@@ -1,0 +1,99 @@
+name: go_green
+description: Aplikasi pengelolaan sampah rumah tangga dengan sistem poin dan reward, dilengkapi anti-kecurangan berbasis kamera in-app, timestamp server, GPS, dan hash SHA-256.
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI & Icon
+  flutter_svg: ^2.0.10+1
+  google_fonts: ^6.1.0
+
+  # State Management
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # Routing
+  go_router: ^14.0.0
+
+  # HTTP & Backend
+  dio: ^5.4.3
+  supabase_flutter: ^2.17.2
+
+  # Local Storage
+  shared_preferences: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Form & Validation
+  reactive_forms: ^17.0.0
+
+  # Kamera & Media
+  camera: ^0.10.5+9
+  image: ^4.1.7
+  image_picker: ^1.1.2
+
+  # GPS & Lokasi
+  geolocator: ^11.0.0
+
+  # QR Scan
+  mobile_scanner: ^5.1.1
+
+  # Permission
+  permission_handler: ^11.3.1
+
+  # Keamanan & Hash
+  crypto: ^3.0.3
+  exif: ^3.3.0
+
+  # Logging
+  logger: ^2.3.0
+
+  # Utility
+  intl: ^0.19.0
+  uuid: ^4.4.0
+  path_provider: ^2.1.3
+  flutter_lucide: ^1.45.0
+  flutter_dotenv: ^6.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.9
+  riverpod_generator: ^2.4.0
+  mocktail: ^1.0.3
+  geolocator_platform_interface: ^4.3.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/images/ref/
+    - assets/icons/custom/
+    - assets/splash/
+    - assets/app_icon/
+  fonts:
+    - family: Manrope
+      fonts:
+        - asset: assets/fonts/font_manrope_regular.ttf
+          weight: 400
+        - asset: assets/fonts/font_manrope_medium.ttf
+          weight: 500
+        - asset: assets/fonts/font_manrope_semibold.ttf
+          weight: 600
+        - asset: assets/fonts/font_manrope_bold.ttf
+          weight: 700
+    - family: Geist
+      fonts:
+        - asset: assets/fonts/font_geist_regular.ttf
+          weight: 400
+        - asset: assets/fonts/font_geist_medium.ttf
+          weight: 500
+        - asset: assets/fonts/font_geist_semibold.ttf
+          weight: 600
