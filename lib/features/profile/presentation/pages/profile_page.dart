@@ -43,8 +43,15 @@ class ProfilePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AuthSession auth = ref.watch(authNotifierProvider);
     final bool isLoggedIn = auth.isLoggedIn;
-    final String subtitle =
-        isLoggedIn ? (auth.userEmail ?? AppStrings.profileDemoEmail) : AppStrings.profileDemoEmail;
+    final String displayName = isLoggedIn
+        ? (auth.displayName ??
+            auth.username ??
+            auth.userEmail?.split('@').first ??
+            AppStrings.guestName)
+        : AppStrings.guestName;
+    final String subtitle = isLoggedIn
+        ? (auth.userEmail ?? AppStrings.profileDemoEmail)
+        : AppStrings.profileDemoEmail;
 
     return Scaffold(
       body: SafeArea(
@@ -64,15 +71,15 @@ class ProfilePage extends ConsumerWidget {
                     color: AppColors.primaryLight,
                     shape: BoxShape.circle,
                   ),
-                  child: const Avatar(name: AppStrings.guestName, size: 60),
+                  child: Avatar(name: displayName, size: 60),
                 ),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      const Text(
-                        AppStrings.guestName,
+                      Text(
+                        displayName,
                         style: AppTypography.headlineMd,
                       ),
                       const SizedBox(height: AppSpacing.xs),

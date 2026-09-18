@@ -24,7 +24,10 @@ class CustomTextField extends StatelessWidget {
     this.validator,
     this.keyboardType,
     this.obscureText = false,
+    this.enabled = true,
     this.onSuffixTap,
+    this.onChanged,
+    this.onFieldSubmitted,
   });
 
   /// Label field (opsional).
@@ -51,8 +54,17 @@ class CustomTextField extends StatelessWidget {
   /// Mode rahasia (mis. password).
   final bool obscureText;
 
+  /// Apakah field bisa diisi (false untuk tampilan baca-saja).
+  final bool enabled;
+
   /// Aksi saat ikon kanan ditekan (mis. toggle password visibility).
   final VoidCallback? onSuffixTap;
+
+  /// Callback saat nilai berubah.
+  final ValueChanged<String>? onChanged;
+
+  /// Callback saat tombol submit ditekan.
+  final ValueChanged<String>? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +72,10 @@ class CustomTextField extends StatelessWidget {
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
+      enabled: enabled,
       validator: validator,
+      onChanged: onChanged,
+      onFieldSubmitted: onFieldSubmitted,
       style: AppTypography.bodyLg,
       decoration: InputDecoration(
         labelText: label,

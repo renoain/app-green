@@ -103,3 +103,26 @@ enum PointType {
     );
   }
 }
+
+/// Sumber data pembuangan sampah. Sesuai kolom `source` tabel waste_logs.
+///
+/// Dipakai untuk analytics (distribusi qr_scan / manual / nfc).
+enum WasteSource {
+  qrScan('qr_scan'),
+  manual('manual'),
+  nfc('nfc');
+
+  const WasteSource(this.value);
+
+  /// String di database.
+  final String value;
+
+  /// Mem-parsing string database menjadi [WasteSource]. Default `manual`
+  /// mengikuti default kolom di database.
+  static WasteSource fromDb(String? value) {
+    return WasteSource.values.firstWhere(
+      (WasteSource source) => source.value == value,
+      orElse: () => WasteSource.manual,
+    );
+  }
+}

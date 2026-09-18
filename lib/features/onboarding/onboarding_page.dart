@@ -3,8 +3,8 @@
 // Home). Ilustrasi memakai placeholder ikon sampai asset gambar tersedia.
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/constants/app_strings.dart';
 import '../../core/router/app_router.dart';
@@ -39,7 +39,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       description: AppStrings.onboardingDesc2,
     ),
     _OnboardingSlide(
-      icon: LucideIcons.shield_check,
+      icon: LucideIcons.globe,
       title: AppStrings.onboardingTitle3,
       description: AppStrings.onboardingDesc3,
     ),

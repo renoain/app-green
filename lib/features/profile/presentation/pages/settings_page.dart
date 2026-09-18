@@ -15,8 +15,8 @@ import '../../../../core/widgets/display_widgets.dart';
 
 /// Halaman pengaturan aplikasi Go Green.
 ///
-/// Berisi menu akun (edit profil), preferensi notifikasi dan mode gelap,
-/// serta informasi aplikasi. Mode gelap disiapkan untuk fase berikutnya.
+/// Berisi menu akun (edit profil), preferensi notifikasi, serta informasi
+/// aplikasi.
 class SettingsPage extends StatefulWidget {
   /// Membuat halaman pengaturan.
   const SettingsPage({super.key});
@@ -27,7 +27,6 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _notificationEnabled = true;
-  bool _darkModeEnabled = false;
 
   void _showAbout() {
     showAboutDialog(
@@ -68,15 +67,6 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
             const SizedBox(height: AppSpacing.md),
-            _buildSwitchTile(
-              icon: LucideIcons.moon,
-              title: AppStrings.settingsDarkMode,
-              subtitle: AppStrings.settingsDarkModeDesc,
-              value: _darkModeEnabled,
-              onChanged: (bool value) {
-                setState(() => _darkModeEnabled = value);
-              },
-            ),
             const SizedBox(height: AppSpacing.lg),
             _sectionTitle(AppStrings.settingsInfoTitle),
             ListTileItem(

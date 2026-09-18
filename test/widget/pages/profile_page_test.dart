@@ -14,8 +14,16 @@ import '../../support/fake_auth_repository.dart';
 
 /// AuthNotifier yang diinisialisasi dalam status sudah login.
 class _AuthenticatedAuth extends AuthNotifier {
-  _AuthenticatedAuth(String email)
-      : super(FakeAuthRepository(session: AuthSession(userEmail: email)));
+  _AuthenticatedAuth(String email, {String? displayName, String? username})
+      : super(
+          FakeAuthRepository(
+            session: AuthSession(
+              userEmail: email,
+              displayName: displayName,
+              username: username,
+            ),
+          ),
+        );
 }
 
 void main() {
@@ -55,8 +63,29 @@ void main() {
 
     expect(find.text(AppStrings.profileLoginNotice), findsNothing);
     expect(find.text('budi@mail.com'), findsOneWidget);
+    expect(find.text('budi'), findsOneWidget);
     expect(find.text(AppStrings.editProfile), findsOneWidget);
     expect(find.text(AppStrings.settings), findsOneWidget);
     expect(find.text(AppStrings.logout), findsOneWidget);
+  });
+
+  testWidgets('sudah login: nama tampilan muncul menggantikan nama tamu',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      buildApp(<Override>[
+        authNotifierProvider.overrideWith(
+          (ref) => _AuthenticatedAuth(
+            'budi@mail.com',
+            displayName: 'Budi Hijau',
+            username: 'budi_hijau',
+          ),
+        ),
+      ]),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Budi Hijau'), findsOneWidget);
+    expect(find.text(AppStrings.guestName), findsNothing);
+    expect(find.text(AppStrings.profileLoginNotice), findsNothing);
   });
 }

@@ -8,19 +8,26 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../../core/constants/app_enums.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/constants/app_values.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/services/location_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/formatters.dart';
+import '../../../../core/utils/geo_utils.dart';
 import '../../../../core/widgets/app_bar_and_loading_widgets.dart';
 import '../../../../core/widgets/app_button_widgets.dart';
 import '../../../verification/presentation/data/verification_extra.dart';
+import '../data/capture_extra.dart';
 
 /// Status inisialisasi kamera pada halaman CapturePhotoPage.
 enum _CaptureStatus { initializing, denied, unavailable, ready }
+
+/// Kategori default bila extra tidak membawa kategori.
+const WasteCategory _defaultCategory = WasteCategory.organik;
 
 /// Halaman kamera in-app untuk mengambil foto bukti pembuangan sampah.
 ///
@@ -28,7 +35,10 @@ enum _CaptureStatus { initializing, denied, unavailable, ready }
 /// verifikasi setelah foto diambil.
 class CapturePhotoPage extends StatefulWidget {
   /// Membuat halaman ambil foto.
-  const CapturePhotoPage({super.key});
+  const CapturePhotoPage({super.key, this.extra});
+
+  /// Checkpoint dan kategori terpilih dari halaman Waste.
+  final CaptureExtra? extra;
 
   @override
   State<CapturePhotoPage> createState() => _CapturePhotoPageState();
@@ -99,10 +109,23 @@ class _CapturePhotoPageState extends State<CapturePhotoPage> {
       final position = await locationService.getCurrentPosition();
       if (!mounted) return;
 
-      // TODO: Aktifkan kembali cek radius GPS 100 m dari checkpoint
-      // (AppValues.gpsRadiusMeters + GeoUtils.distanceMeters) setelah
-      // nilai timestamp server dan relay data terpasang. Sengaja
-      // dinonaktifkan sementara untuk tahap preview UI.
+      final CaptureExtra? extra = widget.extra;
+      if (AppValues.enforceGpsRadius && extra != null && position != null) {
+        final int distance = GeoUtils.distanceMeters(
+          position.latitude,
+          position.longitude,
+          extra.latitude,
+          extra.longitude,
+        );
+        if (distance > extra.radius) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              const SnackBar(content: Text(AppStrings.wasteGpsOutOfRadius)),
+            );
+          return;
+        }
+      }
       final String? locationLabel = position == null
           ? null
           : locationService.formatPositionLabel(position);
@@ -114,6 +137,12 @@ class _CapturePhotoPageState extends State<CapturePhotoPage> {
           locationLabel: locationLabel,
           imagePath: photo.path,
           timestampLabel: timestampLabel,
+          checkpointId: extra?.checkpointId,
+          checkpointName: extra?.checkpointName,
+          latitude: position?.latitude,
+          longitude: position?.longitude,
+          radius: extra?.radius,
+          category: extra?.category ?? _defaultCategory,
         ),
       );
     } catch (_) {

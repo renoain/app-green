@@ -1,17 +1,22 @@
 // Halaman verifikasi bukti pembuangan sampah Go Green.
 //
-// Rincian nilai (timestamp, lokasi, hash) masih demo sampai layer data
-// dan kamera/GPS terpasang. Lokasi dan path foto bisa dikirim dari halaman
-// kamera lewat data ekstra route.
+// Menampilkan preview foto + timestamp + lokasi, lalu mengirim bukti via
+// WasteSubmitNotifier (hash SHA-256, validasi radius/duplikat/rate limit,
+// upload, insert waste_logs). Timestamp server tercatat di database saat
+// insert (kolom server_timestamp default now()).
 
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/app_enums.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/services/supabase_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -20,22 +25,30 @@ import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/app_bar_and_loading_widgets.dart';
 import '../../../../core/widgets/app_button_widgets.dart';
 import '../../../../core/widgets/status_widgets.dart';
+import '../../../checkpoints/domain/entities/checkpoint.dart';
+import '../../../checkpoints/presentation/providers/checkpoint_provider.dart';
+import '../../../waste/presentation/providers/waste_provider.dart';
 import '../data/verification_extra.dart';
 
 /// Halaman verifikasi foto bukti Go Green.
-class VerificationPage extends StatelessWidget {
+class VerificationPage extends ConsumerStatefulWidget {
   /// Membuat halaman verifikasi.
   const VerificationPage({super.key, this.extra});
 
   /// Data ekstra dari halaman kamera (lokasi GPS dan path foto).
   final VerificationExtra? extra;
 
-  void _showHash(BuildContext context) {
+  @override
+  ConsumerState<VerificationPage> createState() => _VerificationPageState();
+}
+
+class _VerificationPageState extends ConsumerState<VerificationPage> {
+  void _showHash(BuildContext context, String hash) {
     showDialog<void>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: const Text(AppStrings.verificationHashLabel),
-        content: const SelectableText(AppStrings.verificationHashDemo),
+        content: SelectableText(hash),
         actions: <Widget>[
           AppTextButton(
             text: AppStrings.backButton,
@@ -46,9 +59,123 @@ class VerificationPage extends StatelessWidget {
     );
   }
 
+  Future<void> _submit() async {
+    final VerificationExtra? extra = widget.extra;
+    final String? imagePath = extra?.imagePath;
+    if (imagePath == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text(AppStrings.genericError)),
+        );
+      return;
+    }
+    final String? checkpointId = extra?.checkpointId;
+    if (checkpointId == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text(AppStrings.wasteCheckpointEmpty)),
+        );
+      return;
+    }
+    final double? latitude = extra?.latitude;
+    final double? longitude = extra?.longitude;
+    if (latitude == null || longitude == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(
+            content: Text(AppStrings.verificationLocationFailed),
+          ),
+        );
+      return;
+    }
+    final String? userId = SupabaseService.instance.currentUser?.id;
+    if (userId == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text(AppStrings.wasteNeedLogin)),
+        );
+      context.pushNamed(AppRouteName.login);
+      return;
+    }
+
+    Checkpoint? checkpoint;
+    try {
+      checkpoint = await ref
+          .read(checkpointRepositoryProvider)
+          .getCheckpointById(checkpointId);
+    } catch (_) {
+      checkpoint = null;
+    }
+    checkpoint ??= Checkpoint(
+      id: checkpointId,
+      name: extra?.checkpointName ?? checkpointId,
+      latitude: extra?.latitude ?? latitude,
+      longitude: extra?.longitude ?? longitude,
+      radius: extra?.radius ?? 100,
+      createdAt: DateTime.now(),
+    );
+
+    Uint8List bytes;
+    try {
+      bytes = await File(imagePath).readAsBytes();
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text(AppStrings.genericError)),
+        );
+      return;
+    }
+
+    await ref.read(wasteSubmitNotifierProvider.notifier).submit(
+          userId: userId,
+          checkpoint: checkpoint,
+          category: extra?.category ?? WasteCategory.organik,
+          photoBytes: bytes,
+          latitude: latitude,
+          longitude: longitude,
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final VerificationExtra? extra = this.extra;
+    ref.listen<AsyncValue<dynamic>>(
+      wasteSubmitNotifierProvider,
+      (previous, next) {
+        next.whenOrNull(
+          data: (value) {
+            if (value != null && previous is AsyncLoading) {
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  const SnackBar(
+                    content: Text(AppStrings.wasteSubmitSuccess),
+                  ),
+                );
+              ref.read(wasteSubmitNotifierProvider.notifier).reset();
+              context.goNamed(AppRouteName.home);
+            }
+          },
+          error: (error, _) {
+            if (!context.mounted) return;
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(SnackBar(content: Text('$error')));
+          },
+        );
+      },
+    );
+    final VerificationExtra? extra = widget.extra;
     final bool hasExtra = extra != null &&
         (extra.locationLabel != null ||
             extra.imagePath != null ||
@@ -59,6 +186,10 @@ class VerificationPage extends StatelessWidget {
         (hasExtra
             ? AppStrings.verificationLocationFailed
             : AppStrings.verificationLocationDemo);
+    final AsyncValue<dynamic> submitState =
+        ref.watch(wasteSubmitNotifierProvider);
+    final bool submitting = submitState.isLoading;
+    const String hashValue = AppStrings.verificationHashDemo;
 
     return Scaffold(
       appBar: const CustomAppBar(
@@ -130,19 +261,23 @@ class VerificationPage extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: AppTextButton(
                 text: AppStrings.verificationHashButton,
-                onPressed: () => _showHash(context),
+                onPressed: () => _showHash(context, hashValue),
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
             SecondaryButton(
               text: AppStrings.retryButton,
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed:
+                  submitting ? null : () => Navigator.of(context).pop(),
             ),
             const SizedBox(height: AppSpacing.md),
-            PrimaryButton(
-              text: AppStrings.verificationSubmitButton,
-              onPressed: () => context.goNamed(AppRouteName.home),
-            ),
+            if (submitting)
+              const Center(child: LoadingIndicator())
+            else
+              PrimaryButton(
+                text: AppStrings.verificationSubmitButton,
+                onPressed: _submit,
+              ),
           ],
         ),
       ),

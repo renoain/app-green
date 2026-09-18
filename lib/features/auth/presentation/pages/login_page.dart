@@ -28,22 +28,15 @@ class LoginPage extends ConsumerStatefulWidget {
 
 class _LoginPageState extends ConsumerState<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _identityController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
   bool _rememberMe = true;
 
-  static final RegExp _emailRegex = RegExp(
-    r'^[\w\.-]+@[\w\.-]+\.\w+$',
-  );
-
-  String? _validateEmail(String? value) {
+  String? _validateIdentity(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return AppStrings.errorEmailRequired;
-    }
-    if (!_emailRegex.hasMatch(value.trim())) {
-      return AppStrings.errorEmailInvalid;
+      return AppStrings.loginIdentityRequired;
     }
     return null;
   }
@@ -65,7 +58,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     setState(() => _isLoading = true);
     final AuthRepository repository = ref.read(authRepositoryProvider);
     final SignInResult result = await repository.signIn(
-      email: _emailController.text.trim(),
+      identifier: _identityController.text.trim(),
       password: _passwordController.text,
     );
     if (!mounted) {
@@ -134,7 +127,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _identityController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -171,12 +164,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                     const SizedBox(height: AppSpacing.xl),
                     CustomTextField(
-                      label: AppStrings.emailLabel,
-                      hint: AppStrings.emailHint,
-                      prefixIcon: LucideIcons.mail,
-                      controller: _emailController,
-                      validator: _validateEmail,
-                      keyboardType: TextInputType.emailAddress,
+                      label: AppStrings.loginIdentityLabel,
+                      hint: AppStrings.loginIdentityHint,
+                      prefixIcon: LucideIcons.user,
+                      controller: _identityController,
+                      validator: _validateIdentity,
+                      keyboardType: TextInputType.text,
                     ),
                     const SizedBox(height: AppSpacing.md),
                     CustomTextField(

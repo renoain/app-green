@@ -16,10 +16,15 @@ import '../models/waste_log_model.dart';
 /// Data source waste log Go Green.
 class WasteRemoteDatasource {
   /// Membuat data source waste log. [client] bisa di-inject untuk test.
-  WasteRemoteDatasource({SupabaseClient? client})
-      : _client = client ?? SupabaseService.instance.client;
+  ///
+  /// Client Supabase diambil malas (lazy) agar konstruksi provider tidak
+  /// crash di mode demo/test saat Supabase belum terinisialisasi.
+  WasteRemoteDatasource({SupabaseClient? client}) : _override = client;
 
-  final SupabaseClient _client;
+  final SupabaseClient? _override;
+
+  SupabaseClient get _client =>
+      _override ?? SupabaseService.instance.client;
 
   /// Upload foto bukti ke bucket waste-photos.
   ///
@@ -38,7 +43,8 @@ class WasteRemoteDatasource {
   }
 
   /// Menyimpan log pembuangan sampah. Timestamp dan status diisi server
-  /// (server_timestamp default now(), status default pending).
+  /// (server_timestamp default now(), status default pending). Kolom source
+  /// diisi [WasteSource.qrScan] saat audit dari QR, manual saat pilih manual.
   Future<WasteLogModel> insertWasteLog({
     required String userId,
     String? checkpointId,
@@ -47,6 +53,7 @@ class WasteRemoteDatasource {
     String? hash,
     double? latitude,
     double? longitude,
+    WasteSource source = WasteSource.manual,
   }) async {
     final Map<String, dynamic> row = await _client
         .from(AppTables.wasteLogs)
@@ -58,6 +65,7 @@ class WasteRemoteDatasource {
           'hash': hash,
           'latitude': latitude,
           'longitude': longitude,
+          'source': source.value,
         })
         .select()
         .single();
@@ -104,5 +112,35 @@ class WasteRemoteDatasource {
         .select()
         .single();
     return WasteLogModel.fromJson(row);
+  }
+
+  /// Mengecek apakah hash sudah pernah dipakai (anti-kecurangan duplikat).
+  ///
+  /// Mengembalikan true bila ada waste log dengan hash yang sama.
+  Future<bool> checkDuplicateHash(String hash) async {
+    final Map<String, dynamic>? row = await _client
+        .from(AppTables.wasteLogs)
+        .select('id')
+        .eq('hash', hash)
+        .maybeSingle();
+    return row != null;
+  }
+
+  /// Menghitung jumlah waste log user sejak awal hari ini (UTC).
+  ///
+  /// Dipakai untuk rate limit (docs/DATABASE_SCHEMA.md bagian 8.6).
+  Future<int> countTodayWasteLogs(String userId) async {
+    final DateTime start = DateTime.now().toUtc();
+    final DateTime startOfDayUtc = DateTime.utc(
+      start.year,
+      start.month,
+      start.day,
+    );
+    final List<Map<String, dynamic>> rows = await _client
+        .from(AppTables.wasteLogs)
+        .select('id')
+        .eq('user_id', userId)
+        .gte('created_at', startOfDayUtc.toIso8601String());
+    return rows.length;
   }
 }

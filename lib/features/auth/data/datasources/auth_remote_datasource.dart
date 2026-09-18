@@ -34,17 +34,63 @@ class AuthRemoteDatasource {
   }
 
   /// Mendaftar akun baru. [username] masuk ke metadata dan dipakai trigger
-  /// `handle_new_user` saat membuat baris profiles.
+  /// `handle_new_user` saat membuat baris profiles; [displayName] tersimpan
+  /// di metadata untuk tampilan (tidak ada kolom baru di profiles).
   Future<AuthResponse> signUpWithEmail({
     required String email,
     required String password,
     String? username,
+    String? displayName,
   }) {
+    final Map<String, dynamic>? data = (username == null && displayName == null)
+        ? null
+        : <String, dynamic>{
+            if (username != null) 'username': username,
+            if (displayName != null) 'display_name': displayName,
+          };
     return _resolvedClient.auth.signUp(
       email: email,
       password: password,
-      data: <String, dynamic>{'username': username},
+      data: data,
     );
+  }
+
+  /// Mencari email auth dari username lewat RPC `get_email_by_username`.
+  ///
+  /// Mengembalikan null bila username tidak ditemukan. Dipakai untuk
+  /// login username karena Supabase Auth hanya menerima email.
+  Future<String?> findEmailByUsername(String username) async {
+    final dynamic result = await _resolvedClient.rpc(
+      'get_email_by_username',
+      params: <String, dynamic>{'p_username': username},
+    );
+    if (result == null) {
+      return null;
+    }
+    final String email = result.toString();
+    return email.isEmpty ? null : email;
+  }
+
+  /// Mengecek apakah username sudah dipakai (case-insensitive).
+  ///
+  /// Dipakai sebelum registrasi agar pesan "username sudah dipakai" bisa
+  /// tampil jelas. Penegak akhir tetap constraint unik di database.
+  Future<bool> isUsernameTaken(String username) async {
+    final String normalized = username.trim().toLowerCase();
+    if (normalized.isEmpty) {
+      return false;
+    }
+    final List<dynamic> rows = await _resolvedClient
+        .from(AppTables.profiles)
+        .select('id')
+        .ilike('username', normalized)
+        .limit(1);
+    return rows.isNotEmpty;
+  }
+
+  /// Memperbarui metadata user saat ini (nama tampilan, telepon).
+  Future<UserResponse> updateUserMetadata(Map<String, dynamic> data) {
+    return _resolvedClient.auth.updateUser(UserAttributes(data: data));
   }
 
   /// Login dengan akun Google (OAuth).

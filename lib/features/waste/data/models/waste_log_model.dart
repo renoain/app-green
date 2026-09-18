@@ -23,6 +23,7 @@ class WasteLogModel extends WasteLog {
     super.verifiedBy,
     super.verifiedAt,
     super.notes,
+    super.source,
     required super.createdAt,
   });
 
@@ -42,6 +43,7 @@ class WasteLogModel extends WasteLog {
       verifiedBy: json['verified_by'] as String?,
       verifiedAt: _parseDateTimeOrNull(json['verified_at']),
       notes: json['notes'] as String?,
+      source: WasteSource.fromDb(json['source'] as String?),
       createdAt: _parseDateTime(json['created_at']),
     );
   }
@@ -62,6 +64,7 @@ class WasteLogModel extends WasteLog {
       'verified_by': verifiedBy,
       'verified_at': verifiedAt?.toIso8601String(),
       'notes': notes,
+      'source': source.value,
       'created_at': createdAt.toIso8601String(),
     };
   }

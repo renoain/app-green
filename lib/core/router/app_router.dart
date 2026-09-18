@@ -7,8 +7,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/activity/presentation/data/activity_detail_extra.dart';
 import '../../features/activity/presentation/pages/activity_detail_page.dart';
 import '../../features/activity/presentation/pages/activity_page.dart';
+import '../../features/article/domain/entities/article.dart';
 import '../../features/article/presentation/pages/article_detail_page.dart';
 import '../../features/article/presentation/pages/article_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
@@ -24,6 +26,7 @@ import '../../features/scan/presentation/pages/scan_page.dart';
 import '../../features/splash/splash_page.dart';
 import '../../features/verification/presentation/data/verification_extra.dart';
 import '../../features/verification/presentation/pages/verification_page.dart';
+import '../../features/waste/presentation/data/capture_extra.dart';
 import '../../features/waste/presentation/pages/capture_photo_page.dart';
 import '../../features/waste/presentation/pages/waste_page.dart';
 import '../widgets/main_shell.dart';
@@ -64,9 +67,13 @@ final List<RouteBase> appRoutes = <RouteBase>[
   GoRoute(
     path: '/article/:id',
     name: AppRouteName.articleDetail,
-    builder: (BuildContext context, GoRouterState state) => ArticleDetailPage(
-      articleId: state.pathParameters['id'] ?? '1',
-    ),
+    builder: (BuildContext context, GoRouterState state) {
+      final Object? extra = state.extra;
+      return ArticleDetailPage(
+        articleId: state.pathParameters['id'] ?? '1',
+        article: extra is Article ? extra : null,
+      );
+    },
   ),
   GoRoute(
     path: '/reward/:id',
@@ -78,10 +85,13 @@ final List<RouteBase> appRoutes = <RouteBase>[
   GoRoute(
     path: '/activity/:id',
     name: AppRouteName.activityDetail,
-    builder: (BuildContext context, GoRouterState state) =>
-        ActivityDetailPage(
-      activityId: state.pathParameters['id'] ?? '1',
-    ),
+    builder: (BuildContext context, GoRouterState state) {
+      final Object? extra = state.extra;
+      return ActivityDetailPage(
+        activityId: state.pathParameters['id'] ?? '1',
+        extra: extra is ActivityDetailExtra ? extra : null,
+      );
+    },
   ),
   GoRoute(
     path: '/verification',
@@ -98,7 +108,7 @@ final List<RouteBase> appRoutes = <RouteBase>[
     path: '/capture',
     name: AppRouteName.capture,
     builder: (BuildContext context, GoRouterState state) =>
-        const CapturePhotoPage(),
+        CapturePhotoPage(extra: state.extra as CaptureExtra?),
   ),
   GoRoute(
     path: '/edit-profile',

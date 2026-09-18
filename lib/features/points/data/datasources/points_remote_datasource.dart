@@ -14,10 +14,15 @@ import '../../../../core/services/supabase_service.dart';
 /// Data source poin dan redemption Go Green.
 class PointsRemoteDatasource {
   /// Membuat data source poin. [client] bisa di-inject untuk test.
-  PointsRemoteDatasource({SupabaseClient? client})
-      : _client = client ?? SupabaseService.instance.client;
+  ///
+  /// Client Supabase diambil malas (lazy) agar konstruksi provider tidak
+  /// crash di mode demo/test saat Supabase belum terinisialisasi.
+  PointsRemoteDatasource({SupabaseClient? client}) : _override = client;
 
-  final SupabaseClient _client;
+  final SupabaseClient? _override;
+
+  SupabaseClient get _client =>
+      _override ?? SupabaseService.instance.client;
 
   /// Total poin user (earn dikurangi redeem).
   Future<int> getTotalPoints(String userId) async {

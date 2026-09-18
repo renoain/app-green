@@ -17,6 +17,14 @@ Implementasi yang sudah ada di lib/core/widgets/:
 - feedback_widgets.dart: EmptyState
 - auth_leaf_decoration.dart: AuthLeafDecoration, AuthLeafSprig
 - auth_header_widget.dart: AuthHeaderWidget
+- app_checkbox.dart: AppCheckbox
+- app_error_state.dart: AppErrorState
+- app_icon.dart: AppIcon
+- app_password_field.dart: AppPasswordField
+- features/checkpoints/presentation/widgets/checkpoint_tile.dart: CheckpointTile
+- features/waste/presentation/widgets/location_status_card.dart: LocationStatusCard
+- features/waste/presentation/widgets/category_chip.dart: CategoryChip
+- features/waste/presentation/widgets/photo_upload_container.dart: PhotoUploadContainer
 
 ---
 
@@ -82,6 +90,7 @@ Props:
 - validator: String? Function(String?)?
 - keyboardType: TextInputType
 - obscureText: bool
+- enabled: bool (default true; false untuk tampilan baca-saja)
 - onSuffixTap: VoidCallback? (toggle jika suffixIcon adalah icon password)
 
 Pemakaian: email, password, nama, input teks.
@@ -205,7 +214,7 @@ Props:
 
 Pemakaian: daftar kosong (pencarian artikel tidak ditemukan).
 
-### ErrorState [Belum]
+### ErrorState [Selesai]
 
 Props:
 - message: String
@@ -213,9 +222,131 @@ Props:
 
 Pemakaian: error state, tombol coba lagi.
 
+### AppErrorState [Selesai]
+
+Props:
+- message: String
+- onRetry: VoidCallback?
+- icon: IconData? (default LucideIcons.alert_circle)
+
+Pemakaian: state error di halaman yang memuat data (kegagalan load dari
+Supabase), dengan tombol coba lagi.
+
 ---
 
-## 6. Display
+## 6. Waste & Checkpoint
+
+### CheckpointTile [Selesai]
+
+Props:
+- name: String (nama checkpoint)
+- address: String?
+- icon: IconData? (default LucideIcons.map_pin)
+- selected: bool (status terpilih)
+- distanceLabel: String? (label jarak, mis. "120 m")
+- onTap: VoidCallback?
+
+Pemakaian: daftar checkpoint terdekat di halaman Buang Sampah. Saat
+`selected` true, ditampilkan ikon centang + warna border primary.
+
+### LocationStatusCard [Selesai]
+
+Props:
+- withinRadius: bool
+- distanceMeters: double
+- radiusMeters: double
+- onCheckLocation: VoidCallback?
+
+Tampilan: status GPS radius dengan label "Berhasil" (blok hijau) atau
+"Di luar radius" (blok error). Menampilkan jarak saat ini dan radius
+checkpoint.
+
+Pemakaian: kartu status radius di halaman Buang Sampah.
+
+### CategoryChip [Selesai]
+
+Props:
+- label: String
+- icon: IconData?
+- selected: bool
+- onTap: VoidCallback?
+
+Tampilan: chip kategori sampah; saat terpilih berwarna primary dengan teks
+onPrimary.
+
+Pemakaian: pilihan kategori/ jenis sampah (organik, anorganik, b3,
+daur ulang) di halaman Buang Sampah.
+
+### PhotoUploadContainer [Selesai]
+
+Props:
+- label: String (default "Ambil Foto")
+- hint: String?
+- hasPhoto: bool
+- onTap: VoidCallback?
+
+Tampilan: container dashed border + ikon kamera; saat `hasPhoto` true
+ditampilkan indikator foto terpasang.
+
+Pemakaian: trigger kamera in-app di halaman Buang Sampah.
+
+### ScanQrButton [Rencana]
+
+Props:
+- text: String (default "Scan QR di checkpoint")
+- onPressed: VoidCallback?
+
+Pemakaian: membuka route /scan untuk memindai QR checkpoint. Saat ini
+navigasi scan dilakukan AppLink/text dari WastePage; komponen terpisah
+menyusul bila dipakai ulang di halaman lain.
+
+---
+
+## 7. Form
+
+### AppCheckbox [Selesai]
+
+Props:
+- value: bool
+- label: String
+- onChanged: ValueChanged<bool>?
+- linkText: String? (teks tautan opsional di dalam label)
+- onLinkTap: VoidCallback?
+
+Pemakaian: checkbox persetujuan Syarat & Ketentuan di Register, "Ingat
+saya" di Login.
+
+### AppPasswordField [Selesai]
+
+Props:
+- label: String?
+- hint: String?
+- controller: TextEditingController?
+- validator: String? Function(String?)?
+- onChanged: ValueChanged<String>?
+- onFieldSubmitted: ValueChanged<String>?
+
+Tampilan: membungkus CustomTextField dengan obscureText + suffix toggle
+(mata terbuka/tertutup) secara otomatis.
+
+Pemakaian: input password di Login dan Register.
+
+---
+
+## 8. Icon
+
+### AppIcon [Selesai]
+
+Static helper:
+- AppIcon.lucide(IconData icon, ...) -> Icon
+- AppIcon.asset(String path, ...) -> Image / SvgPicture.asset
+
+Pemakaian: titik tunggal render ikon supaya mudah mengganti implementasi
+(flutter_svg untuk aset, flutter_lucide untuk ikon standar).
+
+---
+
+## 9. Display
 
 ### Avatar [Selesai]
 
@@ -248,7 +379,7 @@ Pemakaian: statistik di Profile (total poin, total buang sampah).
 
 ---
 
-## 7. List
+## 10. List
 
 ### ListTileItem [Selesai]
 
@@ -263,7 +394,7 @@ Pemakaian: menu di Profile, pilihan filter.
 
 ---
 
-## 8. Status
+## 11. Status
 
 ### StatusChip [Selesai]
 
@@ -283,7 +414,7 @@ Pemakaian: progress menuju target poin, loading bar.
 
 ---
 
-## 9. Auth Decoration
+## 12. Auth Decoration
 
 ### AuthLeafDecoration [Selesai]
 

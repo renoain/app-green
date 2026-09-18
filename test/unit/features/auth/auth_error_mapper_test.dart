@@ -30,6 +30,19 @@ void main() {
       expect(AuthErrorMapper.mapSignInError(error), SignInResult.notConfirmed);
     });
 
+    test('kredensial salah tanpa kode -> invalidCredentials', () {
+      const AuthException error = AuthException('Invalid login credentials');
+      expect(
+        AuthErrorMapper.mapSignInError(error),
+        SignInResult.invalidCredentials,
+      );
+    });
+
+    test('email belum dikonfirmasi tanpa kode -> notConfirmed', () {
+      const AuthException error = AuthException('Email not confirmed');
+      expect(AuthErrorMapper.mapSignInError(error), SignInResult.notConfirmed);
+    });
+
     test('AuthException umum -> error', () {
       const AuthException error = AuthException('Something failed');
       expect(AuthErrorMapper.mapSignInError(error), SignInResult.error);
@@ -72,6 +85,73 @@ void main() {
       expect(
         AuthErrorMapper.mapSignUpError(error),
         SignUpResult.weakPassword,
+      );
+    });
+
+    test('AuthWeakPasswordException (mis. password bocor 123456) -> weakPassword',
+        () {
+      final AuthWeakPasswordException error = AuthWeakPasswordException(
+        message: 'Password is too weak or leaked',
+        statusCode: '422',
+        reasons: const <String>['leaked'],
+      );
+      expect(
+        AuthErrorMapper.mapSignUpError(error),
+        SignUpResult.weakPassword,
+      );
+    });
+
+    test('kode user_already_exists -> alreadyRegistered', () {
+      const AuthException error = AuthException(
+        'User already exists',
+        code: 'user_already_exists',
+      );
+      expect(
+        AuthErrorMapper.mapSignUpError(error),
+        SignUpResult.alreadyRegistered,
+      );
+    });
+
+    test('signup dimatikan -> error umum', () {
+      const AuthException error = AuthException(
+        'Signups not allowed for this instance',
+        code: 'signup_disabled',
+      );
+      expect(
+        AuthErrorMapper.mapSignUpError(error),
+        SignUpResult.error,
+      );
+    });
+
+    test('rate limit email -> rateLimited', () {
+      const AuthException error = AuthException(
+        'Email rate limit exceeded',
+        code: 'over_email_send_rate_limit',
+      );
+      expect(
+        AuthErrorMapper.mapSignUpError(error),
+        SignUpResult.rateLimited,
+      );
+    });
+
+    test('username duplikat constraint -> usernameTaken', () {
+      const AuthException error = AuthException(
+        'duplicate key value violates unique constraint "profiles_username_key"',
+        code: '23505',
+      );
+      expect(
+        AuthErrorMapper.mapSignUpError(error),
+        SignUpResult.usernameTaken,
+      );
+    });
+
+    test('username sudah dipakai -> usernameTaken', () {
+      const AuthException error = AuthException(
+        'Username already exists',
+      );
+      expect(
+        AuthErrorMapper.mapSignUpError(error),
+        SignUpResult.usernameTaken,
       );
     });
 

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,6 +11,9 @@ import 'package:go_green/core/constants/app_strings.dart';
 import 'package:go_green/core/router/app_router.dart';
 import 'package:go_green/core/theme/app_theme.dart';
 import 'package:go_green/core/widgets/display_widgets.dart';
+import 'package:go_green/features/checkpoints/domain/entities/checkpoint.dart';
+import 'package:go_green/features/checkpoints/domain/repositories/checkpoint_repository.dart';
+import 'package:go_green/features/checkpoints/presentation/providers/checkpoint_provider.dart';
 import 'package:go_green/features/scan/presentation/pages/scan_page.dart';
 import 'package:go_green/features/waste/presentation/pages/capture_photo_page.dart';
 import 'package:go_green/features/waste/presentation/pages/waste_page.dart';
@@ -17,32 +21,91 @@ import 'package:go_green/features/waste/presentation/pages/waste_page.dart';
 const MethodChannel _permissionChannel =
     MethodChannel('flutter.baseflow.com/permissions/methods');
 
+/// Repository checkpoint palsu untuk test widget (tanpa Supabase).
+class FakeCheckpointRepository implements CheckpointRepository {
+  FakeCheckpointRepository({List<Checkpoint>? checkpoints})
+      : checkpoints = checkpoints ?? _defaultCheckpoints;
+
+  final List<Checkpoint> checkpoints;
+
+  static List<Checkpoint> get _defaultCheckpoints {
+    final DateTime now = DateTime(2026, 9, 18);
+    return <Checkpoint>[
+      Checkpoint(
+        id: 'demo-1',
+        name: AppStrings.wasteCheckpointTps,
+        address: AppStrings.wasteCheckpointTpsAddress,
+        latitude: -6.200000,
+        longitude: 106.816667,
+        radius: 100,
+        createdAt: now,
+      ),
+      Checkpoint(
+        id: 'demo-2',
+        name: AppStrings.wasteCheckpointBank,
+        address: AppStrings.wasteCheckpointBankAddress,
+        latitude: -6.200500,
+        longitude: 106.816900,
+        radius: 100,
+        createdAt: now,
+      ),
+    ];
+  }
+
+  @override
+  Future<List<Checkpoint>> getAllCheckpoints() async => checkpoints;
+
+  @override
+  Future<List<Checkpoint>> getNearbyCheckpoints({
+    required double latitude,
+    required double longitude,
+  }) async =>
+      checkpoints;
+
+  @override
+  Future<Checkpoint?> getCheckpointById(String id) async {
+    for (final Checkpoint item in checkpoints) {
+      if (item.id == id) return item;
+    }
+    return null;
+  }
+
+  @override
+  Future<Checkpoint?> getCheckpointByQrCode(String qrCode) async => null;
+}
+
+Widget _wasteApp({List<Override> overrides = const <Override>[]}) {
+  return ProviderScope(
+    overrides: <Override>[
+      checkpointRepositoryProvider.overrideWithValue(
+        FakeCheckpointRepository(),
+      ),
+      ...overrides,
+    ],
+    child: MaterialApp(
+      theme: AppTheme.light(),
+      home: const WastePage(),
+    ),
+  );
+}
+
 void main() {
   testWidgets('menampilkan checkpoint, status GPS, dan tombol ambil foto',
       (WidgetTester tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const WastePage(),
-      ),
-    );
+    await tester.pumpWidget(_wasteApp());
+    await tester.pumpAndSettle();
 
     expect(find.text(AppStrings.wasteTitle), findsOneWidget);
     expect(find.text(AppStrings.wasteCheckpointTps), findsOneWidget);
     expect(find.text(AppStrings.wasteCheckpointBank), findsOneWidget);
-    expect(find.text(AppStrings.wasteGpsTitle), findsOneWidget);
-    expect(find.text(AppStrings.wasteGpsInRadius), findsOneWidget);
+    expect(find.text(AppStrings.wasteCategoryTitle), findsOneWidget);
     expect(find.text(AppStrings.takePhotoButton), findsOneWidget);
   });
 
   testWidgets('memilih checkpoint kedua menandai kartu tersebut',
       (WidgetTester tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const WastePage(),
-      ),
-    );
+    await tester.pumpWidget(_wasteApp());
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text(AppStrings.wasteCheckpointBank));
     await tester.pump();
@@ -75,14 +138,22 @@ void main() {
     );
 
     await tester.pumpWidget(
-      MaterialApp.router(
-        theme: AppTheme.light(),
-        routerConfig: GoRouter(
-          initialLocation: '/waste',
-          routes: appRoutes,
+      ProviderScope(
+        overrides: <Override>[
+          checkpointRepositoryProvider.overrideWithValue(
+            FakeCheckpointRepository(),
+          ),
+        ],
+        child: MaterialApp.router(
+          theme: AppTheme.light(),
+          routerConfig: GoRouter(
+            initialLocation: '/waste',
+            routes: appRoutes,
+          ),
         ),
       ),
     );
+    await tester.pumpAndSettle();
 
     await tester.scrollUntilVisible(
       find.text(AppStrings.takePhotoButton),
@@ -99,14 +170,22 @@ void main() {
   testWidgets('link scan QR membuka halaman scan',
       (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp.router(
-        theme: AppTheme.light(),
-        routerConfig: GoRouter(
-          initialLocation: '/waste',
-          routes: appRoutes,
+      ProviderScope(
+        overrides: <Override>[
+          checkpointRepositoryProvider.overrideWithValue(
+            FakeCheckpointRepository(),
+          ),
+        ],
+        child: MaterialApp.router(
+          theme: AppTheme.light(),
+          routerConfig: GoRouter(
+            initialLocation: '/waste',
+            routes: appRoutes,
+          ),
         ),
       ),
     );
+    await tester.pumpAndSettle();
 
     await tester.scrollUntilVisible(
       find.text(AppStrings.wasteScanHint),

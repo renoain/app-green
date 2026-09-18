@@ -37,6 +37,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+/build_old_20260918/
 /coverage/
 .opencode
 

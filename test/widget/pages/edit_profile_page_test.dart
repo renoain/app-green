@@ -44,6 +44,7 @@ void main() {
     expect(find.text(AppStrings.editProfileCaption), findsOneWidget);
     expect(find.text(AppStrings.nameLabel), findsOneWidget);
     expect(find.text(AppStrings.emailLabel), findsOneWidget);
+    expect(find.text(AppStrings.phoneLabel), findsOneWidget);
     final TextFormField nameField =
         tester.widget<TextFormField>(find.byType(TextFormField).at(0));
     final TextFormField emailField =
@@ -79,8 +80,8 @@ void main() {
 
     await tester.enterText(find.byType(TextFormField).at(0), 'Warga Baru');
     await tester.enterText(
-      find.byType(TextFormField).at(1),
-      'warga.baru@go-green.id',
+      find.byType(TextFormField).at(2),
+      '08123456789',
     );
     await tester.tap(find.text(AppStrings.saveButton));
     await tester.pumpAndSettle();

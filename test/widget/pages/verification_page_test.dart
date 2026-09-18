@@ -24,6 +24,15 @@ Widget _verificationRouter() {
   );
 }
 
+Widget _verificationApp(VerificationExtra? extra) {
+  return ProviderScope(
+    child: MaterialApp(
+      theme: AppTheme.light(),
+      home: VerificationPage(extra: extra),
+    ),
+  );
+}
+
 Future<void> _scrollTo(WidgetTester tester, Finder finder) async {
   await tester.scrollUntilVisible(
     finder,
@@ -59,23 +68,23 @@ void main() {
     expect(find.text(AppStrings.verificationHashDemo), findsWidgets);
   });
 
-  testWidgets('kirim mengarahkan kembali ke Home', (WidgetTester tester) async {
+  testWidgets('kirim tanpa foto menampilkan snackbar',
+      (WidgetTester tester) async {
     await tester.pumpWidget(_verificationRouter());
 
     await _scrollTo(tester, find.text(AppStrings.verificationSubmitButton));
     await tester.tap(find.text(AppStrings.verificationSubmitButton));
     await tester.pumpAndSettle();
 
-    expect(find.byType(HomePage), findsOneWidget);
+    expect(find.text(AppStrings.genericError), findsOneWidget);
+    expect(find.byType(VerificationPage), findsOneWidget);
+    expect(find.byType(HomePage), findsNothing);
   });
 
   testWidgets('menampilkan lokasi GPS dari data ekstra', (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const VerificationPage(
-          extra: VerificationExtra(locationLabel: '-6.200000, 106.816667'),
-        ),
+      _verificationApp(
+        const VerificationExtra(locationLabel: '-6.200000, 106.816667'),
       ),
     );
 
@@ -85,11 +94,8 @@ void main() {
 
   testWidgets('menampilkan pesan saat lokasi GPS gagal', (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const VerificationPage(
-          extra: VerificationExtra(imagePath: '/tmp/bukti.jpg'),
-        ),
+      _verificationApp(
+        const VerificationExtra(imagePath: '/tmp/bukti.jpg'),
       ),
     );
 
@@ -102,13 +108,10 @@ void main() {
   testWidgets('menampilkan timestamp dari data ekstra pada foto',
       (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const VerificationPage(
-          extra: VerificationExtra(
-            timestampLabel: '12 Sep 2026, 14.32 WIB',
-            imagePath: '/tmp/bukti.jpg',
-          ),
+      _verificationApp(
+        const VerificationExtra(
+          timestampLabel: '12 Sep 2026, 14.32 WIB',
+          imagePath: '/tmp/bukti.jpg',
         ),
       ),
     );
@@ -143,7 +146,10 @@ void main() {
     );
 
     await tester.pumpWidget(
-      MaterialApp.router(theme: AppTheme.light(), routerConfig: router),
+      ProviderScope(
+        child:
+            MaterialApp.router(theme: AppTheme.light(), routerConfig: router),
+      ),
     );
     await tester.pumpAndSettle();
 

@@ -28,6 +28,7 @@ class RegisterPage extends ConsumerStatefulWidget {
 
 class _RegisterPageState extends ConsumerState<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -40,9 +41,26 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     r'^[\w\.-]+@[\w\.-]+\.\w+$',
   );
 
+  static final RegExp _usernameRegex = RegExp(
+    r'^[a-z0-9_]{3,20}$',
+  );
+
+  String? _validateUsername(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return AppStrings.errorUsernameInvalid;
+    }
+    if (!_usernameRegex.hasMatch(value.trim())) {
+      return AppStrings.errorUsernameInvalid;
+    }
+    return null;
+  }
+
   String? _validateName(String? value) {
     if (value == null || value.trim().isEmpty) {
       return AppStrings.errorNameRequired;
+    }
+    if (value.trim().length < 2) {
+      return AppStrings.errorDisplayNameTooShort;
     }
     return null;
   }
@@ -84,7 +102,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     setState(() => _isLoading = true);
     final AuthRepository repository = ref.read(authRepositoryProvider);
     final SignUpResult result = await repository.signUp(
-      name: _nameController.text,
+      username: _usernameController.text.trim().toLowerCase(),
+      displayName: _nameController.text,
       email: _emailController.text.trim(),
       password: _passwordController.text,
     );
@@ -99,12 +118,16 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         _showSnackBar(AppStrings.signUpConfirmationSent);
       case SignUpResult.alreadyRegistered:
         _showSnackBar(AppStrings.errorEmailRegistered);
+      case SignUpResult.usernameTaken:
+        _showSnackBar(AppStrings.errorUsernameTaken);
       case SignUpResult.weakPassword:
         _showSnackBar(AppStrings.errorWeakPassword);
+      case SignUpResult.rateLimited:
+        _showSnackBar(AppStrings.errorRateLimitExceeded);
       case SignUpResult.networkError:
         _showSnackBar(AppStrings.errorNetwork);
       case SignUpResult.error:
-        _showSnackBar(AppStrings.errorLoginFailed);
+        _showSnackBar(AppStrings.genericError);
     }
   }
 
@@ -148,6 +171,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
 
   @override
   void dispose() {
+    _usernameController.dispose();
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -186,6 +210,15 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                       style: AppTypography.bodyMd,
                     ),
                     const SizedBox(height: AppSpacing.xl),
+                    CustomTextField(
+                      label: AppStrings.usernameLabel,
+                      hint: AppStrings.usernameHint,
+                      prefixIcon: LucideIcons.at_sign,
+                      controller: _usernameController,
+                      validator: _validateUsername,
+                      keyboardType: TextInputType.text,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
                     CustomTextField(
                       label: AppStrings.nameLabel,
                       hint: AppStrings.nameHint,

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 
+import '../../../../core/constants/app_enums.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
@@ -12,17 +13,73 @@ import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/app_bar_and_loading_widgets.dart';
 import '../../../../core/widgets/status_widgets.dart';
 import '../data/activity_demo_data.dart';
+import '../data/activity_detail_extra.dart';
 
 /// Halaman detail satu aktivitas pembuangan sampah.
 class ActivityDetailPage extends StatelessWidget {
   /// Membuat halaman detail aktivitas.
-  const ActivityDetailPage({super.key, this.activityId = '1'});
+  const ActivityDetailPage({super.key, this.activityId = '1', this.extra});
 
   /// Identitas aktivitas yang dibuka.
   final String activityId;
 
+  /// Data real dari daftar aktivitas (null bila dari demo).
+  final ActivityDetailExtra? extra;
+
   @override
   Widget build(BuildContext context) {
+    final ActivityDetailExtra? extra = this.extra;
+    if (extra != null) {
+      final StatusType statusType = switch (extra.status) {
+        WasteLogStatus.verified => StatusType.success,
+        WasteLogStatus.pending => StatusType.warning,
+        WasteLogStatus.rejected => StatusType.error,
+      };
+      final String statusLabel = switch (extra.status) {
+        WasteLogStatus.verified => AppStrings.activityStatusSuccess,
+        WasteLogStatus.pending => AppStrings.activityStatusPending,
+        WasteLogStatus.rejected => AppStrings.verificationFailed,
+      };
+      return Scaffold(
+        appBar: const CustomAppBar(
+          title: AppStrings.activityDetailTitle,
+          leading: LucideIcons.arrow_left,
+        ),
+        body: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            children: <Widget>[
+              _RealStatusHeader(
+                statusType: statusType,
+                statusLabel: statusLabel,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              Text(extra.description, style: AppTypography.headlineMd),
+              const SizedBox(height: AppSpacing.xl),
+              _DetailRow(
+                icon: LucideIcons.calendar,
+                label: AppStrings.activityDetailDateLabel,
+                value: formatIndonesianDate(extra.date),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              _DetailRow(
+                icon: LucideIcons.map_pin,
+                label: AppStrings.activityDetailCheckpointLabel,
+                value: extra.checkpointName,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              _DetailRow(
+                icon: LucideIcons.coins,
+                label: AppStrings.activityDetailPointLabel,
+                value: '+${formatIndonesianNumber(extra.points)} '
+                    '${AppStrings.rewardPointSuffix}',
+              ),
+              const SizedBox(height: AppSpacing.xl),
+            ],
+          ),
+        ),
+      );
+    }
     ActivityDemo? found;
     for (final ActivityDemo demo in demoActivities) {
       if (demo.id == activityId) {
@@ -67,6 +124,54 @@ class ActivityDetailPage extends StatelessWidget {
             const SizedBox(height: AppSpacing.xl),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Header status aktivitas dari waste log real.
+class _RealStatusHeader extends StatelessWidget {
+  const _RealStatusHeader({
+    required this.statusType,
+    required this.statusLabel,
+  });
+
+  final StatusType statusType;
+  final String statusLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+        border: Border.all(color: AppColors.borderLight),
+      ),
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 56,
+            height: 56,
+            decoration: const BoxDecoration(
+              color: AppColors.secondaryContainer,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              LucideIcons.recycle,
+              size: 28,
+              color: AppColors.primary,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          const Expanded(
+            child: Text(
+              AppStrings.activityStatusTitle,
+              style: AppTypography.labelLg,
+            ),
+          ),
+          StatusChip(label: statusLabel, type: statusType),
+        ],
       ),
     );
   }

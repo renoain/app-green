@@ -78,6 +78,7 @@ flutter:
     - assets/icons/custom/
     - assets/splash/
     - assets/app_icon/
+    - .env
   fonts:
     - family: Manrope
       fonts:

@@ -63,10 +63,20 @@ dan Geist sesuai file TTF.
 | font_geist_medium.ttf          | Geist   | 500    | Ada    |
 | font_geist_semibold.ttf        | Geist   | 600    | Ada    |
 
+Catatan: Manrope dipakai untuk heading, Geist untuk body (lihat
+lib/core/theme/app_typography.dart).
+
 ### Icon Custom (MVP)
 
+Ikon standar aplikasi memakai package `lucide_icons` (tidak perlu disimpan
+di assets). Aset SVG custom hanya untuk ikon yang tidak tersedia di lucide
+dan logo/ilustrasi.
+
 TBD: icon-icon yang perlu dibuat:
+- Ikon Google sign-in (ic_google.svg) - wajib untuk tombol "Masuk/Daftar
+  dengan Google".
 - Logo Go Green (logo_go_green.svg)
+- Logo Go Green mono (logo_go_green_mono.svg)
 - Checkpoint (ic_checkpoint.svg)
 - Camera (ic_camera.svg)
 - Leaf / recycle (ic_leaf.svg)
@@ -81,9 +91,11 @@ TBD: icon-icon yang perlu dibuat:
 ### Images (MVP)
 
 TBD: gambar yang perlu disiapkan:
-- Onboarding (3 gambar)
-- Empty state (1-2 gambar)
-- Splash background (opsional)
+- Ilustrasi onboarding (img_onboarding_1.svg, img_onboarding_2.svg,
+  img_onboarding_3.svg)
+- Empty state (img_empty_state.svg)
+- Error state (img_error_state.svg)
+- Pola daun latar (img_leaf_pattern.svg)
 
 Catatan: beberapa gambar referensi di `assets/images/ref/` sementara
 dipakai langsung di halaman Home sebagai aset produksi (hero banner dan
@@ -93,9 +105,14 @@ thumbnail artikel) sampai aset final tersedia. Gambar yang dipakai:
 Path konstanta ada di `AppAssets` (homeBannerHero, articleThumb1,
 articleThumb2). Ganti dengan aset produksi akhir ketika tersedia.
 
+### Splash
+
+- `splash_logo.png` - logo pada splash screen.
+
 ### App Icon
 
-TBD: icon aplikasi Android dan iOS.
+- `app_icon.png` (1024x1024) sebagai sumber, diturunkan ke resolusi
+  Android (mipmap) dan iOS.
 
 ## Aturan
 

@@ -1,6 +1,7 @@
 // Widget test halaman poin dan reward.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -14,11 +15,14 @@ void main() {
   testWidgets('menampilkan judul, saldo, reward, dan riwayat poin',
       (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const PointsPage(),
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          home: const PointsPage(),
+        ),
       ),
     );
+    await tester.pumpAndSettle();
 
     expect(find.text(AppStrings.pointsTitle), findsOneWidget);
     expect(find.text('250'), findsOneWidget);
@@ -45,11 +49,13 @@ void main() {
 
   testWidgets('membuka detail saat reward ditekan', (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp.router(
-        theme: AppTheme.light(),
-        routerConfig: GoRouter(
-          initialLocation: '/points',
-          routes: appRoutes,
+      ProviderScope(
+        child: MaterialApp.router(
+          theme: AppTheme.light(),
+          routerConfig: GoRouter(
+            initialLocation: '/points',
+            routes: appRoutes,
+          ),
         ),
       ),
     );

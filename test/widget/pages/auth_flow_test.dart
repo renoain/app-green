@@ -83,7 +83,7 @@ void main() {
     await tester.tap(find.byType(PrimaryButton));
     await tester.pump();
 
-    expect(find.text(AppStrings.errorEmailRequired), findsOneWidget);
+    expect(find.text(AppStrings.loginIdentityRequired), findsOneWidget);
     expect(find.text(AppStrings.errorPasswordRequired), findsOneWidget);
   });
 
@@ -104,10 +104,11 @@ void main() {
     await tester.pumpWidget(_app('/register'));
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byType(CustomTextField).at(0), 'Budi');
-    await tester.enterText(find.byType(CustomTextField).at(1), 'budi@mail.com');
-    await tester.enterText(find.byType(CustomTextField).at(2), 'rahasia123');
-    await tester.enterText(find.byType(CustomTextField).at(3), 'berbeda999');
+    await tester.enterText(find.byType(CustomTextField).at(0), 'budi_hijau');
+    await tester.enterText(find.byType(CustomTextField).at(1), 'Budi');
+    await tester.enterText(find.byType(CustomTextField).at(2), 'budi@mail.com');
+    await tester.enterText(find.byType(CustomTextField).at(3), 'rahasia123');
+    await tester.enterText(find.byType(CustomTextField).at(4), 'berbeda999');
     await tester.ensureVisible(find.byType(PrimaryButton));
     await tester.tap(find.byType(PrimaryButton));
     await tester.pump();
@@ -119,10 +120,11 @@ void main() {
     await tester.pumpWidget(_app('/register'));
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byType(CustomTextField).at(0), 'Budi');
-    await tester.enterText(find.byType(CustomTextField).at(1), 'budi@mail.com');
-    await tester.enterText(find.byType(CustomTextField).at(2), 'rahasia123');
+    await tester.enterText(find.byType(CustomTextField).at(0), 'budi_hijau');
+    await tester.enterText(find.byType(CustomTextField).at(1), 'Budi');
+    await tester.enterText(find.byType(CustomTextField).at(2), 'budi@mail.com');
     await tester.enterText(find.byType(CustomTextField).at(3), 'rahasia123');
+    await tester.enterText(find.byType(CustomTextField).at(4), 'rahasia123');
     await tester.ensureVisible(find.byType(PrimaryButton));
     await tester.tap(find.byType(PrimaryButton));
     await tester.pump(const Duration(milliseconds: 900));

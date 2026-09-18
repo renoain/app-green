@@ -91,6 +91,10 @@ class AppStrings {
   static const String errorWeakPassword =
       'Kata sandi terlalu lemah. Gunakan kombinasi yang lebih kuat.';
 
+  /// Pesan saat registrasi dibatasi sementara karena terlalu sering mencoba.
+  static const String errorRateLimitExceeded =
+      'Terlalu banyak percobaan. Tunggu beberapa saat lalu coba lagi.';
+
   /// Pesan setelah registrasi yang butuh konfirmasi email.
   static const String signUpConfirmationSent =
       'Pendaftaran berhasil. Periksa email untuk konfirmasi sebelum masuk.';
@@ -109,6 +113,42 @@ class AppStrings {
 
   /// Error nama kosong.
   static const String errorNameRequired = 'Nama wajib diisi';
+
+  /// Error nama tampilan terlalu pendek.
+  static const String errorDisplayNameTooShort = 'Nama minimal 2 karakter';
+
+  /// Label input username.
+  static const String usernameLabel = 'Username';
+
+  /// Hint input username.
+  static const String usernameHint = 'cth: warga_hijau';
+
+  /// Error username tidak valid.
+  static const String errorUsernameInvalid =
+      'Username 3-20 karakter: huruf kecil, angka, underscore, tanpa spasi';
+
+  /// Error username sudah dipakai user lain.
+  static const String errorUsernameTaken =
+      'Username sudah dipakai. Coba username lain.';
+
+  /// Label input login email atau username.
+  static const String loginIdentityLabel = 'Email atau Username';
+
+  /// Hint input login email atau username.
+  static const String loginIdentityHint = 'nama@email.com atau username';
+
+  /// Error login email/username kosong.
+  static const String loginIdentityRequired =
+      'Email atau username wajib diisi';
+
+  /// Label input nomor telepon.
+  static const String phoneLabel = 'Nomor Telepon';
+
+  /// Hint input nomor telepon.
+  static const String phoneHint = '08xxxxxxxxxx (opsional)';
+
+  /// Error nomor telepon tidak valid.
+  static const String errorPhoneInvalid = 'Nomor telepon tidak valid';
 
   /// Label input konfirmasi password.
   static const String confirmPasswordLabel = 'Konfirmasi Kata Sandi';
@@ -161,6 +201,73 @@ class AppStrings {
 
   /// Label tombol aksi hero banner di Home.
   static const String homeHeroCta = 'Mulai Sekarang';
+
+  /// Label kecil di atas judul hero banner Home (Stitch).
+  static const String homeHeroEyebrow = 'Ayo Mulai!';
+
+  /// Judul kartu ringkasan poin di Home (Stitch).
+  static const String homeTotalPointsTitle = 'Total Poin Kamu';
+
+  /// Tombol tukar reward di kartu poin Home.
+  static const String homeExchangeReward = 'Tukar Reward';
+
+  /// Tombol lihat riwayat di kartu poin Home.
+  static const String homeViewHistory = 'Lihat Riwayat';
+
+  /// Nilai stat sampah terpilah di Home.
+  static const String homeStatWasteValue = '12,5 kg';
+
+  /// Label stat sampah terpilah di Home.
+  static const String homeStatWasteLabel = 'Sampah Terpilah';
+
+  /// Nilai stat karbon dihindari di Home.
+  static const String homeStatCarbonValue = '35 kg';
+
+  /// Label stat karbon dihindari di Home.
+  static const String homeStatCarbonLabel = 'Karbon Dihindari';
+
+  /// Nilai stat pohon selamat di Home.
+  static const String homeStatTreeValue = '5';
+
+  /// Label stat pohon selamat di Home.
+  static const String homeStatTreeLabel = 'Pohon Selamat';
+
+  /// Judul misi mingguan di Home.
+  static const String homeMissionTitle = 'Misi Hijau Mingguan';
+
+  /// Deskripsi misi mingguan di Home.
+  static const String homeMissionDesc =
+      'Kumpulkan 5 kg sampah anorganik minggu ini';
+
+  /// Progres terkumpul misi mingguan di Home.
+  static const String homeMissionCollected = '3,25 kg terkumpul';
+
+  /// Target misi mingguan di Home.
+  static const String homeMissionTarget = 'Target: 5,0 kg';
+
+  /// Judul section aktivitas terkini di Home.
+  static const String homeLatestActivity = 'Aktivitas Terkini';
+
+  /// Label ringkas lihat semua (Stitch memakai kata pendek).
+  static const String seeAllShort = 'Semua';
+
+  /// Judul setoran botol plastik demo di Home.
+  static const String homeActivity1Title = 'Setor Botol Plastik (PET)';
+
+  /// Waktu setoran botol plastik demo di Home.
+  static const String homeActivity1Time = 'Hari ini, 08.30';
+
+  /// Judul setoran kertas karton demo di Home.
+  static const String homeActivity2Title = 'Setor Kertas Karton';
+
+  /// Waktu setoran kertas karton demo di Home.
+  static const String homeActivity2Time = 'Kemarin, 14.15';
+
+  /// Label status terverifikasi di Home.
+  static const String homeVerifiedLabel = 'Terverifikasi';
+
+  /// Judul section artikel dan edukasi di Home.
+  static const String homeArticleSection = 'Artikel & Edukasi Hijau';
 
   /// Deskripsi kartu aksi buang sampah.
   static const String quickActionWasteDesc = 'Ambil foto di checkpoint terdekat';
@@ -290,6 +397,20 @@ class AppStrings {
   static const String wasteGpsOutOfRadius =
       'Kamu berada di luar radius checkpoint (maks 100 m). Dekat ke lokasi checkpoint lalu ambil ulang.';
 
+  /// Label singkat status lokasi "di luar radius" pada kartu status GPS.
+  static const String wasteGpsOutsideLabel = 'Di luar radius';
+
+  /// Pesan foto sudah pernah dikirim (hash duplikat).
+  static const String errorPhotoDuplicate =
+      'Foto ini sudah pernah dikirim sebelumnya.';
+
+  /// Pesan melebihi batas kirim per hari.
+  static const String errorRateLimitReached =
+      'Kamu sudah mencapai batas kirim hari ini. Coba lagi besok.';
+
+  /// Label indikator foto sudah terpasang pada container upload.
+  static const String photoAttachedLabel = 'Foto terpasang';
+
   /// Judul halaman ambil foto.
   static const String captureTitle = 'Ambil Foto';
 
@@ -349,6 +470,9 @@ class AppStrings {
 
   /// Judul section riwayat poin.
   static const String pointsHistoryTitle = 'Riwayat Poin';
+
+  /// Pesan saat riwayat poin masih kosong.
+  static const String pointsHistoryEmpty = 'Belum ada riwayat poin.';
 
   /// Nama reward paket sembako.
   static const String rewardSembako = 'Paket Sembako';
@@ -428,6 +552,12 @@ class AppStrings {
   /// Label status di header detail aktivitas.
   static const String activityStatusTitle = 'Status';
 
+  /// Awalan deskripsi aktivitas dari waste log ("Buang sampah ...").
+  static const String activityLogPrefix = 'Buang sampah';
+
+  /// Kata sambung deskripsi aktivitas ("... di ...").
+  static const String activityLogAt = 'di';
+
   /// --- Article ---
 
   /// Judul halaman artikel.
@@ -479,13 +609,6 @@ class AppStrings {
   /// Deskripsi notifikasi di Pengaturan.
   static const String settingsNotificationDesc =
       'Ingatkan saat ada poin baru atau reward.';
-
-  /// Label mode gelap di Pengaturan.
-  static const String settingsDarkMode = 'Mode Gelap';
-
-  /// Deskripsi mode gelap di Pengaturan.
-  static const String settingsDarkModeDesc =
-      'Gunakan tampilan gelap (segera hadir).';
 
   /// Judul section informasi di Pengaturan.
   static const String settingsInfoTitle = 'Informasi';
@@ -582,10 +705,10 @@ class AppStrings {
   static const String onboardingDesc2 = 'Tukarkan poin dengan sembako, voucher, dan e-wallet.';
 
   /// Judul slide onboarding ketiga.
-  static const String onboardingTitle3 = 'Bukti Anti-Edit';
+  static const String onboardingTitle3 = 'Dampak untuk Bumi';
 
   /// Deskripsi slide onboarding ketiga.
-  static const String onboardingDesc3 = 'Foto bukti diamankan dengan GPS, timestamp server, dan hash.';
+  static const String onboardingDesc3 = 'Setiap buang sampah dengan benar mengurangi tumpukan liar dan menjaga lingkungan.';
 
   /// Tombol mulai.
   static const String startButton = 'Mulai';
@@ -607,4 +730,41 @@ class AppStrings {
 
   /// Teks generic error.
   static const String genericError = 'Terjadi kesalahan. Silakan coba lagi.';
+
+  /// Judul section kategori sampah di halaman Buang Sampah.
+  static const String wasteCategoryTitle = 'Kategori Sampah';
+
+  /// Label kategori organik.
+  static const String wasteCategoryOrganik = 'Organik';
+
+  /// Label kategori anorganik.
+  static const String wasteCategoryAnorganik = 'Anorganik';
+
+  /// Label kategori daur ulang.
+  static const String wasteCategoryDaurUlang = 'Daur Ulang';
+
+  /// Label kategori B3.
+  static const String wasteCategoryB3 = 'B3';
+
+  /// Pesan saat daftar checkpoint kosong.
+  static const String wasteCheckpointEmpty =
+      'Belum ada checkpoint di sekitarmu. Coba muat ulang.';
+
+  /// Pesan saat daftar checkpoint gagal dimuat.
+  static const String wasteCheckpointError =
+      'Gagal memuat checkpoint. Periksa koneksi lalu coba lagi.';
+
+  /// Pesan saat posisi GPS tidak dapat diambil di halaman Waste.
+  static const String wastePositionFailed =
+      'Lokasi tidak dapat diambil. Pastikan GPS aktif lalu muat ulang.';
+
+  /// Pesan wajib login sebelum kirim bukti.
+  static const String wasteNeedLogin =
+      'Masuk dulu untuk mengirim bukti buang sampah.';
+
+  /// Pesan kirim bukti berhasil.
+  static const String wasteSubmitSuccess = 'Bukti terkirim. Poin menunggumu.';
+
+  /// Hint jarak checkpoint pada daftar.
+  static const String wasteDistanceHint = 'jarak';
 }

@@ -1,6 +1,7 @@
 // Widget test halaman daftar dan detail artikel.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -11,11 +12,13 @@ import 'package:go_green/features/article/presentation/pages/article_detail_page
 import 'package:go_green/features/article/presentation/pages/article_page.dart';
 
 Widget _articleRouter() {
-  return MaterialApp.router(
-    theme: AppTheme.light(),
-    routerConfig: GoRouter(
-      initialLocation: '/article',
-      routes: appRoutes,
+  return ProviderScope(
+    child: MaterialApp.router(
+      theme: AppTheme.light(),
+      routerConfig: GoRouter(
+        initialLocation: '/article',
+        routes: appRoutes,
+      ),
     ),
   );
 }

@@ -17,8 +17,16 @@ import 'package:go_green/features/home/presentation/pages/home_page.dart';
 import '../../support/fake_auth_repository.dart';
 
 class _AuthenticatedAuth extends AuthNotifier {
-  _AuthenticatedAuth(String email)
-      : super(FakeAuthRepository(session: AuthSession(userEmail: email)));
+  _AuthenticatedAuth(String email, {String? displayName, String? username})
+      : super(
+          FakeAuthRepository(
+            session: AuthSession(
+              userEmail: email,
+              displayName: displayName,
+              username: username,
+            ),
+          ),
+        );
 }
 
 void main() {
@@ -79,5 +87,36 @@ void main() {
 
     expect(find.text(AppStrings.homeLoginNotice), findsNothing);
     expect(find.byType(HomePage), findsOneWidget);
+  });
+
+  testWidgets('nama tampilan muncul di header Home saat sudah login',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      buildApp(
+        overrides: <Override>[
+          authNotifierProvider.overrideWith(
+            (ref) => _AuthenticatedAuth(
+              'budi@mail.com',
+              displayName: 'Budi Hijau',
+              username: 'budi_hijau',
+            ),
+          ),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppStrings.homeLoginNotice), findsNothing);
+    expect(find.text('Budi Hijau'), findsOneWidget);
+    expect(find.text(AppStrings.greeting), findsOneWidget);
+  });
+
+  testWidgets('belum login: header menampilkan nama tamu + notice',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(buildApp());
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppStrings.guestName), findsOneWidget);
+    expect(find.text(AppStrings.homeLoginNotice), findsOneWidget);
   });
 }

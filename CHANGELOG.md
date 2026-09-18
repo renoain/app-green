@@ -1,5 +1,599 @@
 # CHANGELOG - Go Green
 
+## [2026-09-19] - Push migrasi 015-016 ke Supabase remote
+
+Status: Selesai
+
+File yang diubah:
+- Tidak ada perubahan file (hanya `supabase db push` ke remote).
+
+Catatan:
+- Migration list remote kini 001-016 sinkron dengan local (015 sudah ada
+  di remote sebelumnya; push ini menerapkan 016).
+- Tabel articles + policy points_insert_own (earn/redeem) + kolom
+  waste_logs item_type/source kini aktif di remote.
+
+Verifikasi:
+- migration list: 001-016 Local = Remote.
+
+## [2026-09-19] - Audit repo: restore PROTOCOL, migrasi 015-016, radius aktif
+
+Status: Selesai (migration 015-016 perlu `supabase db push` manual; uji device fisik)
+
+Temuan audit:
+- PROTOCOL.md terhapus di working copy (restore dari index, isi utuh).
+- Migration 015_articles_and_points_redeem.sql (tabel articles + seed 4
+  artikel + policy points_insert_own earn/redeem) belum tercatat di
+  CHANGELOG/docs dan belum di-push ke remote.
+- File 003 diedit langsung (tambah item_type + source) padahal sudah
+  applied di remote sehingga kolom tidak pernah sampai ke remote.
+- enforceGpsRadius masih false (radius nonaktif) setelah masa uji submit.
+- Folder build_old_20260918/ (artefak build lama, untracked) mengotori repo.
+
+File yang dibuat:
+- supabase/migrations/016_waste_logs_item_type_source.sql (dibuat):
+  ALTER TABLE ADD COLUMN IF NOT EXISTS item_type + source (idempoten).
+
+File yang diubah:
+- PROTOCOL.md (direstore): file kembali ada, isi sesuai index.
+- supabase/migrations/003_create_waste_logs.sql (dikembalikan): revert ke
+  versi applied (tanpa item_type/source; kolom pindah ke 016).
+- lib/core/constants/app_values.dart (diedit): enforceGpsRadius false ke
+  true; anti-kecurangan radius aktif lagi (blokir ke kamera/verifikasi/
+  submit bila di luar radius, jarak tetap tampil).
+- .gitignore (diedit): tambah build_old_20260918/.
+- docs/DATABASE_SCHEMA.md (diedit): RLS points ikut 015, section 3.7
+  articles baru, section 7 catat 014 sudah push + 015/016 menunggu push;
+  versi 1.2 ke 1.3.
+- docs/ARCHITECTURE.md (diedit): migration 001-012 ke 001-016, tabel
+  articles di 10.1, RLS points ikut 015 di 10.2.
+- docs/UI_PAGES.md (diedit): catatan policy Poin ikut 015.
+
+Catatan:
+- Hapus fisik build_old_20260918/ gagal (handle dikunci Gradle daemon:
+  java PID 5608/23204, access denied). Sudah di-gitignore; hapus manual
+  setelah IDE/daemon Gradle ditutup.
+- Tanpa `supabase db push`, kolom item_type/source + tabel articles +
+  policy redeem belum ada di remote. Jalankan push sebelum uji device.
+- Risiko MVP tetap: insert earn/redeem via klien (batas 50). Pengerasan
+  fase lanjut: trigger/RPC saat verified + cabut policy.
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue; sempat 5
+  error di article_detail_page/app_router, sudah diperbaiki)
+- hasil test: OK (149 test lulus; sempat 4 gagal di article_page_test
+  karena kurang ProviderScope, sudah diperbaiki)
+
+## [2026-09-18] - Push migrasi 014 ke Supabase remote
+
+Status: Selesai
+
+File yang diubah:
+- Tidak ada perubahan file (hanya `supabase db push` ke remote).
+
+Catatan:
+- Migration list remote kini 001-014 sinkron dengan local.
+- Policy points_insert_own_earn aktif di remote; submit waste kini bisa
+  mencatat poin earn dari klien.
+- Verifikasi: migration list Local = Remote 001-014.
+
+## [2026-09-18] - Poin langsung saat submit + Aktivitas/Poin real
+
+Status: Selesai (migration 014 perlu `supabase db push` manual; uji device fisik)
+
+Laporan: setelah foto terverifikasi user tidak dapat poin dan aktivitas kosong.
+
+Temuan:
+- SubmitWasteUsecase hanya menghitung estimasi poin tanpa insert ke tabel
+  points; tabel points pun tidak punya policy insert klien (by design awal
+  "pencatatan sisi server fase lanjut" yang belum ada). Jadi tidak ada baris
+  poin yang tercipta.
+- ActivityPage dan PointsPage masih memakai data demo (belum baca
+  waste_logs/points), sehingga hasil submit tidak tampil di mana pun.
+- Keputusan user: poin langsung saat submit (bukan saat verified admin).
+
+File yang dibuat:
+- supabase/migrations/014_points_insert_own_earn.sql (dibuat): policy
+  points_insert_own_earn (own user_id, type earn, amount 1-50). Belum
+  di-push ke remote (konvensi: push manual oleh user).
+- lib/features/activity/presentation/data/activity_detail_extra.dart (dibuat):
+  ActivityDetailExtra primitif (description/date/status/checkpointName/points).
+
+File yang diubah:
+- lib/features/waste/domain/usecases/submit_waste_usecase.dart (diedit): tambah
+  typedef RecordEarnPoints + param opsional recordEarnPoints; catat earn
+  (reference_id = log.id) setelah insert log. Null berarti estimasi saja.
+- lib/features/waste/domain/usecases/calculate_points_usecase.dart (diedit):
+  tambah const constructor.
+- lib/features/waste/presentation/providers/waste_provider.dart (diedit):
+  submitWasteUsecaseProvider wiring recordEarnPoints ke
+  PointsRemoteDatasource.addPoints (earn); CalculatePointsUsecase const.
+- lib/features/points/data/datasources/points_remote_datasource.dart (diedit):
+  client Supabase lazy (aman di test/demo).
+- lib/core/constants/app_strings.dart (diedit): tambah pointsHistoryEmpty,
+  activityLogPrefix, activityLogAt.
+- lib/features/points/presentation/pages/points_page.dart (diedit):
+  ConsumerStatefulWidget via pointsNotifierProvider (loading/error+retry+demo
+  fallback/data real + EmptyState; tamu selalu demo; reward masih demo).
+- lib/features/activity/presentation/pages/activity_page.dart (diedit):
+  ConsumerStatefulWidget via wasteRepository.getWasteLogs + nama checkpoint
+  (loading/error+retry/demo fallback; item real kirim ActivityDetailExtra).
+- lib/features/activity/presentation/pages/activity_detail_page.dart (diedit):
+  param extra opsional; render real bila ada (status verified/pending/rejected),
+  fallback demo seperti sebelumnya. Stateless, const tetap.
+- lib/core/router/app_router.dart (diedit): /activity/:id teruskan
+  ActivityDetailExtra via state.extra.
+- test/unit/features/waste/waste_submit_notifier_test.dart (diedit): 2 test
+  baru recordEarnPoints (tercatat + referensi log; tanpa pencatat = estimasi).
+- test/unit/features/waste/calculate_points_test.dart (diedit): const.
+- test/widget/pages/points_page_test.dart (diedit): ProviderScope.
+- test/widget/pages/activity_detail_page_test.dart (diedit): ProviderScope
+  untuk kasus router.
+- docs/DATABASE_SCHEMA.md (diedit): RLS points + catatan migration 014.
+- docs/ARCHITECTURE.md (diedit): RLS points MVP + alur submit/poin/aktivitas.
+- docs/UI_PAGES.md (diedit): section Poin & Reward, Aktivitas, Detail Aktivitas.
+
+Catatan:
+- Tanpa migration 014 di remote, submit gagal di langkah catat poin (log
+  waste tetap terinsert; retry submit kena duplikat hash). Jalankan
+  `supabase db push` dulu sebelum uji device.
+- Risiko MVP: user bisa insert earn sendiri via API (batas 50). Pengerasan
+  fase lanjut: trigger/RPC saat verified + cabut policy (lihat migration 014).
+- Timestamp server tercatat di DB; radius tetap nonaktif sementara
+  (enforceGpsRadius = false).
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (149 test lulus, termasuk 2 test baru recordEarnPoints)
+
+## [2026-09-18] - Radius GPS dimatikan sementara untuk uji submit device
+
+Status: Selesai
+
+File yang diubah:
+- lib/core/constants/app_values.dart (diedit): tambah flag enforceGpsRadius = false.
+- lib/features/waste/presentation/pages/waste_page.dart (diedit): blokir ke kamera hanya bila enforceGpsRadius true; jarak tetap tampil.
+- lib/features/waste/presentation/pages/capture_photo_page.dart (diedit): blokir ke verifikasi hanya bila enforceGpsRadius true.
+- lib/features/waste/domain/usecases/validate_photo_usecase.dart (diedit): cek jarak hanya bila enforceGpsRadius true (duplikat + rate limit tetap jalan).
+
+Catatan:
+- Untuk aktifkan lagi: set enforceGpsRadius = true (satu tempat).
+- Duplikat hash dan rate limit 5/hari tetap aktif saat uji submit.
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (147 test lulus)
+
+## [2026-09-18] - Wiring Buang Sampah ke Supabase (checkpoint real, radius aktif, submit real)
+
+Status: Selesai (kamera/GPS/submit wajib uji device fisik)
+
+File yang dibuat:
+- lib/features/waste/presentation/data/capture_extra.dart (dibuat): CaptureExtra (checkpointId/Name/lat/lng/radius/category) dari Waste ke kamera.
+- test/unit/features/waste/waste_submit_notifier_test.dart (dibuat): 3 test WasteSubmitNotifier (sukses poin 30, gagal duplikat, reset idle).
+
+File yang diubah:
+- lib/core/constants/app_strings.dart (diedit): tambah wasteCategoryTitle/Organik/Anorganik/DaurUlang/B3, wasteCheckpointEmpty/Error, wastePositionFailed, wasteNeedLogin, wasteSubmitSuccess, wasteDistanceHint.
+- lib/features/verification/presentation/data/verification_extra.dart (diedit): tambah checkpointId/Name/latitude/longitude/radius/category.
+- lib/features/checkpoints/presentation/providers/checkpoint_provider.dart (diedit): CheckpointNotifier tambah loadAll + inject repository.
+- lib/features/waste/presentation/providers/waste_provider.dart (diedit): tambah WasteSubmitNotifier + wasteSubmitNotifierProvider (submit via SubmitWasteUsecase, reset idle).
+- lib/features/waste/presentation/pages/waste_page.dart (diedit): ConsumerStatefulWidget, checkpoint dari checkpointNotifierProvider (fallback demo bila error/kosong), posisi GPS real + timeout 3 dtk, LocationStatusCard real (GeoUtils), CategoryChip kategori, blokir ke kamera bila di luar radius (snackbar wasteGpsOutOfRadius), kirim CaptureExtra ke /capture.
+- lib/features/waste/presentation/pages/capture_photo_page.dart (diedit): terima CaptureExtra, tegakkan radius GPS sebelum ke verifikasi, teruskan VerificationExtra lengkap (checkpoint, kategori, lat/lng).
+- lib/features/verification/presentation/pages/verification_page.dart (diedit): ConsumerStatefulWidget, ref.listen submit sukses (snackbar + ke Home) / gagal (snackbar error), _submit validasi imagePath/checkpoint/lokasi/login, ambil checkpoint via repository (fallback konstruksi dari extra), baca bytes foto, panggil WasteSubmitNotifier.
+- lib/core/router/app_router.dart (diedit): /capture teruskan CaptureExtra via state.extra.
+- lib/features/checkpoints/data/datasources/checkpoint_remote_datasource.dart (diedit): client Supabase lazy agar konstruksi provider aman di test/demo.
+- lib/features/waste/data/datasources/waste_remote_datasource.dart (diedit): client Supabase lazy (sama).
+- test/widget/pages/waste_page_test.dart (diedit): ProviderScope + FakeCheckpointRepository, pumpAndSettle setelah load async.
+- test/widget/pages/verification_page_test.dart (diedit): ProviderScope di semua kasus langsung, test kirim tanpa foto harapkan genericError (bukan ke Home).
+- docs/UI_PAGES.md (diedit): section Waste/Capture/Verifikasi update ke alur real.
+- docs/ARCHITECTURE.md (diedit): catat WasteSubmitNotifier + CaptureExtra/VerificationExtra + lazy client.
+
+Catatan:
+- Timestamp server tercatat di DB saat insert (server_timestamp default now()); preview masih waktu device.
+- Submit butuh login (Supabase currentUser); bila null arahkan ke Login dengan snackbar wasteNeedLogin.
+- Mode demo/test tanpa Supabase tetap jalan via fallback demo dan lazy client; submit real butuh Supabase + GPS device.
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (147 test lulus, termasuk 3 test baru WasteSubmitNotifier)
+
+## [2026-09-18] - Push migrasi 011-013 ke Supabase remote
+
+Status: Selesai
+
+File yang diubah:
+- Tidak ada perubahan file (hanya `supabase db push` ke remote).
+
+Catatan:
+- Migration list remote kini 001-013 sinkron dengan local (sebelumnya 011-013 hanya local).
+- Mencakup RPC login username (011), set admin (012), normalisasi username lowercase (013).
+- Langkah lanjut: uji login pakai username di device/emulator; bila masih gagal, cek `select email, username from profiles` untuk akun itu lalu UPDATE username manual.
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (144 test lulus)
+- migration list: 001-013 Local = Remote
+
+## [2026-09-18] - Perbaiki login username gagal: migrasi 013 + regression test
+
+Status: Selesai
+
+Laporan: login pakai email bisa, login pakai username gagal dengan notif
+"Email atau kata sandi salah" padahal password benar.
+
+Temuan:
+- Kode resolusi username -> email benar (identifier tanpa @ -> RPC
+  get_email_by_username dengan input lower+trim). Email bisa login
+  membuktikan password benar, sehingga gagalnya di tahap resolusi.
+- Penyebab utama: data. Akun lama menyimpan profiles.username
+  non-normalisasi (kapital/spasi/display name) karena trigger 007 tidak
+  me-lower() dan era AuthService sempat insert manual; RPC tidak cocok
+  lalu repository mengembalikan invalidCredentials.
+- Celah test: nol test menutup jalur login username (test lama hanya
+  identifier email; fake selalu sukses).
+
+File yang dibuat:
+- supabase/migrations/013_normalize_usernames.sql (dibuat): lower()
+  idempoten untuk username lama; baris yang tabrakan unik dilewati agar
+  migrasi tidak gagal (perbaiki manual per akun).
+- Catatan: db push manual oleh user (konvensi proyek); 013 belum
+  ter-apply ke remote sampai user menjalankan push.
+
+File yang diubah:
+- lib/features/auth/data/repositories/supabase_auth_repository.dart (diedit): tambah param opsional isDemoOverride (hanya seam test, produksi tidak berubah).
+- test/unit/features/auth/supabase_auth_repository_test.dart (diedit): stub datasource + 6 test baru (resolve sukses + normalisasi, username tak ada, RPC gagal, email lewati RPC, password salah, signUp username dipakai).
+- docs/DATABASE_SCHEMA.md (diedit): catatan diagnosis login username + migration 013.
+- docs/ARCHITECTURE.md (diedit): catatan data lama, pesan generik anti-enumerasi, cakupan test baru.
+
+Catatan:
+- Perbaikan data akun spesifik tetap butuh query manual: select email, username dari profiles untuk akun itu, lalu UPDATE username ke nilai benar bila masih salah (migrasi 013 hanya lower(), tidak menebak username yang dimaksud).
+- Pesan error login sengaja tetap generik; pembeda hanya di log terminal.
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (144 test lulus, termasuk 6 test baru login username)
+
+## [2026-09-18] - Username unik, nama tampil di Home/Profil, notice login kondisional
+
+Status: Selesai
+
+File yang diubah:
+- lib/features/auth/domain/entities/auth_session.dart (diedit): tambah displayName + username di sesi.
+- lib/features/auth/domain/repositories/auth_repository.dart (diedit): tambah SignUpResult.usernameTaken, tambah isUsernameTaken, currentAccount tambah username.
+- lib/features/auth/data/datasources/auth_remote_datasource.dart (diedit): tambah isUsernameTaken via query profiles ilike.
+- lib/features/auth/data/mappers/auth_error_mapper.dart (diedit): duplikat username (profiles_username_key/23505/pesan unik) dipetakan ke usernameTaken.
+- lib/features/auth/data/repositories/supabase_auth_repository.dart (diedit): signUp cek username dulu, sesi/state membawa displayName+username dari metadata, tambah isUsernameTaken.
+- lib/features/auth/presentation/pages/register_page.dart (diedit): tangani usernameTaken dengan snackbar khusus.
+- lib/core/constants/app_strings.dart (diedit): tambah errorUsernameTaken.
+- lib/features/home/presentation/pages/home_page.dart (diedit): tambah header sapaan + avatar nama; notice login hanya saat belum login.
+- lib/features/profile/presentation/pages/profile_page.dart (diedit): nama kartu profil dari sesi (displayName/username/prefix email), notice hanya saat belum login.
+- lib/features/profile/presentation/pages/edit_profile_page.dart (diedit): sesuaikan record currentAccount baru.
+- test/support/fake_auth_repository.dart (diedit): dukung displayName/username, takenUsernames, isUsernameTaken.
+- test/unit/features/auth/auth_error_mapper_test.dart (diedit): tambah 2 test usernameTaken.
+- test/widget/pages/profile_page_test.dart (diedit): cek fallback prefix email + test nama tampilan.
+- test/widget/pages/home_login_notice_test.dart (diedit): tambah test header nama + tamu.
+- docs/ARCHITECTURE.md (diedit): kontrak auth baru (sesi, usernameTaken, isUsernameTaken, header/nama).
+- docs/UI_PAGES.md (diedit): Register (username unik), Home (header nama + notice kondisional), Profile (nama tampilan + notice kondisional).
+
+Catatan:
+- Username harus beda: cek awal isUsernameTaken (case-insensitive) untuk pesan jelas; penegak akhir tetap unique constraint profiles_username_key (migration 011) sehingga race tetap aman.
+- Nama di Home/Profil: displayName ?? username ?? prefix email ?? nama tamu; tamu tetap "Warga Go Green".
+- Notice login: Home dan Profil hanya render LoginNoticeCard saat !isLoggedIn; saat sudah login tidak ada notice.
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (138 test lulus)
+
+## [2026-09-17 15:00] - Login username, display_name metadata, telepon profil, admin SQL
+
+Status: Selesai
+
+File yang dibuat:
+- supabase/migrations/011_login_username.sql (dibuat): unique username idempoten, RPC get_email_by_username (security definer, grant anon/authenticated), trigger handle_new_user normalisasi lowercase.
+- supabase/migrations/012_set_admin.sql (dibuat): update idempoten role admin untuk admin@green.com.
+
+File yang diubah:
+- lib/features/auth/domain/repositories/auth_repository.dart (diedit): signIn pakai identifier, signUp pakai username+displayName, tambah currentAccount dan updateProfile, tambah SignUpResult.rateLimited dipakai ulang.
+- lib/features/auth/data/datasources/auth_remote_datasource.dart (diedit): signup kirim metadata username+display_name, tambah findEmailByUsername via RPC dan updateUserMetadata.
+- lib/features/auth/data/repositories/supabase_auth_repository.dart (diedit): login username diselesaikan ke email di repository; updateProfile/currentAccount dengan logging tanpa data sensitif.
+- lib/features/auth/presentation/pages/login_page.dart (diedit): field Email atau Username tanpa validasi format email.
+- lib/features/auth/presentation/pages/register_page.dart (diedit): field username (regex lowercase 3-20) + nama tampilan (min 2), kirim username+display_name.
+- lib/features/profile/presentation/pages/edit_profile_page.dart (diedit): ConsumerStatefulWidget, prefill dari akun, field telepon opsional, email baca-saja, simpan via updateProfile.
+- lib/core/widgets/custom_text_field_widget.dart (diedit): tambah prop enabled (default true).
+- lib/core/constants/app_strings.dart (diedit): tambah usernameLabel/Hint, errorUsernameInvalid, errorDisplayNameTooShort, loginIdentityLabel/Hint/Required, phoneLabel/Hint, errorPhoneInvalid.
+- test/support/fake_auth_repository.dart (diedit): ikuti kontrak baru.
+- test/unit/features/auth/supabase_auth_repository_test.dart (diedit): panggilan signIn/signUp baru.
+- test/widget/pages/auth_flow_test.dart (diedit): field register 5 input, error identitas baru.
+- test/widget/pages/edit_profile_page_test.dart (diedit): cek field telepon, simpan tanpa ubah email.
+- docs/ARCHITECTURE.md (diedit): migration 001-012, kontrak auth baru, subbagian RPC login username.
+- docs/UI_PAGES.md (diedit): deskripsi Login, Register, Edit Profil baru.
+- docs/COMPONENT_LIBRARY.md (diedit): prop enabled CustomTextField.
+- docs/DATABASE_SCHEMA.md (diedit): catatan trigger lowercase, RPC, admin idempoten.
+
+Catatan:
+- display_name dan phone disimpan di user_metadata auth; tidak ada kolom/tabel/RLS baru sesuai batasan.
+- Deviasi dari rencana: (1) datasource tidak mengembalikan SignInResult (menjaga layering domain vs data; resolusi username di repository); (2) admin sebagai migration 012, bukan supabase/seed/ (folder seed tidak dikenal CLI dan edit 009 yang sudah applied tidak jalan ulang di remote).
+- db push TIDAK dijalankan (user menjalankan manual). Migration 011-012 belum ter-apply ke remote.
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (133 test lulus)
+
+## [2026-09-17 14:00] - Pesan khusus rate limit registrasi
+
+Status: Selesai
+
+File yang diubah:
+- lib/features/auth/domain/repositories/auth_repository.dart (diedit): tambah SignUpResult.rateLimited.
+- lib/features/auth/data/mappers/auth_error_mapper.dart (diedit): kode over_request_rate_limit/over_email_send_rate_limit/over_sms_send_rate_limit dan pesan rate limit dipetakan ke rateLimited.
+- lib/core/constants/app_strings.dart (diedit): tambah errorRateLimitExceeded.
+- lib/features/auth/presentation/pages/register_page.dart (diedit): tangani rateLimited dengan snackbar khusus.
+- test/unit/features/auth/auth_error_mapper_test.dart (diedit): test rate limit email mengharapkan rateLimited.
+
+Catatan:
+- Ditemukan dari log terminal user: AuthApiException over_email_send_rate_limit (429) setelah Confirm email dimatikan; percobaan ulang dengan alamat yang sama tetap dibatasi sampai jendela rate limit reset.
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (auth + auth_flow lulus)
+
+## [2026-09-17 13:00] - Perbaiki sign-up dan login gagal tanpa error jelas
+
+Status: Selesai
+
+File yang diubah:
+- lib/features/auth/data/mappers/auth_error_mapper.dart (diedit): mapping login tahan tanpa kode (pesan saja); mapping registrasi kenali AuthWeakPasswordException, kode user_already_exists/email_exists/identity_already_exists, dan varian pesan lemah/bocor (weak, leaked, compromised, breached); signup_disabled dan rate limit tetap error umum tetapi tercatat di log.
+- lib/features/auth/data/repositories/supabase_auth_repository.dart (diedit): tambah AppLogger.error di catch signIn/signUp/signInWithGoogle (email saja, tanpa password) dan debug hasil sign-up; error asli kini muncul di terminal.
+- lib/features/auth/data/datasources/auth_remote_datasource.dart (diedit): metadata username hanya dikirim bila tidak null.
+- lib/features/auth/presentation/pages/register_page.dart (diedit): error umum registrasi tampilkan genericError, bukan pesan login.
+- test/unit/features/auth/auth_error_mapper_test.dart (diedit): tambah 6 test (kredensial/belum-konfirmasi tanpa kode, AuthWeakPasswordException, user_already_exists, signup_disabled, rate limit).
+
+Catatan:
+- Hipotesis utama: password 123456 ditolak proteksi leaked-password Supabase sehingga user tidak pernah terbuat; mapper lama tidak mengenali varian pesannya dan menampilkan error umum.
+- Username metadata memang sudah dikirim sebelum perbaikan; trigger handle_new_user tidak tersentuh.
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (133 test lulus, termasuk 6 test baru)
+
+## [2026-09-17 12:00] - Redesign Home sesuai Stitch (tanpa ubah BottomNav)
+
+Status: Selesai
+
+File yang diubah:
+- lib/features/home/presentation/pages/home_page.dart (diedit): hero carousel Ayo Mulai + dots, kartu Total Poin Kamu + 3 stat, kartu Misi Hijau Mingguan 63%, Aktivitas Terkini 2 tile, Artikel & Edukasi Hijau; navigasi tetap via go_router; BottomNav dan routing tidak diubah.
+- lib/core/constants/app_strings.dart (diedit): tambah homeHeroEyebrow, homeTotalPointsTitle, homeExchangeReward, homeViewHistory, homeStatWasteValue/Label, homeStatCarbonValue/Label, homeStatTreeValue/Label, homeMissionTitle/Desc/Collected/Target, homeLatestActivity, seeAllShort, homeActivity1Title/Time, homeActivity2Title/Time, homeVerifiedLabel, homeArticleSection.
+- docs/UI_PAGES.md (diedit): deskripsi Home update ke section Stitch, catat pemetaan token existing dan BottomNav tidak diubah.
+
+Catatan:
+- Token Stitch dipetakan ke token existing (surfaceDim, tertiaryLight, surface, primary, borderLight, elevation level1, spacing, radius, typography); tidak ada token baru, tidak ada dependency baru, tidak ada aset baru, tidak ada komponen baru di lib/core/widgets/.
+- Asumsi teks kecil Stitch yang blur: 12,5 kg Sampah Terpilah, 35 kg Karbon Dihindari, 5 Pohon Selamat, 3,25 kg terkumpul / Target 5,0 kg.
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (127 test lulus)
+
+## [2026-09-16 11:30] - Slide 3 Onboarding Menjadi "Dampak untuk Bumi"
+
+Status: Selesai
+
+File yang diubah:
+- lib/features/onboarding/onboarding_page.dart (diedit): slide 3 memakai
+  ikon globe dan konten onboardingTitle3/onboardingDesc3.
+- lib/core/constants/app_strings.dart (diedit): ganti onboardingCtaTitle/
+  onboardingCtaDesc menjadi onboardingTitle3 ("Dampak untuk Bumi") dan
+  onboardingDesc3 ("Setiap buang sampah dengan benar mengurangi tumpukan
+  liar dan menjaga lingkungan.").
+
+Catatan:
+- Keputusan user: slide 3 tidak jadi CTA, melainkan pesan dampak
+  lingkungan ("Dampak untuk Bumi") agar menyentuh misi produk.
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (127 test lulus)
+
+## [2026-09-16 11:15] - Revert Visual Onboarding ke Ikon, Slide 3 Tetap CTA
+
+Status: Selesai
+
+File yang diubah:
+- lib/features/onboarding/onboarding_page.dart (diedit): visual slide
+  dikembalikan ke placeholder ikon (kotak 160x160 dengan icon lucide
+  recycle/gift/recycle). Slide 3 memakai konten CTA (onboardingCtaTitle/
+  onboardingCtaDesc, "Buang Sampah Sekarang").
+- lib/core/constants/app_assets.dart (diedit): onboarding1/2/3
+  dikembalikan ke path awal assets/images/onboarding_1/2/3.png
+  (belum disediakan; dipakai mengganti tampilan gambar ref yang dinilai
+  tidak cocok).
+- docs/ASSET_MANAGEMENT.md (diedit): catatan pemakaian sementara gambar
+  ref untuk onboarding dihapus, daftar TBD ilustrasi onboarding kembali
+  ke 3 file.
+
+Catatan:
+- Keputusan user: visual onboarding dengan gambar ref terlihat kurang
+  bagus sehingga dikembalikan ke desain ikon sebelumnya; hanya isi teks
+  slide 3 yang diganti menjadi CTA.
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (127 test lulus)
+
+## [2026-09-16 11:00] - Onboarding Pakai Gambar dari Assets dan Slide 3 Jadi CTA
+
+Status: Selesai
+
+File yang diubah:
+- lib/features/onboarding/onboarding_page.dart (diedit): ilustrasi slide
+  tidak lagi memakai ikon placeholder Lucide; diganti Image.asset dari
+  AppAssets dengan sudut membulat. Slide 3 (CTA) memakai gambar yang sama
+  dengan slide 1.
+- lib/core/constants/app_assets.dart (diedit): onboarding1/onboarding2/
+  onboarding3 diarahkan ke gambar folder referensi UI
+  (waste_illustration.png, reward_banner.png) karena file onboarding_
+  1/2/3.png belum tersedia.
+- lib/core/constants/app_strings.dart (diedit): ganti onboardingTitle3/
+  onboardingDesc3 menjadi onboardingCtaTitle/onboardingCtaDesc
+  ("Buang Sampah Sekarang").
+- docs/ASSET_MANAGEMENT.md (diedit): catatan pemakaian sementara gambar
+  referensi untuk onboarding dan daftar TBD disesuaikan (2 ilustrasi final,
+  tanpa slide ketiga khusus).
+
+Catatan:
+- Struktur onboarding tetap 3 halaman: slide 1 (buang sampah), slide 2
+  (tukar poin), slide 3 CTA (Buang Sampah Sekarang). Tombol slide 3 tetap
+  "Mulai" mengarah ke Home.
+- Gambar dipakai sampai aset final onboarding tersedia.
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (127 test lulus)
+- task UI: screenshot belum dilampirkan (belum dijalankan di device/browser)
+
+## [2026-09-16 10:15] - Sambungkan Project ke Supabase dan Migrasi Database
+
+Status: Selesai
+
+File yang diubah:
+- supabase/config.toml (dibuat): hasil supabase init; project_id go_green.
+- supabase/.temp/* (baru, digenerate CLI): project_ref, pooler_url, versi
+  komponen. Tidak dicommit (di .gitignore Supabase).
+- supabase/migrations/010_fix_rls_recursion.sql (baru): perbaikan
+  infinite recursion pada policy RLS.
+
+Catatan:
+- Project Supabase tujuan: bnwntvfeelwgardryjec ("renown's Project",
+  wilayah Seoul), sudah di-link via supabase link.
+- Migration 001-009 dari supabase/migrations/ berhasil di-push.
+- Seed data masuk: 3 checkpoint (CP-001 s/d CP-003) dan 5 reward.
+- Ditemukan bug: query SELECT ke public.checkpoints dan public.profiles
+  gagal dengan "infinite recursion detected in policy for relation
+  profiles" (42P17) meski fungsi role sudah security definer
+  (points/redemptions terbukti sehat). Penyebab: policy nyasar di luar
+  definisi kanonik. Migration 010 membersihkan semua policy tabel
+  publik Go Green lalu membuat ulang definisi kanonik (RK) dan fungsi
+  bantu role. Setelah 010, seluruh tabel bisa diakses via REST 200.
+- Bucket storage waste-photos (private) dan avatars (public) dibuat
+  via migration 008; bucket privat memang tidak tampil untuk anon.
+- Signup berhasil terhadap auth Supabase (user uji
+  sgo.green.test@gmail.com). Login belum bisa dites sampai email
+  dikonfirmasi; setelan "Confirm email" aktif di dashboard Supabase.
+- Telah dibuat user uji yang tidak merusak produksi; bisa dihapus dari
+  Authentication di dashboard bila tidak dipakai.
+
+Verifikasi:
+- hasil linter/analyze: tidak ada perubahan kode Dart pada task ini.
+- hasil test: tidak ada perubahan test pada task ini.
+- migration list: 001-010 Local = Remote.
+- REST (anon): checkpoints 200 (3 baris), rewards 200 (5 baris),
+  profiles/waste_logs/points/redemptions 200 (kosong).
+
+## [2026-09-16 10:45] - Hapus Toggle Mode Gelap (Segera Hadir) dari Pengaturan
+
+Status: Selesai
+
+File yang diubah:
+- lib/features/profile/presentation/pages/settings_page.dart (diedit): toggle
+  Mode Gelap dihapus karena belum tersedia; state _darkModeEnabled dan baris
+  switch ikut dihapus. Doc header halaman disesuaikan.
+- lib/core/constants/app_strings.dart (diedit): hapus settingsDarkMode dan
+  settingsDarkModeDesc yang tidak terpakai.
+- test/widget/pages/settings_page_test.dart (diedit): hapus asersi dan test
+  toggle mode gelap.
+
+Catatan:
+- Bagian "segera hadir" (mode gelap) tidak lagi ditampilkan di halaman
+  Pengaturan.
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (settings_page_test lulus)
+
+## [2026-09-16 10:30] - Layer Data-Domain-Presentation Waste, Checkpoint, Points, Reward
+
+Status: Selesai
+
+File yang diubah:
+- lib/core/constants/app_enums.dart (diedit): tambah enum WasteSource
+  (qrScan/manual/nfc) dengan fromDb default manual.
+- lib/core/constants/app_values.dart (diedit): tambah maxWasteLogsPerDay,
+  basePointsPerWaste, categoryBonusOrganik/Anorganik/DaurUlang/B3,
+  streakBonusThreshold, streakBonusPoints.
+- lib/core/constants/app_strings.dart (diedit): tambah wasteGpsOutsideLabel,
+  errorPhotoDuplicate, errorRateLimitReached, photoAttachedLabel.
+- lib/features/checkpoints/data/datasources/checkpoint_remote_datasource.dart
+  (baru): get/select checkpoint beserta pencarian nearby via GeoUtils.
+- lib/features/checkpoints/domain/repositories/checkpoint_repository.dart
+  dan data/repositories/checkpoint_repository_impl.dart (baru).
+- lib/features/checkpoints/domain/usecases/get_nearby_checkpoints_usecase.dart
+  (baru).
+- lib/features/checkpoints/presentation/providers/checkpoint_provider.dart
+  (baru): CheckpointNotifier (AsyncValue).
+- lib/features/checkpoints/presentation/widgets/checkpoint_tile.dart (baru).
+- lib/features/waste/domain/entities/waste_log.dart (diedit): tambah field
+  WasteSource source.
+- lib/features/waste/data/models/waste_log_model.dart (diedit): source pada
+  fromJson/toJson.
+- lib/features/waste/data/datasources/waste_remote_datasource.dart (diedit):
+  insertWasteLog menerima source; tambah checkDuplicateHash dan
+  countTodayWasteLogs.
+- lib/features/waste/domain/repositories/waste_repository.dart dan
+  data/repositories/waste_repository_impl.dart (baru).
+- lib/features/waste/domain/usecases/calculate_points_usecase.dart (baru):
+  poin dasar + bonus kategori + bonus streak.
+- lib/features/waste/domain/usecases/validate_photo_usecase.dart (baru):
+  cek duplikat hash, radius GPS (haversine murni Dart), rate limit.
+- lib/features/waste/domain/usecases/submit_waste_usecase.dart (baru):
+  hash SHA-256 -> validasi -> upload -> insert log -> hitung poin.
+- lib/features/waste/presentation/providers/waste_provider.dart (baru).
+- lib/features/waste/presentation/widgets/location_status_card.dart,
+  category_chip.dart, photo_upload_container.dart (baru).
+- lib/features/points/domain/entities/point.dart dan
+  data/models/point_model.dart (baru).
+- lib/features/points/presentation/providers/point_provider.dart (baru):
+  PointsNotifier (saldo + riwayat).
+- lib/features/rewards/data/datasources/reward_remote_datasource.dart (baru):
+  katalog reward + redeemReward yang mendelegasi ke PointsRemoteDatasource.
+- lib/features/rewards/presentation/providers/reward_provider.dart (baru).
+- lib/core/widgets/app_checkbox.dart, app_password_field.dart, app_icon.dart,
+  app_error_state.dart (baru).
+- lib/core/widgets/custom_text_field_widget.dart (diedit): tambah
+  onFieldSubmitted.
+- test/unit/features/waste/calculate_points_test.dart (baru).
+
+Catatan:
+- Mengisi gap arsitektur data-domain-presentation untuk Waste, Checkpoint,
+  Points, dan Reward tanpa mengubah kode lama yang sudah berjalan (opsi
+  "Isi gap saja").
+- app_button_test.dart yang sudah ada tidak diduplikasi.
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (128 test lulus, termasuk calculate_points_test)
+
+## [2026-09-15] - Perbaikan: Back Button Navigasi Free Routes
+
+Status: Selesai
+
+File yang diubah:
+- lib/features/home/presentation/pages/home_page.dart (diedit): navigasi dari
+  Home ke free routes yang seharusnya bisa kembali (editProfile, article,
+  articleDetail, scan) diganti dari context.goNamed menjadi context.pushNamed
+  agar halaman Home tetap ada di back stack.
+- lib/features/points/presentation/pages/points_page.dart (diedit): navigasi
+  dari Points ke rewardDetail diganti dari context.goNamed menjadi
+  context.pushNamed agar halaman Points tetap ada di back stack.
+- lib/features/article/presentation/pages/article_page.dart (diedit): navigasi
+  dari daftar artikel ke articleDetail diganti dari context.goNamed menjadi
+  context.pushNamed agar halaman daftar artikel tetap ada di back stack.
+- test/widget/pages/back_navigation_test.dart (baru): test regresi back button
+  untuk alur Home <> daftar artikel <> detail artikel dan Points <> detail
+  reward dengan appRoutes asli (StatefulShellRoute).
+
+Verifikasi:
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (120 test lulus, termasuk back_navigation_test)
+
 ## [2026-09-15] - Kecil: Posisi Cari Artikel & Navigasi Avatar Profile
 
 Status: Selesai

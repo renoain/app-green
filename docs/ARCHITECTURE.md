@@ -291,12 +291,12 @@ geolocator_platform_interface 4.3.0 (dev, untuk unit test):
 
 ## 10. Backend (Supabase) - Status Saat Ini
 
-Status: schema, RLS, dan storage disiapkan sebagai 9 migration berurut
-(supabase/migrations/001-009) mengikuti docs/DATABASE_SCHEMA.md sebagai
+Status: schema, RLS, dan storage disiapkan sebagai 16 migration berurut
+(supabase/migrations/001-016) mengikuti docs/DATABASE_SCHEMA.md sebagai
 sumber kebenaran. Email/password auth diaktifkan via dashboard Supabase
 (langkah manual). Kredensial dibaca dari .env (gitignored) atau
 --dart-define oleh supabase_service.dart; dilarang hardcode secret.
-Migration belum dijalankan ke database (dijalankan manual di SQL Editor).
+Migration dijalankan manual (supabase db push oleh user, bukan agent).
 
 ### 10.1 Tabel (lihat migration 001-006, docs/DATABASE_SCHEMA.md)
 
@@ -304,15 +304,18 @@ Migration belum dijalankan ke database (dijalankan manual di SQL Editor).
   on_auth_user_created -> handle_new_user
 - checkpoints (id, name, address, latitude, longitude, radius, qr_code,
   created_at)
-- waste_logs (id, user_id, checkpoint_id, category, photo_url, hash,
-  latitude, longitude, server_timestamp, status, verified_by,
-  verified_at, notes, created_at)
+- waste_logs (id, user_id, checkpoint_id, category, item_type, photo_url,
+  hash, latitude, longitude, server_timestamp, status, verified_by,
+  verified_at, notes, source, created_at); kolom source menyimpan asal data
+  (qr_scan / manual / nfc) dan dipakai untuk analytics.
 - points (id, user_id, amount, type, reference_id, description,
   created_at)
 - rewards (id, name, description, points_cost, stock, image_url,
   is_active, created_at)
 - redemptions (id, user_id, reward_id, status, qr_code, created_at,
   claimed_at)
+- articles (id, title, excerpt, content, cover_url, published_at,
+  created_at) + seed 4 artikel (migration 015)
 
 ### 10.2 RLS
 
@@ -321,7 +324,10 @@ Migration belum dijalankan ke database (dijalankan manual di SQL Editor).
   is_petugas, is_admin_or_petugas.
 - checkpoints: public read; tulis/ubah/hapus hanya admin.
 - waste_logs: user baca/insert sendiri; admin/petugas baca + update semua.
-- points: user baca sendiri; admin baca semua (pencatatan poin sisi server).
+- points: user baca sendiri + insert earn/redeem sendiri (MVP,
+  migration 015 menggantikan 014: type earn/redeem, amount 1-50);
+  admin baca semua. Pengerasan fase lanjut:
+  trigger/RPC sisi server saat verified + cabut insert klien.
 - rewards: public baca yang is_active; tulis/ubah/hapus hanya admin.
 - redemptions: user baca/insert sendiri; admin/petugas baca + update semua.
 
@@ -338,49 +344,146 @@ Migration belum dijalankan ke database (dijalankan manual di SQL Editor).
 - AI forensics.
 - Approval manual.
 
+### 10.5 Strategi Query Checkpoint Terdekat
+
+- Untuk MVP: ambil semua checkpoint (getAllCheckpoints) lalu hitung jarak
+  di sisi client memakai Geolocator.distanceBetween; filter yang di dalam
+  radius jangkauan.
+- Alasan: jumlah checkpoint MVP kecil (puluhan-ratusan), tidak butuh
+  dependency PostGIS, dan latensi tetap rendah. Detail di
+  docs/DATABASE_SCHEMA.md bagian 8.2.
+- PostGIS (ST_DWithin / earthdistance) baru dipakai nanti kalau jumlah
+  checkpoint sudah besar.
+
+### 10.6 Deep Link QR (Opsional, fase 2)
+
+- QR checkpoint hanya berisi URL deep link, bukan data mentah.
+- Android: App Links (assetlinks.json) mengarah ke skema custom
+  (misal go_green://checkpoint/<id> atau /checkpoint/<id>).
+- iOS: Universal Links (apple-app-site-association).
+- Di klien, go_router menangkap deep link dan memetakan ke route
+  /scan atau /waste dengan checkpoint_id terisi (source: qr_scan).
+
+### 10.7 NFC (Opsional, fase 2)
+
+- Tag NFC di checkpoint menuliskan URL yang sama dengan isi QR.
+- Saat tag didekatkan, aplikasi membuka URL tersebut sehingga alur
+  identik dengan scan QR (source: nfc).
+- Dipakai sebagai alternatif saat QR buram / kondisi kurang cahaya.
+
 ---
 
-### 10.5 Autentikasi (Auth)
+### 10.8 Autentikasi (Auth)
 
 Arsitektur auth berlapis presentation -> domain -> data:
 
 - Domain (lib/features/auth/domain/):
-  - entities/auth_session.dart: AuthSession (userEmail, isLoggedIn).
+  - entities/auth_session.dart: AuthSession (userEmail, displayName,
+    username, isLoggedIn). Nama tampilan diambil dari metadata auth
+    dengan fallback username / prefix email / nama tamu di widget.
   - repositories/auth_repository.dart: kontrak AuthRepository
-    (signIn, signUp, signOut, currentSession, authStateChanges) plus enum
-    hasil SignInResult / SignUpResult.
+    (signIn dengan identifier email/username, signUp dengan
+    username + displayName, signOut, isUsernameTaken, currentSession,
+    currentAccount (email/displayName/username/phone),
+    updateProfile, authStateChanges) plus enum hasil SignInResult /
+    SignUpResult (termasuk rateLimited dan usernameTaken).
 - Data (lib/features/auth/data/):
   - datasources/auth_remote_datasource.dart: membungkus Supabase Auth
-    (signInWithEmail, signUpWithEmail, signOut, currentSession,
-    authStateChanges) dengan SupabaseService.instance lazy.
+    (signInWithEmail, signUpWithEmail dengan metadata username +
+    display_name, findEmailByUsername via RPC, isUsernameTaken via
+    query profiles ilike, updateUserMetadata,
+    signOut, currentSession, authStateChanges) dengan
+    SupabaseService.instance lazy.
   - repositories/supabase_auth_repository.dart: implementasi
     AuthRepository; bila Supabase belum terinisialisasi (mode demo)
     mensimulasikan operasi (delay 800ms) agar UI & test tetap berfungsi.
+    Login username diselesaikan menjadi email di repository (bukan di
+    datasource) agar enum domain tidak bocor ke data layer. Registrasi
+    cek isUsernameTaken dulu (pesan jelas) dengan penegak akhir
+    constraint unik profiles_username_key di database.
   - mappers/auth_error_mapper.dart: memetakan AuthException/error jaringan
-    ke SignInResult/SignUpResult.
+    ke SignInResult/SignUpResult, termasuk duplikat username
+    (profiles_username_key / 23505 / pesan unik username) ke
+    SignUpResult.usernameTaken.
 - Presentation (lib/features/auth/presentation/):
   - providers/auth_provider.dart: authRepositoryProvider (AuthRepository)
     dan authNotifierProvider (AuthNotifier StateNotifier<AuthSession>);
-    mengikuti authStateChanges dari repository.
+    mengikuti authStateChanges dari repository (email + displayName +
+    username dari metadata).
 - Baris "profiles" dibuat otomatis oleh trigger handle_new_user setelah
-  signUp. Kredensial Supabase dibaca dari .env / --dart-define.
-- Dipakai Login/Register (form -> repository), Home (notice login
-  otomatis hilang saat login), dan Profile (menu kondisional login vs
-  logout).
+  signUp (username dinormalisasi lowercase, unik via constraint).
+  display_name dan phone hanya
+  tersimpan di user_metadata auth (tidak ada kolom baru di profiles).
+  Kredensial Supabase dibaca dari .env / --dart-define.
+- Dipakai Login (email atau username)/Register (username unik + nama
+  tampilan, usernameTaken menampilkan snackbar khusus),
+  Home (header sapaan + nama, notice login otomatis hilang saat login),
+  Profile (nama tampilan + email sesi, notice hanya saat belum login),
+  dan Edit Profil
+  (nama + telepon via updateProfile, email baca-saja).
 
-### 10.6 Data Layer (Datasource & Model)
+### 10.8.1 RPC Login Username (migration 011)
+
+- Supabase Auth hanya menerima email, sehingga login username memakai RPC
+  `get_email_by_username(p_username)` (SECURITY DEFINER, grant ke anon +
+  authenticated karena dipanggil sebelum login) yang mengembalikan email
+  dari join auth.users + profiles (case-insensitive).
+- Tradeoff: RPC membuka enumerasi username -> email; diterima untuk MVP,
+  perketat dengan rate limit bila disalahgunakan.
+- Data lama: akun yang dibuat sebelum migration 011 bisa menyimpan
+  username non-normalisasi (kapital/spasi/display name) karena trigger
+  007 tidak me-lower(); login username untuk akun itu gagal dengan
+  invalidCredentials meski password benar (login email tetap bisa).
+  Migration 013 menormalisasi ke lowercase (melewati baris yang
+  tabrakan unik, perbaiki manual). Pesan error login sengaja tetap
+  generik (anti-enumerasi); pembeda hanya di log
+  (`username tidak ditemukan` vs `Sign in gagal`).
+- Test: jalur login username ditutup unit test via stub datasource +
+  `isDemoOverride: false` (resolve sukses, username tak ada, RPC gagal,
+  identifier email lewati RPC, password salah, signUp username dipakai).
+- Migration 012_set_admin.sql mengeset role admin untuk admin@green.com
+  secara idempoten (pengganti edit 009 yang sudah ter-push).
+
+### 10.9 Data Layer (Datasource & Model)
 
 - Datasource per fitur di data/datasources/:
   - auth_remote_datasource.dart (signInWithEmail, signUpWithEmail,
     signInWithGoogle, signOut, getCurrentUser, getProfile).
+  - checkpoint_remote_datasource.dart (getAllCheckpoints,
+    getNearbyCheckpoints, getCheckpointById, getCheckpointByQrCode).
+    getNearbyCheckpoints menghitung jarak di client (lihat 10.5).
   - waste_remote_datasource.dart (uploadPhoto, insertWasteLog,
-    getWasteLogs, getPendingWasteLogs, verifyWasteLog).
+    getWasteLogs, getPendingWasteLogs, verifyWasteLog,
+    checkDuplicateHash, checkRateLimit). Kolom source diisi 'qr_scan'
+    saat audit dari QR, 'manual' saat pilih manual.
   - points_remote_datasource.dart (getTotalPoints, getPointsHistory,
-    addPoints, redeemPoints).
+    addPoints).
+  - reward_remote_datasource.dart (getAllRewards, getRewardById,
+    redeemReward).
 - Model data extends entity domain per fitur; fromJson/toJson memakai
-  kolom snake_case. Entities: WasteLog, Profile, Checkpoint, Reward.
+  kolom snake_case. Entities: WasteLog, Checkpoint, Reward, Point,
+  Profile.
 - Konstanta nama tabel/bucket di AppTables; enum role/kategori/status/
-  tipe poin di app_enums (AppEnums).
+  tipe poin/sumber (WasteSource) di app_enums.dart.
+- Kolom source pada waste_logs menjadi dasar analytics (distribusi
+  qr_scan / manual / nfc) untuk evaluasi fitur.
+- Client Supabase di checkpoint/waste datasource diambil malas (lazy
+  getter) agar konstruksi provider aman di mode demo/test tanpa Supabase;
+  crash hanya bila method remote benar dipanggil tanpa backend.
+- Alur Buang Sampah: WastePage (Consumer, checkpointNotifierProvider +
+  LocationService + GeoUtils) -> CaptureExtra ke /capture ->
+  CapturePhotoPage (tegakkan radius bila enforceGpsRadius, teruskan
+  VerificationExtra) -> VerificationPage (Consumer,
+  wasteSubmitNotifierProvider -> SubmitWasteUsecase: hash, validasi,
+  upload, insert waste_log, hitung poin, catat earn ke points via
+  RecordEarnPoints/PointsRemoteDatasource dengan reference_id log).
+  Widget tidak menyimpan logic bisnis; validasi dan orkestrasi di
+  domain/usecase.
+- Alur Poin: PointsPage (Consumer, pointsNotifierProvider) baca saldo +
+  riwayat dari points; tamu/error memakai konten demo.
+- Alur Aktivitas: ActivityPage (Consumer, wasteRepository.getWasteLogs +
+  checkpoint names) daftar real; tap item kirim ActivityDetailExtra ke
+  /activity/:id; tamu/error/kosong memakai demo.
 
 ---
 
@@ -399,6 +502,10 @@ Detail di docs/SECURITY_AND_VALIDATION.md.
 
 ## 12. Status Dokumen
 
-- Versi: 1.0
-- Terakhir update: [tanggal]
-- Perubahan berikutnya: setelah Fase 1 final.
+- Versi: 1.1
+- Terakhir update: 2026-09-15
+- Riwayat:
+  - 1.0: arsitektur awal (layer, routing, backend, anti-kecurangan).
+  - 1.1: tambah strategi query checkpoint terdekat (client-side dulu),
+    deep link QR fase 2 (App Links/Universal Links), NFC fase 2, kolom
+    source waste_logs untuk analytics, dan daftar datasource per fitur.

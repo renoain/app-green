@@ -22,6 +22,7 @@ class WasteLog {
     this.verifiedBy,
     this.verifiedAt,
     this.notes,
+    this.source = WasteSource.manual,
     required this.createdAt,
   });
 
@@ -63,6 +64,9 @@ class WasteLog {
 
   /// Catatan verifikator.
   final String? notes;
+
+  /// Asal data log (scan QR, manual, atau NFC).
+  final WasteSource source;
 
   /// Waktu log dibuat.
   final DateTime createdAt;

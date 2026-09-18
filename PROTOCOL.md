@@ -90,7 +90,7 @@ Vote: setuju / tidak setuju + alasan. Jika menolak, tulis alasan di CHANGELOG.
 ```markdown
 # CHANGELOG - Go Green
 
-## [YYYY-MM-DD] - Nama Task
+## [YYYY-MM-DD HH:MM] - Nama Task
 
 Status: Selesai / Sedang dikerjakan / Dibatalkan
 

@@ -33,28 +33,10 @@ void main() {
     expect(find.text(AppStrings.settingsPreferencesTitle), findsOneWidget);
     expect(find.text(AppStrings.settingsNotification), findsOneWidget);
     expect(find.text(AppStrings.settingsNotificationDesc), findsOneWidget);
-    expect(find.text(AppStrings.settingsDarkMode), findsOneWidget);
-    expect(find.text(AppStrings.settingsDarkModeDesc), findsOneWidget);
     expect(find.text(AppStrings.settingsInfoTitle), findsOneWidget);
     expect(find.text(AppStrings.settingsVersion), findsOneWidget);
     expect(find.text(AppStrings.settingsVersionValue), findsOneWidget);
     expect(find.text(AppStrings.settingsAbout), findsOneWidget);
-  });
-
-  testWidgets('toggle mode gelap dapat diaktifkan dan dinonaktifkan',
-      (WidgetTester tester) async {
-    await pumpSettings(tester);
-
-    final Finder darkSwitch = find.byType(Switch).at(1);
-    expect(tester.widget<Switch>(darkSwitch).value, isFalse);
-
-    await tester.tap(darkSwitch);
-    await tester.pump();
-    expect(tester.widget<Switch>(darkSwitch).value, isTrue);
-
-    await tester.tap(darkSwitch);
-    await tester.pump();
-    expect(tester.widget<Switch>(darkSwitch).value, isFalse);
   });
 
   testWidgets('menampilkan dialog tentang saat baris tentang ditekan',
