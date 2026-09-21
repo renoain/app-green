@@ -42,6 +42,22 @@ abstract interface class WasteRepository {
     String? notes,
   });
 
+  /// Menyetujui waste log (status verified). Tanpa insert poin ulang.
+  Future<WasteLog> approveWasteLog({
+    required String id,
+    required String verifiedBy,
+  });
+
+  /// Menolak waste log (status rejected + alasan).
+  Future<WasteLog> rejectWasteLog({
+    required String id,
+    required String verifiedBy,
+    required String reason,
+  });
+
+  /// URL bertanda tangan untuk foto bukti privat.
+  Future<String> getPhotoSignedUrl(String path);
+
   /// Mengecek apakah hash sudah pernah dipakai (anti-kecurangan duplikat).
   Future<bool> checkDuplicateHash(String hash);
 

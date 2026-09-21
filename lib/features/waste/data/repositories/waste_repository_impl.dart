@@ -75,6 +75,32 @@ class WasteRepositoryImpl implements WasteRepository {
   }
 
   @override
+  Future<WasteLog> approveWasteLog({
+    required String id,
+    required String verifiedBy,
+  }) {
+    return _remote.approveWasteLog(id: id, verifiedBy: verifiedBy);
+  }
+
+  @override
+  Future<WasteLog> rejectWasteLog({
+    required String id,
+    required String verifiedBy,
+    required String reason,
+  }) {
+    return _remote.rejectWasteLog(
+      id: id,
+      verifiedBy: verifiedBy,
+      reason: reason,
+    );
+  }
+
+  @override
+  Future<String> getPhotoSignedUrl(String path) {
+    return _remote.getPhotoSignedUrl(path);
+  }
+
+  @override
   Future<bool> checkDuplicateHash(String hash) {
     return _remote.checkDuplicateHash(hash);
   }

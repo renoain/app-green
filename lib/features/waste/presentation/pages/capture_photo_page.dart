@@ -5,8 +5,11 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import '../../../admin/presentation/providers/admin_providers.dart';
 
 import '../../../../core/constants/app_enums.dart';
 import '../../../../core/constants/app_strings.dart';
@@ -105,15 +108,26 @@ class _CapturePhotoPageState extends State<CapturePhotoPage> {
     if (controller == null || !controller.value.isInitialized) return;
     try {
       final XFile photo = await controller.takePicture();
+      if (!mounted) return;
+      // Lokasi uji admin diutamakan agar testing pindah lokasi mudah.
+      final DebugLocation? debug =
+          ProviderScope.containerOf(context).read(debugLocationProvider);
       const LocationService locationService = LocationService();
-      final position = await locationService.getCurrentPosition();
+      final position = debug == null
+          ? await locationService.getCurrentPosition()
+          : null;
       if (!mounted) return;
 
+      final double? userLat = debug?.latitude ?? position?.latitude;
+      final double? userLng = debug?.longitude ?? position?.longitude;
       final CaptureExtra? extra = widget.extra;
-      if (AppValues.enforceGpsRadius && extra != null && position != null) {
+      if (AppValues.enforceGpsRadius &&
+          extra != null &&
+          userLat != null &&
+          userLng != null) {
         final int distance = GeoUtils.distanceMeters(
-          position.latitude,
-          position.longitude,
+          userLat,
+          userLng,
           extra.latitude,
           extra.longitude,
         );
@@ -126,9 +140,12 @@ class _CapturePhotoPageState extends State<CapturePhotoPage> {
           return;
         }
       }
-      final String? locationLabel = position == null
-          ? null
-          : locationService.formatPositionLabel(position);
+      final String? locationLabel = debug != null
+          ? '${debug.latitude.toStringAsFixed(6)}, '
+              '${debug.longitude.toStringAsFixed(6)}'
+          : position == null
+              ? null
+              : locationService.formatPositionLabel(position);
       final String timestampLabel =
           formatIndonesianTimestamp(DateTime.now());
       context.pushNamed(
@@ -139,8 +156,8 @@ class _CapturePhotoPageState extends State<CapturePhotoPage> {
           timestampLabel: timestampLabel,
           checkpointId: extra?.checkpointId,
           checkpointName: extra?.checkpointName,
-          latitude: position?.latitude,
-          longitude: position?.longitude,
+          latitude: userLat,
+          longitude: userLng,
           radius: extra?.radius,
           category: extra?.category ?? _defaultCategory,
         ),

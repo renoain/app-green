@@ -24,6 +24,7 @@ import '../../../../core/utils/geo_utils.dart';
 import '../../../../core/widgets/app_bar_and_loading_widgets.dart';
 import '../../../../core/widgets/app_button_widgets.dart';
 import '../../../../core/widgets/display_widgets.dart';
+import '../../../admin/presentation/providers/admin_providers.dart';
 import '../../../checkpoints/domain/entities/checkpoint.dart';
 import '../../../checkpoints/presentation/providers/checkpoint_provider.dart';
 import '../data/capture_extra.dart';
@@ -81,6 +82,18 @@ class _WastePageState extends ConsumerState<WastePage> {
 
   Future<void> _reload() async {
     setState(() => _loadingPosition = true);
+    // Lokasi uji admin (debug) diutamakan agar penguji bisa pindah lokasi
+    // tanpa ke lapangan; fallback ke GPS asli bila tidak aktif.
+    final DebugLocation? debug = ref.read(debugLocationProvider);
+    if (debug != null) {
+      if (!mounted) return;
+      setState(() => _loadingPosition = false);
+      await ref.read(checkpointNotifierProvider.notifier).loadNearby(
+            latitude: debug.latitude,
+            longitude: debug.longitude,
+          );
+      return;
+    }
     const LocationService locationService = LocationService();
     Position? position;
     try {
@@ -125,7 +138,7 @@ class _WastePageState extends ConsumerState<WastePage> {
     return checkpoints.first;
   }
 
-  void _takePhoto(Checkpoint? checkpoint) {
+  void _takePhoto(Checkpoint? checkpoint, DebugLocation? debug) {
     if (checkpoint == null) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
@@ -135,10 +148,14 @@ class _WastePageState extends ConsumerState<WastePage> {
       return;
     }
     final Position? position = _position;
-    if (AppValues.enforceGpsRadius && position != null) {
+    final double? overrideLat = debug?.latitude;
+    final double? overrideLng = debug?.longitude;
+    final double? checkLat = overrideLat ?? position?.latitude;
+    final double? checkLng = overrideLng ?? position?.longitude;
+    if (AppValues.enforceGpsRadius && checkLat != null && checkLng != null) {
       final int distance = GeoUtils.distanceMeters(
-        position.latitude,
-        position.longitude,
+        checkLat,
+        checkLng,
         checkpoint.latitude,
         checkpoint.longitude,
       );
@@ -171,6 +188,7 @@ class _WastePageState extends ConsumerState<WastePage> {
     final List<Checkpoint> checkpoints =
         _effectiveCheckpoints(checkpointState);
     final Checkpoint? selected = _selectedCheckpoint(checkpoints);
+    final DebugLocation? debug = ref.watch(debugLocationProvider);
     final bool isLoading =
         checkpointState.isLoading || _loadingPosition;
 
@@ -247,11 +265,14 @@ class _WastePageState extends ConsumerState<WastePage> {
               const SizedBox(height: AppSpacing.sm),
             ],
             const SizedBox(height: AppSpacing.lg),
+            if (debug != null && selected != null)
+              _DebugLocationBanner(debug: debug, onClear: _reload),
             _GpsSection(
               position: _position,
               loading: _loadingPosition,
               checkpoint: selected,
               onRetry: _reload,
+              debug: debug,
             ),
             const SizedBox(height: AppSpacing.sm),
             Align(
@@ -288,7 +309,7 @@ class _WastePageState extends ConsumerState<WastePage> {
             const SizedBox(height: AppSpacing.lg),
             PrimaryButton(
               text: AppStrings.takePhotoButton,
-              onPressed: () => _takePhoto(selected),
+              onPressed: () => _takePhoto(selected, debug),
             ),
             const SizedBox(height: AppSpacing.xl),
             const Text(
@@ -303,6 +324,51 @@ class _WastePageState extends ConsumerState<WastePage> {
   }
 }
 
+/// Banner penanda lokasi uji aktif (debug) di halaman Waste.
+class _DebugLocationBanner extends StatelessWidget {
+  /// Membuat banner lokasi uji.
+  const _DebugLocationBanner({required this.debug, required this.onClear});
+
+  /// Lokasi uji yang aktif.
+  final DebugLocation debug;
+
+  /// Aksi muat ulang (sekaligus refresh setelah lokasi uji dimatikan).
+  final VoidCallback onClear;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: const EdgeInsets.all(AppSpacing.sm),
+      decoration: BoxDecoration(
+        color: AppColors.tertiaryLight,
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.primaryLight),
+      ),
+      child: Row(
+        children: <Widget>[
+          const Icon(
+            LucideIcons.locate_fixed,
+            size: 18,
+            color: AppColors.primary,
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(
+              '${AppStrings.adminTestLocationActive}: ${debug.label}',
+              style: AppTypography.bodySm,
+            ),
+          ),
+          AppTextButton(
+            text: AppStrings.adminTestLocationCleared,
+            onPressed: onClear,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 /// Section status GPS: loading, gagal, atau kartu radius real.
 class _GpsSection extends StatelessWidget {
   const _GpsSection({
@@ -310,6 +376,7 @@ class _GpsSection extends StatelessWidget {
     required this.loading,
     required this.checkpoint,
     required this.onRetry,
+    this.debug,
   });
 
   final Position? position;
@@ -317,8 +384,27 @@ class _GpsSection extends StatelessWidget {
   final Checkpoint? checkpoint;
   final VoidCallback onRetry;
 
+  /// Lokasi uji admin; bila ada, jarak dihitung dari titik ini.
+  final DebugLocation? debug;
+
   @override
   Widget build(BuildContext context) {
+    final DebugLocation? override = debug;
+    final Checkpoint? target = checkpoint;
+    if (override != null && target != null) {
+      final int distance = GeoUtils.distanceMeters(
+        override.latitude,
+        override.longitude,
+        target.latitude,
+        target.longitude,
+      );
+      return LocationStatusCard(
+        withinRadius: distance <= target.radius,
+        distanceMeters: distance.toDouble(),
+        radiusMeters: target.radius.toDouble(),
+        onCheckLocation: onRetry,
+      );
+    }
     if (loading) {
       return Container(
         padding: const EdgeInsets.all(AppSpacing.md),
@@ -342,8 +428,8 @@ class _GpsSection extends StatelessWidget {
       );
     }
     final Position? current = position;
-    final Checkpoint? target = checkpoint;
-    if (current == null || target == null) {
+    final Checkpoint? fallbackTarget = checkpoint;
+    if (current == null || fallbackTarget == null) {
       return Container(
         padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
@@ -371,13 +457,13 @@ class _GpsSection extends StatelessWidget {
     final int distance = GeoUtils.distanceMeters(
       current.latitude,
       current.longitude,
-      target.latitude,
-      target.longitude,
+      fallbackTarget.latitude,
+      fallbackTarget.longitude,
     );
     return LocationStatusCard(
-      withinRadius: distance <= target.radius,
+      withinRadius: distance <= fallbackTarget.radius,
       distanceMeters: distance.toDouble(),
-      radiusMeters: target.radius.toDouble(),
+      radiusMeters: fallbackTarget.radius.toDouble(),
       onCheckLocation: onRetry,
     );
   }

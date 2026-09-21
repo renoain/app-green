@@ -8,6 +8,9 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_enums.dart';
+import '../../../../core/services/supabase_service.dart';
+import '../../../admin/data/datasources/admin_profile_datasource.dart';
 import '../../domain/entities/auth_session.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../data/repositories/supabase_auth_repository.dart';
@@ -45,3 +48,16 @@ final StateNotifierProvider<AuthNotifier, AuthSession> authNotifierProvider =
     StateNotifierProvider<AuthNotifier, AuthSession>(
   (Ref ref) => AuthNotifier(ref.watch(authRepositoryProvider)),
 );
+
+/// Role user yang sedang login untuk redirect pasca-login.
+///
+/// Default [UserRole.user] saat demo, belum login, atau query gagal.
+Future<UserRole> getCurrentUserRole() async {
+  final String? userId = SupabaseService.instance.currentUser?.id;
+  if (userId == null) return UserRole.user;
+  try {
+    return await AdminProfileDatasource().getRole(userId);
+  } catch (_) {
+    return UserRole.user;
+  }
+}

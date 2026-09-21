@@ -110,6 +110,11 @@ Lokasi pembuangan sampah terdaftar.
 | longitude | double precision | not null | Koordinat |
 | radius | integer | default 100 | Radius validasi (meter) |
 | qr_code | text | unique | Kode QR unik |
+| code | text | unique | Kode TPS format KOTA-KEC-NOMOR (migration 017) |
+| province_code | text | | ID provinsi API wilayah (migration 017) |
+| city_code | text | indexed | ID kota/kabupaten API wilayah (migration 017) |
+| district_code | text | indexed | ID kecamatan API wilayah (migration 017) |
+| subdistrict | text | | Kelurahan opsional (migration 017) |
 | created_at | timestamptz | default now() | |
 
 RLS:

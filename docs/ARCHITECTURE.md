@@ -37,6 +37,7 @@ layer, dan aturan dependency.
 | GPS        | geolocator         | Standar Flutter, akurat    | location                              |
 | QR scan    | mobile_scanner     | Modern, aktif dipelihara   | qr_code_scanner                       |
 | Permission | permission_handler | Standar Flutter            | -                                     |
+| Peta admin | flutter_map + latlong2 (OSM) | Gratis tanpa API key, BSD, aktif dipelihara (flutter_map 8.3.2, latlong2 0.10.1); cukup untuk pin checkpoint testing | google_maps_flutter (ditolak: butuh API key + billing) |
 
 ### 1.4 Keamanan & Hash
 
@@ -171,6 +172,21 @@ Daftar route:
 - /capture (kamera in-app, foto bukti)
 - /edit-profile (edit profil)
 - /settings (pengaturan aplikasi)
+- /admin/dashboard (dasbor admin, branch AdminShell)
+- /admin/checkpoints (kelola TPS, branch AdminShell)
+- /admin/checkpoints/new (tambah TPS)
+- /admin/checkpoints/:id/edit (ubah TPS)
+- /admin/waste-verification (antrean verifikasi, branch AdminShell)
+- /admin/waste-verification/:id (detail verifikasi)
+- /admin/rewards, /admin/users, /admin/settings (fase 2, placeholder)
+
+Route admin memakai StatefulShellRoute.indexedStack kedua dengan
+AdminShell (drawer, tanpa bottom nav user). Back di root branch admin
+perlu 2 kali dalam 2 detik untuk keluar (PopScope + SystemNavigator,
+seperti MainShell); di sub-route admin back berjalan normal. Redirect berbasis role
+di halaman Login via getCurrentUserRole: admin -> /admin/dashboard,
+petugas -> /admin/waste-verification, user -> /home. Menu Mode Admin
+di Profile (khusus admin/petugas) ke /admin/dashboard.
 
 ---
 
@@ -258,7 +274,6 @@ dari package:flutter_lucide.
 ### 8.2 Evaluasi Dependency Terpasang (dev)
 
 geolocator_platform_interface 4.3.0 (dev, untuk unit test):
-
 1. Tujuan: fake GeolocatorPlatform agar LocationService dan GeoUtils dapat
    diuji tanpa plugin perangkat di environment test.
 2. Alternatif dievaluasi:
@@ -270,6 +285,50 @@ geolocator_platform_interface 4.3.0 (dev, untuk unit test):
 4. Lisensi: MIT.
 5. Kompatibilitas: sudah diresolusi sebagai dependency transitif geolocator
    11.1.0; cukup dipindah ke dev_dependencies agar dapat di-import test.
+
+---
+
+### 8.3 Evaluasi Dependency Terpasang
+
+pretty_qr_code 3.6.0 (render QR checkpoint di form TPS admin):
+
+1. Tujuan: menampilkan QR code siap cetak di halaman edit TPS.
+2. Alternatif dievaluasi:
+   - qr_flutter 4.1.0: DITOLAK - rilis terakhir 2023-05 (>12 bulan tanpa
+     rilis), melanggar aturan pemeliharaan project.
+   - pretty_qr_code 3.6.0: aktif (rilis 2026-01-31), widget siap pakai
+     (PrettyQrView.data), dipakai.
+3. Pemeliharaan: aktif, rilis reguler.
+4. Lisensi: MIT.
+5. Kompatibilitas: SDK Dart >=2.17 <4.0, Flutter >=3.0, cocok
+   Dart 3.13/Flutter 3.47.2.
+6. Ukuran: kecil (hanya depend ke qr + meta).
+7. Dokumentasi: README lengkap dengan contoh.
+
+### 8.4 Evaluasi Dependency Terpasang
+
+dropdown_search 7.0.0 (dropdown wilayah + cari di form/filter TPS):
+
+1. Tujuan: dropdown Provinsi/Kota/Kecamatan dengan kotak cari.
+2. Alternatif dievaluasi:
+   - DropdownButtonFormField bawaan + TextField cari manual: bisa,
+     tetapi boilerplate filter + popup tiap dropdown; tidak dipilih.
+   - flutter_wilayah_indonesia 0.1.0: DITOLAK - rilis 13 bulan lalu
+     (>12 bulan tanpa rilis), melanggar aturan pemeliharaan project.
+     Data wilayah diambil langsung via dio (sudah ada) ke API publik
+     emsifa/api-wilayah-indonesia dengan cache memory.
+   - dropdown_search 7.0.0: aktif (rilis 2026-04, verified publisher,
+     1.9k likes), dipakai.
+3. Pemeliharaan: aktif, rilis reguler.
+4. Lisensi: MIT.
+5. Kompatibilitas: SDK Dart >=2.17, cocok Dart 3.13/Flutter 3.47.2.
+6. Ukuran: kecil (hanya depend ke flutter + cupertino_icons).
+7. Dokumentasi: README + example lengkap.
+
+Strategi data wilayah: RegionRemoteDatasource (dio) baca
+provinces/regencies/districts JSON dari emsifa.github.io dengan cache
+memory per level; tanpa bundel JSON lokal agar bundle tetap kecil.
+Admin butuh internet saat tambah TPS (wajib untuk Supabase juga).
 
 ---
 
@@ -303,7 +362,7 @@ Migration dijalankan manual (supabase db push oleh user, bukan agent).
 - profiles (id, email, username, role, created_at) + trigger
   on_auth_user_created -> handle_new_user
 - checkpoints (id, name, address, latitude, longitude, radius, qr_code,
-  created_at)
+  code, province_code, city_code, district_code, subdistrict, created_at)
 - waste_logs (id, user_id, checkpoint_id, category, item_type, photo_url,
   hash, latitude, longitude, server_timestamp, status, verified_by,
   verified_at, notes, source, created_at); kolom source menyimpan asal data

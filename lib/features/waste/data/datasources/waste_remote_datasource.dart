@@ -114,7 +114,41 @@ class WasteRemoteDatasource {
     return WasteLogModel.fromJson(row);
   }
 
-  /// Mengecek apakah hash sudah pernah dipakai (anti-kecurangan duplikat).
+  /// Menyetujui waste log (status verified oleh admin/petugas).
+  ///
+  /// Poin earn sudah dicatat saat submit (SubmitWasteUsecase), jadi approve
+  /// hanya mengubah status tanpa insert poin ulang.
+  Future<WasteLogModel> approveWasteLog({
+    required String id,
+    required String verifiedBy,
+  }) {
+    return verifyWasteLog(
+      id: id,
+      status: WasteLogStatus.verified,
+      verifiedBy: verifiedBy,
+    );
+  }
+
+  /// Menolak waste log (status rejected + alasan di notes).
+  Future<WasteLogModel> rejectWasteLog({
+    required String id,
+    required String verifiedBy,
+    required String reason,
+  }) {
+    return verifyWasteLog(
+      id: id,
+      status: WasteLogStatus.rejected,
+      verifiedBy: verifiedBy,
+      notes: reason,
+    );
+  }
+
+  /// URL bertanda tangan untuk foto bukti (bucket waste-photos privat).
+  Future<String> getPhotoSignedUrl(String path, {int expiresIn = 3600}) {
+    return _client.storage
+        .from(AppTables.wastePhotosBucket)
+        .createSignedUrl(path, expiresIn);
+  }
   ///
   /// Mengembalikan true bila ada waste log dengan hash yang sama.
   Future<bool> checkDuplicateHash(String hash) async {

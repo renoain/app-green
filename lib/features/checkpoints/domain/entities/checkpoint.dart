@@ -14,6 +14,11 @@ class Checkpoint {
     required this.longitude,
     required this.radius,
     this.qrCode,
+    this.code,
+    this.provinceCode,
+    this.cityCode,
+    this.districtCode,
+    this.subdistrict,
     required this.createdAt,
   });
 
@@ -37,6 +42,21 @@ class Checkpoint {
 
   /// Kode QR unik checkpoint.
   final String? qrCode;
+
+  /// Kode TPS unik format KOTA-KEC-NOMOR (migration 017).
+  final String? code;
+
+  /// ID provinsi (API wilayah Indonesia).
+  final String? provinceCode;
+
+  /// ID kota/kabupaten (API wilayah Indonesia).
+  final String? cityCode;
+
+  /// ID kecamatan (API wilayah Indonesia).
+  final String? districtCode;
+
+  /// Kelurahan (opsional).
+  final String? subdistrict;
 
   /// Waktu checkpoint dibuat.
   final DateTime createdAt;

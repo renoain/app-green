@@ -348,3 +348,113 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 - Catatan: memakai package permission_handler; manifest Android dan
   Info.plist iOS sudah berisi deklarasi kamera dan lokasi.
 - Prioritas MVP: Ya.
+
+---
+
+## 17. Admin Kelola Lokasi [Selesai]
+
+- Tujuan: admin/petugas menambah titik pembuangan, mengatur pin di peta,
+  dan testing pindah lokasi tanpa ke lapangan.
+- Elemen: dasbor admin (menu titik + verifikasi + status lokasi uji),
+  daftar titik (nama, koordinat, radius, aksi lokasi uji/ubah/hapus),
+  form titik (peta OSM ketuk untuk pin, field nama/alamat/lat/lng/
+  radius/QR, tombol pakai lokasi saya), antrean verifikasi (daftar
+  pending + setujui/tolak).
+- State: role admin (profiles.role), daftar checkpoint, lokasi uji
+  debug (in-memory), antrean pending.
+- Aksi: CRUD checkpoint via RLS admin (policy
+  checkpoints_insert/update/delete_admin), pasang/hapus lokasi uji,
+  halaman Waste dan Kamera otomatis memakai lokasi uji saat aktif.
+- Navigasi: menu Mode Admin di Profile (hanya admin/petugas) ke
+  /admin/dashboard; guard di shell (akses ditolak bila bukan admin).
+- Catatan: peta memakai flutter_map + TileLayer OpenStreetMap tanpa
+  API key; lokasi uji hanya alat testing, otorisasi tulis tetap di
+  RLS server.
+- Prioritas MVP: Ya (alat testing).
+
+---
+
+## 18. Dasbor Admin [Selesai]
+
+- Tujuan: ringkasan operasional + jalan pintas ke aksi admin.
+- Elemen: 4 kartu angka (Total User, Total TPS, Waste Hari Ini,
+  Pending Verifikasi), kartu Poin Beredar, tombol Tambah TPS, tombol
+  Lihat Verifikasi Pending (dengan jumlah).
+- State: AdminDashboardSummary dari Supabase (loading, error + retry,
+  pull-to-refresh).
+- Aksi: ke form tambah TPS, ke antrean verifikasi.
+- Navigasi: branch pertama AdminShell (/admin/dashboard), dibuka lewat
+  drawer atau menu Mode Admin di Profile.
+- Prioritas MVP: Ya.
+
+---
+
+## 19. Kelola TPS [Selesai]
+
+- Tujuan: daftar semua checkpoint untuk admin.
+- Elemen: search nama/kode TPS, filter wilayah berjenjang
+  (Provinsi, Kota, Kecamatan), kartu TPS (kode TPS, nama, koordinat,
+  radius, kode QR, tombol Ubah dan Nonaktifkan), FAB Tambah TPS.
+- State: daftar checkpoint (loading, error + retry, empty state),
+  query pencarian, filter wilayah, pull-to-refresh.
+- Aksi: tap Ubah ke form edit, Nonaktifkan dengan dialog konfirmasi
+  (hapus permanen karena skema tanpa kolom is_active). Kembali dari
+  form dengan hasil tersimpan memuat ulang daftar admin dan daftar
+  user (Supabase) agar lokasi baru/terubah langsung tampil.
+- Navigasi: /admin/checkpoints di AdminShell.
+- Prioritas MVP: Ya.
+
+---
+
+## 20. Form TPS [Selesai]
+
+- Tujuan: tambah/ubah checkpoint.
+- Elemen: peta OSM ketuk untuk pin (kamera peta mengikuti pin saat
+  koordinat berubah), tombol Pakai Lokasi Saya (geolocator + loading,
+  GPS HP langsung jadi pin), dropdown wilayah berjenjang Provinsi ->
+  Kota/Kabupaten -> Kecamatan (dropdown_search + kotak cari),
+  kode TPS baca-saja (otomatis KOTA-KEC-NOMOR + preview, generate
+  ulang saat kecamatan dipilih bila kode masih kosong), kelurahan
+  opsional, deskripsi lokasi manual (wajib, menjelaskan titik spesifik),
+  alamat, latitude, longitude, radius (default 100), tombol Simpan.
+  Kolom QR disembunyikan sementara (menyusul fase berikut).
+- State: validasi via ManageCheckpointUsecase (pesan Bahasa Indonesia),
+  saving, locating, resolving wilayah (reverse-geocode Nominatim),
+  generating code, muat ulang edit-by-id (loading +
+  retry bila /admin/checkpoints/:id/edit dibuka tanpa extra).
+- Aksi: Pakai Lokasi Saya / ketuk peta mengisi lat/lng, me-resolve
+  wilayah otomatis, lalu menggenerate kode TPS; simpan kembali ke
+  daftar; simpan/tolak juga menyegarkan daftar checkpoint user via
+  Supabase.
+- Navigasi: /admin/checkpoints/new dan /admin/checkpoints/:id/edit.
+- Prioritas MVP: Ya.
+
+---
+
+## 21. Verifikasi Waste [Selesai]
+
+- Tujuan: antrean bukti menunggu verifikasi manual.
+- Elemen: filter chip (Hari Ini, 7 Hari, Semua), kartu verifikasi
+  (kategori, pengirim, waktu) ke halaman detail.
+- State: daftar pending dari Supabase (loading, error + retry,
+  empty state), filter aktif.
+- Aksi: tap kartu ke detail.
+- Navigasi: /admin/waste-verification di AdminShell; petugas langsung
+  diarahkan ke sini setelah login.
+- Prioritas MVP: Ya.
+
+---
+
+## 22. Detail Verifikasi Waste [Selesai]
+
+- Tujuan: periksa bukti lalu setujui/tolak.
+- Elemen: foto bukti (signed URL storage privat), kategori, pengirim,
+  timestamp server, lokasi, jarak ke checkpoint (haversine domain),
+  hash SHA-256, estimasi poin, tombol Setujui dan Tolak (dialog alasan
+  wajib).
+- State: busy saat approve/reject, snackbar sukses/gagal.
+- Aksi: Setujui mengubah status verified; Tolak mengubah rejected +
+  alasan di notes. Poin earn tidak dicatat ulang (sudah tercatat saat
+  submit) agar tidak ganda.
+- Navigasi: /admin/waste-verification/:id, kembali ke antrean.
+- Prioritas MVP: Ya.

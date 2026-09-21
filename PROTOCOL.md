@@ -230,10 +230,12 @@ Setiap task selesai wajib dicek:
 
 ## Bagian M: Anti-AI-Slop untuk Kode
 
-- Setiap file .dart wajib punya header komentar singkat (tujuan file).
-- Setiap class wajib punya doc comment singkat.
+- Setiap file .dart wajib punya header komentar 1 baris (tujuan file).
+- Setiap class wajib punya doc comment 1 baris.
+- Komentar fungsi/method hanya jika logikanya tidak jelas dari nama dan kode.
+- Dilarang komentar bertele-tele: tidak setiap baris, tidak menjelaskan yang
+  sudah jelas dari kode, maksimal sesingkat yang masih jelas.
 - Dilarang kode hasil generate yang tidak dipahami.
-- Dilarang komentar bertele-tele / menjelaskan yang sudah jelas.
 - Dilarang duplikasi kode; wajib di-refactor ke fungsi/class.
 - Dilarang hardcode nilai ajaib yang seharusnya konstanta.
 - Kode harus mengikuti layering; dilarang logic bisnis di widget.

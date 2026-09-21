@@ -23,6 +23,7 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/display_widgets.dart';
 import '../../../../core/widgets/login_notice_widget.dart';
+import '../../../admin/presentation/providers/admin_providers.dart';
 import '../../../auth/domain/entities/auth_session.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 
@@ -43,6 +44,11 @@ class ProfilePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AuthSession auth = ref.watch(authNotifierProvider);
     final bool isLoggedIn = auth.isLoggedIn;
+    final bool isAdmin =
+        ref.watch(isAdminProvider).maybeWhen(
+              data: (bool allowed) => allowed,
+              orElse: () => false,
+            );
     final String displayName = isLoggedIn
         ? (auth.displayName ??
             auth.username ??
@@ -149,6 +155,15 @@ class ProfilePage extends ConsumerWidget {
               icon: LucideIcons.settings,
               onTap: () => context.pushNamed(AppRouteName.settings),
             ),
+            if (isLoggedIn && isAdmin) ...<Widget>[
+              const SizedBox(height: AppSpacing.sm),
+              ListTileItem(
+                title: AppStrings.adminMode,
+                icon: LucideIcons.shield_check,
+                onTap: () =>
+                    context.pushNamed(AppRouteName.adminDashboard),
+              ),
+            ],
             if (isLoggedIn) ...<Widget>[
               const SizedBox(height: AppSpacing.sm),
               ListTileItem(

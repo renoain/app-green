@@ -24,6 +24,8 @@ class WasteLog {
     this.notes,
     this.source = WasteSource.manual,
     required this.createdAt,
+    this.submitterName,
+    this.checkpointName,
   });
 
   /// ID unik log.
@@ -70,4 +72,10 @@ class WasteLog {
 
   /// Waktu log dibuat.
   final DateTime createdAt;
+
+  /// Username pengirim (dari join profiles, khusus daftar admin).
+  final String? submitterName;
+
+  /// Nama checkpoint (dari join checkpoints, khusus daftar admin).
+  final String? checkpointName;
 }

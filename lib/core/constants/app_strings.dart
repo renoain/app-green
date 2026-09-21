@@ -767,4 +767,189 @@ class AppStrings {
 
   /// Hint jarak checkpoint pada daftar.
   static const String wasteDistanceHint = 'jarak';
+
+  /// --- Admin ---
+  static const String adminTitle = 'Kelola Lokasi';
+  static const String adminSubtitle =
+      'Khusus admin dan petugas untuk testing.';
+  static const String adminAccessDenied =
+      'Halaman ini khusus admin dan petugas. Masuk dengan akun admin.';
+  static const String adminCheckpointsTitle = 'Titik Pembuangan';
+  static const String adminAddCheckpoint = 'Tambah titik';
+  static const String adminEditCheckpoint = 'Ubah titik';
+  static const String adminCheckpointEmpty =
+      'Belum ada titik pembuangan. Tambah titik pertama.';
+  static const String adminCheckpointNameLabel = 'Deskripsi lokasi';
+  static const String adminCheckpointNameHint = 'Contoh: Depan gerbang perumahan blok C';
+  static const String adminCheckpointAddressLabel = 'Alamat (opsional)';
+  static const String adminCheckpointLatLabel = 'Latitude';
+  static const String adminCheckpointLngLabel = 'Longitude';
+  static const String adminCheckpointRadiusLabel = 'Radius (meter)';
+  static const String adminCheckpointQrLabel = 'Kode QR (opsional)';
+  static const String adminCheckpointNameEmpty = 'Deskripsi lokasi wajib diisi.';
+  static const String adminCheckpointLatInvalid =
+      'Latitude harus di antara -90 dan 90.';
+  static const String adminCheckpointLngInvalid =
+      'Longitude harus di antara -180 dan 180.';
+  static const String adminCheckpointRadiusInvalid =
+      'Radius harus lebih dari 0.';
+  static const String adminCheckpointSaved = 'Titik berhasil disimpan.';
+  static const String adminCheckpointDeleted = 'Titik berhasil dihapus.';
+  static const String adminCheckpointDeleteTitle = 'Hapus titik ini?';
+  static const String adminMapHint =
+      'Ketuk peta untuk memindahkan pin lokasi.';
+  static const String adminUseMyLocation = 'Pakai lokasi saya';
+  static const String adminTestLocationTitle = 'Lokasi uji';
+  static const String adminTestLocationActive = 'Lokasi uji aktif';
+  static const String adminTestLocationOff = 'GPS asli';
+  static const String adminTestLocationSet = 'Lokasi uji dipasang.';
+  static const String adminTestLocationCleared = 'Kembali ke GPS asli.';
+  static const String adminVerificationTitle = 'Antrean Verifikasi';
+  static const String adminVerificationEmpty =
+      'Tidak ada bukti menunggu verifikasi.';
+  static const String adminApprove = 'Setujui';
+  static const String adminReject = 'Tolak';
+  static const String adminMenuCheckpoint = 'Kelola titik';
+  static const String adminMenuVerification = 'Verifikasi bukti';
+  static const String adminMenuOpen = 'Buka kelola lokasi';
+
+  /// --- Admin Shell ---
+
+  /// Judul dasbor admin.
+  static const String adminDashboard = 'Dasbor Admin';
+
+  /// Menu kelola TPS.
+  static const String adminManageTps = 'Kelola TPS';
+
+  /// Menu verifikasi waste.
+  static const String adminVerifyWaste = 'Verifikasi Waste';
+
+  /// Menu kelola reward.
+  static const String adminManageReward = 'Kelola Reward';
+
+  /// Menu kelola user.
+  static const String adminManageUser = 'Kelola User';
+
+  /// Menu pengaturan admin.
+  static const String adminSettings = 'Pengaturan';
+
+  /// Menu mode admin di profil.
+  static const String adminMode = 'Mode Admin';
+
+  /// Pesan halaman admin fase 2 yang belum tersedia.
+  static const String adminComingSoon = 'Halaman ini tersedia di fase 2.';
+
+  /// --- Dasbor Admin ---
+
+  /// Label total user.
+  static const String adminTotalUsers = 'Total User';
+
+  /// Label total TPS.
+  static const String adminTotalTps = 'Total TPS';
+
+  /// Label waste hari ini.
+  static const String adminWasteToday = 'Waste Hari Ini';
+
+  /// Label waste pending.
+  static const String adminWastePending = 'Pending Verifikasi';
+
+  /// Label poin beredar.
+  static const String adminPointsCirculating = 'Poin Beredar';
+
+  /// Tombol tambah TPS di dasbor.
+  static const String adminAddTps = 'Tambah TPS';
+
+  /// Tombol lihat verifikasi pending di dasbor.
+  static const String adminViewPending = 'Lihat Verifikasi Pending';
+
+  /// --- Kelola TPS ---
+
+  /// Judul halaman kelola TPS.
+  static const String adminEditTps = 'Ubah TPS';
+
+  /// Hint pencarian TPS.
+  static const String adminSearchTpsHint = 'Cari nama TPS';
+
+  /// Label kode QR di form TPS.
+  static const String adminQrCodeLabel = 'Kode QR (otomatis)';
+
+  /// Label kode TPS di form/daftar.
+  static const String adminTpsCodeLabel = 'Kode TPS (otomatis)';
+
+  /// Label dropdown provinsi.
+  static const String adminRegionProvinceLabel = 'Provinsi';
+
+  /// Label dropdown kota/kabupaten.
+  static const String adminRegionCityLabel = 'Kota/Kabupaten';
+
+  /// Label dropdown kecamatan.
+  static const String adminRegionDistrictLabel = 'Kecamatan';
+
+  /// Label input kelurahan opsional.
+  static const String adminSubdistrictLabel = 'Kelurahan (opsional)';
+
+  /// Judul section filter wilayah di daftar TPS.
+  static const String adminRegionFilterTitle = 'Filter Wilayah';
+
+  /// Aksi nonaktifkan TPS.
+  static const String adminDeactivate = 'Nonaktifkan';
+
+  /// Judul dialog nonaktifkan TPS.
+  static const String adminDeactivateTitle = 'Nonaktifkan TPS ini?';
+
+  /// --- Verifikasi Waste ---
+
+  /// Filter hari ini.
+  static const String adminFilterToday = 'Hari Ini';
+
+  /// Filter 7 hari.
+  static const String adminFilterWeek = '7 Hari';
+
+  /// Filter semua.
+  static const String adminFilterAll = 'Semua';
+
+  /// Judul halaman detail verifikasi.
+  static const String adminDetailTitle = 'Detail Verifikasi';
+
+  /// Judul dialog alasan penolakan.
+  static const String adminRejectReasonTitle = 'Alasan Penolakan';
+
+  /// Hint input alasan penolakan.
+  static const String adminRejectReasonHint = 'Tulis alasan penolakan';
+
+  /// Error alasan penolakan kosong.
+  static const String adminRejectReasonEmpty = 'Alasan penolakan wajib diisi.';
+
+  /// Pesan verifikasi disetujui.
+  static const String adminVerifySuccess = 'Bukti disetujui.';
+
+  /// Pesan verifikasi ditolak.
+  static const String adminRejectSuccess = 'Bukti ditolak.';
+
+  /// Label foto bukti.
+  static const String adminPhotoLabel = 'Foto Bukti';
+
+  /// Label jarak ke checkpoint.
+  static const String adminDistanceLabel = 'Jarak ke Checkpoint';
+
+  /// Label hash SHA-256.
+  static const String adminHashLabel = 'Hash SHA-256';
+
+  /// Label kategori sampah.
+  static const String adminCategoryLabel = 'Kategori';
+
+  /// Label pengirim.
+  static const String adminSubmitterLabel = 'Pengirim';
+
+  /// Label timestamp server.
+  static const String adminServerTimeLabel = 'Waktu Server';
+
+  /// Label lokasi.
+  static const String adminLocationLabel = 'Lokasi';
+
+  /// Label estimasi poin.
+  static const String adminPointsEstimateLabel = 'Estimasi Poin';
+
+  /// Pesan foto tidak tersedia.
+  static const String adminNoPhoto = 'Foto tidak tersedia.';
 }

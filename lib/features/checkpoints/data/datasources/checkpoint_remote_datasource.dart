@@ -89,4 +89,157 @@ class CheckpointRemoteDatasource {
         .maybeSingle();
     return row == null ? null : CheckpointModel.fromJson(row);
   }
+
+  /// Tambah checkpoint baru (RLS: hanya admin, policy
+  /// checkpoints_insert_admin).
+  Future<CheckpointModel> createCheckpoint({
+    required String name,
+    String? address,
+    required double latitude,
+    required double longitude,
+    required int radius,
+    String? qrCode,
+    String? code,
+    String? provinceCode,
+    String? cityCode,
+    String? districtCode,
+    String? subdistrict,
+  }) async {
+    final Map<String, dynamic> row = await _client
+        .from(AppTables.checkpoints)
+        .insert(<String, dynamic>{
+          'name': name,
+          'address': address,
+          'latitude': latitude,
+          'longitude': longitude,
+          'radius': radius,
+          if (qrCode != null && qrCode.isNotEmpty) 'qr_code': qrCode,
+          if (code != null && code.isNotEmpty) 'code': code,
+          if (provinceCode != null && provinceCode.isNotEmpty)
+            'province_code': provinceCode,
+          if (cityCode != null && cityCode.isNotEmpty) 'city_code': cityCode,
+          if (districtCode != null && districtCode.isNotEmpty)
+            'district_code': districtCode,
+          if (subdistrict != null && subdistrict.isNotEmpty)
+            'subdistrict': subdistrict,
+        })
+        .select()
+        .single();
+    return CheckpointModel.fromJson(row);
+  }
+
+  /// Ubah checkpoint (RLS: hanya admin, policy checkpoints_update_admin).
+  Future<CheckpointModel> updateCheckpoint({
+    required String id,
+    required String name,
+    String? address,
+    required double latitude,
+    required double longitude,
+    required int radius,
+    String? qrCode,
+    String? code,
+    String? provinceCode,
+    String? cityCode,
+    String? districtCode,
+    String? subdistrict,
+  }) async {
+    final Map<String, dynamic> row = await _client
+        .from(AppTables.checkpoints)
+        .update(<String, dynamic>{
+          'name': name,
+          'address': address,
+          'latitude': latitude,
+          'longitude': longitude,
+          'radius': radius,
+          'qr_code': (qrCode == null || qrCode.isEmpty) ? null : qrCode,
+          'code': (code == null || code.isEmpty) ? null : code,
+          'province_code': (provinceCode == null || provinceCode.isEmpty)
+              ? null
+              : provinceCode,
+          'city_code':
+              (cityCode == null || cityCode.isEmpty) ? null : cityCode,
+          'district_code': (districtCode == null || districtCode.isEmpty)
+              ? null
+              : districtCode,
+          'subdistrict':
+              (subdistrict == null || subdistrict.isEmpty) ? null : subdistrict,
+        })
+        .eq('id', id)
+        .select()
+        .single();
+    return CheckpointModel.fromJson(row);
+  }
+
+  /// Hapus checkpoint (RLS: hanya admin, policy checkpoints_delete_admin).
+  Future<void> deleteCheckpoint(String id) async {
+    await _client.from(AppTables.checkpoints).delete().eq('id', id);
+  }
+
+  /// Tambah checkpoint baru (alias admin untuk [createCheckpoint]).
+  Future<CheckpointModel> insertCheckpoint({
+    required String name,
+    String? address,
+    required double latitude,
+    required double longitude,
+    required int radius,
+    String? qrCode,
+    String? code,
+    String? provinceCode,
+    String? cityCode,
+    String? districtCode,
+    String? subdistrict,
+  }) {
+    return createCheckpoint(
+      name: name,
+      address: address,
+      latitude: latitude,
+      longitude: longitude,
+      radius: radius,
+      qrCode: qrCode,
+      code: code,
+      provinceCode: provinceCode,
+      cityCode: cityCode,
+      districtCode: districtCode,
+      subdistrict: subdistrict,
+    );
+  }
+
+  /// Ubah checkpoint (alias admin untuk [updateCheckpoint]).
+  Future<CheckpointModel> updateCheckpointRecord({
+    required String id,
+    required String name,
+    String? address,
+    required double latitude,
+    required double longitude,
+    required int radius,
+    String? qrCode,
+    String? code,
+    String? provinceCode,
+    String? cityCode,
+    String? districtCode,
+    String? subdistrict,
+  }) {
+    return updateCheckpoint(
+      id: id,
+      name: name,
+      address: address,
+      latitude: latitude,
+      longitude: longitude,
+      radius: radius,
+      qrCode: qrCode,
+      code: code,
+      provinceCode: provinceCode,
+      cityCode: cityCode,
+      districtCode: districtCode,
+      subdistrict: subdistrict,
+    );
+  }
+
+  /// Nonaktifkan checkpoint.
+  ///
+  /// Skema checkpoints tidak punya kolom is_active dan skema dilarang
+  /// diubah, jadi nonaktif = hapus permanen (RLS: hanya admin).
+  Future<void> deactivateCheckpoint(String id) {
+    return deleteCheckpoint(id);
+  }
 }

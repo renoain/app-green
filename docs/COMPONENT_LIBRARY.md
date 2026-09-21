@@ -25,6 +25,10 @@ Implementasi yang sudah ada di lib/core/widgets/:
 - features/waste/presentation/widgets/location_status_card.dart: LocationStatusCard
 - features/waste/presentation/widgets/category_chip.dart: CategoryChip
 - features/waste/presentation/widgets/photo_upload_container.dart: PhotoUploadContainer
+- features/admin/presentation/widgets/admin_drawer.dart: AdminDrawer, AdminMenuItem
+- features/admin/presentation/widgets/tps_card.dart: TpsCard
+- features/admin/presentation/widgets/region_picker_dropdown.dart: RegionPickerDropdown
+- features/admin/presentation/widgets/waste_verification_card.dart: WasteVerificationCard
 
 ---
 
@@ -289,6 +293,49 @@ Tampilan: container dashed border + ikon kamera; saat `hasPhoto` true
 ditampilkan indikator foto terpasang.
 
 Pemakaian: trigger kamera in-app di halaman Buang Sampah.
+
+### AdminDrawer [Selesai]
+
+Props:
+- displayName: String
+- roleLabel: String
+- currentIndex: int
+- visibleCount: int (petugas hanya 3 menu pertama)
+- onSelect: ValueChanged<int>
+- onLogout: VoidCallback
+
+Pemakaian: sidebar AdminShell (Dashboard, Kelola TPS, Verifikasi Waste,
+Kelola Reward, Kelola User, Pengaturan, Logout).
+
+### TpsCard [Selesai]
+
+Props:
+- checkpoint: Checkpoint
+- onEdit: VoidCallback
+- onDeactivate: VoidCallback
+
+Pemakaian: item daftar Kelola TPS (kode TPS, nama, koordinat, radius,
+kode QR).
+
+### RegionPickerDropdown [Selesai]
+
+Props:
+- initialProvinceCode: String? (mode ubah)
+- initialCityCode: String?
+- initialDistrictCode: String?
+- onChanged: ValueChanged<RegionSelection>?
+
+Pemakaian: dropdown wilayah berjenjang Provinsi -> Kota/Kabupaten ->
+Kecamatan (dropdown_search + kotak cari) di form TPS dan filter
+daftar Kelola TPS. Data dari region providers (API wilayah via dio).
+
+### WasteVerificationCard [Selesai]
+
+Props:
+- log: WasteLog
+- onTap: VoidCallback
+
+Pemakaian: item antrean Verifikasi Waste (kategori, pengirim, waktu).
 
 ### ScanQrButton [Rencana]
 

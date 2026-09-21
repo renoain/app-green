@@ -10,6 +10,16 @@ import 'package:go_router/go_router.dart';
 import '../../features/activity/presentation/data/activity_detail_extra.dart';
 import '../../features/activity/presentation/pages/activity_detail_page.dart';
 import '../../features/activity/presentation/pages/activity_page.dart';
+import '../../features/admin/presentation/admin_shell.dart';
+import '../../features/admin/presentation/pages/admin_checkpoint_form_page.dart';
+import '../../features/admin/presentation/pages/admin_checkpoint_page.dart';
+import '../../features/admin/presentation/pages/admin_dashboard_page.dart';
+import '../../features/admin/presentation/pages/admin_rewards_page.dart';
+import '../../features/admin/presentation/pages/admin_settings_page.dart';
+import '../../features/admin/presentation/pages/admin_users_page.dart';
+import '../../features/admin/presentation/pages/admin_waste_detail_page.dart';
+import '../../features/admin/presentation/pages/admin_waste_verification_page.dart';
+import '../../features/checkpoints/domain/entities/checkpoint.dart';
 import '../../features/article/domain/entities/article.dart';
 import '../../features/article/presentation/pages/article_detail_page.dart';
 import '../../features/article/presentation/pages/article_page.dart';
@@ -26,6 +36,7 @@ import '../../features/scan/presentation/pages/scan_page.dart';
 import '../../features/splash/splash_page.dart';
 import '../../features/verification/presentation/data/verification_extra.dart';
 import '../../features/verification/presentation/pages/verification_page.dart';
+import '../../features/waste/domain/entities/waste_log.dart';
 import '../../features/waste/presentation/data/capture_extra.dart';
 import '../../features/waste/presentation/pages/capture_photo_page.dart';
 import '../../features/waste/presentation/pages/waste_page.dart';
@@ -121,6 +132,106 @@ final List<RouteBase> appRoutes = <RouteBase>[
     name: AppRouteName.settings,
     builder: (BuildContext context, GoRouterState state) =>
         const SettingsPage(),
+  ),
+  StatefulShellRoute.indexedStack(
+    builder: (BuildContext context, GoRouterState state,
+            StatefulNavigationShell navigationShell,) =>
+        AdminShell(navigationShell: navigationShell),
+    branches: <StatefulShellBranch>[
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '/admin/dashboard',
+            name: AppRouteName.adminDashboard,
+            builder: (BuildContext context, GoRouterState state) =>
+                const AdminDashboardPage(),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '/admin/checkpoints',
+            name: AppRouteName.adminCheckpoints,
+            builder: (BuildContext context, GoRouterState state) =>
+                const AdminCheckpointPage(),
+            routes: <RouteBase>[
+              GoRoute(
+                path: 'new',
+                name: AppRouteName.adminCheckpointNew,
+                builder: (BuildContext context, GoRouterState state) =>
+                    const AdminCheckpointFormPage(),
+              ),
+              GoRoute(
+                path: ':id/edit',
+                name: AppRouteName.adminCheckpointEdit,
+                builder: (BuildContext context, GoRouterState state) {
+                  final Object? extra = state.extra;
+                  return AdminCheckpointFormPage(
+                    checkpoint:
+                        extra is Checkpoint ? extra : null,
+                    checkpointId: state.pathParameters['id'],
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '/admin/waste-verification',
+            name: AppRouteName.adminWasteVerification,
+            builder: (BuildContext context, GoRouterState state) =>
+                const AdminWasteVerificationPage(),
+            routes: <RouteBase>[
+              GoRoute(
+                path: ':id',
+                name: AppRouteName.adminWasteDetail,
+                builder: (BuildContext context, GoRouterState state) {
+                  final Object? extra = state.extra;
+                  return AdminWasteDetailPage(
+                    logId: state.pathParameters['id'] ?? '',
+                    log: extra is WasteLog ? extra : null,
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '/admin/rewards',
+            name: AppRouteName.adminRewards,
+            builder: (BuildContext context, GoRouterState state) =>
+                const AdminRewardsPage(),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '/admin/users',
+            name: AppRouteName.adminUsers,
+            builder: (BuildContext context, GoRouterState state) =>
+                const AdminUsersPage(),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '/admin/settings',
+            name: AppRouteName.adminSettings,
+            builder: (BuildContext context, GoRouterState state) =>
+                const AdminSettingsPage(),
+          ),
+        ],
+      ),
+    ],
   ),
   StatefulShellRoute.indexedStack(
     builder: (BuildContext context, GoRouterState state,
@@ -246,4 +357,31 @@ abstract final class AppRouteName {
 
   /// Nama route pengaturan.
   static const String settings = 'settings';
+
+  /// Nama route dasbor admin.
+  static const String adminDashboard = 'adminDashboard';
+
+  /// Nama route daftar TPS admin.
+  static const String adminCheckpoints = 'adminCheckpoints';
+
+  /// Nama route tambah TPS admin.
+  static const String adminCheckpointNew = 'adminCheckpointNew';
+
+  /// Nama route ubah TPS admin.
+  static const String adminCheckpointEdit = 'adminCheckpointEdit';
+
+  /// Nama route verifikasi waste admin.
+  static const String adminWasteVerification = 'adminWasteVerification';
+
+  /// Nama route detail verifikasi waste admin.
+  static const String adminWasteDetail = 'adminWasteDetail';
+
+  /// Nama route kelola reward admin (fase 2).
+  static const String adminRewards = 'adminRewards';
+
+  /// Nama route kelola user admin (fase 2).
+  static const String adminUsers = 'adminUsers';
+
+  /// Nama route pengaturan admin (fase 2).
+  static const String adminSettings = 'adminSettings';
 }

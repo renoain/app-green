@@ -72,6 +72,24 @@ class FakeWasteRepository implements WasteRepository {
       throw UnimplementedError();
 
   @override
+  Future<WasteLog> approveWasteLog({
+    required String id,
+    required String verifiedBy,
+  }) async =>
+      throw UnimplementedError();
+
+  @override
+  Future<WasteLog> rejectWasteLog({
+    required String id,
+    required String verifiedBy,
+    required String reason,
+  }) async =>
+      throw UnimplementedError();
+
+  @override
+  Future<String> getPhotoSignedUrl(String path) async => 'signed/$path';
+
+  @override
   Future<bool> checkDuplicateHash(String hash) async => duplicateHash;
 
   @override

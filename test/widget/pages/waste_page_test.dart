@@ -72,6 +72,78 @@ class FakeCheckpointRepository implements CheckpointRepository {
 
   @override
   Future<Checkpoint?> getCheckpointByQrCode(String qrCode) async => null;
+
+  @override
+  Future<Checkpoint> createCheckpoint({
+    required String name,
+    String? address,
+    required double latitude,
+    required double longitude,
+    required int radius,
+    String? qrCode,
+    String? code,
+    String? provinceCode,
+    String? cityCode,
+    String? districtCode,
+    String? subdistrict,
+  }) async =>
+      checkpoints.first;
+
+  @override
+  Future<Checkpoint> updateCheckpoint({
+    required String id,
+    required String name,
+    String? address,
+    required double latitude,
+    required double longitude,
+    required int radius,
+    String? qrCode,
+    String? code,
+    String? provinceCode,
+    String? cityCode,
+    String? districtCode,
+    String? subdistrict,
+  }) async =>
+      checkpoints.first;
+
+  @override
+  Future<void> deleteCheckpoint(String id) async {}
+
+  @override
+  Future<Checkpoint> insertCheckpoint({
+    required String name,
+    String? address,
+    required double latitude,
+    required double longitude,
+    required int radius,
+    String? qrCode,
+    String? code,
+    String? provinceCode,
+    String? cityCode,
+    String? districtCode,
+    String? subdistrict,
+  }) async =>
+      checkpoints.first;
+
+  @override
+  Future<Checkpoint> updateCheckpointRecord({
+    required String id,
+    required String name,
+    String? address,
+    required double latitude,
+    required double longitude,
+    required int radius,
+    String? qrCode,
+    String? code,
+    String? provinceCode,
+    String? cityCode,
+    String? districtCode,
+    String? subdistrict,
+  }) async =>
+      checkpoints.first;
+
+  @override
+  Future<void> deactivateCheckpoint(String id) async {}
 }
 
 Widget _wasteApp({List<Override> overrides = const <Override>[]}) {

@@ -25,10 +25,14 @@ class WasteLogModel extends WasteLog {
     super.notes,
     super.source,
     required super.createdAt,
+    super.submitterName,
+    super.checkpointName,
   });
 
   /// Membangun model dari respons JSON Supabase.
   factory WasteLogModel.fromJson(Map<String, dynamic> json) {
+    final Object? profile = json['profiles'];
+    final Object? checkpoint = json['checkpoints'];
     return WasteLogModel(
       id: json['id'] as String,
       userId: json['user_id'] as String,
@@ -45,6 +49,12 @@ class WasteLogModel extends WasteLog {
       notes: json['notes'] as String?,
       source: WasteSource.fromDb(json['source'] as String?),
       createdAt: _parseDateTime(json['created_at']),
+      submitterName: profile is Map<String, dynamic>
+          ? profile['username'] as String?
+          : null,
+      checkpointName: checkpoint is Map<String, dynamic>
+          ? checkpoint['name'] as String?
+          : null,
     );
   }
 

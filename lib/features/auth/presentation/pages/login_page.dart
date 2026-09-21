@@ -6,6 +6,7 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/app_enums.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -69,7 +70,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       _showLoginError(result);
       return;
     }
-    context.goNamed(AppRouteName.home);
+    final UserRole role = await getCurrentUserRole();
+    if (!mounted) {
+      return;
+    }
+    context.goNamed(_homeForRole(role));
   }
 
   void _showLoginError(SignInResult result) {
@@ -98,7 +103,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       _showGoogleLoginError(result);
       return;
     }
-    context.goNamed(AppRouteName.home);
+    final UserRole role = await getCurrentUserRole();
+    if (!mounted) {
+      return;
+    }
+    context.goNamed(_homeForRole(role));
   }
 
   /// Menampilkan pesan error khusus login Google.
@@ -114,6 +123,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   void _goToRegister() {
     context.goNamed(AppRouteName.register);
+  }
+
+  /// Route tujuan pasca-login berdasarkan role.
+  String _homeForRole(UserRole role) {
+    switch (role) {
+      case UserRole.admin:
+        return AppRouteName.adminDashboard;
+      case UserRole.petugas:
+        return AppRouteName.adminWasteVerification;
+      case UserRole.user:
+        return AppRouteName.home;
+    }
   }
 
   /// Menampilkan pemberitahuan sementara untuk menu yang belum tersedia.
