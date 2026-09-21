@@ -47,6 +47,7 @@ void main() {
     expect(find.text(AppStrings.profileLoginNotice), findsOneWidget);
     expect(find.text(AppStrings.settings), findsOneWidget);
     expect(find.text(AppStrings.editProfile), findsNothing);
+    expect(find.text(AppStrings.voucherTitle), findsNothing);
     expect(find.text(AppStrings.logout), findsNothing);
   });
 
@@ -65,6 +66,7 @@ void main() {
     expect(find.text('budi@mail.com'), findsOneWidget);
     expect(find.text('budi'), findsOneWidget);
     expect(find.text(AppStrings.editProfile), findsOneWidget);
+    expect(find.text(AppStrings.voucherTitle), findsOneWidget);
     expect(find.text(AppStrings.settings), findsOneWidget);
     expect(find.text(AppStrings.logout), findsOneWidget);
   });

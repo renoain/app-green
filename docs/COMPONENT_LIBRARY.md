@@ -24,6 +24,8 @@ Implementasi yang sudah ada di lib/core/widgets/:
 - features/checkpoints/presentation/widgets/checkpoint_tile.dart: CheckpointTile
 - features/waste/presentation/widgets/location_status_card.dart: LocationStatusCard
 - features/waste/presentation/widgets/category_chip.dart: CategoryChip
+- features/verification/presentation/widgets/points_earned_dialog.dart: showPointsEarnedDialog
+- features/rewards/presentation/widgets/redeem_dialogs.dart: showRedeemConfirmDialog/showRedeemSuccessDialog
 - features/waste/presentation/widgets/photo_upload_container.dart: PhotoUploadContainer
 - features/admin/presentation/widgets/admin_drawer.dart: AdminDrawer, AdminMenuItem
 - features/admin/presentation/widgets/tps_card.dart: TpsCard
@@ -278,8 +280,37 @@ Props:
 Tampilan: chip kategori sampah; saat terpilih berwarna primary dengan teks
 onPrimary.
 
-Pemakaian: pilihan kategori/ jenis sampah (organik, anorganik, b3,
-daur ulang) di halaman Buang Sampah.
+Pemakaian: pilihan kategori/jenis sampah (organik, anorganik, b3,
+daur ulang) di halaman Verifikasi setelah foto.
+
+### PointsEarnedDialog [Selesai]
+
+Props (fungsi `showPointsEarnedDialog`):
+
+- context: BuildContext
+- points: int (poin yang masuk)
+
+Tampilan: popup kartu surface (ikon koin, +poin headline, judul, pesan,
+tombol Ke Beranda); animasi scale easeOutBack + fade 350ms;
+barrier tidak bisa ditutup tanpa tombol.
+
+Pemakaian: notifikasi poin masuk setelah bukti terkirim di halaman
+Verifikasi.
+
+### RedeemDialogs [Selesai]
+
+Props (fungsi `showRedeemConfirmDialog` / `showRedeemSuccessDialog`):
+
+- context: BuildContext
+- rewardTitle: String, pointCost: int (konfirmasi saja)
+
+Tampilan: popup kartu surface (ikon, judul, detail biaya, pesan);
+animasi scale easeOutBack + fade 350ms; konfirmasi: Batal (kiri,
+secondary) + Tukar (kanan, primary) sejajar; sukses: Lihat Voucher
+Saya (penuh) + Tutup (penuh) bertumpuk agar label panjang tidak
+terpotong.
+
+Pemakaian: konfirmasi dan sukses penukaran reward di Detail Reward.
 
 ### PhotoUploadContainer [Selesai]
 

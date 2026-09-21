@@ -162,7 +162,7 @@ Widget _wasteApp({List<Override> overrides = const <Override>[]}) {
 }
 
 void main() {
-  testWidgets('menampilkan checkpoint, status GPS, dan tombol ambil foto',
+  testWidgets('menampilkan checkpoint tanpa kategori dan tombol ambil foto',
       (WidgetTester tester) async {
     await tester.pumpWidget(_wasteApp());
     await tester.pumpAndSettle();
@@ -170,7 +170,7 @@ void main() {
     expect(find.text(AppStrings.wasteTitle), findsOneWidget);
     expect(find.text(AppStrings.wasteCheckpointTps), findsOneWidget);
     expect(find.text(AppStrings.wasteCheckpointBank), findsOneWidget);
-    expect(find.text(AppStrings.wasteCategoryTitle), findsOneWidget);
+    expect(find.text(AppStrings.wasteCategoryTitle), findsNothing);
     expect(find.text(AppStrings.takePhotoButton), findsOneWidget);
   });
 

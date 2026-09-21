@@ -12,8 +12,7 @@ class LocationService {
   /// Mengambil posisi GPS saat ini.
   ///
   /// Mengembalikan null jika GPS mati, izin ditolak, atau gagal.
-  Future<Position?> getCurrentPosition() async {
-    try {
+  Future<Position?> getCurrentPosition() async {    try {
       if (!await Geolocator.isLocationServiceEnabled()) return null;
 
       LocationPermission permission = await Geolocator.checkPermission();
@@ -32,6 +31,24 @@ class LocationService {
       return null;
     }
   }
+
+  /// Status layanan lokasi perangkat (GPS hidup atau mati).
+  Future<bool> isServiceEnabled() => Geolocator.isLocationServiceEnabled();
+
+  /// Status izin lokasi saat ini (tanpa meminta).
+  Future<LocationPermission> checkPermission() =>
+      Geolocator.checkPermission();
+
+  /// Meminta izin lokasi ke sistem.
+  Future<LocationPermission> requestPermission() =>
+      Geolocator.requestPermission();
+
+  /// Membuka pengaturan lokasi sistem agar user bisa menghidupkan GPS.
+  Future<void> openLocationSettings() =>
+      Geolocator.openLocationSettings();
+
+  /// Membuka pengaturan aplikasi (untuk izin ditolak permanen).
+  Future<void> openAppSettings() => Geolocator.openAppSettings();
 
   /// Memformat posisi menjadi label koordinat untuk ditampilkan.
   String formatPositionLabel(Position position) =>

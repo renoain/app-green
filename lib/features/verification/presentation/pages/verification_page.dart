@@ -1,9 +1,11 @@
 // Halaman verifikasi bukti pembuangan sampah Go Green.
 //
-// Menampilkan preview foto + timestamp + lokasi, lalu mengirim bukti via
-// WasteSubmitNotifier (hash SHA-256, validasi radius/duplikat/rate limit,
-// upload, insert waste_logs). Timestamp server tercatat di database saat
-// insert (kolom server_timestamp default now()).
+// Menampilkan preview foto + timestamp + lokasi, pilihan kategori
+// sampah (dipilih setelah foto), lalu mengirim bukti via
+// WasteSubmitNotifier (hash SHA-256, validasi radius/duplikat/rate
+// limit, upload, insert waste_logs). Sukses menampilkan popup poin
+// animasi. Timestamp server tercatat di database saat insert (kolom
+// server_timestamp default now()).
 
 import 'dart:io';
 import 'dart:typed_data';
@@ -27,8 +29,21 @@ import '../../../../core/widgets/app_button_widgets.dart';
 import '../../../../core/widgets/status_widgets.dart';
 import '../../../checkpoints/domain/entities/checkpoint.dart';
 import '../../../checkpoints/presentation/providers/checkpoint_provider.dart';
+import '../../../waste/domain/usecases/submit_waste_usecase.dart';
 import '../../../waste/presentation/providers/waste_provider.dart';
+import '../../../waste/presentation/widgets/category_chip.dart';
 import '../data/verification_extra.dart';
+import '../widgets/points_earned_dialog.dart';
+
+/// Label Bahasa Indonesia untuk kategori sampah.
+String _categoryLabel(WasteCategory category) {
+  return switch (category) {
+    WasteCategory.organik => AppStrings.wasteCategoryOrganik,
+    WasteCategory.anorganik => AppStrings.wasteCategoryAnorganik,
+    WasteCategory.daurUlang => AppStrings.wasteCategoryDaurUlang,
+    WasteCategory.b3 => AppStrings.wasteCategoryB3,
+  };
+}
 
 /// Halaman verifikasi foto bukti Go Green.
 class VerificationPage extends ConsumerStatefulWidget {
@@ -43,6 +58,15 @@ class VerificationPage extends ConsumerStatefulWidget {
 }
 
 class _VerificationPageState extends ConsumerState<VerificationPage> {
+  WasteCategory _selectedCategory = WasteCategory.organik;
+
+  @override
+  void initState() {
+    super.initState();
+    final WasteCategory? initial = widget.extra?.category;
+    if (initial != null) _selectedCategory = initial;
+  }
+
   void _showHash(BuildContext context, String hash) {
     showDialog<void>(
       context: context,
@@ -139,7 +163,7 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
     await ref.read(wasteSubmitNotifierProvider.notifier).submit(
           userId: userId,
           checkpoint: checkpoint,
-          category: extra?.category ?? WasteCategory.organik,
+          category: _selectedCategory,
           photoBytes: bytes,
           latitude: latitude,
           longitude: longitude,
@@ -150,22 +174,19 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
   Widget build(BuildContext context) {
     ref.listen<AsyncValue<dynamic>>(
       wasteSubmitNotifierProvider,
-      (previous, next) {
+      (previous, next) async {
+        final Object? value = next.valueOrNull;
+        if (value is SubmitWasteResult && previous is AsyncLoading) {
+          if (!context.mounted) return;
+          await showPointsEarnedDialog(
+            context,
+            points: value.estimatedPoints,
+          );
+          if (!context.mounted) return;
+          ref.read(wasteSubmitNotifierProvider.notifier).reset();
+          context.goNamed(AppRouteName.home);
+        }
         next.whenOrNull(
-          data: (value) {
-            if (value != null && previous is AsyncLoading) {
-              if (!context.mounted) return;
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                  const SnackBar(
-                    content: Text(AppStrings.wasteSubmitSuccess),
-                  ),
-                );
-              ref.read(wasteSubmitNotifierProvider.notifier).reset();
-              context.goNamed(AppRouteName.home);
-            }
-          },
           error: (error, _) {
             if (!context.mounted) return;
             ScaffoldMessenger.of(context)
@@ -190,6 +211,9 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
         ref.watch(wasteSubmitNotifierProvider);
     final bool submitting = submitState.isLoading;
     const String hashValue = AppStrings.verificationHashDemo;
+    final int estimatedPoints = ref
+        .watch(calculatePointsUsecaseProvider)
+        .calculate(category: _selectedCategory);
 
     return Scaffold(
       appBar: const CustomAppBar(
@@ -235,6 +259,27 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
               timestampLabel: timestampValue,
             ),
             const SizedBox(height: AppSpacing.lg),
+            const Text(
+              AppStrings.wasteCategoryTitle,
+              style: AppTypography.headlineSm,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: <Widget>[
+                for (final WasteCategory category in WasteCategory.values)
+                  CategoryChip(
+                    label: _categoryLabel(category),
+                    selected: _selectedCategory == category,
+                    onTap: submitting
+                        ? null
+                        : () =>
+                            setState(() => _selectedCategory = category),
+                  ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.lg),
             _DetailRow(
               icon: LucideIcons.clock,
               label: AppStrings.verificationTimestampLabel,
@@ -248,8 +293,7 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
             _DetailRow(
               icon: LucideIcons.coins,
               label: AppStrings.verificationPointsLabel,
-              value:
-                  '+${formatIndonesianNumber(AppStrings.verificationPointsDemo)}',
+              value: '+${formatIndonesianNumber(estimatedPoints)}',
             ),
             const _DetailRow(
               icon: LucideIcons.shield_check,

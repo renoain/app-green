@@ -223,8 +223,8 @@ class AppStrings {
   /// Nilai stat karbon dihindari di Home.
   static const String homeStatCarbonValue = '35 kg';
 
-  /// Label stat karbon dihindari di Home.
-  static const String homeStatCarbonLabel = 'Karbon Dihindari';
+  /// Label stat karbon dikurangi di Home (Stitch Enhanced).
+  static const String homeStatCarbonLabel = 'Karbon Dikurangi';
 
   /// Nilai stat pohon selamat di Home.
   static const String homeStatTreeValue = '5';
@@ -265,6 +265,25 @@ class AppStrings {
 
   /// Label status terverifikasi di Home.
   static const String homeVerifiedLabel = 'Terverifikasi';
+
+  /// Label stat hitungan buang di Home (data asli).
+  static const String homeStatTimesLabel = 'Kali Buang';
+
+  /// Label stat buang minggu ini di Home (data asli).
+  static const String homeStatWeekLabel = 'Minggu Ini';
+
+  /// Satuan hitungan misi mingguan di Home.
+  static const String homeMissionTimesUnit = 'kali';
+
+  /// Akhiran progres terkumpul misi mingguan di Home.
+  static const String homeMissionCollectedSuffix = 'terkumpul';
+
+  /// Awalan target misi mingguan di Home.
+  static const String homeMissionTargetPrefix = 'Target:';
+
+  /// Pesan aktivitas kosong di Home (user login tanpa riwayat).
+  static const String homeActivityEmpty =
+      'Belum ada aktivitas. Buang sampah pertamamu yuk!';
 
   /// Judul section artikel dan edukasi di Home.
   static const String homeArticleSection = 'Artikel & Edukasi Hijau';
@@ -629,8 +648,37 @@ class AppStrings {
   static const String redeemConfirmMessage =
       'Kamu akan menukar poin untuk reward ini. Lanjutkan?';
 
-  /// Pesan reward berhasil ditukar.
-  static const String redeemSuccess = 'Reward berhasil ditukar.';
+  /// Judul popup penukaran berhasil.
+  static const String redeemSuccessTitle = 'Penukaran Berhasil';
+
+  /// Pesan popup penukaran berhasil.
+  static const String redeemSuccessMessage =
+      'Voucher sudah masuk daftar Voucher Saya.';
+
+  /// Tombol lihat voucher di popup sukses.
+  static const String redeemGoVoucherButton = 'Lihat Voucher Saya';
+
+  /// Tombol tutup popup.
+  static const String redeemCloseButton = 'Tutup';
+
+  /// Judul halaman voucher saya.
+  static const String voucherTitle = 'Voucher Saya';
+
+  /// Pesan voucher kosong.
+  static const String voucherEmptyMessage =
+      'Belum ada voucher. Tukar poin dengan reward favoritmu!';
+
+  /// Status voucher menunggu.
+  static const String voucherStatusPending = 'Menunggu';
+
+  /// Status voucher disetujui.
+  static const String voucherStatusApproved = 'Disetujui';
+
+  /// Status voucher ditolak.
+  static const String voucherStatusRejected = 'Ditolak';
+
+  /// Status voucher diklaim.
+  static const String voucherStatusClaimed = 'Diklaim';
 
   /// Tombol batal pada dialog.
   static const String cancelButton = 'Batal';
@@ -670,6 +718,16 @@ class AppStrings {
   /// Tombol konfirmasi kirim.
   static const String verificationSubmitButton = 'Konfirmasi Kirim';
 
+  /// Judul popup poin masuk.
+  static const String pointsEarnedTitle = 'Poin Masuk!';
+
+  /// Pesan popup poin masuk.
+  static const String pointsEarnedMessage =
+      'Foto, lokasi, dan hash terverifikasi. Poin sudah masuk ke akunmu.';
+
+  /// Tombol tutup popup poin masuk.
+  static const String pointsEarnedButton = 'Ke Beranda';
+
   /// Label tombol lihat detail hash.
   static const String verificationHashButton = 'Lihat Detail Hash';
 
@@ -686,9 +744,6 @@ class AppStrings {
   /// Nilai hash demo sebelum integrasi.
   static const String verificationHashDemo =
       'a3f1c8e92b7d44e0a5f6c12b9d3e7f8a3c5d9e1f7b2a4c6d8e0f1a3b5c7d9e1f3';
-
-  /// Estimasi poin demo.
-  static const int verificationPointsDemo = 25;
 
   /// --- Onboarding ---
 
@@ -762,9 +817,6 @@ class AppStrings {
   static const String wasteNeedLogin =
       'Masuk dulu untuk mengirim bukti buang sampah.';
 
-  /// Pesan kirim bukti berhasil.
-  static const String wasteSubmitSuccess = 'Bukti terkirim. Poin menunggumu.';
-
   /// Hint jarak checkpoint pada daftar.
   static const String wasteDistanceHint = 'jarak';
 
@@ -781,7 +833,7 @@ class AppStrings {
       'Belum ada titik pembuangan. Tambah titik pertama.';
   static const String adminCheckpointNameLabel = 'Deskripsi lokasi';
   static const String adminCheckpointNameHint = 'Contoh: Depan gerbang perumahan blok C';
-  static const String adminCheckpointAddressLabel = 'Alamat (opsional)';
+  static const String adminCheckpointAddressLabel = 'Alamat lengkap (otomatis)';
   static const String adminCheckpointLatLabel = 'Latitude';
   static const String adminCheckpointLngLabel = 'Longitude';
   static const String adminCheckpointRadiusLabel = 'Radius (meter)';
@@ -797,8 +849,38 @@ class AppStrings {
   static const String adminCheckpointDeleted = 'Titik berhasil dihapus.';
   static const String adminCheckpointDeleteTitle = 'Hapus titik ini?';
   static const String adminMapHint =
-      'Ketuk peta untuk memindahkan pin lokasi.';
+      'Ketuk peta untuk memindahkan pin, atau buka peta layar penuh untuk menggeser.';
   static const String adminUseMyLocation = 'Pakai lokasi saya';
+
+  /// Tombol buka pemilih peta layar penuh.
+  static const String adminPickOnMap = 'Pilih di peta';
+
+  /// Judul halaman pemilih peta layar penuh.
+  static const String adminMapPickerTitle = 'Pilih lokasi';
+
+  /// Hint pemilih peta layar penuh.
+  static const String adminMapPickerHint =
+      'Geser peta atau ketuk untuk memindahkan pin.';
+
+  /// Tombol konfirmasi titik di pemilih peta.
+  static const String adminUseThisLocation = 'Gunakan lokasi ini';
+
+  /// Judul dialog saat GPS perangkat mati.
+  static const String adminEnableLocationTitle = 'Hidupkan lokasi';
+
+  /// Pesan dialog saat GPS perangkat mati.
+  static const String adminEnableLocationMessage =
+      'Layanan lokasi perangkat mati. Hidupkan GPS untuk memakai lokasi saat ini.';
+
+  /// Tombol buka pengaturan sistem dari dialog lokasi.
+  static const String adminOpenSettings = 'Buka Pengaturan';
+
+  /// Judul dialog saat izin lokasi ditolak permanen.
+  static const String adminLocationPermissionTitle = 'Izin lokasi ditolak';
+
+  /// Pesan dialog saat izin lokasi ditolak permanen.
+  static const String adminLocationPermissionMessage =
+      'Izin lokasi ditolak. Buka pengaturan aplikasi untuk mengizinkan akses lokasi.';
   static const String adminTestLocationTitle = 'Lokasi uji';
   static const String adminTestLocationActive = 'Lokasi uji aktif';
   static const String adminTestLocationOff = 'GPS asli';
@@ -885,8 +967,8 @@ class AppStrings {
   /// Label dropdown kecamatan.
   static const String adminRegionDistrictLabel = 'Kecamatan';
 
-  /// Label input kelurahan opsional.
-  static const String adminSubdistrictLabel = 'Kelurahan (opsional)';
+  /// Label input kelurahan (terisi otomatis dari peta, bisa diubah).
+  static const String adminSubdistrictLabel = 'Kelurahan (otomatis)';
 
   /// Judul section filter wilayah di daftar TPS.
   static const String adminRegionFilterTitle = 'Filter Wilayah';

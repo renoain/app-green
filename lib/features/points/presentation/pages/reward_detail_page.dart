@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -12,6 +14,7 @@ import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/app_bar_and_loading_widgets.dart';
 import '../../../../core/widgets/app_button_widgets.dart';
 import '../../../../core/widgets/card_widgets.dart';
+import '../../../rewards/presentation/widgets/redeem_dialogs.dart';
 import '../data/reward_demo_data.dart';
 
 /// Halaman detail reward Go Green.
@@ -107,7 +110,7 @@ class RewardDetailPage extends StatelessWidget {
             const SizedBox(height: AppSpacing.lg),
             PrimaryButton(
               text: AppStrings.rewardExchangeButton,
-              onPressed: () => _onExchange(context),
+              onPressed: () => _onExchange(context, reward),
             ),
             const SizedBox(height: AppSpacing.xl),
           ],
@@ -116,27 +119,15 @@ class RewardDetailPage extends StatelessWidget {
     );
   }
 
-  Future<void> _onExchange(BuildContext context) async {
-    final bool? confirmed = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext dialogContext) => AlertDialog(
-        title: const Text(AppStrings.redeemConfirmTitle),
-        content: const Text(AppStrings.redeemConfirmMessage),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text(AppStrings.cancelButton),
-          ),
-          PrimaryButton(
-            text: AppStrings.rewardExchangeButton,
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-          ),
-        ],
-      ),
+  Future<void> _onExchange(BuildContext context, RewardDemo reward) async {
+    final bool confirmed = await showRedeemConfirmDialog(
+      context,
+      rewardTitle: reward.title,
+      pointCost: reward.pointCost,
     );
-    if (confirmed != true || !context.mounted) return;
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(const SnackBar(content: Text(AppStrings.redeemSuccess)));
+    if (!confirmed || !context.mounted) return;
+    final bool goVouchers = await showRedeemSuccessDialog(context);
+    if (!goVouchers || !context.mounted) return;
+    context.pushNamed(AppRouteName.vouchers);
   }
 }

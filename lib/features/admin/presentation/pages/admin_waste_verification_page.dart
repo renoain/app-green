@@ -46,10 +46,7 @@ class _AdminWasteVerificationPageState
       appBar: CustomAppBar(
         title: AppStrings.adminVerifyWaste,
         leading: LucideIcons.menu,
-        onLeadingTap: () => ref
-            .read(adminScaffoldKeyProvider)
-            .currentState
-            ?.openDrawer(),
+        onLeadingTap: () => ref.read(adminDrawerOpenerProvider)?.call(),
       ),
       body: Column(
         children: <Widget>[

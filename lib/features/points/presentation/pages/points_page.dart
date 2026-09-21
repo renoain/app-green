@@ -22,6 +22,7 @@ import '../../../../core/widgets/status_widgets.dart';
 import '../../domain/entities/point.dart';
 import '../data/reward_demo_data.dart';
 import '../providers/point_provider.dart';
+import '../../../waste/presentation/providers/waste_provider.dart';
 
 /// Tanggal riwayat poin demo pertama.
 final DateTime _demoHistoryDate1 = DateTime(2026, 9, 11);
@@ -53,6 +54,12 @@ class _PointsPageState extends ConsumerState<PointsPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue<dynamic>>(
+      wasteSubmitNotifierProvider,
+      (previous, next) {
+        if (next.valueOrNull != null && previous is AsyncLoading) _reload();
+      },
+    );
     final String? userId = SupabaseService.instance.currentUser?.id;
     if (userId == null) {
       return Scaffold(
@@ -228,9 +235,19 @@ class _RewardsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const Text(
-          AppStrings.rewardsSectionTitle,
-          style: AppTypography.headlineSm,
+        Row(
+          children: <Widget>[
+            const Expanded(
+              child: Text(
+                AppStrings.rewardsSectionTitle,
+                style: AppTypography.headlineSm,
+              ),
+            ),
+            AppTextButton(
+              text: AppStrings.voucherTitle,
+              onPressed: () => context.pushNamed(AppRouteName.vouchers),
+            ),
+          ],
         ),
         const SizedBox(height: AppSpacing.md),
         for (final RewardDemo reward in demoRewards) ...<Widget>[

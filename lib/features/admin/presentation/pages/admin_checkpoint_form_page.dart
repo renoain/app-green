@@ -1,9 +1,9 @@
 // Halaman form tambah/ubah titik pembuangan (presentation).
 //
-// Koordinat dari lokasi saya/ketuk peta otomatis me-resolve wilayah
-// (reverse-geocode) sehingga dropdown + kode TPS terisi sendiri.
-// Validasi bisnis di ManageCheckpointUsecase; widget hanya menampilkan
-// pesan ramah Bahasa Indonesia.
+// Koordinat dari lokasi saya/peta layar penuh otomatis me-resolve
+// wilayah (reverse-geocode) sehingga dropdown + kelurahan + alamat +
+// kode TPS terisi sendiri. Validasi bisnis di ManageCheckpointUsecase;
+// widget hanya menampilkan pesan ramah Bahasa Indonesia.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -22,11 +22,14 @@ import '../../../checkpoints/domain/entities/checkpoint.dart';
 import '../../../checkpoints/domain/usecases/manage_checkpoint_usecase.dart';
 import '../../../checkpoints/presentation/providers/checkpoint_provider.dart';
 import '../../../regions/domain/entities/region.dart';
+import '../../../regions/domain/usecases/resolve_region_usecase.dart';
 import '../../../regions/presentation/providers/region_provider.dart';
 import '../providers/admin_checkpoint_provider.dart';
 import '../providers/admin_providers.dart';
 import '../widgets/checkpoint_map_picker.dart';
+import '../widgets/location_ready.dart';
 import '../widgets/region_picker_dropdown.dart';
+import 'admin_map_picker_page.dart';
 
 /// Form tambah/ubah checkpoint admin.
 class AdminCheckpointFormPage extends ConsumerStatefulWidget {
@@ -133,6 +136,7 @@ class _AdminCheckpointFormPageState
 
   Future<void> _useMyLocation() async {
     if (_locating) return;
+    if (!await ensureLocationReady(context)) return;
     setState(() => _locating = true);
     try {
       const LocationService service = LocationService();
@@ -158,17 +162,45 @@ class _AdminCheckpointFormPageState
     }
   }
 
+  Future<void> _openFullMap() async {
+    if (!mounted) return;
+    final LatLng? picked = await Navigator.of(context).push<LatLng>(
+      MaterialPageRoute<LatLng>(
+        builder: (_) => AdminMapPickerPage(
+          initialLatitude: _lat,
+          initialLongitude: _lng,
+        ),
+      ),
+    );
+    if (!mounted || picked == null) return;
+    setState(() {
+      _latController.text = picked.latitude.toStringAsFixed(6);
+      _lngController.text = picked.longitude.toStringAsFixed(6);
+    });
+    _resolveRegion(picked.latitude, picked.longitude);
+  }
+
   Future<void> _resolveRegion(double latitude, double longitude) async {
     if (_resolvingRegion) return;
     setState(() => _resolvingRegion = true);
     try {
-      final RegionSelection? resolved = await ref
+      final ResolvedLocation? resolved = await ref
           .read(resolveRegionUsecaseProvider)
-          .resolve(latitude: latitude, longitude: longitude);
+          .resolveDetails(latitude: latitude, longitude: longitude);
       if (!mounted || resolved == null) return;
-      setState(() => _region = resolved);
-      final RegionCity? city = resolved.city;
-      final RegionDistrict? district = resolved.district;
+      setState(() {
+        _region = resolved.selection;
+        if (resolved.subdistrict != null &&
+            resolved.subdistrict!.isNotEmpty) {
+          _subdistrictController.text = resolved.subdistrict!;
+        }
+        if (resolved.fullAddress != null &&
+            resolved.fullAddress!.isNotEmpty) {
+          _addressController.text = resolved.fullAddress!;
+        }
+      });
+      final RegionCity? city = resolved.selection.city;
+      final RegionDistrict? district = resolved.selection.district;
       if (city != null && district != null) {
         await _generateCodeFor(city, district);
       }
@@ -388,21 +420,29 @@ class _AdminCheckpointFormPageState
                 latitude: _lat,
                 longitude: _lng,
                 onPick: _onMapPick,
+                onExpand: _openFullMap,
               ),
               const SizedBox(height: AppSpacing.sm),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                  onPressed: _locating ? null : _useMyLocation,
-                  icon: _locating
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(LucideIcons.locate_fixed, size: 16),
-                  label: const Text(AppStrings.adminUseMyLocation),
-                ),
+              Wrap(
+                spacing: AppSpacing.sm,
+                children: <Widget>[
+                  TextButton.icon(
+                    onPressed: _locating ? null : _useMyLocation,
+                    icon: _locating
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(LucideIcons.locate_fixed, size: 16),
+                    label: const Text(AppStrings.adminUseMyLocation),
+                  ),
+                  TextButton.icon(
+                    onPressed: _openFullMap,
+                    icon: const Icon(LucideIcons.map, size: 16),
+                    label: const Text(AppStrings.adminPickOnMap),
+                  ),
+                ],
               ),
               if (_resolvingRegion)
                 const Padding(

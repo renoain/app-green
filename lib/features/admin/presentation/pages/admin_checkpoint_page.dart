@@ -100,10 +100,7 @@ class _AdminCheckpointPageState extends ConsumerState<AdminCheckpointPage> {
       appBar: CustomAppBar(
         title: AppStrings.adminManageTps,
         leading: LucideIcons.menu,
-        onLeadingTap: () => ref
-            .read(adminScaffoldKeyProvider)
-            .currentState
-            ?.openDrawer(),
+        onLeadingTap: () => ref.read(adminDrawerOpenerProvider)?.call(),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {

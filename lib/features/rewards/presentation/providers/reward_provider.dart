@@ -6,6 +6,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../domain/entities/redemption.dart';
 import '../../domain/entities/reward.dart';
 import '../../data/datasources/reward_remote_datasource.dart';
 
@@ -44,4 +45,31 @@ final StateNotifierProvider<RewardNotifier, AsyncValue<List<Reward>>>
     rewardNotifierProvider =
     StateNotifierProvider<RewardNotifier, AsyncValue<List<Reward>>>(
   (Ref ref) => RewardNotifier(ref.watch(rewardRemoteDatasourceProvider)),
+);
+
+/// Notifier daftar voucher (redemption) milik user.
+class UserVouchersNotifier
+    extends StateNotifier<AsyncValue<List<Redemption>>> {
+  /// Membuat notifier dengan data source yang di-inject.
+  UserVouchersNotifier(this._datasource)
+      : super(const AsyncLoading<List<Redemption>>());
+
+  final RewardRemoteDatasource _datasource;
+
+  /// Memuat daftar penukaran milik [userId].
+  Future<void> load({required String userId}) async {
+    state = const AsyncLoading<List<Redemption>>();
+    state = await AsyncValue.guard<List<Redemption>>(
+      () => _datasource.getUserRedemptions(userId),
+    );
+  }
+}
+
+/// Provider state voucher milik user.
+final StateNotifierProvider<UserVouchersNotifier,
+        AsyncValue<List<Redemption>>> userVouchersProvider =
+    StateNotifierProvider<UserVouchersNotifier,
+        AsyncValue<List<Redemption>>>(
+  (Ref ref) =>
+      UserVouchersNotifier(ref.watch(rewardRemoteDatasourceProvider)),
 );

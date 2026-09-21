@@ -49,7 +49,7 @@ Setelah login:
 
 ## 4. Alur Masuk Admin
 
-1. User buka app, splash.
+1. User buka app, splash (sesi tersimpan langsung ke dasbor sesuai role).
 2. Login (email/username + password, atau Google).
 3. App ambil role dari tabel `profiles`.
 4. Redirect:
@@ -63,7 +63,7 @@ Admin tidak melihat Home user. Admin punya layout sendiri.
 
 ## 5. Layout Admin
 
-Admin memakai **drawer** (sidebar) sebagai navigasi utama, bukan bottom nav, karena menu admin lebih banyak dan lebih cocok untuk operasional. Tombol back di root branch perlu ditekan 2 kali dalam 2 detik untuk keluar aplikasi (seperti tab Beranda user); di sub-route (form/detail) back berjalan normal.
+Admin memakai **drawer** (sidebar) sebagai navigasi utama, bukan bottom nav, karena menu admin lebih banyak dan lebih cocok untuk operasional. Tombol back di root branch sekali tekan langsung kembali ke UI user (/profile); di sub-route (form/detail) back berjalan normal (pop). Masuk admin selalu via go (bukan push) agar tidak menumpuk shell.
 
 Drawer berisi:
 
@@ -107,9 +107,13 @@ Fitur:
 - Tambah checkpoint baru.
 - Edit checkpoint.
 - Nonaktifkan checkpoint (soft delete).
-- Ambil lokasi dari GPS admin saat tambah/edit.
+- Ambil lokasi dari GPS admin saat tambah/edit (minta hidupkan GPS bila
+  mati, arahkan ke pengaturan bila izin ditolak permanen).
+- Pilih titik di peta layar penuh (pin tengah, geser peta atau ketuk,
+  tombol lokasi saya, konfirmasi Gunakan lokasi ini).
 - Pilih wilayah berjenjang: Provinsi -> Kota/Kabupaten -> Kecamatan (dengan search).
-- Wilayah otomatis terisi dari GPS/peta (reverse-geocode Nominatim) lalu kode TPS tergenerate.
+- Wilayah + kelurahan + alamat lengkap otomatis terisi dari GPS/peta
+  (reverse-geocode Nominatim) lalu kode TPS tergenerate.
 - Generate kode TPS otomatis format <KOTA>-<KEC>-<NOMOR> (mis. SBY-KTT-01) dari kecamatan terpilih + nomor urut se-wilayah.
 - Kolom QR disembunyikan sementara, menyusul fase berikut (qr_code tetap tersimpan otomatis CP-XXX).
 - Tampilkan QR code (untuk dicetak/ditempel di TPS).
@@ -120,9 +124,9 @@ Form tambah/edit:
 - Kota/Kabupaten (wajib, terfilter dari provinsi, dropdown + search).
 - Kecamatan (wajib, terfilter dari kota, dropdown + search).
 - Kode TPS (otomatis, unik, preview sebelum simpan).
-- Kelurahan (opsional).
+- Kelurahan (otomatis dari lokasi, bisa diubah).
 - Deskripsi lokasi (wajib, manual, menjelaskan titik spesifik TPS).
-- Alamat (opsional).
+- Alamat lengkap (otomatis dari lokasi, bisa diubah).
 - Latitude (wajib, bisa dari GPS).
 - Longitude (wajib, bisa dari GPS).
 - Radius (default 100 m, bisa diubah).
@@ -222,10 +226,12 @@ pages/
 admin_dashboard_page.dart
 admin_checkpoint_page.dart
 admin_checkpoint_form_page.dart
+admin_map_picker_page.dart
 admin_waste_verification_page.dart
 admin_reward_page.dart
 admin_user_page.dart
 widgets/
+location_ready.dart
 providers/
 
 text
@@ -294,5 +300,7 @@ text
 - 2026-09-20: Implementasi MVP selesai (fase 2: reward, user, pengaturan).
 - 2026-09-21: Section 6.2 diperbarui (filter + dropdown wilayah berjenjang, kode TPS otomatis KOTA-KEC-NOMOR, kolom code terpisah dari qr_code).
 - 2026-09-21: Double-back keluar di AdminShell; wilayah + kode otomatis dari GPS/peta; Nama jadi Deskripsi; QR disembunyikan sementara.
+- 2026-09-21: Dialog hidupkan GPS + izin lokasi; peta layar penuh pin geser; autofill kecamatan/kelurahan/alamat lengkap/kode TPS.
+- 2026-09-21: Masuk admin via go + kunci Scaffold per-instance (perbaiki layar merah); back root sekali ke /profile; splash redirect sesi sesuai role; retry+timeout API wilayah (522).
 - Menunggu review dan uji device fisik.
 - Setelah disetujui, masuk ke pengembangan fase 2.

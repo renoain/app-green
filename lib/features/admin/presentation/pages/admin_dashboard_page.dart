@@ -33,10 +33,7 @@ class AdminDashboardPage extends ConsumerWidget {
       appBar: CustomAppBar(
         title: AppStrings.adminDashboard,
         leading: LucideIcons.menu,
-        onLeadingTap: () => ref
-            .read(adminScaffoldKeyProvider)
-            .currentState
-            ?.openDrawer(),
+        onLeadingTap: () => ref.read(adminDrawerOpenerProvider)?.call(),
       ),
       body: summary.when(
         loading: () => const Center(child: LoadingIndicator()),

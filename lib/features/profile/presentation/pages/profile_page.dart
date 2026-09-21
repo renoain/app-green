@@ -149,6 +149,12 @@ class ProfilePage extends ConsumerWidget {
                 onTap: () => context.pushNamed(AppRouteName.editProfile),
               ),
               const SizedBox(height: AppSpacing.sm),
+              ListTileItem(
+                title: AppStrings.voucherTitle,
+                icon: LucideIcons.ticket,
+                onTap: () => context.pushNamed(AppRouteName.vouchers),
+              ),
+              const SizedBox(height: AppSpacing.sm),
             ],
             ListTileItem(
               title: AppStrings.settings,
@@ -161,7 +167,7 @@ class ProfilePage extends ConsumerWidget {
                 title: AppStrings.adminMode,
                 icon: LucideIcons.shield_check,
                 onTap: () =>
-                    context.pushNamed(AppRouteName.adminDashboard),
+                    context.goNamed(AppRouteName.adminDashboard),
               ),
             ],
             if (isLoggedIn) ...<Widget>[

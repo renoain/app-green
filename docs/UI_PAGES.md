@@ -9,13 +9,11 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 
 ## 1. Splash [Selesai]
 
-- Tujuan: layar awal, penanda awal alur (ke Home, login tidak wajib).
+- Tujuan: layar awal, redirect sesuai sesi tersimpan.
 - Elemen: logo Go Green, nama aplikasi.
-- State: loading (cek auth status).
-- Aksi: navigasi ke Home; jika sudah login notice di Home tidak ditampilkan.
-- Catatan: saat ini selalu navigasi ke Home setelah 2 detik; cek
-  status login dan penandaan "sudah login" menyusul saat Supabase Auth
-  terpasang.
+- State: loading (cek sesi + role).
+- Aksi: tanpa sesi ke Onboarding; sesi admin ke /admin/dashboard,
+  petugas ke /admin/waste-verification, user ke /home.
 - Prioritas MVP: Ya.
 
 ---
@@ -92,20 +90,25 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 - Elemen: header sapaan ("Halo," + nama tampilan + avatar inisial),
   notice login (hanya bila belum login), banner hero carousel "Ayo
   Mulai! Buang Sampah Dapat Poin!" dengan CTA "Mulai Sekarang" dan
-  indikator 3 titik, kartu "Total Poin Kamu" (4.324 Poin) dengan tombol
-  "Tukar Reward" dan "Lihat Riwayat" plus 3 stat dampak (Sampah
-  Terpilah, Karbon Dihindari, Pohon Selamat), kartu "Misi Hijau
-  Mingguan" dengan progress 63% (3,25 kg terkumpul / Target 5,0 kg),
-  section "Aktivitas Terkini" berisi dua tile (Botol Plastik PET +150,
-  Kertas Karton +80, status Terverifikasi), section "Artikel & Edukasi
-  Hijau" dengan thumbnail gambar dari assets/images/ref/
-  (article_1.png, article_2.png).
+  indikator 3 titik, kartu "Total Poin Kamu" dengan tombol
+  "Tukar Reward" dan "Lihat Riwayat" plus 3 stat, kartu "Misi Hijau
+  Mingguan" dengan progress, section "Aktivitas Terkini" berisi dua
+  tile, section "Artikel & Edukasi Hijau" dengan thumbnail gambar dari
+  assets/images/ref/ (article_1.png, article_2.png).
+  Tamu/gagal backend: konten demo (4.324 Poin; Sampah Terpilah,
+  Karbon Dikurangi, Pohon Selamat; misi 63% 3,25 kg / 5,0 kg; tile
+  Botol Plastik PET +150, Kertas Karton +80). User login: data asli
+  selaras Poin & Aktivitas (saldo points, stat Kali Buang/Minggu
+  Ini/Terverifikasi, misi hitungan vs target mingguan, 2 log terbaru
+  dengan status asli; kosong menampilkan pesan ajakan).
 - Akses cepat: CTA hero ke tab Buang Sampah, Tukar Reward ke tab Poin,
   Lihat Riwayat/Semua ke tab Aktivitas, tile aktivitas ke detail
   aktivitas, Lihat Semua artikel ke halaman Artikel.
 - State: data user (nama dari AuthSession: displayName ?? username ??
-  prefix email ?? nama tamu; ringkasan masih placeholder), loading
-  (belum diimplementasi), tampil/hilang notice login.
+  prefix email ?? nama tamu; tamu/gagal backend: demo; login: saldo
+  pointsNotifierProvider + waste log via BuildHomeSummaryUsecase +
+  refresh otomatis tiap submit sukses), loading (layar loading saat
+  user login memuat data), tampil/hilang notice login.
 - Aksi: tap CTA / menu ke halaman terkait, tutup notice login, tap
   "Masuk" pada notice (buka Login), tap "Lihat semua" ke halaman Artikel.
 - Navigasi: bottom nav ke Home, Aktivitas, Buang Sampah, Poin, Profile.
@@ -118,8 +121,13 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   (LoginNoticeCard, bisa ditutup oleh tamu, otomatis hilang saat sudah
   login dan tidak tampil lagi selama sesi login). Header selalu tampil:
   tamu melihat "Warga Go Green", user login melihat nama tampilannya.
-  Data masih placeholder (total poin 4324, misi 63%, dua
-  aktivitas demo, dua artikel demo). Token Stitch dipetakan ke token
+  Angka Home user login selalu selaras dengan Poin & Aktivitas karena
+  memakai sumber yang sama (tabel points + waste_logs); Poin dan
+  Aktivitas ikut refresh otomatis tiap submit sukses. Kartu poin
+  hijau tua elegan (gradient primary ke primaryLight, teks putih,
+  padding vertikal lg agar lebih panjang, hiasan statis daun samar
+  + lingkaran lembut, tombol Lihat Riwayat translusen, divider putih
+  20 persen, 3 stat putih solid). Token Stitch dipetakan ke token
   existing (surfaceDim/tertiaryLight/surface, primary, borderLight,
   elevation-1, spacing xs/sm/md/lg, radius lg/xl/full) sehingga
   DESIGN_SYSTEM.md tidak perlu token baru. Bottom nav tidak diubah
@@ -135,15 +143,14 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   (fallback demo bila error/kosong/offline), pilihan checkpoint (centang),
   kartu status GPS real (LocationStatusCard: jarak GeoUtils vs radius
   checkpoint, tombol muat ulang), tombol/link "Scan QR di checkpoint",
-  pilihan kategori sampah (CategoryChip: Organik/Anorganik/Daur Ulang/B3),
   tombol "Ambil Foto" (PrimaryButton), disclaimer antikecurangan.
-- State: checkpoint terpilih (default pertama), kategori terpilih (default
-  organik), posisi GPS + loading 3 dtk timeout, daftar checkpoint
-  (AsyncValue), error checkpoint + retry.
-- Aksi: pilih checkpoint, pilih kategori, cek posisi GPS; bila di luar
+  Kategori sampah TIDAK di sini; dipilih setelah foto di Verifikasi.
+- State: checkpoint terpilih (default pertama), posisi GPS + loading 3 dtk
+  timeout, daftar checkpoint (AsyncValue), error checkpoint + retry.
+- Aksi: pilih checkpoint, cek posisi GPS; bila di luar
   radius checkpoint tampilkan snackbar wasteGpsOutOfRadius dan blokir ke
   kamera; bila di dalam radius (atau GPS null) kirim CaptureExtra
-  (checkpointId/Name/lat/lng/radius/category) ke route /capture.
+  (checkpointId/Name/lat/lng/radius) ke route /capture.
 - Navigasi: back ke Home; Scan QR membuka route /scan.
 - Catatan: blokir radius GPS sementara DIMATIKAN via
   AppValues.enforceGpsRadius = false agar uji device bisa submit dari mana
@@ -177,11 +184,11 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   balik kamera, fallback saat izin ditolak atau kamera tidak tersedia.
 - State: inisialisasi kamera, izin ditolak, kamera tidak tersedia, siap, mode
   flash.
-- Aksi: terima CaptureExtra (checkpoint + kategori) dari Waste; saat shutter
+- Aksi: terima CaptureExtra (checkpoint) dari Waste; saat shutter
   ambil posisi GPS, tegakkan radius (GeoUtils vs radius checkpoint, blokir +
   snackbar wasteGpsOutOfRadius bila di luar); teruskan VerificationExtra
   lengkap (imagePath, locationLabel, timestampLabel, checkpointId/Name,
-  latitude/longitude, radius, category) ke Verifikasi via push.
+  latitude/longitude, radius) ke Verifikasi via push.
 - Navigasi: dari Waste lewat tombol "Ambil Foto" (route /capture dengan extra)
   ke Verifikasi; verifikasi dibuka dengan push agar kembali ke kamera tetap
   berfungsi.
@@ -196,12 +203,15 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 
 - Tujuan: menampilkan hasil verifikasi foto bukti dan mengirim ke Supabase.
 - Elemen: status, preview foto bukti dengan overlay timestamp (atau
-  placeholder), detail (timestamp preview, lokasi GPS asli, hash demo,
-  estimasi poin demo), dialog detail hash, tombol Coba Lagi dan Konfirmasi
+  placeholder), pilihan kategori sampah setelah foto (CategoryChip:
+  Organik/Anorganik/Daur Ulang/B3, default organik), detail (timestamp
+  preview, lokasi GPS asli, hash demo, estimasi poin live mengikuti
+  kategori), dialog detail hash, tombol Coba Lagi dan Konfirmasi
   Kirim (dengan loading saat submit).
-- State: submit via wasteSubmitNotifierProvider
-  (AsyncData idle / AsyncLoading / AsyncData hasil / AsyncError); sukses
-  menampilkan snackbar wasteSubmitSuccess lalu ke Home; gagal menampilkan
+- State: kategori terpilih + submit via wasteSubmitNotifierProvider
+  (AsyncValue idle / loading / hasil / error); sukses menampilkan popup
+  poin animasi (PointsEarnedDialog: scale + fade 350ms, ikon koin,
+  +poin, tombol Ke Beranda) lalu ke Home; gagal menampilkan
   snackbar error dari WasteValidationException (duplikat/radius/rate limit).
 - Aksi: validasi imagePath/checkpoint/lokasi/login (bila belum login
   snackbar wasteNeedLogin + ke Login); ambil checkpoint via repository
@@ -223,7 +233,8 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 ## 10. Poin & Reward [Selesai]
 
 - Tujuan: lihat saldo poin dan tukar reward.
-- Elemen: total poin (PointCard), kartu reward (sembako, voucher, e-wallet,
+- Elemen: total poin (PointCard), section reward (judul + tombol
+  Voucher Saya ke /vouchers), kartu reward (sembako, voucher, e-wallet,
   donasi), histori poin (ActivityCard per catatan Point).
 - State: saat login, saldo + riwayat dari pointsNotifierProvider
   (AsyncValue: loading indikator, error + retry + konten demo fallback,
@@ -235,10 +246,27 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 - Navigasi: ke detail reward; klaim (QR) menampilkan dialog konfirmasi.
 - Catatan: insert earn/redeem klien butuh policy points_insert_own
   (migration 015, push manual). Detail reward tersedia di route
-  /reward/:id; tombol Tukar menampilkan dialog konfirmasi dan snackbar
-  sukses (penukaran backend menunggu supabase). Alur klaim QR (QR_CODE di
+  /reward/:id; tombol Tukar menampilkan popup konfirmasi animasi
+  (Batal kiri + Tukar kanan) lalu popup sukses animasi dengan tombol
+  Lihat Voucher Saya ke /vouchers (penulisan backend + katalog real
+  menyusul). Alur klaim QR (QR_CODE di
   redemptions) aktif saat supabase terpasang; verifikator memindai QR
   untuk ubah status redemptions menjadi 'claimed'.
+- Prioritas MVP: Ya.
+
+---
+
+## 10a. Voucher Saya [Selesai]
+
+- Tujuan: daftar voucher hasil penukaran reward milik user.
+- Elemen: kartu voucher (ikon tiket, nama reward, waktu tukar, chip
+  status Menunggu/Disetujui/Ditolak/Diklaim), empty state bila kosong,
+  notice login bila tamu.
+- State: daftar redemptions asli via userVouchersProvider
+  (loading, error + retry, kosong); tamu selalu notice login.
+- Aksi: buka dari menu Voucher Saya di Profile atau tombol Lihat
+  Voucher Saya di popup sukses; muat ulang via retry.
+- Navigasi: route /vouchers (free route, back ke halaman sebelumnya).
 - Prioritas MVP: Ya.
 
 ---
@@ -286,15 +314,18 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   - Sudah login: kartu profil (avatar inisial + nama tampilan dari
     AuthSession + email sesi, tanpa notice login),
     statistik (total poin, total buang sampah), menu Edit Profil,
-    Pengaturan, Logout.
+    Voucher Saya, Pengaturan, Logout.
 - State: data user, status autentikasi, loading.
-- Aksi: login via notice (ke Login), edit profil, logout (signOut lalu
+- Aksi: login via notice (ke Login), edit profil, buka Voucher Saya
+  (daftar penukaran milik user), logout (signOut lalu
   kembali ke Home), buka pengaturan.
 - Navigasi ke subhalaman:
   - Edit Profil (route /edit-profile): form nama tampilan + telepon
     opsional + email baca-saja, validasi, tombol Simpan menyimpan ke
     metadata auth via AuthRepository.updateProfile lalu snackbar sukses
     dan kembali (gagal menampilkan snackbar error).
+  - Voucher Saya (route /vouchers): daftar redemptions asli + status,
+    empty state bila kosong, notice login bila tamu.
   - Pengaturan (route /settings): menu akun, toggle Notifikasi dan Mode
     Gelap (lokal), versi aplikasi, dialog Tentang Go Green. Mode Gelap
     diterapkan pada fase berikutnya.
@@ -410,23 +441,30 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 
 - Tujuan: tambah/ubah checkpoint.
 - Elemen: peta OSM ketuk untuk pin (kamera peta mengikuti pin saat
-  koordinat berubah), tombol Pakai Lokasi Saya (geolocator + loading,
-  GPS HP langsung jadi pin), dropdown wilayah berjenjang Provinsi ->
+  koordinat berubah, tombol layar penuh + tombol Pilih di peta membuka
+  pemilih peta layar penuh: pin di tengah, geser peta atau ketuk untuk
+  memindahkan pin, tombol Gunakan lokasi ini + tombol lokasi saya),
+  tombol Pakai Lokasi Saya (minta hidupkan GPS bila mati lewat dialog
+  ke pengaturan sistem, dialog ke pengaturan aplikasi bila izin
+  ditolak permanen), dropdown wilayah berjenjang Provinsi ->
   Kota/Kabupaten -> Kecamatan (dropdown_search + kotak cari),
   kode TPS baca-saja (otomatis KOTA-KEC-NOMOR + preview, generate
   ulang saat kecamatan dipilih bila kode masih kosong), kelurahan
-  opsional, deskripsi lokasi manual (wajib, menjelaskan titik spesifik),
-  alamat, latitude, longitude, radius (default 100), tombol Simpan.
-  Kolom QR disembunyikan sementara (menyusul fase berikut).
+  otomatis dari reverse-geocode (bisa diubah), deskripsi lokasi manual
+  (wajib, menjelaskan titik spesifik), alamat lengkap otomatis
+  (display_name Nominatim, bisa diubah), latitude, longitude, radius
+  (default 100), tombol Simpan. Kolom QR disembunyikan sementara
+  (menyusul fase berikut).
 - State: validasi via ManageCheckpointUsecase (pesan Bahasa Indonesia),
-  saving, locating, resolving wilayah (reverse-geocode Nominatim),
-  generating code, muat ulang edit-by-id (loading +
+  saving, locating, resolving wilayah (reverse-geocode Nominatim +
+  kelurahan + alamat), generating code, muat ulang edit-by-id (loading +
   retry bila /admin/checkpoints/:id/edit dibuka tanpa extra).
-- Aksi: Pakai Lokasi Saya / ketuk peta mengisi lat/lng, me-resolve
-  wilayah otomatis, lalu menggenerate kode TPS; simpan kembali ke
-  daftar; simpan/tolak juga menyegarkan daftar checkpoint user via
-  Supabase.
-- Navigasi: /admin/checkpoints/new dan /admin/checkpoints/:id/edit.
+- Aksi: Pakai Lokasi Saya / ketuk peta / pilih di peta layar penuh
+  mengisi lat/lng, me-resolve wilayah otomatis (dropdown + kelurahan +
+  alamat), lalu menggenerate kode TPS; simpan kembali ke daftar;
+  simpan/tolak juga menyegarkan daftar checkpoint user via Supabase.
+- Navigasi: /admin/checkpoints/new dan /admin/checkpoints/:id/edit;
+  pemilih peta layar penuh via Navigator push (kembali membawa LatLng).
 - Prioritas MVP: Ya.
 
 ---

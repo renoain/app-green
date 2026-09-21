@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/app_enums.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/services/supabase_service.dart';
@@ -23,30 +22,7 @@ import '../../../waste/domain/usecases/calculate_points_usecase.dart';
 import '../../../waste/presentation/providers/waste_provider.dart';
 import '../data/activity_demo_data.dart';
 import '../data/activity_detail_extra.dart';
-
-/// Status UI untuk satu waste log.
-({StatusType type, String label}) _statusOf(WasteLogStatus status) {
-  return switch (status) {
-    WasteLogStatus.verified => (
-        type: StatusType.success,
-        label: AppStrings.activityStatusSuccess,
-      ),
-    WasteLogStatus.pending => (
-        type: StatusType.warning,
-        label: AppStrings.activityStatusPending,
-      ),
-    WasteLogStatus.rejected => (
-        type: StatusType.error,
-        label: AppStrings.verificationFailed,
-      ),
-  };
-}
-
-/// Deskripsi aktivitas dari waste log.
-String _descriptionOf(WasteLog log, String checkpointName) {
-  return '${AppStrings.activityLogPrefix} ${log.category.value} '
-      '${AppStrings.activityLogAt} $checkpointName';
-}
+import '../data/activity_texts.dart';
 
 /// Halaman riwayat aktivitas Go Green.
 class ActivityPage extends ConsumerStatefulWidget {
@@ -114,6 +90,12 @@ class _ActivityPageState extends ConsumerState<ActivityPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue<dynamic>>(
+      wasteSubmitNotifierProvider,
+      (previous, next) {
+        if (next.valueOrNull != null && previous is AsyncLoading) _reload();
+      },
+    );
     final List<WasteLog>? logs = _logs;
     if (_loading) {
       return const Scaffold(
@@ -185,17 +167,19 @@ class _ActivityPageState extends ConsumerState<ActivityPage> {
                     category: log.category,
                   );
                   final ({String label, StatusType type}) status =
-                      _statusOf(log.status);
+                      activityStatusOf(log.status);
                   return ActivityCard(
                     date: log.createdAt,
-                    description: _descriptionOf(log, checkpointName),
+                    description:
+                        activityDescriptionOf(log, checkpointName),
                     point: points,
                     status: status.type,
                     onTap: () => context.pushNamed(
                       AppRouteName.activityDetail,
                       pathParameters: <String, String>{'id': log.id},
                       extra: ActivityDetailExtra(
-                        description: _descriptionOf(log, checkpointName),
+                        description:
+                            activityDescriptionOf(log, checkpointName),
                         date: log.createdAt,
                         status: log.status,
                         checkpointName: checkpointName,

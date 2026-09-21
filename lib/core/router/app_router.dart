@@ -32,6 +32,7 @@ import '../../features/points/presentation/pages/reward_detail_page.dart';
 import '../../features/profile/presentation/pages/edit_profile_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/profile/presentation/pages/settings_page.dart';
+import '../../features/rewards/presentation/pages/vouchers_page.dart';
 import '../../features/scan/presentation/pages/scan_page.dart';
 import '../../features/splash/splash_page.dart';
 import '../../features/verification/presentation/data/verification_extra.dart';
@@ -92,6 +93,12 @@ final List<RouteBase> appRoutes = <RouteBase>[
     builder: (BuildContext context, GoRouterState state) => RewardDetailPage(
       rewardId: state.pathParameters['id'] ?? '1',
     ),
+  ),
+  GoRoute(
+    path: '/vouchers',
+    name: AppRouteName.vouchers,
+    builder: (BuildContext context, GoRouterState state) =>
+        const VouchersPage(),
   ),
   GoRoute(
     path: '/activity/:id',
@@ -342,6 +349,9 @@ abstract final class AppRouteName {
 
   /// Nama route detail reward.
   static const String rewardDetail = 'rewardDetail';
+
+  /// Nama route voucher saya.
+  static const String vouchers = 'vouchers';
 
   /// Nama route verifikasi.
   static const String verification = 'verification';

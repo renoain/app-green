@@ -20,10 +20,7 @@ class AdminRewardsPage extends ConsumerWidget {
       appBar: CustomAppBar(
         title: AppStrings.adminManageReward,
         leading: LucideIcons.menu,
-        onLeadingTap: () => ref
-            .read(adminScaffoldKeyProvider)
-            .currentState
-            ?.openDrawer(),
+        onLeadingTap: () => ref.read(adminDrawerOpenerProvider)?.call(),
       ),
       body: const Center(
         child: EmptyState(

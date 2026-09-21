@@ -1,5 +1,360 @@
 # CHANGELOG - Go Green
 
+## [2026-09-21] - Kartu poin Home hijau tua elegan + hiasan statis
+
+Status: Selesai
+
+Laporan: widget poin dan background terlalu sama sehingga monoton;
+kartu dibuat sedikit lebih panjang, kontras, tetap elegan.
+Animasi jatuh didiskusikan dulu, disepakati hiasan statis saja.
+
+File yang diubah:
+
+- lib/features/home/presentation/pages/home_page.dart (diedit): kartu poin gradient primary ke primaryLight + teks putih + padding vertikal lg + daun samar dan lingkaran lembut + tombol riwayat translusen + divider putih 20 persen + stat putih solid
+- docs/UI_PAGES.md (diedit): section 5 catat varian hijau tua elegan
+
+Catatan:
+
+- Tanpa token/warna baru dan tanpa dependency animasi baru; hiasan hanya pakai token existing dan LucideIcons.
+- Animasi sampah jatuh loop tidak jadi dipakai (biaya baterai dan risiko ganggu bacaan); opsi animasi momen saja tetap terbuka bila diminta.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (192 test lulus)
+
+## [2026-09-21] - Kartu poin Home seperti Stitch Enhanced
+
+Status: Selesai
+
+Laporan: screen Home Page - Go Green (Enhanced) ADA di Stitch;
+bagian Total Poin diganti mengikuti Stitch (gradient lembut,
+ikon bintang, angka besar, tombol kompak, stat translusen).
+
+File yang diubah:
+
+- lib/features/home/presentation/pages/home_page.dart (diedit): kartu poin gradient surfaceDim ke tertiaryLight + ikon star + angka headlineLg + tombol 30px labelSm + mini stat surface 85 persen
+- lib/core/constants/app_strings.dart (diedit): homeStatCarbonLabel jadi Karbon Dikurangi sesuai Stitch
+- docs/UI_PAGES.md (diedit): section 5 sebut gradient Enhanced + label karbon
+
+Catatan:
+
+- Tanpa token/warna baru; gradient hanya pakai token existing surfaceDim dan tertiaryLight, bukan hardcode hex Stitch.
+- Struktur section Home tidak berubah.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (192 test lulus)
+
+## [2026-09-21] - Kartu poin Home gaya mockup hijau muda
+
+Status: Selesai
+
+Laporan: samakan bagian Total Poin Kamu dengan mockup (kartu hijau,
+tombol kanan, stat grid + divider).
+
+File yang diubah:
+
+- lib/features/home/presentation/pages/home_page.dart (diedit): kartu surfaceDim + tombol Tukar Reward/Lihat Riwayat kanan + divider + mini stat surface
+- lib/core/constants/app_strings.dart (diedit): kembalikan homeExchangeReward/homeViewHistory
+- docs/UI_PAGES.md: tetap (struktur section 5 tidak berubah)
+
+Catatan:
+
+- Tanpa gradient (aturan anti-AI-slop): hijau mockup dipetakan ke token flat AppColors.surfaceDim; tanpa token/warna baru.
+- Tombol dikembalikan mengikuti mockup (sempat dihapus, dibatalkan).
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (192 test lulus)
+
+## [2026-09-21] - Popup sukses vertikal + akses voucher di Poin
+
+Status: Selesai
+
+Laporan: tombol Lihat Voucher Saya terpotong di popup; halaman Poin
+belum ada jalan masuk ke Voucher Saya.
+
+Temuan: baris sejajar Batal + Lihat Voucher Saya selebar setengah kartu
+(320px) memotong label panjang.
+
+File yang diubah:
+
+- lib/features/rewards/presentation/widgets/redeem_dialogs.dart (diedit): popup sukses tombol bertumpuk vertikal (penuh + penuh), konfirmasi tetap sejajar
+- lib/features/points/presentation/pages/points_page.dart (diedit): header section reward tambah tombol Voucher Saya ke /vouchers
+- test/widget/pages/points_page_test.dart (diedit): 1 test navigasi voucher
+- docs/UI_PAGES.md (diedit): section 10 tombol voucher
+- docs/COMPONENT_LIBRARY.md (diedit): catatan tombol bertumpuk
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (192 test lulus, termasuk 1 test baru)
+
+## [2026-09-21] - Popup tukar animasi + Voucher Saya di Profil
+
+Status: Selesai (uji device fisik tukar + buka voucher)
+
+File yang dibuat:
+
+- lib/features/rewards/presentation/widgets/redeem_dialogs.dart (dibuat): popup konfirmasi + sukses animasi scale + fade, Batal kiri + aksi kanan
+- lib/features/rewards/domain/entities/redemption.dart (dibuat): entity penukaran
+- lib/features/rewards/data/models/redemption_model.dart (dibuat): parse join rewards(name)
+- lib/features/rewards/presentation/pages/vouchers_page.dart (dibuat): daftar voucher asli + status + empty + notice tamu
+- test/unit/features/rewards/redemption_model_test.dart (dibuat): 2 test parse
+- test/widget/pages/vouchers_page_test.dart (dibuat): 1 test tamu
+
+File yang diubah:
+
+- lib/features/points/presentation/pages/reward_detail_page.dart (diedit): konfirmasi + sukses via popup animasi, sukses ke /vouchers
+- lib/features/rewards/data/datasources/reward_remote_datasource.dart (diedit): client lazy + getUserRedemptions join nama reward
+- lib/features/rewards/presentation/providers/reward_provider.dart (diedit): UserVouchersNotifier + userVouchersProvider
+- lib/features/profile/presentation/pages/profile_page.dart (diedit): menu Voucher Saya di bawah Edit Profil (login saja)
+- lib/core/router/app_router.dart (diedit): route /vouchers + nama vouchers
+- lib/core/constants/app_strings.dart (diedit): tambah string voucher + popup sukses, hapus redeemSuccess tak terpakai
+- test/widget/pages/reward_detail_page_test.dart (diedit): popup baru + navigasi voucher
+- test/widget/pages/profile_page_test.dart (diedit): menu voucher login/tamu
+- docs/UI_PAGES.md (diedit): section 10, 10a Voucher Saya, 13 Profil
+- docs/COMPONENT_LIBRARY.md (diedit): RedeemDialogs
+- docs/ARCHITECTURE.md (diedit): route /vouchers
+
+Catatan:
+
+- Tanpa dependency baru (animasi bawaan Flutter, Supabase yang ada).
+- Penulisan redeem backend + katalog real (id UUID) adalah langkah lanjut; popup sukses dan daftar voucher sudah siap menampungnya.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (191 test lulus, termasuk 3 test baru voucher)
+
+## [2026-09-21] - Home selaras poin + hitungan buang asli
+
+Status: Selesai (uji device fisik login + submit + cek angka Home)
+
+File yang dibuat:
+
+- lib/features/home/domain/usecases/build_home_summary_usecase.dart (dibuat): ringkasan total/mingguan (Senin)/terverifikasi + progres misi
+- lib/features/activity/presentation/data/activity_texts.dart (dibuat): deskripsi + status aktivitas bersama
+- test/unit/features/home/build_home_summary_test.dart (dibuat): 3 test minggu/progres/batas
+
+File yang diubah:
+
+- lib/features/home/presentation/pages/home_page.dart (diedit): tamu demo, login tampilkan saldo asli + stat Kali Buang/Minggu Ini/Terverifikasi + misi hitungan + 2 log terbaru + refresh tiap submit sukses
+- lib/features/activity/presentation/pages/activity_page.dart (diedit): pakai teks bersama + refresh tiap submit sukses
+- lib/features/points/presentation/pages/points_page.dart (diedit): refresh tiap submit sukses
+- lib/core/constants/app_values.dart (diedit): tambah weeklyMissionTargetDisposals 5
+- lib/core/constants/app_strings.dart (diedit): tambah label stat/misi/empty Home Bahasa Indonesia
+- docs/UI_PAGES.md (diedit): section 5 Home data asli vs demo
+
+Catatan:
+
+- Tanpa dependency baru; logic hitungan di domain + unit test.
+- Gagal backend tetap fallback demo (filosofi Points/Aktivitas).
+- Target misi 5 kali/minggu di AppValues; minggu dihitung Senin 00.00 lokal.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (187 test lulus, termasuk 3 test baru ringkasan)
+
+## [2026-09-21] - Kategori setelah foto + popup poin animasi
+
+Status: Selesai (uji device fisik alur buang sampah + submit)
+
+File yang dibuat:
+
+- lib/features/verification/presentation/widgets/points_earned_dialog.dart (dibuat): popup +poin scale easeOutBack + fade 350ms + tombol Ke Beranda
+- test: 2 test baru verifikasi (pilih kategori ubah estimasi, popup tampil dan tertutup)
+
+File yang diubah:
+
+- lib/features/waste/presentation/pages/waste_page.dart (diedit): section kategori dihapus, CaptureExtra tanpa kategori
+- lib/features/waste/presentation/data/capture_extra.dart (diedit): field category dihapus
+- lib/features/waste/presentation/pages/capture_photo_page.dart (diedit): teruskan VerificationExtra tanpa kategori
+- lib/features/verification/presentation/pages/verification_page.dart (diedit): pilih kategori setelah foto, estimasi poin live, sukses tampilkan popup lalu ke Home
+- lib/core/constants/app_strings.dart (diedit): tambah pointsEarnedTitle/Message/Button, hapus wasteSubmitSuccess + verificationPointsDemo yang tak terpakai
+- test/widget/pages/waste_page_test.dart (diedit): kategori tidak ada di Waste
+- test/widget/pages/verification_page_test.dart (diedit): scroll sebelum asersi baris bawah + 2 test baru
+- docs/UI_PAGES.md (diedit): section 6/8/9 alur kategori + popup
+- docs/ARCHITECTURE.md (diedit): alur Buang Sampah baru
+- docs/COMPONENT_LIBRARY.md (diedit): CategoryChip pindah ke Verifikasi + PointsEarnedDialog
+
+Catatan:
+
+- Tanpa dependency baru (animasi showGeneralDialog bawaan Flutter).
+- Estimasi live: 25/30/35/40 sesuai kategori (streak 0); popup memakai poin hasil submit sebenarnya.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (184 test lulus, termasuk 2 test baru)
+
+## [2026-09-21] - Perbaiki kecamatan otomatis (municipality + alias DKI)
+
+Status: Selesai (uji device fisik tambah TPS Surabaya/Jakarta)
+
+Laporan: kecamatan tidak terisi otomatis saat set lokasi dari GPS/peta.
+
+Temuan (dari respons Nominatim asli):
+
+- Surabaya (Ketintang): kecamatan ada di kunci `municipality`
+  ("Gayungan") yang tidak pernah dicek untuk kecamatan; `village`
+  berisi kelurahan. Akibatnya district selalu null.
+- Jakarta (Monas): tidak ada kunci `state`; `city` berisi
+  "Daerah Khusus Ibukota Jakarta" (provinsi), `city_district`
+  berisi kota ("Jakarta Pusat"). Akibatnya resolve berhenti di awal.
+
+File yang diubah:
+
+- lib/features/regions/domain/usecases/resolve_region_usecase.dart (diedit): kandidat kecamatan tambah municipality/borough/quarter/city_district, municipality keluar dari kandidat kota, city_district masuk kandidat kota, provinsi fallback ke city bila state kosong, alias DKI/DI + awalan ADM ganda, titik dihapus sebelum normalisasi, kelurahan dari kunci selevel desa dipakai apa adanya
+- test/unit/features/regions/resolve_region_test.dart (diedit): fake tambah data DKI, 4 test baru (alias/ADM, municipality Surabaya, fallback Jakarta, neighbourhood)
+
+Catatan:
+
+- Tanpa dependency baru; kontrak repository tidak berubah.
+- Bila Nominatim sama sekali tidak mengembalikan kunci selevel kecamatan (kasus langka), dropdown tetap bisa diisi manual.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (182 test lulus, termasuk 4 test baru matcher)
+
+## [2026-09-21] - Perbaiki layar merah tulis provider di initState AdminShell
+
+Status: Selesai (uji device fisik buka aplikasi sesi admin)
+
+Laporan: saat buka aplikasi langsung layar merah "Tried to modify a
+provider while the widget tree was building" di
+admin_shell.dart baris 48 initState.
+
+Temuan: AdminShell menulis adminDrawerOpenerProvider langsung di
+initState, padahal initState berjalan saat widget tree dibangun
+(Riverpod melarang tulis provider di fase ini). Halaman admin lain
+sudah benar memakai addPostFrameCallback. Dipicu di startup karena
+splash kini mengarahkan sesi admin ke dasbor.
+
+File yang dibuat:
+
+- test/widget/pages/admin_shell_test.dart (dibuat): 2 test regresi (shell terpasang tanpa error, tombol menu buka drawer)
+
+File yang diubah:
+
+- lib/features/admin/presentation/admin_shell.dart (diedit): tulis opener via addPostFrameCallback + mounted, hapus tulis di dispose (unmount bisa berbarengan build route baru; closure basi aman karena no-op dan ditimpa saat masuk lagi)
+
+Catatan:
+
+- Tanpa perubahan logic bisnis dan tanpa dependency baru.
+- Cara perbaikan: tulis via addPostFrameCallback (solusi 2 dari laporan), sama seperti halaman admin lain.
+- Test regresi terbukti gagal di kode lama dan lulus di kode baru.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (178 test lulus, termasuk 2 test baru admin shell)
+
+## [2026-09-21] - Perbaiki navigasi admin, splash role, retry API wilayah
+
+Status: Selesai (uji device fisik login admin + pindah UI + tambah TPS)
+
+Laporan:
+
+- Login admin masuk ke tampilan user; keluar-masuk admin menyebabkan layar merah failed assertion framework.
+- Tambah lokasi otomatis gagal dengan DioException 522 dari API wilayah (emsifa.github.io).
+- Back di dasbor admin perlu 2 kali untuk kembali ke UI user.
+
+Temuan:
+
+- Menu Mode Admin memakai pushNamed ke route StatefulShellRoute sehingga shell admin menumpuk di atas shell user (pola tak didukung go_router) + GlobalKey Scaffold dipakai bersama antar-instance.
+- Splash selalu ke onboarding sehingga sesi admin tersimpan selalu mendarat di UI user.
+- Dio tanpa timeout dan tanpa retry sehingga gangguan sesaat API statis langsung menggagalkan dropdown.
+
+File yang dibuat:
+
+- test/unit/features/regions/region_remote_datasource_test.dart (dibuat): 3 test retry (522 lalu sukses, 522 terus, 404 tanpa ulang)
+
+File yang diubah:
+
+- lib/features/profile/presentation/pages/profile_page.dart (diedit): Mode Admin pushNamed menjadi goNamed
+- lib/features/admin/presentation/admin_shell.dart (diedit): kunci Scaffold per-instance, back root sekali ke /profile, hapus double-back exit
+- lib/features/admin/presentation/providers/admin_providers.dart (diedit): adminScaffoldKeyProvider diganti adminDrawerOpenerProvider
+- lib/features/admin/presentation/pages/admin_dashboard_page.dart (diedit): buka drawer via opener
+- lib/features/admin/presentation/pages/admin_checkpoint_page.dart (diedit): buka drawer via opener
+- lib/features/admin/presentation/pages/admin_waste_verification_page.dart (diedit): buka drawer via opener
+- lib/features/admin/presentation/pages/admin_rewards_page.dart (diedit): buka drawer via opener
+- lib/features/admin/presentation/pages/admin_users_page.dart (diedit): buka drawer via opener
+- lib/features/admin/presentation/pages/admin_settings_page.dart (diedit): buka drawer via opener
+- lib/features/splash/splash_page.dart (diedit): ConsumerState, sesi tersimpan redirect sesuai role
+- lib/features/regions/data/datasources/region_remote_datasource.dart (diedit): timeout connect/receive, retry transien (3x daftar, 2x reverse), log warning ringkas
+- docs/UI_PAGES.md (diedit): section 1 splash redirect role
+- docs/ARCHITECTURE.md (diedit): navigasi admin go + opener + back profile + retry wilayah
+- docs/PRD_ADMIN.md (diedit): section 4-5, riwayat
+
+Catatan:
+
+- Tanpa dependency baru (pola go_router + dio yang sudah ada; mirror seformat tak ada yang tepercaya sehingga memakai retry).
+- Back root admin kini selalu ke /profile (UI user), bukan keluar aplikasi.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (176 test lulus, termasuk 3 test baru retry datasource)
+
+## [2026-09-21] - Admin izin GPS + peta layar penuh + autofill alamat
+
+Status: Selesai (uji device fisik GPS/peta/reverse-geocode)
+
+File yang dibuat:
+
+- lib/features/admin/presentation/pages/admin_map_picker_page.dart (dibuat): peta layar penuh pin tengah (geser peta/ketuk + lokasi saya + konfirmasi, kembali LatLng)
+- lib/features/admin/presentation/widgets/location_ready.dart (dibuat): dialog hidupkan GPS + izin ditolak permanen
+- test: 5 test baru resolveDetails/kelurahan/alamat di resolve_region_test.dart
+
+File yang diubah:
+
+- lib/core/services/location_service.dart (diedit): helper isServiceEnabled/checkPermission/requestPermission/openLocationSettings/openAppSettings
+- lib/features/regions/data/datasources/region_remote_datasource.dart (diedit): reverseGeocode sertakan display_name + addressdetails
+- lib/features/regions/domain/usecases/resolve_region_usecase.dart (diedit): ResolvedLocation + resolveDetails + pickSubdistrict/pickFullAddress, kandidat kota/kecamatan diperluas
+- lib/features/admin/presentation/pages/admin_checkpoint_form_page.dart (diedit): dialog izin GPS, tombol Pilih di peta, autofill dropdown + kelurahan + alamat + kode TPS
+- lib/features/admin/presentation/widgets/checkpoint_map_picker.dart (diedit): tombol layar penuh opsional
+- lib/core/constants/app_strings.dart (diedit): string izin GPS + peta layar penuh Bahasa Indonesia, label alamat/kelurahan otomatis
+- test/unit/features/regions/resolve_region_test.dart (diedit): fake repository + 5 test detail
+- docs/UI_PAGES.md (diedit): section 20 peta layar penuh + autofill
+- docs/PRD_ADMIN.md (diedit): section 6.2, struktur folder, riwayat
+
+Catatan:
+
+- Tanpa dependency baru (geolocator + flutter_map yang sudah ada).
+- Peta layar penuh via Navigator push (tanpa route baru); GPS mati/izin permanen diarahkan ke pengaturan sistem/aplikasi.
+- Kelurahan teks bebas dari Nominatim (dilewati bila sama dengan kecamatan); alamat display_name bisa diubah manual.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (173 test lulus, termasuk 5 test baru resolve detail)
+
+## [2026-09-21] - Push migrasi 017 ke Supabase remote
+
+Status: Selesai
+
+File yang diubah:
+
+- Tidak ada perubahan file (hanya `supabase db push` ke remote).
+
+Catatan:
+
+- Migration list remote kini 001-017 sinkron dengan local.
+- Kolom checkpoints code/province_code/city_code/district_code/subdistrict + index kini aktif di remote; insert/update wilayah + kode TPS otomatis sudah bisa diuji dari HP.
+- Langkah lanjut: uji tambah/edit TPS dari device fisik + pastikan role admin1@green.com sudah dieskalasi via SQL.
+
+Verifikasi:
+
+- migration list: 001-017 Local = Remote.
+- hasil linter/analyze: belum dijalankan (tanpa perubahan kode)
+- hasil test: belum dijalankan (tanpa perubahan kode)
+
 ## [2026-09-21] - Admin double-back keluar + lokasi otomatis + deskripsi, QR ditunda
 
 Status: Selesai (uji device fisik GPS/peta/reverse-geocode)

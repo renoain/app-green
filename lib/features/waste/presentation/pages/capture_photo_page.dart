@@ -11,7 +11,6 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../admin/presentation/providers/admin_providers.dart';
 
-import '../../../../core/constants/app_enums.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_values.dart';
 import '../../../../core/router/app_router.dart';
@@ -29,9 +28,6 @@ import '../data/capture_extra.dart';
 /// Status inisialisasi kamera pada halaman CapturePhotoPage.
 enum _CaptureStatus { initializing, denied, unavailable, ready }
 
-/// Kategori default bila extra tidak membawa kategori.
-const WasteCategory _defaultCategory = WasteCategory.organik;
-
 /// Halaman kamera in-app untuk mengambil foto bukti pembuangan sampah.
 ///
 /// Meminta izin kamera, menampilkan preview, dan mengarahkan ke halaman
@@ -40,7 +36,7 @@ class CapturePhotoPage extends StatefulWidget {
   /// Membuat halaman ambil foto.
   const CapturePhotoPage({super.key, this.extra});
 
-  /// Checkpoint dan kategori terpilih dari halaman Waste.
+  /// Checkpoint terpilih dari halaman Waste.
   final CaptureExtra? extra;
 
   @override
@@ -159,7 +155,6 @@ class _CapturePhotoPageState extends State<CapturePhotoPage> {
           latitude: userLat,
           longitude: userLng,
           radius: extra?.radius,
-          category: extra?.category ?? _defaultCategory,
         ),
       );
     } catch (_) {

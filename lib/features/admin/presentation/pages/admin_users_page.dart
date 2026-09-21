@@ -20,10 +20,7 @@ class AdminUsersPage extends ConsumerWidget {
       appBar: CustomAppBar(
         title: AppStrings.adminManageUser,
         leading: LucideIcons.menu,
-        onLeadingTap: () => ref
-            .read(adminScaffoldKeyProvider)
-            .currentState
-            ?.openDrawer(),
+        onLeadingTap: () => ref.read(adminDrawerOpenerProvider)?.call(),
       ),
       body: const Center(
         child: EmptyState(

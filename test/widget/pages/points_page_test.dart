@@ -10,6 +10,7 @@ import 'package:go_green/core/router/app_router.dart';
 import 'package:go_green/core/theme/app_theme.dart';
 import 'package:go_green/features/points/presentation/pages/points_page.dart';
 import 'package:go_green/features/points/presentation/pages/reward_detail_page.dart';
+import 'package:go_green/features/rewards/presentation/pages/vouchers_page.dart';
 
 void main() {
   testWidgets('menampilkan judul, saldo, reward, dan riwayat poin',
@@ -65,5 +66,26 @@ void main() {
 
     expect(find.byType(RewardDetailPage), findsOneWidget);
     expect(find.text(AppStrings.rewardDetailTitle), findsOneWidget);
+  });
+
+  testWidgets('tombol voucher di section reward membuka Voucher Saya',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp.router(
+          theme: AppTheme.light(),
+          routerConfig: GoRouter(
+            initialLocation: '/points',
+            routes: appRoutes,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(AppStrings.voucherTitle));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(VouchersPage), findsOneWidget);
   });
 }

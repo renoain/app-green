@@ -1,36 +1,55 @@
 // Halaman splash: layar pembuka dengan logo, nama aplikasi, dan indikator
-// loading. Setelah jeda singkat, berpindah ke Onboarding.
+// loading. Sesi tersimpan langsung diarahkan sesuai role (admin/petugas
+// ke dasbor admin, user ke Home); tanpa sesi ke Onboarding.
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../core/constants/app_enums.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/router/app_router.dart';
+import '../../core/services/supabase_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/widgets/app_bar_and_loading_widgets.dart';
+import '../auth/presentation/providers/auth_provider.dart';
 
 /// Halaman splash Go Green.
-class SplashPage extends StatefulWidget {
+class SplashPage extends ConsumerStatefulWidget {
   /// Membuat halaman splash.
   const SplashPage({super.key});
 
   @override
-  State<SplashPage> createState() => _SplashPageState();
+  ConsumerState<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends ConsumerState<SplashPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        context.goNamed(AppRouteName.onboarding);
-      }
-    });
+    Future.delayed(const Duration(seconds: 2), _redirect);
+  }
+
+  Future<void> _redirect() async {
+    if (!mounted) return;
+    if (SupabaseService.instance.currentUser == null) {
+      if (mounted) context.goNamed(AppRouteName.onboarding);
+      return;
+    }
+    final UserRole role = await getCurrentUserRole();
+    if (!mounted) return;
+    switch (role) {
+      case UserRole.admin:
+        context.goNamed(AppRouteName.adminDashboard);
+      case UserRole.petugas:
+        context.goNamed(AppRouteName.adminWasteVerification);
+      case UserRole.user:
+        context.goNamed(AppRouteName.home);
+    }
   }
 
   @override

@@ -1,9 +1,8 @@
 // Data yang dikirim dari halaman Buang Sampah ke halaman kamera.
 //
-// Berisi checkpoint terpilih dan kategori sampah agar kamera bisa
-// menegakkan radius GPS sebelum foto diteruskan ke verifikasi.
-
-import '../../../../core/constants/app_enums.dart';
+// Berisi checkpoint terpilih agar kamera bisa menegakkan radius GPS
+// sebelum foto diteruskan ke verifikasi. Kategori dipilih user
+// setelah foto, di halaman verifikasi.
 
 /// Data ekstra route kamera in-app.
 class CaptureExtra {
@@ -13,7 +12,6 @@ class CaptureExtra {
     required this.latitude,
     required this.longitude,
     required this.radius,
-    this.category = WasteCategory.organik,
   });
 
   /// ID checkpoint terpilih.
@@ -30,7 +28,4 @@ class CaptureExtra {
 
   /// Radius validasi GPS checkpoint dalam meter.
   final int radius;
-
-  /// Kategori sampah terpilih.
-  final WasteCategory category;
 }

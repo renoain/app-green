@@ -11,6 +11,7 @@ import 'package:go_green/core/theme/app_theme.dart';
 import 'package:go_green/features/home/presentation/pages/home_page.dart';
 import 'package:go_green/features/verification/presentation/data/verification_extra.dart';
 import 'package:go_green/features/verification/presentation/pages/verification_page.dart';
+import 'package:go_green/features/verification/presentation/widgets/points_earned_dialog.dart';
 
 Widget _verificationRouter() {
   return ProviderScope(
@@ -51,10 +52,10 @@ void main() {
     expect(find.text(AppStrings.verificationSuccess), findsNWidgets(2));
     expect(find.text(AppStrings.verificationTimestampLabel), findsOneWidget);
     expect(find.text(AppStrings.verificationLocationLabel), findsOneWidget);
-    expect(find.text(AppStrings.verificationPointsLabel), findsOneWidget);
-    expect(find.text(AppStrings.verificationHashLabel), findsOneWidget);
 
     await _scrollTo(tester, find.text(AppStrings.verificationSubmitButton));
+    expect(find.text(AppStrings.verificationPointsLabel), findsOneWidget);
+    expect(find.text(AppStrings.verificationHashLabel), findsOneWidget);
     expect(find.text(AppStrings.verificationSubmitButton), findsOneWidget);
   });
 
@@ -81,8 +82,7 @@ void main() {
     expect(find.byType(HomePage), findsNothing);
   });
 
-  testWidgets('menampilkan lokasi GPS dari data ekstra', (WidgetTester tester) async {
-    await tester.pumpWidget(
+  testWidgets('menampilkan lokasi GPS dari data ekstra', (WidgetTester tester) async {    await tester.pumpWidget(
       _verificationApp(
         const VerificationExtra(locationLabel: '-6.200000, 106.816667'),
       ),
@@ -166,5 +166,63 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(VerificationPage), findsNothing);
     expect(find.text('Buka Verification'), findsOneWidget);
+  });
+
+  testWidgets('kategori bisa dipilih setelah foto', (WidgetTester tester) async {
+    await tester.pumpWidget(_verificationRouter());
+    await tester.pumpAndSettle();
+
+    await _scrollTo(tester, find.text(AppStrings.wasteCategoryTitle));
+    expect(find.text(AppStrings.wasteCategoryTitle), findsOneWidget);
+    expect(find.text(AppStrings.wasteCategoryDaurUlang), findsOneWidget);
+
+    await _scrollTo(tester, find.text(AppStrings.verificationPointsLabel));
+    expect(find.text('+25'), findsOneWidget);
+
+    await _scrollTo(tester, find.text(AppStrings.wasteCategoryDaurUlang));
+    await tester.tap(find.text(AppStrings.wasteCategoryDaurUlang));
+    await tester.pumpAndSettle();
+
+    await _scrollTo(tester, find.text(AppStrings.verificationPointsLabel));
+    expect(find.text('+35'), findsOneWidget);
+  });
+
+  testWidgets('popup poin tampil dengan animasi dan tombol',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          home: Builder(
+            builder: (BuildContext context) => Scaffold(
+              body: Center(
+                child: FilledButton(
+                  onPressed: () => showPointsEarnedDialog(
+                    context,
+                    points: 35,
+                  ),
+                  child: const Text('Tampil'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Tampil'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.text('+35'), findsOneWidget);
+    expect(find.text(AppStrings.pointsEarnedTitle), findsOneWidget);
+    expect(find.text(AppStrings.pointsEarnedMessage), findsOneWidget);
+
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(AppStrings.pointsEarnedButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppStrings.pointsEarnedTitle), findsNothing);
   });
 }

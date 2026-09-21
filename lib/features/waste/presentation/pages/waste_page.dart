@@ -3,7 +3,8 @@
 // Checkpoint dimuat dari Supabase via checkpointNotifierProvider dengan
 // fallback demo saat backend tidak tersedia. Blokir radius GPS sementara
 // dimatikan via AppValues.enforceGpsRadius agar uji device bisa submit
-// dari mana saja; jarak tetap ditampilkan di kartu status.
+// dari mana saja; jarak tetap ditampilkan di kartu status. Kategori
+// dipilih setelah foto, di halaman verifikasi.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -11,7 +12,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/app_enums.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_values.dart';
 import '../../../../core/router/app_router.dart';
@@ -29,7 +29,6 @@ import '../../../checkpoints/domain/entities/checkpoint.dart';
 import '../../../checkpoints/presentation/providers/checkpoint_provider.dart';
 import '../data/capture_extra.dart';
 import '../data/checkpoint_demo_data.dart';
-import '../widgets/category_chip.dart';
 import '../widgets/location_status_card.dart';
 
 /// Checkpoint fallback saat Supabase belum tersedia (mode demo/test).
@@ -49,16 +48,6 @@ List<Checkpoint> _fallbackCheckpoints() {
   ];
 }
 
-/// Label Bahasa Indonesia untuk kategori sampah.
-String _categoryLabel(WasteCategory category) {
-  return switch (category) {
-    WasteCategory.organik => AppStrings.wasteCategoryOrganik,
-    WasteCategory.anorganik => AppStrings.wasteCategoryAnorganik,
-    WasteCategory.daurUlang => AppStrings.wasteCategoryDaurUlang,
-    WasteCategory.b3 => AppStrings.wasteCategoryB3,
-  };
-}
-
 /// Halaman buang sampah ke checkpoint Go Green.
 class WastePage extends ConsumerStatefulWidget {
   /// Membuat halaman buang sampah.
@@ -70,7 +59,6 @@ class WastePage extends ConsumerStatefulWidget {
 
 class _WastePageState extends ConsumerState<WastePage> {
   String? _selectedCheckpointId;
-  WasteCategory _selectedCategory = WasteCategory.organik;
   Position? _position;
   bool _loadingPosition = true;
 
@@ -176,7 +164,6 @@ class _WastePageState extends ConsumerState<WastePage> {
         latitude: checkpoint.latitude,
         longitude: checkpoint.longitude,
         radius: checkpoint.radius,
-        category: _selectedCategory,
       ),
     );
   }
@@ -286,25 +273,6 @@ class _WastePageState extends ConsumerState<WastePage> {
                 ),
                 label: const Text(AppStrings.wasteScanHint),
               ),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            const Text(
-              AppStrings.wasteCategoryTitle,
-              style: AppTypography.headlineSm,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Wrap(
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.sm,
-              children: <Widget>[
-                for (final WasteCategory category in WasteCategory.values)
-                  CategoryChip(
-                    label: _categoryLabel(category),
-                    selected: _selectedCategory == category,
-                    onTap: () =>
-                        setState(() => _selectedCategory = category),
-                  ),
-              ],
             ),
             const SizedBox(height: AppSpacing.lg),
             PrimaryButton(

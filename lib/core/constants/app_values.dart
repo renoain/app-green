@@ -43,4 +43,10 @@ abstract final class AppValues {
 
   /// Bonus poin saat streak melewati ambang threshold.
   static const int streakBonusPoints = 10;
+
+  /// Target buang sampah per minggu untuk misi hijau Home (kali/minggu).
+  ///
+  /// Dipakai BuildHomeSummaryUsecase (lib/features/home/domain/usecases/
+  /// build_home_summary_usecase.dart).
+  static const int weeklyMissionTargetDisposals = 5;
 }

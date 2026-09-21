@@ -1,11 +1,11 @@
 // Kerangka admin dengan drawer (presentation).
 //
-// Perilaku tombol back: di branch root perlu tekan 2 kali dalam 2 detik
-// untuk keluar (seperti MainShell user); di sub-route (form/detail)
-// back berfungsi normal.
+// Perilaku tombol back: di branch root sekali tekan langsung kembali
+// ke UI user (/profile); di sub-route (form/detail) back berjalan
+// normal (pop). Masuk admin selalu via go (bukan push) agar hanya
+// ada satu instance shell.
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,9 +16,6 @@ import '../../auth/domain/entities/auth_session.dart';
 import '../../auth/presentation/providers/auth_provider.dart';
 import 'providers/admin_providers.dart';
 import 'widgets/admin_drawer.dart';
-
-/// Jeda maksimal antara dua back agar aplikasi benar-benar tertutup.
-const Duration _adminExitConfirmDuration = Duration(seconds: 2);
 
 /// Route root tiap branch admin (back di luar ini berjalan normal).
 const List<String> _adminBranchRoots = <String>[
@@ -43,7 +40,18 @@ class AdminShell extends ConsumerStatefulWidget {
 }
 
 class _AdminShellState extends ConsumerState<AdminShell> {
-  DateTime? _lastBackPressed;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void _openDrawer() => _scaffoldKey.currentState?.openDrawer();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(adminDrawerOpenerProvider.notifier).state = _openDrawer;
+    });
+  }
 
   Future<void> _handleLogout(BuildContext context, WidgetRef ref) async {
     await ref.read(authRepositoryProvider).signOut();
@@ -53,19 +61,8 @@ class _AdminShellState extends ConsumerState<AdminShell> {
 
   void _onPopInvokedWithResult(bool didPop, Object? result) {
     if (didPop) return;
-    final DateTime now = DateTime.now();
-    final DateTime? last = _lastBackPressed;
-    if (last != null && now.difference(last) <= _adminExitConfirmDuration) {
-      _lastBackPressed = null;
-      SystemNavigator.pop();
-      return;
-    }
-    _lastBackPressed = now;
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        const SnackBar(content: Text(AppStrings.backToExitHint)),
-      );
+    if (!mounted) return;
+    context.goNamed(AppRouteName.profile);
   }
 
   @override
@@ -103,7 +100,7 @@ class _AdminShellState extends ConsumerState<AdminShell> {
               !_adminBranchRoots.contains(GoRouterState.of(context).uri.path),
           onPopInvokedWithResult: _onPopInvokedWithResult,
           child: Scaffold(
-            key: ref.watch(adminScaffoldKeyProvider),
+            key: _scaffoldKey,
             drawer: AdminDrawer(
               displayName: displayName,
               roleLabel: roleLabel,

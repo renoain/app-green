@@ -9,21 +9,28 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/constants/app_tables.dart';
 import '../../../../core/services/supabase_service.dart';
 import '../../../points/data/datasources/points_remote_datasource.dart';
+import '../models/redemption_model.dart';
 import '../models/reward_model.dart';
 
 /// Data source reward Go Green.
 class RewardRemoteDatasource {
   /// Membuat data source reward. [client] dan [pointsDatasource] bisa
   /// di-inject untuk test.
+  ///
+  /// Client Supabase diambil malas (lazy) agar konstruksi provider tidak
+  /// crash di mode demo/test saat Supabase belum terinisialisasi.
   RewardRemoteDatasource({
     SupabaseClient? client,
     PointsRemoteDatasource? pointsDatasource,
-  })  : _client = client ?? SupabaseService.instance.client,
+  })  : _override = client,
         _pointsDatasource =
             pointsDatasource ?? PointsRemoteDatasource(client: client);
 
-  final SupabaseClient _client;
+  final SupabaseClient? _override;
   final PointsRemoteDatasource _pointsDatasource;
+
+  SupabaseClient get _client =>
+      _override ?? SupabaseService.instance.client;
 
   /// Ambil semua reward aktif, diurutkan berdasarkan harga poin.
   Future<List<RewardModel>> getAllRewards() async {
@@ -55,5 +62,15 @@ class RewardRemoteDatasource {
       userId: userId,
       rewardId: rewardId,
     );
+  }
+
+  /// Daftar penukaran milik user, terbaru di atas, lengkap nama reward.
+  Future<List<RedemptionModel>> getUserRedemptions(String userId) async {
+    final List<Map<String, dynamic>> rows = await _client
+        .from(AppTables.redemptions)
+        .select('*, rewards(name)')
+        .eq('user_id', userId)
+        .order('created_at', ascending: false);
+    return rows.map(RedemptionModel.fromJson).toList();
   }
 }

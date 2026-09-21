@@ -4,7 +4,6 @@
 // admin_checkpoint_provider, admin_waste_provider). Logic bisnis tetap di
 // domain dan data, bukan di sini.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_enums.dart';
@@ -41,11 +40,12 @@ final Provider<AsyncValue<bool>> isAdminProvider =
   );
 });
 
-/// Kunci Scaffold shell admin untuk membuka drawer dari halaman branch.
-final Provider<GlobalKey<ScaffoldState>> adminScaffoldKeyProvider =
-    Provider<GlobalKey<ScaffoldState>>(
-  (Ref ref) => GlobalKey<ScaffoldState>(),
-);
+/// Pembuka drawer shell admin yang aktif (didaftarkan AdminShell).
+///
+/// Branch admin memakai ini agar tidak bergantung pada GlobalKey
+/// bersama; tiap instance shell mendaftarkan pembukanya sendiri.
+final StateProvider<void Function()?> adminDrawerOpenerProvider =
+    StateProvider<void Function()?>((Ref ref) => null);
 
 /// Titik lokasi uji (GPS palsu khusus testing).
 ///

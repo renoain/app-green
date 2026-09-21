@@ -166,6 +166,7 @@ Daftar route:
 - /article
 - /article/:id (detail artikel)
 - /reward/:id (detail reward)
+- /vouchers (voucher saya, redemptions user)
 - /activity/:id (detail aktivitas)
 - /verification (verifikasi bukti)
 - /scan (scan QR)
@@ -181,12 +182,17 @@ Daftar route:
 - /admin/rewards, /admin/users, /admin/settings (fase 2, placeholder)
 
 Route admin memakai StatefulShellRoute.indexedStack kedua dengan
-AdminShell (drawer, tanpa bottom nav user). Back di root branch admin
-perlu 2 kali dalam 2 detik untuk keluar (PopScope + SystemNavigator,
-seperti MainShell); di sub-route admin back berjalan normal. Redirect berbasis role
-di halaman Login via getCurrentUserRole: admin -> /admin/dashboard,
-petugas -> /admin/waste-verification, user -> /home. Menu Mode Admin
-di Profile (khusus admin/petugas) ke /admin/dashboard.
+AdminShell (drawer, tanpa bottom nav user). Masuk admin selalu via go
+(bukan push) agar satu instance shell; tiap instance punya kunci
+Scaffold sendiri dan mendaftarkan pembuka drawer via
+adminDrawerOpenerProvider (tanpa GlobalKey bersama). Back di root
+branch admin sekali tekan kembali ke UI user (/profile); di sub-route
+admin back berjalan normal (pop). Redirect berbasis role di Splash
+(sesi tersimpan) dan halaman Login via getCurrentUserRole: admin ->
+/admin/dashboard, petugas -> /admin/waste-verification, user -> /home.
+Menu Mode Admin di Profile (khusus admin/petugas) ke /admin/dashboard
+via go. GET wilayah memakai timeout + retry galat transien (timeout/
+koneksi/HTTP 5xx) agar tahan terhadap gangguan sesaat API statis.
 
 ---
 
@@ -530,14 +536,16 @@ Arsitektur auth berlapis presentation -> domain -> data:
   getter) agar konstruksi provider aman di mode demo/test tanpa Supabase;
   crash hanya bila method remote benar dipanggil tanpa backend.
 - Alur Buang Sampah: WastePage (Consumer, checkpointNotifierProvider +
-  LocationService + GeoUtils) -> CaptureExtra ke /capture ->
-  CapturePhotoPage (tegakkan radius bila enforceGpsRadius, teruskan
-  VerificationExtra) -> VerificationPage (Consumer,
-  wasteSubmitNotifierProvider -> SubmitWasteUsecase: hash, validasi,
-  upload, insert waste_log, hitung poin, catat earn ke points via
-  RecordEarnPoints/PointsRemoteDatasource dengan reference_id log).
-  Widget tidak menyimpan logic bisnis; validasi dan orkestrasi di
-  domain/usecase.
+  LocationService + GeoUtils, tanpa pilihan kategori) -> CaptureExtra
+  (checkpoint saja) ke /capture -> CapturePhotoPage (tegakkan radius bila
+  enforceGpsRadius, teruskan VerificationExtra) -> VerificationPage
+  (Consumer, pilih kategori setelah foto + estimasi poin live via
+  CalculatePointsUsecase, wasteSubmitNotifierProvider ->
+  SubmitWasteUsecase: hash, validasi, upload, insert waste_log, hitung
+  poin, catat earn ke points via RecordEarnPoints/PointsRemoteDatasource
+  dengan reference_id log, sukses tampilkan PointsEarnedDialog animasi
+  lalu ke Home). Widget tidak menyimpan logic bisnis; validasi dan
+  orkestrasi di domain/usecase.
 - Alur Poin: PointsPage (Consumer, pointsNotifierProvider) baca saldo +
   riwayat dari points; tamu/error memakai konten demo.
 - Alur Aktivitas: ActivityPage (Consumer, wasteRepository.getWasteLogs +
