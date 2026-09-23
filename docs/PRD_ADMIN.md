@@ -170,14 +170,15 @@ Fitur:
 - Update stok via form.
 - Aktif/nonaktif via switch (langsung tersimpan).
 
-### 6.5 Kelola User (Fase 2)
+### 6.5 Kelola User (Selesai baca + tulis role)
 
 Fitur:
 
-- List user.
-- Filter by role.
-- Ubah role user (user/petugas/admin).
-- Lihat detail user (profil, total poin, riwayat waste).
+- List user (limit 50, terbaru di atas).
+- Cari nama/email + filter by role (Semua/User/Petugas/Admin).
+- Ubah role user (user/petugas/admin) via detail; cegah self-demote
+  (migration 018 policy profiles_update_role_admin, push manual).
+- Lihat detail user (profil, total poin via points, 10 riwayat waste).
 
 ### 6.6 Pengaturan (Fase 2)
 
@@ -252,6 +253,7 @@ text
 | `/admin/rewards/new`            | Tambah Reward    |
 | `/admin/rewards/:id/edit`       | Ubah Reward      |
 | `/admin/users`                  | Kelola User      |
+| `/admin/users/:id`              | Detail User      |
 | `/admin/settings`               | Pengaturan       |
 
 ---
@@ -297,7 +299,7 @@ text
 
 ## 13. Status dan Riwayat
 
-- Status: In Progress (MVP: shell, dasbor, kelola TPS, verifikasi waste, kelola reward tulis; baca user/pengaturan).
+- Status: In Progress (MVP: shell, dasbor, kelola TPS, verifikasi waste, kelola reward tulis, kelola user tulis; baca pengaturan).
 - 2026-09-20: Dokumen dibuat manual oleh owner.
 - 2026-09-20: Implementasi MVP selesai (fase 2: reward, user, pengaturan).
 - 2026-09-21: Section 6.2 diperbarui (filter + dropdown wilayah berjenjang, kode TPS otomatis KOTA-KEC-NOMOR, kolom code terpisah dari qr_code).
@@ -307,5 +309,6 @@ text
 - 2026-09-22: Reward/user/pengaturan jadi daftar real baca (skeleton + refresh); tulis (tambah/ubah role) tetap fase 2.
 - 2026-09-22: Nav ganda uji coba (drawer usap tepi + navbar 3 item + sheet usap-atas) dengan flag AppValues; Mode Pengguna khusus role admin via go.
 - 2026-09-23: Kelola Reward tulis selesai (tambah/ubah/hapus/stok/aktif via form + switch + konfirmasi, RLS admin); user/pengaturan tulis tetap fase 2.
+- 2026-09-23: Kelola User tulis selesai (cari/filter role/detail poin+riwayat/ubah role + cegah self-demote, migration 018 profiles_update_role_admin + rewards_select_all_admin); pengaturan tulis tetap fase 2.
 - Menunggu review dan uji device fisik.
 - Setelah disetujui, masuk ke pengembangan fase 2.

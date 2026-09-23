@@ -1,5 +1,44 @@
 # CHANGELOG - Go Green
 
+## [2026-09-23] - Admin kelola user tulis (cari/filter/ubah role/detail)
+
+Status: Selesai (migration 018 perlu `supabase db push` manual; uji device fisik ubah role)
+
+Laporan: /admin/users masih baca saja sehingga admin tidak bisa cari,
+filter role, lihat detail poin/riwayat, dan ubah role dari aplikasi.
+
+File yang dibuat:
+
+- supabase/migrations/018_admin_write_policies.sql (dibuat): policy rewards_select_all_admin + profiles_update_role_admin, idempoten
+- lib/features/admin/domain/usecases/manage_user_usecase.dart (dibuat): cegah self-demote agar admin tidak terkunci
+- lib/features/admin/presentation/pages/admin_user_detail_page.dart (dibuat): profil + total poin + 10 riwayat + pilih role + simpan
+- test/unit/features/admin/manage_user_test.dart (dibuat): 3 test self-demote/teruskan/pertahankan
+
+File yang diubah:
+
+- lib/features/admin/data/datasources/admin_users_datasource.dart (diedit): tambah updateRole
+- lib/features/admin/presentation/providers/admin_users_provider.dart (ditulis ulang): usecase + search/filter provider + filtered + updateRole
+- lib/features/admin/presentation/pages/admin_users_page.dart (ditulis ulang): kolom cari + chip filter + ketuk ke detail
+- lib/core/router/app_router.dart (diedit): route /admin/users/:id + nama adminUserDetail
+- lib/core/constants/app_strings.dart (diedit): 8 string cari/filter/detail/cegah Bahasa Indonesia
+- test/widget/pages/admin_phase2_test.dart (diedit): asersi cari + filter
+- docs/UI_PAGES.md (diedit): section 24 tulis + detail
+- docs/PRD_ADMIN.md (diedit): 6.5 selesai tulis + route + riwayat + status
+- docs/ARCHITECTURE.md (diedit): route detail + alur user admin
+- docs/DATABASE_SCHEMA.md (diedit): RLS 3.1/3.5 + migration 018, versi 1.3 ke 1.4
+
+Catatan:
+
+- Tanpa dependency baru; tulis lewat RLS admin di server.
+- Tanpa `supabase db push` 018, ubah role ditolak RLS dan reward nonaktif hilang dari daftar admin (perbaikan ikut terkirim).
+- Self-demote ditolak di domain sebelum menyentuh backend.
+- Pengaturan tulis tetap fase 2 (butuh tabel app_settings karena AppValues const).
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (213 test lulus, termasuk 3 test baru manage_user)
+
 ## [2026-09-23] - Admin kelola reward tulis (tambah/ubah/hapus/aktif)
 
 Status: Selesai (uji device fisik tambah/ubah/hapus + switch aktif)

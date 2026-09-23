@@ -179,7 +179,7 @@ Daftar route:
 - /admin/checkpoints/:id/edit (ubah TPS)
 - /admin/waste-verification (antrean verifikasi, branch AdminShell)
 - /admin/waste-verification/:id (detail verifikasi)
-- /admin/rewards (+ new, :id/edit form reward), /admin/users, /admin/settings (users/settings baca; rewards baca + tulis)
+- /admin/rewards (+ new, :id/edit form reward), /admin/users (+ :id detail user), /admin/settings (settings baca; rewards + users tulis)
 
 Route admin memakai StatefulShellRoute.indexedStack kedua dengan
 AdminShell (drawer, tanpa bottom nav user). Masuk admin selalu via go
@@ -578,6 +578,13 @@ Arsitektur auth berlapis presentation -> domain -> data:
   server). Switch aktif dan hapus konfirmasi langsung via notifier +
   reload. Katalog user (rewardNotifierProvider, hanya aktif) tidak
   tersentuh agar alur tukar tetap stabil.
+- Alur User admin (tulis role): AdminUsersPage (adminUsersProvider +
+  search/filter lokal) -> ketuk ke /admin/users/:id (AdminUserDetailPage:
+  total poin via PointsRemoteDatasource, 10 riwayat via wasteRepository)
+  -> pilih role + simpan via ManageUserUsecase (tolak self-demote,
+  cegah admin terkunci) -> AdminUsersDatasource.updateRole (policy
+  profiles_update_role_admin, migration 018). Daftar admin baca semua
+  profil (policy select_all_admin yang sudah ada).
 
 ---
 

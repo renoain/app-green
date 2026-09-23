@@ -538,14 +538,17 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 
 ## 24. Kelola User Admin [Selesai]
 
-- Tujuan: lihat user terbaru untuk admin.
-- Elemen: daftar user (avatar inisial, username/email, tanggal daftar,
-  chip Role: User/Petugas/Admin).
-- State: adminUsersProvider via AdminUsersDatasource (skeleton,
-  error + retry, kosong, pull-to-refresh, limit 50).
-- Aksi: tarik untuk muat ulang; ubah role/nonaktifkan menyusul fase 2.
-- Navigasi: /admin/users di AdminShell.
-- Prioritas MVP: Ya (baca).
+- Tujuan: kelola user (cari/filter/ubah role/detail) untuk admin.
+- Elemen: kolom cari nama/email, chip filter Semua/User/Petugas/Admin,
+  daftar user (avatar inisial, username/email, tanggal daftar,
+  chip Role), detail (profil, total poin, 10 riwayat buang, pilih role).
+- State: adminUsersProvider via AdminUsersDatasource + ManageUserUsecase
+  (skeleton, error + retry, kosong, pull-to-refresh, limit 50).
+- Aksi: cari + filter lokal; ketuk ke /admin/users/:id; ubah role via
+  dropdown chip + simpan (cegah self-demote, migration 018); tulis via
+  RLS admin, perlu `supabase db push` manual sebelum uji.
+- Navigasi: /admin/users (+ :id detail) di AdminShell.
+- Prioritas MVP: Ya (baca + tulis role).
 
 ---
 

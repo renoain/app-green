@@ -77,6 +77,8 @@ RLS:
 - User bisa baca profil sendiri.
 - Admin bisa baca semua profil.
 - User bisa update profil sendiri (kecuali role).
+- Admin bisa update semua profil termasuk role (migration 018 policy
+  profiles_update_role_admin; perlu `supabase db push` manual).
 
 Trigger:
 
@@ -213,6 +215,8 @@ Katalog hadiah.
 RLS:
 
 - Semua user bisa baca yang aktif.
+- Admin bisa baca semua termasuk nonaktif (migration 018 policy
+  rewards_select_all_admin; perlu `supabase db push` manual).
 - Hanya admin yang bisa insert/update/delete.
 
 ### 3.6 redemptions
@@ -361,6 +365,10 @@ where email = 'admin@green.com';
   Perbaikan atas edit langsung ke file 003 yang sudah applied sehingga
   tidak pernah sampai ke remote; file 003 dikembalikan ke versi
   applied. Belum di-push ke remote (push manual bersama 015).
+- Migration 018_admin_write_policies.sql menambah policy RLS yang kurang
+  (idempoten): rewards_select_all_admin (admin baca semua reward) dan
+  profiles_update_role_admin (admin ubah role). Belum di-push ke remote
+  (push manual oleh user sebelum uji ubah role/nonaktif).
 
 ---
 
@@ -439,9 +447,9 @@ where user_id = auth.uid()
 
 ## 9. Status Dokumen
 
-Versi: 1.3
+Versi: 1.4
 
-Terakhir update: 2026-09-19
+Terakhir update: 2026-09-23
 
 Riwayat:
 
@@ -456,3 +464,5 @@ Riwayat:
 - 1.3: tabel articles + policy points_insert_own (migration 015),
   kolom waste_logs item_type/source lewat migration 016 (revert edit
   langsung 003).
+- 1.4: policy admin tulis (migration 018): rewards_select_all_admin +
+  profiles_update_role_admin.

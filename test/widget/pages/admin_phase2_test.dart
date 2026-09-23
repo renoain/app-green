@@ -99,7 +99,7 @@ void main() {
     expect(find.byType(Switch), findsWidgets);
   });
 
-  testWidgets('admin users menampilkan daftar user + role',
+  testWidgets('admin users menampilkan cari + filter + daftar role',
       (WidgetTester tester) async {
     await tester.pumpWidget(
       ProviderScope(
@@ -118,6 +118,8 @@ void main() {
     expect(find.text('budi_hijau'), findsOneWidget);
     expect(find.text('admin1'), findsOneWidget);
     expect(find.textContaining('Role:'), findsWidgets);
+    expect(find.text(AppStrings.adminUserSearchHint), findsOneWidget);
+    expect(find.text(AppStrings.adminUserFilterAll), findsOneWidget);
   });
 
   testWidgets('admin settings menampilkan info aplikasi + fase 2',

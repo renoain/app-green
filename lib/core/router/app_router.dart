@@ -16,10 +16,12 @@ import '../../features/admin/presentation/pages/admin_checkpoint_page.dart';
 import '../../features/admin/presentation/pages/admin_dashboard_page.dart';
 import '../../features/admin/presentation/pages/admin_reward_form_page.dart';
 import '../../features/admin/presentation/pages/admin_rewards_page.dart';
+import '../../features/admin/presentation/pages/admin_user_detail_page.dart';
 import '../../features/admin/presentation/pages/admin_settings_page.dart';
 import '../../features/admin/presentation/pages/admin_users_page.dart';
 import '../../features/admin/presentation/pages/admin_waste_detail_page.dart';
 import '../../features/admin/presentation/pages/admin_waste_verification_page.dart';
+import '../../features/admin/domain/entities/admin_user.dart';
 import '../../features/checkpoints/domain/entities/checkpoint.dart';
 import '../../features/rewards/domain/entities/reward.dart';
 import '../../features/article/domain/entities/article.dart';
@@ -245,6 +247,19 @@ final List<RouteBase> appRoutes = <RouteBase>[
             name: AppRouteName.adminUsers,
             builder: (BuildContext context, GoRouterState state) =>
                 const AdminUsersPage(),
+            routes: <RouteBase>[
+              GoRoute(
+                path: ':id',
+                name: AppRouteName.adminUserDetail,
+                builder: (BuildContext context, GoRouterState state) {
+                  final Object? extra = state.extra;
+                  if (extra is AdminUser) {
+                    return AdminUserDetailPage(user: extra);
+                  }
+                  return const AdminUsersPage();
+                },
+              ),
+            ],
           ),
         ],
       ),
@@ -415,8 +430,11 @@ abstract final class AppRouteName {
   /// Nama route ubah reward admin.
   static const String adminRewardEdit = 'adminRewardEdit';
 
-  /// Nama route kelola user admin (fase 2).
+  /// Nama route kelola user admin.
   static const String adminUsers = 'adminUsers';
+
+  /// Nama route detail user admin.
+  static const String adminUserDetail = 'adminUserDetail';
 
   /// Nama route pengaturan admin (fase 2).
   static const String adminSettings = 'adminSettings';

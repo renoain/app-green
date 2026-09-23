@@ -1039,6 +1039,31 @@ class AppStrings {
   /// Label role di daftar user admin.
   static const String adminUserRoleLabel = 'Role';
 
+  /// Hint cari user admin (nama/email).
+  static const String adminUserSearchHint = 'Cari nama atau email...';
+
+  /// Label filter semua role user admin.
+  static const String adminUserFilterAll = 'Semua';
+
+  /// Judul detail user admin.
+  static const String adminUserDetailTitle = 'Detail User';
+
+  /// Label total poin di detail user admin.
+  static const String adminUserTotalPoints = 'Total Poin';
+
+  /// Judul riwayat buang di detail user admin.
+  static const String adminUserHistoryTitle = 'Riwayat Buang';
+
+  /// Pesan riwayat kosong di detail user admin.
+  static const String adminUserHistoryEmpty = 'Belum ada riwayat buang.';
+
+  /// Label ubah role di detail user admin.
+  static const String adminUserChangeRole = 'Ubah Role';
+
+  /// Cegahan admin mencabut role sendiri.
+  static const String adminUserSelfDemoteBlocked =
+      'Tidak bisa mencabut role admin milik sendiri agar tidak terkunci.';
+
   /// Judul info aplikasi di pengaturan admin.
   static const String adminSettingsAppTitle = 'Aplikasi';
 

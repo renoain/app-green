@@ -1,6 +1,7 @@
 // Data source daftar user admin (data layer).
 //
-// Baca profiles terbaru; tulis tetap lewat dashboard/SQL dan RLS admin.
+// Baca profiles terbaru + ubah role (policy profiles_update_role_admin,
+// migration 018; RLS admin di server).
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -27,6 +28,13 @@ class AdminUsersDatasource {
         .order('created_at', ascending: false)
         .limit(limit);
     return rows.map(_fromJson).toList(growable: false);
+  }
+
+  /// Ubah role user (admin, RLS di server).
+  Future<void> updateRole({required String id, required UserRole role}) async {
+    await _client
+        .from(AppTables.profiles)
+        .update(<String, dynamic>{'role': role.value}).eq('id', id);
   }
 
   AdminUser _fromJson(Map<String, dynamic> json) {
