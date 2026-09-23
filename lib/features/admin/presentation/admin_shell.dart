@@ -11,10 +11,12 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_enums.dart';
 import '../../../core/constants/app_strings.dart';
+import '../../../core/constants/app_values.dart';
 import '../../../core/router/app_router.dart';
 import '../../auth/domain/entities/auth_session.dart';
 import '../../auth/presentation/providers/auth_provider.dart';
 import 'providers/admin_providers.dart';
+import 'widgets/admin_bottom_nav.dart';
 import 'widgets/admin_drawer.dart';
 
 /// Route root tiap branch admin (back di luar ini berjalan normal).
@@ -65,12 +67,21 @@ class _AdminShellState extends ConsumerState<AdminShell> {
     context.goNamed(AppRouteName.profile);
   }
 
+  void _goUserMode() {
+    if (!mounted) return;
+    context.goNamed(AppRouteName.profile);
+  }
+
   @override
   Widget build(BuildContext context) {
     final AuthSession auth = ref.watch(authNotifierProvider);
     final AsyncValue<UserRole> role = ref.watch(adminRoleProvider);
     final bool isPetugas = role.maybeWhen(
       data: (UserRole value) => value == UserRole.petugas,
+      orElse: () => false,
+    );
+    final bool isFullAdmin = role.maybeWhen(
+      data: (UserRole value) => value == UserRole.admin,
       orElse: () => false,
     );
     final String displayName = auth.displayName ??
@@ -101,6 +112,8 @@ class _AdminShellState extends ConsumerState<AdminShell> {
           onPopInvokedWithResult: _onPopInvokedWithResult,
           child: Scaffold(
             key: _scaffoldKey,
+            drawerEnableOpenDragGesture:
+                AppValues.adminDrawerSwipeEnabled,
             drawer: AdminDrawer(
               displayName: displayName,
               roleLabel: roleLabel,
@@ -111,7 +124,24 @@ class _AdminShellState extends ConsumerState<AdminShell> {
                 widget.navigationShell.goBranch(index);
               },
               onLogout: () => _handleLogout(context, ref),
+              showUserMode: isFullAdmin,
+              onUserMode: () {
+                Navigator.of(context).pop();
+                _goUserMode();
+              },
             ),
+            bottomNavigationBar: AppValues.adminBottomNavEnabled
+                ? AdminBottomBar(
+                    currentIndex:
+                        widget.navigationShell.currentIndex,
+                    visibleCount:
+                        isPetugas ? 3 : adminMenuItems.length,
+                    showUserMode: isFullAdmin,
+                    onSelectBranch: (int index) =>
+                        widget.navigationShell.goBranch(index),
+                    onUserMode: _goUserMode,
+                  )
+                : null,
             body: widget.navigationShell,
           ),
         );

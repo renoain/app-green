@@ -169,4 +169,34 @@ void main() {
     expect(find.byType(HomePage), findsOneWidget);
     expect(find.text(AppStrings.backToExitHint), findsOneWidget);
   });
+
+  testWidgets('Login menampilkan tombol Google dengan logo', (WidgetTester tester) async {
+    await tester.pumpWidget(_app('/login'));
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.text(AppStrings.loginWithGoogle),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+
+    expect(find.byType(GoogleAuthButton), findsOneWidget);
+    expect(find.text(AppStrings.loginWithGoogle), findsOneWidget);
+  });
+
+  testWidgets('Login dengan Google demo berpindah ke Home', (WidgetTester tester) async {
+    await tester.pumpWidget(_app('/login'));
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.text(AppStrings.loginWithGoogle),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text(AppStrings.loginWithGoogle));
+    await tester.pump(const Duration(milliseconds: 900));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(HomePage), findsOneWidget);
+  });
 }

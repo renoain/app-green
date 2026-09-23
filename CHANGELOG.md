@@ -1,5 +1,199 @@
 # CHANGELOG - Go Green
 
+## [2026-09-22] - Admin nav ganda uji coba + Mode Pengguna khusus admin
+
+Status: Selesai (uji device fisik gestur + pindah mode)
+
+Laporan: belum ada tombol pindah tampilan admin ke UI user; diminta
+dua pola untuk dites (drawer slide + navbar bawah) dengan saklar
+nonaktif salah satu, plus switch hanya untuk role admin.
+
+File yang dibuat:
+
+- lib/features/admin/presentation/widgets/admin_bottom_nav.dart (dibuat): AdminBottomBar 3 menu + grip + sheet usap-atas semua menu
+- test/widget/pages/admin_nav_test.dart (dibuat): 7 test bar/sheet/switch/drawer
+
+File yang diubah:
+
+- lib/core/constants/app_values.dart (diedit): tambah adminBottomNavEnabled + adminDrawerSwipeEnabled (keduanya true)
+- lib/core/constants/app_strings.dart (diedit): tambah adminUserMode + adminMoreMenu
+- lib/features/admin/presentation/widgets/admin_drawer.dart (diedit): item Mode Pengguna opsional khusus admin
+- lib/features/admin/presentation/admin_shell.dart (diedit): drawerEnableOpenDragGesture flag + bottomNavigationBar flag + isFullAdmin + _goUserMode via go
+- docs/UI_PAGES.md (diedit): section 17 + 23-25 nav ganda + switch
+- docs/PRD_ADMIN.md (diedit): riwayat nav ganda + switch admin
+- docs/ARCHITECTURE.md (diedit): pola nav admin + flag uji coba
+- docs/COMPONENT_LIBRARY.md (diedit): AdminBottomBar
+
+Catatan:
+
+- Drawer Scaffold bawaan sudah mendukung usap tepi kiri; flag hanya mengatur drag gesture.
+- Pindah mode selalu via go (bukan push) agar shell tidak menumpuk (hindari layar merah lama).
+- Petugas tanpa tombol switch (tetap back root ke /profile); tambah/ubah reward dan ubah role tetap fase 2.
+- Nonaktifkan salah satu: set false flag terkait di AppValues.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (205 test lulus, termasuk 7 test baru nav)
+
+## [2026-09-22] - Login Google: logo G asli + OAuth HP bisa selesai
+
+Status: Selesai (uji device fisik buka browser + callback + masuk)
+
+Laporan: tombol Google tanpa logo (ikon globe) dan tidak terjadi
+apa-apa saat dites di HP/flutter run: browser OAuth tidak kembali ke
+aplikasi karena tanpa redirectTo/deep link, dan halaman langsung
+navigasi tanpa menunggu sesi.
+
+File yang dibuat:
+
+- assets/icons/custom/ic_google.svg (dibuat): logo G 4 warna resmi
+- test bertambah 2: tombol Google tampil + login Google demo ke Home di auth_flow_test.dart
+
+File yang diubah:
+
+- lib/core/constants/app_assets.dart (diedit): tambah iconGoogle
+- lib/core/widgets/app_button_widgets.dart (diedit): GoogleAuthButton pakai SvgPicture logo G 20px, hapus ikon globe
+- lib/core/constants/app_values.dart (diedit): tambah oauthRedirectTo io.supabase.gogreen://login-callback
+- lib/features/auth/data/datasources/auth_remote_datasource.dart (diedit): signInWithGoogle kirim redirectTo
+- lib/features/auth/data/repositories/supabase_auth_repository.dart (diedit): tunggu sesi via authStateChanges max 120 detik, batal/timeout jadi error
+- lib/features/auth/presentation/pages/login_page.dart (diedit): loading Google terpisah + snackbar petunjuk browser
+- lib/features/auth/presentation/pages/register_page.dart (diedit): sama seperti login
+- lib/core/constants/app_strings.dart (diedit): tambah googleBrowserHint
+- android/app/src/main/AndroidManifest.xml (diedit): intent-filter VIEW/BROWSABLE scheme io.supabase.gogreen
+- ios/Runner/Info.plist (diedit): CFBundleURLTypes scheme io.supabase.gogreen
+- docs/UI_PAGES.md (diedit): section 3-4 alur Google + redirect
+- docs/ARCHITECTURE.md (diedit): alur OAuth + deep link
+- docs/ASSET_MANAGEMENT.md (diedit): ic_google.svg Ada
+
+Catatan:
+
+- Tanpa dependency baru (flutter_svg sudah ada).
+- Wajib di dashboard Supabase: Authentication > URL Configuration > tambah io.supabase.gogreen://login-callback ke Redirect URLs (provider Google sudah aktif).
+- Demo/test tetap instan tanpa browser; HP real buka browser lalu kembali via deep link.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (198 test lulus, termasuk 2 test baru Google)
+
+## [2026-09-22] - Admin rewards/users/settings real (bukan placeholder)
+
+Status: Selesai
+
+Laporan: /admin/rewards, /admin/users, /admin/settings masih
+EmptyState fase 2 sehingga admin tidak bisa lihat data.
+
+File yang dibuat:
+
+- lib/features/admin/domain/entities/admin_user.dart (dibuat): ringkasan user admin
+- lib/features/admin/data/datasources/admin_users_datasource.dart (dibuat): baca profiles terbaru limit 50
+- lib/features/admin/presentation/providers/admin_users_provider.dart (dibuat): AdminUsersNotifier + provider
+- test/widget/pages/admin_phase2_test.dart (dibuat): 3 test override tanpa Supabase
+
+File yang diubah:
+
+- lib/features/admin/presentation/pages/admin_rewards_page.dart (ditulis ulang): daftar katalog real via rewardNotifier + skeleton + refresh + chip aktif/nonaktif + catatan tambah/ubah fase 2
+- lib/features/admin/presentation/pages/admin_users_page.dart (ditulis ulang): daftar user real + skeleton + refresh + chip role + avatar inisial
+- lib/features/admin/presentation/pages/admin_settings_page.dart (ditulis ulang): info aplikasi + anti-kecurangan + misi dari AppValues + catatan fase 2
+- lib/core/constants/app_strings.dart (diedit): tambah 10 string admin Bahasa Indonesia
+- docs/UI_PAGES.md (diedit): section 18-22 admin real
+- docs/PRD_ADMIN.md (diedit): riwayat + status daftar real
+- docs/ARCHITECTURE.md (diedit): datasource + provider users admin
+
+Catatan:
+
+- Tanpa dependency baru; RLS tulis tetap di server, halaman hanya baca.
+- Ubah role/nonaktifkan user dan tambah/ubah reward tetap fase 2.
+- Gagal backend tampilkan error + retry, tidak crash di test.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (196 test lulus, termasuk 3 test baru admin)
+
+## [2026-09-22] - Voucher + Profil smooth: skeleton, refresh, stat real
+
+Status: Selesai
+
+Laporan: Voucher masih loading penuh tanpa refresh; stat Profil
+(250 poin, 12 buang) selalu placeholder sehingga monoton.
+
+File yang diubah:
+
+- lib/features/rewards/presentation/pages/vouchers_page.dart (diedit): skeleton statis + RefreshIndicator tamu/loading/error/kosong/data + RepaintBoundary tiap kartu + empty dalam ListView agar bisa refresh
+- lib/features/profile/presentation/pages/profile_page.dart (ditulis ulang): ConsumerStateful + _reload poin dan hitungan buang + RefreshIndicator + stat AnimatedSwitcher 300ms + RepaintBoundary + fallback placeholder bila tamu/gagal
+- docs/UI_PAGES.md (diedit): section 10a Voucher skeleton + refresh, section 13 Profil stat real
+
+Catatan:
+
+- Tanpa token/warna baru dan tanpa dependency baru.
+- Stat Profil login pakai pointsNotifier + wasteRepository; tamu/test fake-auth tetap placeholder tanpa crash.
+- Gagal muat voucher/buang fallback aman + retry, tidak ada shimmer loop.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (193 test lulus)
+
+## [2026-09-22] - Poin + Aktivitas smooth, katalog reward real + redeem backend
+
+Status: Selesai
+
+Laporan: section reward masih demo (id 1-4, tanpa tulis backend);
+detail reward tanpa guard login/saldo/stok; Points/Aktivitas masih
+loading penuh tanpa refresh.
+
+File yang dibuat:
+
+- test bertambah 1: id real gagal dimuat tampilkan error + coba lagi di reward_detail_page_test.dart
+
+File yang diubah:
+
+- lib/features/activity/presentation/pages/activity_page.dart (diedit): skeleton statis + RefreshIndicator kedua state + hapus LoadingIndicator
+- lib/features/points/presentation/pages/points_page.dart (diedit): skeleton + RefreshIndicator tamu/error/data + saldo AnimatedSwitcher 300ms + RepaintBoundary + _RewardsSection real via rewardNotifierProvider (fallback demo bila loading/error/kosong) + ikon by nama + reload reward tiap _reload
+- lib/features/points/presentation/pages/reward_detail_page.dart (ditulis ulang): ConsumerStateful, demo 1-4 instan kompatibel test, UUID muat getRewardById + skeleton/error/retry, saldo asli + refresh + AnimatedSwitcher, guard login/saldo/stok, redeem backend via rewardNotifier + refresh poin/voucher, tombol loading Menukar
+- lib/core/constants/app_strings.dart (diedit): tambah redeemNeedLogin/redeemInsufficientPoints/redeemOutOfStock/redeemFailedMessage/redeemLoadingLabel Bahasa Indonesia
+- test/widget/pages/reward_detail_page_test.dart (diedit): ProviderScope + 1 test real error
+- docs/UI_PAGES.md (diedit): section 10/10a katalog real + guard, section 9/11 skeleton + refresh
+- docs/ARCHITECTURE.md (diedit): alur katalog real + redeem guard
+
+Catatan:
+
+- Tanpa token/warna baru dan tanpa dependency baru; ikon real dipetakan dari nama (voucher/wallet/donasi/gift).
+- Demo 1-4 tetap tanpa login/backend agar test + deep link lama tidak rusak; UUID wajib login + saldo cukup + stok > 0.
+- Gagal backend katalog/detail fallback demo/error + retry, tidak crash di mode tamu/test.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (193 test lulus, termasuk 1 test baru real error)
+
+## [2026-09-22] - Home tidak monoton + smooth: carousel 3 slide, skeleton, refresh, animasi momen
+
+Status: Selesai
+
+Laporan: Home monoton (hero statis + dots palsu, loading layar penuh,
+tanpa refresh) dan terasa kaku (angka/progres berubah instan).
+
+File yang diubah:
+
+- lib/core/constants/app_strings.dart (diedit): tambah 8 string hero slide 2-3 Bahasa Indonesia (reward + misi)
+- lib/features/home/presentation/pages/home_page.dart (diedit): hero PageView 3 slide manual + dots AnimatedContainer, skeleton statis saat loading login, RefreshIndicator pull-to-refresh, RepaintBoundary hero + poin, AnimatedSwitcher angka poin 300ms, progres misi Tween 600ms sekali jalan, fade-in seksi 0-360ms sekali jalan, hapus import loading tak terpakai
+- lib/core/widgets/card_widgets.dart (diedit): ArticleCard thumbnail gaplessPlayback anti flicker
+- docs/UI_PAGES.md (diedit): section 5 catat carousel + skeleton + refresh + animasi momen
+
+Catatan:
+
+- Tanpa token/warna baru dan tanpa dependency baru; semua pakai token existing dan animasi bawaan Flutter.
+- Tanpa autoplay/carousel loop dan tanpa shimmer loop (hemat baterai); semua animasi sekali jalan.
+- Tinggi hero 200px agar konten 3 slide tidak overflow di test selebar 800px.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (192 test lulus)
+
 ## [2026-09-21] - Kartu poin Home hijau tua elegan + hiasan statis
 
 Status: Selesai

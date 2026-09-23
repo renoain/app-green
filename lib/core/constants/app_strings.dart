@@ -50,6 +50,10 @@ class AppStrings {
   static const String errorGoogleLoginFailed =
       'Gagal masuk dengan Google. Coba lagi.';
 
+  /// Petunjuk saat browser OAuth Google dibuka.
+  static const String googleBrowserHint =
+      'Lanjutkan login di browser, lalu kembali ke aplikasi.';
+
   /// Teks link ke halaman register.
   static const String registerPrompt = 'Belum punya akun? Daftar di sini';
 
@@ -204,6 +208,32 @@ class AppStrings {
 
   /// Label kecil di atas judul hero banner Home (Stitch).
   static const String homeHeroEyebrow = 'Ayo Mulai!';
+
+  /// Judul hero slide tukar reward di Home.
+  static const String homeHero2Title = 'Tukar Poin, Dapat Reward!';
+
+  /// Deskripsi hero slide tukar reward di Home.
+  static const String homeHero2Subtitle =
+      'Poin terkumpul bisa jadi sembako dan voucher.';
+
+  /// Label tombol hero slide tukar reward di Home.
+  static const String homeHero2Cta = 'Lihat Reward';
+
+  /// Label kecil hero slide tukar reward di Home.
+  static const String homeHero2Eyebrow = 'Reward Menanti';
+
+  /// Judul hero slide misi mingguan di Home.
+  static const String homeHero3Title = 'Selesaikan Misi Mingguan!';
+
+  /// Deskripsi hero slide misi mingguan di Home.
+  static const String homeHero3Subtitle =
+      'Buang sampah rutin dan kejar target mingguanmu.';
+
+  /// Label tombol hero slide misi mingguan di Home.
+  static const String homeHero3Cta = 'Lihat Aktivitas';
+
+  /// Label kecil hero slide misi mingguan di Home.
+  static const String homeHero3Eyebrow = 'Misi Hijau';
 
   /// Judul kartu ringkasan poin di Home (Stitch).
   static const String homeTotalPointsTitle = 'Total Poin Kamu';
@@ -661,6 +691,23 @@ class AppStrings {
   /// Tombol tutup popup.
   static const String redeemCloseButton = 'Tutup';
 
+  /// Pesan wajib login sebelum tukar reward.
+  static const String redeemNeedLogin = 'Masuk dulu untuk menukar reward.';
+
+  /// Pesan saldo poin tidak cukup untuk tukar reward.
+  static const String redeemInsufficientPoints =
+      'Poin belum cukup untuk reward ini.';
+
+  /// Pesan stok reward habis.
+  static const String redeemOutOfStock = 'Stok reward habis.';
+
+  /// Pesan gagal tukar reward.
+  static const String redeemFailedMessage =
+      'Penukaran gagal. Coba lagi ya.';
+
+  /// Label tombol saat proses tukar berjalan.
+  static const String redeemLoadingLabel = 'Menukar...';
+
   /// Judul halaman voucher saya.
   static const String voucherTitle = 'Voucher Saya';
 
@@ -918,8 +965,49 @@ class AppStrings {
   /// Menu mode admin di profil.
   static const String adminMode = 'Mode Admin';
 
+  /// Menu kembali ke UI user dari shell admin (khusus role admin).
+  static const String adminUserMode = 'Mode Pengguna';
+
+  /// Judul sheet semua menu admin dari navbar bawah.
+  static const String adminMoreMenu = 'Semua Menu Admin';
+
   /// Pesan halaman admin fase 2 yang belum tersedia.
   static const String adminComingSoon = 'Halaman ini tersedia di fase 2.';
+
+  /// Catatan kelola reward admin (tambah/ubah fase 2).
+  static const String adminRewardManageNote =
+      'Daftar real dari katalog. Tambah dan ubah reward menyusul di fase 2.';
+
+  /// Pesan reward kosong di admin.
+  static const String adminRewardEmpty = 'Belum ada reward di katalog.';
+
+  /// Label stok reward di admin.
+  static const String adminRewardStockLabel = 'Stok';
+
+  /// Label status aktif reward di admin.
+  static const String adminRewardActiveLabel = 'Aktif';
+
+  /// Label status nonaktif reward di admin.
+  static const String adminRewardInactiveLabel = 'Nonaktif';
+
+  /// Pesan user kosong di admin.
+  static const String adminUserEmpty = 'Belum ada user terdaftar.';
+
+  /// Label role di daftar user admin.
+  static const String adminUserRoleLabel = 'Role';
+
+  /// Judul info aplikasi di pengaturan admin.
+  static const String adminSettingsAppTitle = 'Aplikasi';
+
+  /// Judul info anti-kecurangan di pengaturan admin.
+  static const String adminSettingsSecurityTitle = 'Anti-kecurangan';
+
+  /// Judul info misi di pengaturan admin.
+  static const String adminSettingsMissionTitle = 'Misi Mingguan';
+
+  /// Catatan pengaturan admin lanjutan fase 2.
+  static const String adminSettingsPhaseNote =
+      'Pengaturan lanjutan (ubah nilai dari aplikasi) menyusul di fase 2.';
 
   /// --- Dasbor Admin ---
 

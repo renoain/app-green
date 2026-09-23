@@ -191,7 +191,11 @@ admin back berjalan normal (pop). Redirect berbasis role di Splash
 (sesi tersimpan) dan halaman Login via getCurrentUserRole: admin ->
 /admin/dashboard, petugas -> /admin/waste-verification, user -> /home.
 Menu Mode Admin di Profile (khusus admin/petugas) ke /admin/dashboard
-via go. GET wilayah memakai timeout + retry galat transien (timeout/
+via go. Di dalam admin ada nav ganda uji coba: drawer (usap tepi kiri,
+flag adminDrawerSwipeEnabled) + navbar bawah 3 item (Dasbor, TPS,
+Verifikasi) + sheet usap-atas semua menu (flag adminBottomNavEnabled);
+Mode Pengguna khusus role admin kembali via go ke /profile agar shell
+tidak menumpuk. GET wilayah memakai timeout + retry galat transien (timeout/
 koneksi/HTTP 5xx) agar tahan terhadap gangguan sesaat API statis.
 
 ---
@@ -513,7 +517,12 @@ Arsitektur auth berlapis presentation -> domain -> data:
 
 - Datasource per fitur di data/datasources/:
   - auth_remote_datasource.dart (signInWithEmail, signUpWithEmail,
-    signInWithGoogle, signOut, getCurrentUser, getProfile).
+    signInWithGoogle + redirectTo AppValues.oauthRedirectTo, signOut,
+    getCurrentUser, getProfile). Alur Google: browser OAuth ->
+    deep link io.supabase.gogreen://login-callback (intent-filter
+    Android + CFBundleURLTypes iOS + Redirect URL dashboard) ->
+    repository menunggu sesi via authStateChanges max 120 detik;
+    halaman menunggu dengan spinner terpisah + snackbar petunjuk.
   - checkpoint_remote_datasource.dart (getAllCheckpoints,
     getNearbyCheckpoints, getCheckpointById, getCheckpointByQrCode).
     getNearbyCheckpoints menghitung jarak di client (lihat 10.5).
@@ -525,6 +534,8 @@ Arsitektur auth berlapis presentation -> domain -> data:
     addPoints).
   - reward_remote_datasource.dart (getAllRewards, getRewardById,
     redeemReward).
+  - admin_users_datasource.dart (getUsers limit 50, kolom profiles
+    id/username/email/role/created_at).
 - Model data extends entity domain per fitur; fromJson/toJson memakai
   kolom snake_case. Entities: WasteLog, Checkpoint, Reward, Point,
   Profile.
@@ -546,8 +557,16 @@ Arsitektur auth berlapis presentation -> domain -> data:
   dengan reference_id log, sukses tampilkan PointsEarnedDialog animasi
   lalu ke Home). Widget tidak menyimpan logic bisnis; validasi dan
   orkestrasi di domain/usecase.
-- Alur Poin: PointsPage (Consumer, pointsNotifierProvider) baca saldo +
-  riwayat dari points; tamu/error memakai konten demo.
+- Alur Poin: PointsPage (Consumer, pointsNotifierProvider +
+  rewardNotifierProvider) baca saldo + riwayat dari points dan katalog
+  dari rewards; tamu/error memakai konten demo + fallback katalog demo.
+  Saldo AnimatedSwitcher + skeleton + pull-to-refresh.
+- Alur Reward real: _RewardsSection muat rewardNotifierProvider.load(),
+  data non-kosong tampil sebagai RewardCard real (ikon by nama) dengan
+  navigasi /reward/:id UUID, else fallback demo 1-4. RewardDetailPage
+  demo instan; UUID via getRewardById + skeleton/error/retry, guard
+  login/saldo/stok, redeem via rewardNotifier.redeem + refresh poin dan
+  voucher.
 - Alur Aktivitas: ActivityPage (Consumer, wasteRepository.getWasteLogs +
   checkpoint names) daftar real; tap item kirim ActivityDetailExtra ke
   /activity/:id; tamu/error/kosong memakai demo.

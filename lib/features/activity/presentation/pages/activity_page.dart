@@ -10,9 +10,10 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/services/supabase_service.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
-import '../../../../core/widgets/app_bar_and_loading_widgets.dart';
 import '../../../../core/widgets/app_button_widgets.dart';
 import '../../../../core/widgets/card_widgets.dart';
 import '../../../../core/widgets/status_widgets.dart';
@@ -99,14 +100,61 @@ class _ActivityPageState extends ConsumerState<ActivityPage> {
     final List<WasteLog>? logs = _logs;
     if (_loading) {
       return const Scaffold(
-        body: SafeArea(
-          child: Center(child: LoadingIndicator()),
-        ),
+        body: SafeArea(child: _ActivitySkeleton()),
       );
     }
     if (logs == null || logs.isEmpty) {
       return Scaffold(
         body: SafeArea(
+          child: RefreshIndicator(
+            color: AppColors.primary,
+            onRefresh: _reload,
+            child: ListView(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              children: <Widget>[
+                const Text(
+                  AppStrings.activityTitle,
+                  style: AppTypography.headlineLg,
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                if (_failed) ...<Widget>[
+                  const Text(
+                    AppStrings.genericError,
+                    style: AppTypography.bodySm,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  AppTextButton(
+                    text: AppStrings.retryButton,
+                    onPressed: _reload,
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                ],
+                for (final ActivityDemo activity in demoActivities) ...<Widget>[
+                  ActivityCard(
+                    date: activity.date,
+                    description: activity.description,
+                    point: activity.point,
+                    status: activity.status,
+                    onTap: () => context.pushNamed(
+                      AppRouteName.activityDetail,
+                      pathParameters: <String, String>{'id': activity.id},
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+    const CalculatePointsUsecase calculatePoints = CalculatePointsUsecase();
+    return Scaffold(
+      body: SafeArea(
+        child: RefreshIndicator(
+          color: AppColors.primary,
+          onRefresh: _reload,
           child: ListView(
             padding: const EdgeInsets.all(AppSpacing.md),
             children: <Widget>[
@@ -115,84 +163,87 @@ class _ActivityPageState extends ConsumerState<ActivityPage> {
                 style: AppTypography.headlineLg,
               ),
               const SizedBox(height: AppSpacing.lg),
-              if (_failed) ...<Widget>[
-                const Text(
-                  AppStrings.genericError,
-                  style: AppTypography.bodySm,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                AppTextButton(
-                  text: AppStrings.retryButton,
-                  onPressed: _reload,
-                ),
-                const SizedBox(height: AppSpacing.lg),
-              ],
-              for (final ActivityDemo activity in demoActivities) ...<Widget>[
-                ActivityCard(
-                  date: activity.date,
-                  description: activity.description,
-                  point: activity.point,
-                  status: activity.status,
-                  onTap: () => context.pushNamed(
-                    AppRouteName.activityDetail,
-                    pathParameters: <String, String>{'id': activity.id},
-                  ),
+              for (final WasteLog log in logs) ...<Widget>[
+                Builder(
+                  builder: (BuildContext context) {
+                    final String checkpointName =
+                        _checkpointNames[log.checkpointId] ??
+                            (log.checkpointId ?? '-');
+                    final int points = calculatePoints.calculate(
+                      category: log.category,
+                    );
+                    final ({String label, StatusType type}) status =
+                        activityStatusOf(log.status);
+                    return ActivityCard(
+                      date: log.createdAt,
+                      description:
+                          activityDescriptionOf(log, checkpointName),
+                      point: points,
+                      status: status.type,
+                      onTap: () => context.pushNamed(
+                        AppRouteName.activityDetail,
+                        pathParameters: <String, String>{'id': log.id},
+                        extra: ActivityDetailExtra(
+                          description:
+                              activityDescriptionOf(log, checkpointName),
+                          date: log.createdAt,
+                          status: log.status,
+                          checkpointName: checkpointName,
+                          points: points,
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: AppSpacing.md),
               ],
             ],
           ),
         ),
-      );
-    }
-    const CalculatePointsUsecase calculatePoints = CalculatePointsUsecase();
-    return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          children: <Widget>[
-            const Text(
-              AppStrings.activityTitle,
-              style: AppTypography.headlineLg,
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            for (final WasteLog log in logs) ...<Widget>[
-              Builder(
-                builder: (BuildContext context) {
-                  final String checkpointName =
-                      _checkpointNames[log.checkpointId] ??
-                          (log.checkpointId ?? '-');
-                  final int points = calculatePoints.calculate(
-                    category: log.category,
-                  );
-                  final ({String label, StatusType type}) status =
-                      activityStatusOf(log.status);
-                  return ActivityCard(
-                    date: log.createdAt,
-                    description:
-                        activityDescriptionOf(log, checkpointName),
-                    point: points,
-                    status: status.type,
-                    onTap: () => context.pushNamed(
-                      AppRouteName.activityDetail,
-                      pathParameters: <String, String>{'id': log.id},
-                      extra: ActivityDetailExtra(
-                        description:
-                            activityDescriptionOf(log, checkpointName),
-                        date: log.createdAt,
-                        status: log.status,
-                        checkpointName: checkpointName,
-                        points: points,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: AppSpacing.md),
-            ],
-          ],
-        ),
+      ),
+    );
+  }
+}
+
+/// Skeleton statis Aktivitas saat memuat data.
+///
+/// Kotak surfaceDim tanpa animasi loop agar ringan.
+class _ActivitySkeleton extends StatelessWidget {
+  /// Membuat skeleton Aktivitas.
+  const _ActivitySkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      children: const <Widget>[
+        SizedBox(height: AppSpacing.sm),
+        _ActivitySkeletonBlock(height: 96),
+        SizedBox(height: AppSpacing.md),
+        _ActivitySkeletonBlock(height: 96),
+        SizedBox(height: AppSpacing.md),
+        _ActivitySkeletonBlock(height: 96),
+      ],
+    );
+  }
+}
+
+/// Satu blok placeholder skeleton Aktivitas.
+class _ActivitySkeletonBlock extends StatelessWidget {
+  /// Membuat blok skeleton.
+  const _ActivitySkeletonBlock({required this.height});
+
+  /// Tinggi blok.
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height,
+      decoration: BoxDecoration(
+        color: AppColors.surfaceDim,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(color: AppColors.borderLight),
       ),
     );
   }

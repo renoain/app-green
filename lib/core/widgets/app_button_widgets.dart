@@ -2,8 +2,9 @@
 // dan docs/DESIGN_SYSTEM.md (Button -> Primary).
 
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
+import '../constants/app_assets.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_radius.dart';
 import '../theme/app_spacing.dart';
@@ -144,7 +145,7 @@ class AppTextButton extends StatelessWidget {
 
 /// Tombol masuk/daftar dengan Google (sekali klik OAuth).
 ///
-/// Menampilkan ikon Chrome sebagai identitas Google, gaya outlined sekunder
+/// Menampilkan logo G Google resmi (SVG 4 warna), gaya outlined sekunder
 /// tinggi 48 dan radius [AppRadius.lg], konsisten dengan SecondaryButton.
 class GoogleAuthButton extends StatelessWidget {
   /// Membuat tombol autentikasi Google.
@@ -176,11 +177,11 @@ class GoogleAuthButton extends StatelessWidget {
         : Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-                const Icon(
-                  LucideIcons.globe,
-                  size: 20,
-                  color: AppColors.textPrimary,
-                ),
+              SvgPicture.asset(
+                AppAssets.iconGoogle,
+                width: 20,
+                height: 20,
+              ),
               const SizedBox(width: AppSpacing.sm),
               Text(
                 text,

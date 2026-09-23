@@ -36,6 +36,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   bool _obscurePassword = true;
   bool _obscureConfirm = true;
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
 
   static final RegExp _emailRegex = RegExp(
     r'^[\w\.-]+@[\w\.-]+\.\w+$',
@@ -141,16 +142,25 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     context.goNamed(AppRouteName.login);
   }
 
-  /// Menangani "Daftar dengan Google": satu klik langsung membuat akun dan
-  /// masuk otomatis tanpa perlu mengisi form manual.
+  /// Menangani "Daftar dengan Google": buka browser OAuth lalu tunggu
+  /// sesi dari deep link callback; form manual tetap bisa dipakai
+  /// selama menunggu.
   Future<void> _handleGoogleSignIn() async {
-    setState(() => _isLoading = true);
+    setState(() => _isGoogleLoading = true);
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(
+          content: Text(AppStrings.googleBrowserHint),
+          duration: Duration(seconds: 5),
+        ),
+      );
     final AuthRepository repository = ref.read(authRepositoryProvider);
     final SignInResult result = await repository.signInWithGoogle();
     if (!mounted) {
       return;
     }
-    setState(() => _isLoading = false);
+    setState(() => _isGoogleLoading = false);
     if (result != SignInResult.success) {
       _showGoogleLoginError(result);
       return;
@@ -289,8 +299,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     const SizedBox(height: AppSpacing.lg),
                     GoogleAuthButton(
                       text: AppStrings.registerWithGoogle,
-                      isLoading: _isLoading,
-                      onPressed: _isLoading ? null : _handleGoogleSignIn,
+                      isLoading: _isGoogleLoading,
+                      onPressed: (_isLoading || _isGoogleLoading)
+                          ? null
+                          : _handleGoogleSignIn,
                     ),
                     const SizedBox(height: AppSpacing.md),
                     Center(

@@ -73,13 +73,14 @@ Props:
 - onPressed: VoidCallback?
 - isExpanded: bool (full-width)
 
-Elemen: globe icon (lucide, bukan brand Google) + teks.
+Elemen: logo G Google resmi (ic_google.svg via flutter_svg, 20px) + teks.
 
 Pemakaian: tombol satu klik sign-in Google di halaman Login dan Register.
-Tombol ini menampilkan ikon globe (LucideIcons.globe) sebagai pengganti
-logo Google — sesuai DESIGN_SYSTEM (ikon lucide, tanpa aset brand pihak
-ketiga). Handler ada di masing-masing halaman (login/register) memanggil
-AuthRepository.signInWithGoogle.
+Logo brand dikecualikan dari aturan ikon lucide karena Google mewajibkan
+logo resminya. Handler ada di masing-masing halaman (login/register):
+buka browser OAuth (redirectTo AppValues.oauthRedirectTo), tampilkan
+snackbar petunjuk + spinner terpisah, tunggu sesi max 120 detik via
+AuthRepository.signInWithGoogle, lalu navigasi sesuai role.
 
 ---
 
@@ -334,9 +335,24 @@ Props:
 - visibleCount: int (petugas hanya 3 menu pertama)
 - onSelect: ValueChanged<int>
 - onLogout: VoidCallback
+- showUserMode: bool (Mode Pengguna khusus role admin)
+- onUserMode: VoidCallback?
 
 Pemakaian: sidebar AdminShell (Dashboard, Kelola TPS, Verifikasi Waste,
-Kelola Reward, Kelola User, Pengaturan, Logout).
+Kelola Reward, Kelola User, Pengaturan, Mode Pengguna admin, Logout).
+
+### AdminBottomBar [Selesai]
+
+Props:
+- currentIndex: int (di luar 0-2 tanpa highlight)
+- visibleCount: int (petugas 3)
+- showUserMode: bool
+- onSelectBranch: ValueChanged<int>
+- onUserMode: VoidCallback
+
+Pemakaian: navbar bawah AdminShell uji coba (3 menu utama + grip);
+usap ke atas / ketuk grip membuka sheet Semua Menu Admin (semua menu +
+Mode Pengguna admin). Matikan via AppValues.adminBottomNavEnabled.
 
 ### TpsCard [Selesai]
 

@@ -42,6 +42,8 @@ class AdminDrawer extends StatelessWidget {
     required this.visibleCount,
     required this.onSelect,
     required this.onLogout,
+    this.showUserMode = false,
+    this.onUserMode,
   });
 
   /// Nama admin yang login.
@@ -61,6 +63,12 @@ class AdminDrawer extends StatelessWidget {
 
   /// Aksi logout.
   final VoidCallback onLogout;
+
+  /// Tampilkan tombol Mode Pengguna (khusus role admin).
+  final bool showUserMode;
+
+  /// Aksi kembali ke UI user.
+  final VoidCallback? onUserMode;
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +121,14 @@ class AdminDrawer extends StatelessWidget {
               ),
             ),
             const Divider(height: 1),
+            if (showUserMode) ...<Widget>[
+              ListTile(
+                leading:
+                    const Icon(LucideIcons.smartphone, size: 20),
+                title: const Text(AppStrings.adminUserMode),
+                onTap: onUserMode,
+              ),
+            ],
             ListTile(
               leading: const Icon(LucideIcons.log_out, size: 20),
               title: const Text(AppStrings.logout),

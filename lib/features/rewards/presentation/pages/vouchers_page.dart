@@ -1,7 +1,8 @@
 // Halaman Voucher Saya: daftar penukaran reward milik user.
 //
 // Tamu melihat notice login; user login memuat redemptions asli dari
-// Supabase; kosong menampilkan empty state.
+// Supabase; kosong menampilkan empty state. Semua state bisa
+// pull-to-refresh; loading memakai skeleton statis.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -79,14 +80,18 @@ class _VouchersPageState extends ConsumerState<VouchersPage> {
           leading: LucideIcons.arrow_left,
         ),
         body: SafeArea(
-          child: ListView(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            children: <Widget>[
-              LoginNoticeCard(
-                message: AppStrings.profileLoginNotice,
-                onLogin: () => context.pushNamed(AppRouteName.login),
-              ),
-            ],
+          child: RefreshIndicator(
+            color: AppColors.primary,
+            onRefresh: () async {},
+            child: ListView(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              children: <Widget>[
+                LoginNoticeCard(
+                  message: AppStrings.profileLoginNotice,
+                  onLogin: () => context.pushNamed(AppRouteName.login),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -100,86 +105,149 @@ class _VouchersPageState extends ConsumerState<VouchersPage> {
       ),
       body: SafeArea(
         child: state.when(
-          loading: () => const Center(child: LoadingIndicator()),
-          error: (Object error, StackTrace _) => ListView(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            children: <Widget>[
-              Text('$error', style: AppTypography.bodySm),
-              const SizedBox(height: AppSpacing.md),
-              AppTextButton(
-                text: AppStrings.retryButton,
-                onPressed: _reload,
-              ),
-            ],
+          loading: () => const _VoucherSkeleton(),
+          error: (Object error, StackTrace _) => RefreshIndicator(
+            color: AppColors.primary,
+            onRefresh: _reload,
+            child: ListView(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              children: <Widget>[
+                Text('$error', style: AppTypography.bodySm),
+                const SizedBox(height: AppSpacing.md),
+                AppTextButton(
+                  text: AppStrings.retryButton,
+                  onPressed: _reload,
+                ),
+              ],
+            ),
           ),
           data: (List<Redemption> vouchers) {
             if (vouchers.isEmpty) {
-              return const Center(
-                child: EmptyState(
-                  icon: LucideIcons.ticket,
-                  title: AppStrings.voucherTitle,
-                  message: AppStrings.voucherEmptyMessage,
+              return RefreshIndicator(
+                color: AppColors.primary,
+                onRefresh: _reload,
+                child: ListView(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  children: const <Widget>[
+                    EmptyState(
+                      icon: LucideIcons.ticket,
+                      title: AppStrings.voucherTitle,
+                      message: AppStrings.voucherEmptyMessage,
+                    ),
+                  ],
                 ),
               );
             }
-            return ListView.separated(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              itemCount: vouchers.length,
-              separatorBuilder: (_, __) =>
-                  const SizedBox(height: AppSpacing.sm),
-              itemBuilder: (BuildContext context, int index) {
-                final Redemption voucher = vouchers[index];
-                final ({String label, StatusType type}) status =
-                    _statusOf(voucher.status);
-                return Container(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(AppRadius.lg),
-                    border: Border.all(color: AppColors.borderLight),
-                  ),
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        width: 44,
-                        height: 44,
-                        decoration: const BoxDecoration(
-                          color: AppColors.secondaryContainer,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          LucideIcons.ticket,
-                          size: 22,
-                          color: AppColors.primary,
-                        ),
+            return RefreshIndicator(
+              color: AppColors.primary,
+              onRefresh: _reload,
+              child: ListView.separated(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                itemCount: vouchers.length,
+                separatorBuilder: (_, __) =>
+                    const SizedBox(height: AppSpacing.sm),
+                itemBuilder: (BuildContext context, int index) {
+                  final Redemption voucher = vouchers[index];
+                  final ({String label, StatusType type}) status =
+                      _statusOf(voucher.status);
+                  return RepaintBoundary(
+                    child: Container(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius:
+                            BorderRadius.circular(AppRadius.lg),
+                        border:
+                            Border.all(color: AppColors.borderLight),
                       ),
-                      const SizedBox(width: AppSpacing.md),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              voucher.rewardName ?? '-',
-                              style: AppTypography.labelLg,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: const BoxDecoration(
+                              color: AppColors.secondaryContainer,
+                              shape: BoxShape.circle,
                             ),
-                            const SizedBox(height: AppSpacing.xs),
-                            Text(
-                              formatIndonesianTimestamp(voucher.createdAt),
-                              style: AppTypography.bodySm,
+                            child: const Icon(
+                              LucideIcons.ticket,
+                              size: 22,
+                              color: AppColors.primary,
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(width: AppSpacing.md),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  voucher.rewardName ?? '-',
+                                  style: AppTypography.labelLg,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: AppSpacing.xs),
+                                Text(
+                                  formatIndonesianTimestamp(
+                                    voucher.createdAt,
+                                  ),
+                                  style: AppTypography.bodySm,
+                                ),
+                              ],
+                            ),
+                          ),
+                          StatusChip(
+                            label: status.label,
+                            type: status.type,
+                          ),
+                        ],
                       ),
-                      StatusChip(label: status.label, type: status.type),
-                    ],
-                  ),
-                );
-              },
+                    ),
+                  );
+                },
+              ),
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+/// Skeleton statis Voucher saat memuat data.
+class _VoucherSkeleton extends StatelessWidget {
+  const _VoucherSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      children: const <Widget>[
+        _VoucherSkeletonBlock(height: 76),
+        SizedBox(height: AppSpacing.sm),
+        _VoucherSkeletonBlock(height: 76),
+        SizedBox(height: AppSpacing.sm),
+        _VoucherSkeletonBlock(height: 76),
+      ],
+    );
+  }
+}
+
+/// Satu blok placeholder skeleton Voucher.
+class _VoucherSkeletonBlock extends StatelessWidget {
+  const _VoucherSkeletonBlock({required this.height});
+
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height,
+      decoration: BoxDecoration(
+        color: AppColors.surfaceDim,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(color: AppColors.borderLight),
       ),
     );
   }

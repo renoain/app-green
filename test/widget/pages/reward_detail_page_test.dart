@@ -12,9 +12,11 @@ import 'package:go_green/features/points/presentation/pages/reward_detail_page.d
 import 'package:go_green/features/rewards/presentation/pages/vouchers_page.dart';
 
 Widget _detailApp() {
-  return MaterialApp(
-    theme: AppTheme.light(),
-    home: const RewardDetailPage(rewardId: '1'),
+  return ProviderScope(
+    child: MaterialApp(
+      theme: AppTheme.light(),
+      home: const RewardDetailPage(rewardId: '1'),
+    ),
   );
 }
 
@@ -25,6 +27,17 @@ Widget _detailRouter() {
       routerConfig: GoRouter(
         initialLocation: '/reward/2',
         routes: appRoutes,
+      ),
+    ),
+  );
+}
+
+Widget _detailRealApp() {
+  return ProviderScope(
+    child: MaterialApp(
+      theme: AppTheme.light(),
+      home: const RewardDetailPage(
+        rewardId: '00000000-0000-0000-0000-000000000001',
       ),
     ),
   );
@@ -96,5 +109,14 @@ void main() {
 
     expect(find.byType(VouchersPage), findsOneWidget);
     expect(find.text(AppStrings.voucherTitle), findsOneWidget);
+  });
+
+  testWidgets('id real yang gagal dimuat menampilkan error + coba lagi',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(_detailRealApp());
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppStrings.genericError), findsOneWidget);
+    expect(find.text(AppStrings.retryButton), findsOneWidget);
   });
 }

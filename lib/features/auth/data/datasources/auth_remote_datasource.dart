@@ -6,6 +6,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/constants/app_tables.dart';
+import '../../../../core/constants/app_values.dart';
 import '../../../../core/services/supabase_service.dart';
 import '../../../profile/data/models/profile_model.dart';
 
@@ -95,10 +96,14 @@ class AuthRemoteDatasource {
 
   /// Login dengan akun Google (OAuth).
   ///
-  /// Mengembalikan true saat halaman OAuth berhasil dibuka (hasil login
-  /// tetap dipantau lewat [authStateChanges]).
+  /// [redirectTo] deep link kembali ke aplikasi agar sesi bisa
+  /// diselesaikan di HP; hasilnya dipantau lewat [authStateChanges].
+  /// Mengembalikan true saat halaman OAuth berhasil dibuka.
   Future<bool> signInWithGoogle() {
-    return _resolvedClient.auth.signInWithOAuth(OAuthProvider.google);
+    return _resolvedClient.auth.signInWithOAuth(
+      OAuthProvider.google,
+      redirectTo: AppValues.oauthRedirectTo,
+    );
   }
 
   /// Keluar dari sesi.

@@ -4,6 +4,8 @@
 // UI. Dalam mode demo (Supabase belum terinisialisasi, misal saat test
 // widget) operasi disimulasikan agar UI tetap bisa berjalan.
 
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/services/supabase_service.dart';
@@ -65,7 +67,19 @@ class SupabaseAuthRepository implements AuthRepository {
     }
     try {
       final bool oauthStarted = await _datasource.signInWithGoogle();
-      return oauthStarted ? SignInResult.success : SignInResult.error;
+      if (!oauthStarted) {
+        return SignInResult.error;
+      }
+      // Browser sudah dibuka; tunggu sesi dari deep link callback.
+      // Batal/timeout 120 detik dianggap gagal agar UI tidak macet.
+      try {
+        await _datasource.authStateChanges
+            .firstWhere((AuthState state) => state.session != null)
+            .timeout(const Duration(seconds: 120));
+      } on TimeoutException {
+        return SignInResult.error;
+      }
+      return SignInResult.success;
     } catch (error) {
       AppLogger.error('Sign in Google gagal', error);
       if (AuthErrorMapper.mapSignInError(error) == SignInResult.networkError) {

@@ -295,12 +295,14 @@ text
 
 ## 13. Status dan Riwayat
 
-- Status: In Progress (MVP: shell, dasbor, kelola TPS, verifikasi waste).
+- Status: In Progress (MVP: shell, dasbor, kelola TPS, verifikasi waste; baca reward/user/pengaturan).
 - 2026-09-20: Dokumen dibuat manual oleh owner.
 - 2026-09-20: Implementasi MVP selesai (fase 2: reward, user, pengaturan).
 - 2026-09-21: Section 6.2 diperbarui (filter + dropdown wilayah berjenjang, kode TPS otomatis KOTA-KEC-NOMOR, kolom code terpisah dari qr_code).
 - 2026-09-21: Double-back keluar di AdminShell; wilayah + kode otomatis dari GPS/peta; Nama jadi Deskripsi; QR disembunyikan sementara.
 - 2026-09-21: Dialog hidupkan GPS + izin lokasi; peta layar penuh pin geser; autofill kecamatan/kelurahan/alamat lengkap/kode TPS.
 - 2026-09-21: Masuk admin via go + kunci Scaffold per-instance (perbaiki layar merah); back root sekali ke /profile; splash redirect sesi sesuai role; retry+timeout API wilayah (522).
+- 2026-09-22: Reward/user/pengaturan jadi daftar real baca (skeleton + refresh); tulis (tambah/ubah role) tetap fase 2.
+- 2026-09-22: Nav ganda uji coba (drawer usap tepi + navbar 3 item + sheet usap-atas) dengan flag AppValues; Mode Pengguna khusus role admin via go.
 - Menunggu review dan uji device fisik.
 - Setelah disetujui, masuk ke pengembangan fase 2.

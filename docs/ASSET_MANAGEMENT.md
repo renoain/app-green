@@ -73,8 +73,8 @@ di assets). Aset SVG custom hanya untuk ikon yang tidak tersedia di lucide
 dan logo/ilustrasi.
 
 TBD: icon-icon yang perlu dibuat:
-- Ikon Google sign-in (ic_google.svg) - wajib untuk tombol "Masuk/Daftar
-  dengan Google".
+- Ikon Google sign-in (ic_google.svg) - Ada (logo G 4 warna, dipakai
+  GoogleAuthButton di Login/Register).
 - Logo Go Green (logo_go_green.svg)
 - Logo Go Green mono (logo_go_green_mono.svg)
 - Checkpoint (ic_checkpoint.svg)

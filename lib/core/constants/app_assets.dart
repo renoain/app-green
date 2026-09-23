@@ -46,6 +46,9 @@ class AppAssets {
   /// Path icon logout.
   static const String iconLogout = 'assets/icons/custom/ic_logout.svg';
 
+  /// Path logo G Google untuk tombol sign-in (SVG 4 warna resmi).
+  static const String iconGoogle = 'assets/icons/custom/ic_google.svg';
+
   /// Path image onboarding slide pertama.
   static const String onboarding1 = 'assets/images/onboarding_1.png';
 

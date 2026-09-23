@@ -43,7 +43,10 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 - Background: dekorasi lingkaran lembut + ikon daun samar (AuthLeafDecoration)
   sebagai Positioned.fill di belakang konten utama.
 - Akses cepat: one-click Google sign-in (AuthRepository.signInWithGoogle,
-  Supabase OAuth) tanpa isi email manual; dari halaman Login/Register.
+  Supabase OAuth + redirectTo io.supabase.gogreen://login-callback +
+  tunggu sesi max 120 detik) tanpa isi email manual; dari halaman Login/Register.
+  Tombol GoogleAuthButton berlogo G resmi (ic_google.svg); saat ditekan
+  tampil snackbar petunjuk browser dan spinner terpisah dari form email.
 - State: form validation (identitas wajib diisi, tanpa cek format email),
   loading, error, rememberMe (checkbox).
 - Aksi: validasi, login via AuthRepository (username diselesaikan menjadi
@@ -88,9 +91,10 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 
 - Tujuan: beranda, ringkasan aktivitas dan akses cepat.
 - Elemen: header sapaan ("Halo," + nama tampilan + avatar inisial),
-  notice login (hanya bila belum login), banner hero carousel "Ayo
-  Mulai! Buang Sampah Dapat Poin!" dengan CTA "Mulai Sekarang" dan
-  indikator 3 titik, kartu "Total Poin Kamu" dengan tombol
+  notice login (hanya bila belum login), banner hero carousel 3 slide
+  geser manual (Buang Sampah, Tukar Reward, Misi Mingguan) dengan CTA
+  "Mulai Sekarang" / "Lihat Reward" / "Lihat Aktivitas" dan
+  indikator 3 titik fungsional, kartu "Total Poin Kamu" dengan tombol
   "Tukar Reward" dan "Lihat Riwayat" plus 3 stat, kartu "Misi Hijau
   Mingguan" dengan progress, section "Aktivitas Terkini" berisi dua
   tile, section "Artikel & Edukasi Hijau" dengan thumbnail gambar dari
@@ -107,10 +111,12 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 - State: data user (nama dari AuthSession: displayName ?? username ??
   prefix email ?? nama tamu; tamu/gagal backend: demo; login: saldo
   pointsNotifierProvider + waste log via BuildHomeSummaryUsecase +
-  refresh otomatis tiap submit sukses), loading (layar loading saat
-  user login memuat data), tampil/hilang notice login.
-- Aksi: tap CTA / menu ke halaman terkait, tutup notice login, tap
-  "Masuk" pada notice (buka Login), tap "Lihat semua" ke halaman Artikel.
+  refresh otomatis tiap submit sukses + pull-to-refresh),
+  loading (skeleton statis saat user login memuat data),
+  tampil/hilang notice login.
+- Aksi: geser hero + tap CTA / menu ke halaman terkait, tutup notice login, tap
+  "Masuk" pada notice (buka Login), tap "Lihat semua" ke halaman Artikel,
+  tarik untuk memuat ulang Home.
 - Navigasi: bottom nav ke Home, Aktivitas, Buang Sampah, Poin, Profile.
 - Keperilakuan back: dari tab selain Beranda, back kembali ke tab Beranda
   dulu (tidak langsung keluar aplikasi); di tab Beranda, back pertama
@@ -130,7 +136,10 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   20 persen, 3 stat putih solid). Token Stitch dipetakan ke token
   existing (surfaceDim/tertiaryLight/surface, primary, borderLight,
   elevation-1, spacing xs/sm/md/lg, radius lg/xl/full) sehingga
-  DESIGN_SYSTEM.md tidak perlu token baru. Bottom nav tidak diubah
+  DESIGN_SYSTEM.md tidak perlu token baru. Hero tanpa autoplay,
+  angka poin AnimatedSwitcher 300ms, progres misi animasi 600ms sekali
+  jalan, seksi fade-in 0-360ms sekali jalan, thumbnail artikel
+  gaplessPlayback. Bottom nav tidak diubah
   (CustomBottomNavBar tetap 5 item via StatefulShellRoute).
 - Prioritas MVP: Ya.
 
@@ -237,19 +246,22 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   Voucher Saya ke /vouchers), kartu reward (sembako, voucher, e-wallet,
   donasi), histori poin (ActivityCard per catatan Point).
 - State: saat login, saldo + riwayat dari pointsNotifierProvider
-  (AsyncValue: loading indikator, error + retry + konten demo fallback,
-  data real, empty state bila riwayat kosong); tamu selalu konten demo
-  (saldo 250, empat reward demo, dua riwayat demo). Katalog reward masih
-  demo sampai terpasang ke Supabase.
+  (AsyncValue: skeleton statis, error + retry + konten demo fallback,
+  data real + saldo AnimatedSwitcher 300ms + pull-to-refresh, empty
+  state bila riwayat kosong); tamu selalu konten demo + refresh
+  (saldo 250, katalog real bila backend siap else empat reward demo,
+  dua riwayat demo). Katalog reward real via rewardNotifierProvider
+  (loading/error/kosong fallback demo); ikon real dipetakan dari nama.
 - Aksi: tukar poin, pilih reward, klaim reward via QR. Riwayat earn
   tercatat otomatis tiap submit waste (reference_id = waste log).
-- Navigasi: ke detail reward; klaim (QR) menampilkan dialog konfirmasi.
+- Navigasi: ke detail reward (/reward/:id demo 1-4 atau UUID real);
+  klaim (QR) menampilkan dialog konfirmasi.
 - Catatan: insert earn/redeem klien butuh policy points_insert_own
-  (migration 015, push manual). Detail reward tersedia di route
-  /reward/:id; tombol Tukar menampilkan popup konfirmasi animasi
-  (Batal kiri + Tukar kanan) lalu popup sukses animasi dengan tombol
-  Lihat Voucher Saya ke /vouchers (penulisan backend + katalog real
-  menyusul). Alur klaim QR (QR_CODE di
+  (migration 015, push manual). Detail reward demo 1-4 tanpa
+  login/backend (kompatibel test); UUID memuat getRewardById +
+  skeleton/error/retry, saldo asli + AnimatedSwitcher, guard login /
+  saldo / stok, redeem backend via rewardNotifier + refresh poin dan
+  voucher, tombol loading Menukar. Alur klaim QR (QR_CODE di
   redemptions) aktif saat supabase terpasang; verifikator memindai QR
   untuk ubah status redemptions menjadi 'claimed'.
 - Prioritas MVP: Ya.
@@ -263,7 +275,8 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   status Menunggu/Disetujui/Ditolak/Diklaim), empty state bila kosong,
   notice login bila tamu.
 - State: daftar redemptions asli via userVouchersProvider
-  (loading, error + retry, kosong); tamu selalu notice login.
+  (skeleton statis, error + retry, kosong); tamu selalu notice login.
+  Semua state bisa pull-to-refresh; tiap kartu RepaintBoundary.
 - Aksi: buka dari menu Voucher Saya di Profile atau tombol Lihat
   Voucher Saya di popup sukses; muat ulang via retry.
 - Navigasi: route /vouchers (free route, back ke halaman sebelumnya).
@@ -278,8 +291,9 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   <checkpoint>", tanggal, estimasi poin, status chip verified/pending/
   rejected).
 - State: saat login, daftar dari wasteRepository.getWasteLogs + nama
-  checkpoint (loading indikator, error + retry + fallback demo, kosong +
-  fallback demo); tamu selalu daftar demo (dua aktivitas). Estimasi poin
+  checkpoint (skeleton statis, error + retry + fallback demo, kosong +
+  fallback demo, pull-to-refresh); tamu selalu daftar demo (dua
+  aktivitas) + refresh. Estimasi poin
   per item via CalculatePointsUsecase (formula sama dengan earn tercatat).
 - Aksi: tap kartu membuka route /activity/:id dengan ActivityDetailExtra
   (detail real); item demo membuka detail demo seperti sebelumnya.
@@ -329,7 +343,7 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   - Pengaturan (route /settings): menu akun, toggle Notifikasi dan Mode
     Gelap (lokal), versi aplikasi, dialog Tentang Go Green. Mode Gelap
     diterapkan pada fase berikutnya.
-- Catatan: bahwa status login dibaca dari authNotifierProvider (Supabase  Auth); data statistik masih placeholder. Logout menyimpan ke mode tamu
+- Catatan: bahwa status login dibaca dari authNotifierProvider (Supabase  Auth); stat login pakai pointsNotifier (saldo) + wasteRepository (hitungan buang) + AnimatedSwitcher 300ms + pull-to-refresh, fallback placeholder bila tamu/gagal. Logout menyimpan ke mode tamu
   dan kembali ke Home (notice login muncul kembali). Logout lanjutan
   (konfirmasi, hapus sesi device, sync) dicatat sebagai task fase berikutnya.
 - Prioritas MVP: Ya.
@@ -391,6 +405,14 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   form titik (peta OSM ketuk untuk pin, field nama/alamat/lat/lng/
   radius/QR, tombol pakai lokasi saya), antrean verifikasi (daftar
   pending + setujui/tolak).
+- Navigasi ganda (uji coba, bisa dimatikan per pola via AppValues):
+  drawer samping (usap tepi kiri ke kanan, flag
+  adminDrawerSwipeEnabled) + navbar bawah 3 menu utama (Dasbor,
+  Kelola TPS, Verifikasi; flag adminBottomNavEnabled) + usap navbar
+  ke atas / ketuk grip membuka sheet Semua Menu Admin (6 menu +
+  Mode Pengguna khusus admin). Pindah mode selalu via go ke /profile
+  agar shell tidak menumpuk. Tombol Mode Pengguna hanya untuk role
+  admin (petugas tanpa switch, tetap back root ke /profile).
 - State: role admin (profiles.role), daftar checkpoint, lokasi uji
   debug (in-memory), antrean pending.
 - Aksi: CRUD checkpoint via RLS admin (policy
@@ -496,3 +518,41 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   submit) agar tidak ganda.
 - Navigasi: /admin/waste-verification/:id, kembali ke antrean.
 - Prioritas MVP: Ya.
+
+---
+
+## 23. Kelola Reward Admin [Selesai]
+
+- Tujuan: lihat katalog reward untuk admin.
+- Elemen: daftar reward real (nama, harga poin, stok, chip Aktif/Nonaktif),
+  catatan tambah/ubah fase 2.
+- State: rewardNotifierProvider (skeleton, error + retry, kosong,
+  pull-to-refresh).
+- Aksi: tarik untuk muat ulang; tambah/ubah menyusul fase 2.
+- Navigasi: /admin/rewards di AdminShell.
+- Prioritas MVP: Ya (baca).
+
+---
+
+## 24. Kelola User Admin [Selesai]
+
+- Tujuan: lihat user terbaru untuk admin.
+- Elemen: daftar user (avatar inisial, username/email, tanggal daftar,
+  chip Role: User/Petugas/Admin).
+- State: adminUsersProvider via AdminUsersDatasource (skeleton,
+  error + retry, kosong, pull-to-refresh, limit 50).
+- Aksi: tarik untuk muat ulang; ubah role/nonaktifkan menyusul fase 2.
+- Navigasi: /admin/users di AdminShell.
+- Prioritas MVP: Ya (baca).
+
+---
+
+## 25. Pengaturan Admin [Selesai]
+
+- Tujuan: info konfigurasi aktif untuk admin.
+- Elemen: info aplikasi (versi), anti-kecurangan (radius + penegakan +
+  hash/timestamp), misi (target, batas harian, foto maks),
+  catatan ubah nilai fase 2.
+- State: statis dari AppValues + pull-to-refresh tampilan.
+- Navigasi: /admin/settings di AdminShell.
+- Prioritas MVP: Ya (info).

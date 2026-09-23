@@ -49,4 +49,23 @@ abstract final class AppValues {
   /// Dipakai BuildHomeSummaryUsecase (lib/features/home/domain/usecases/
   /// build_home_summary_usecase.dart).
   static const int weeklyMissionTargetDisposals = 5;
+
+  /// Redirect deep link login Google (OAuth) kembali ke aplikasi.
+  ///
+  /// Wajib terdaftar di AndroidManifest (intent-filter VIEW/BROWSABLE),
+  /// Info.plist (CFBundleURLTypes), dan Supabase dashboard
+  /// (Authentication > URL Configuration > Redirect URLs).
+  static const String oauthRedirectTo =
+      'io.supabase.gogreen://login-callback';
+
+  /// Tampilkan navbar bawah di shell admin (uji coba, bisa dimatikan).
+  ///
+  /// True berarti 3 menu utama tampil di bawah + usap ke atas membuka
+  /// semua menu; false berarti navigasi admin hanya lewat drawer.
+  static const bool adminBottomNavEnabled = true;
+
+  /// Gestur usap tepi kiri untuk membuka drawer admin (uji coba).
+  ///
+  /// False berarti drawer hanya dibuka lewat tombol menu.
+  static const bool adminDrawerSwipeEnabled = true;
 }

@@ -232,6 +232,7 @@ class ArticleCard extends StatelessWidget {
             width: 88,
             height: 88,
             fit: BoxFit.cover,
+            gaplessPlayback: true,
           )
         : Container(
             width: 88,

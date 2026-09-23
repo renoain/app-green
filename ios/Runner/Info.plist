@@ -30,6 +30,17 @@
 	<string>Aplikasi membutuhkan kamera untuk mengambil foto bukti pembuangan sampah.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Aplikasi membutuhkan lokasi untuk memverifikasi pembuangan sampah di checkpoint.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>go.green.oauth</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>io.supabase.gogreen</string>
+			</array>
+		</dict>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

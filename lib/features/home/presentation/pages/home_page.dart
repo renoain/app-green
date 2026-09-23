@@ -24,7 +24,6 @@ import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/formatters.dart';
-import '../../../../core/widgets/app_bar_and_loading_widgets.dart';
 import '../../../../core/widgets/app_button_widgets.dart';
 import '../../../../core/widgets/card_widgets.dart';
 import '../../../../core/widgets/display_widgets.dart';
@@ -158,9 +157,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         realPoints != null;
     if (userId != null && (_loadingData || (logs == null && !_failedData))) {
       return const Scaffold(
-        body: SafeArea(
-          child: Center(child: LoadingIndicator()),
-        ),
+        body: SafeArea(child: _HomeSkeleton()),
       );
     }
     const BuildHomeSummaryUsecase summaryUsecase = BuildHomeSummaryUsecase();
@@ -220,42 +217,68 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-          children: <Widget>[
-            const SizedBox(height: AppSpacing.sm),
-            _HomeHeader(displayName: displayName),
-            const SizedBox(height: AppSpacing.md),
-            if (showNotice) ...<Widget>[
-              LoginNoticeCard(
-                message: AppStrings.homeLoginNotice,
-                onLogin: () => context.pushNamed(AppRouteName.login),
-                onDismiss: () => setState(() => _showLoginNotice = false),
+        child: RefreshIndicator(
+          color: AppColors.primary,
+          onRefresh: _reload,
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+            children: <Widget>[
+              const SizedBox(height: AppSpacing.sm),
+              _HomeHeader(displayName: displayName),
+              const SizedBox(height: AppSpacing.md),
+              if (showNotice) ...<Widget>[
+                LoginNoticeCard(
+                  message: AppStrings.homeLoginNotice,
+                  onLogin: () => context.pushNamed(AppRouteName.login),
+                  onDismiss: () => setState(() => _showLoginNotice = false),
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
+              _FadeIn(
+                delayMs: 0,
+                child: RepaintBoundary(
+                  child: _HeroCarouselCard(
+                    onStartWaste: () =>
+                        context.goNamed(AppRouteName.waste),
+                    onStartReward: () =>
+                        context.goNamed(AppRouteName.points),
+                    onStartActivity: () =>
+                        context.goNamed(AppRouteName.activity),
+                  ),
+                ),
               ),
               const SizedBox(height: AppSpacing.md),
-            ],
-            _HeroCarouselCard(
-              onStart: () => context.goNamed(AppRouteName.waste),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            _PointsSummaryCard(
-              totalPoints: totalPoints,
-              stats: stats,
-              onExchange: () => context.goNamed(AppRouteName.points),
-              onHistory: () => context.goNamed(AppRouteName.activity),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            _MissionCard(
-              progress: missionProgress,
-              collected: missionCollected,
-              target: missionTarget,
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            _SectionHeader(
-              title: AppStrings.homeLatestActivity,
-              actionLabel: AppStrings.seeAllShort,
-              onAction: () => context.goNamed(AppRouteName.activity),
-            ),
+              _FadeIn(
+                delayMs: 60,
+                child: RepaintBoundary(
+                  child: _PointsSummaryCard(
+                    totalPoints: totalPoints,
+                    stats: stats,
+                    onExchange: () =>
+                        context.goNamed(AppRouteName.points),
+                    onHistory: () =>
+                        context.goNamed(AppRouteName.activity),
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              _FadeIn(
+                delayMs: 120,
+                child: _MissionCard(
+                  progress: missionProgress,
+                  collected: missionCollected,
+                  target: missionTarget,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              _FadeIn(
+                delayMs: 180,
+                child: _SectionHeader(
+                  title: AppStrings.homeLatestActivity,
+                  actionLabel: AppStrings.seeAllShort,
+                  onAction: () => context.goNamed(AppRouteName.activity),
+                ),
+              ),
             const SizedBox(height: AppSpacing.sm),
             if (realLogs == null) ...<Widget>[
               _ActivityTile(
@@ -327,35 +350,45 @@ class _HomePageState extends ConsumerState<HomePage> {
                 const SizedBox(height: AppSpacing.sm),
               ],
             const SizedBox(height: AppSpacing.lg),
-            _SectionHeader(
-              title: AppStrings.homeArticleSection,
-              actionLabel: AppStrings.seeAll,
-              onAction: () => context.pushNamed(AppRouteName.article),
+            _FadeIn(
+              delayMs: 240,
+              child: _SectionHeader(
+                title: AppStrings.homeArticleSection,
+                actionLabel: AppStrings.seeAll,
+                onAction: () => context.pushNamed(AppRouteName.article),
+              ),
             ),
             const SizedBox(height: AppSpacing.sm),
-            ArticleCard(
-              title: AppStrings.homeArticle1Title,
-              excerpt: AppStrings.homeArticle1Excerpt,
-              date: _demoArticle1Date,
-              thumbnailImage: AppAssets.articleThumb1,
-              onTap: () => context.pushNamed(
-                AppRouteName.articleDetail,
-                pathParameters: const <String, String>{'id': '1'},
+            _FadeIn(
+              delayMs: 300,
+              child: ArticleCard(
+                title: AppStrings.homeArticle1Title,
+                excerpt: AppStrings.homeArticle1Excerpt,
+                date: _demoArticle1Date,
+                thumbnailImage: AppAssets.articleThumb1,
+                onTap: () => context.pushNamed(
+                  AppRouteName.articleDetail,
+                  pathParameters: const <String, String>{'id': '1'},
+                ),
               ),
             ),
             const SizedBox(height: AppSpacing.md),
-            ArticleCard(
-              title: AppStrings.homeArticle2Title,
-              excerpt: AppStrings.homeArticle2Excerpt,
-              date: _demoArticle2Date,
-              thumbnailImage: AppAssets.articleThumb2,
-              onTap: () => context.pushNamed(
-                AppRouteName.articleDetail,
-                pathParameters: const <String, String>{'id': '2'},
+            _FadeIn(
+              delayMs: 360,
+              child: ArticleCard(
+                title: AppStrings.homeArticle2Title,
+                excerpt: AppStrings.homeArticle2Excerpt,
+                date: _demoArticle2Date,
+                thumbnailImage: AppAssets.articleThumb2,
+                onTap: () => context.pushNamed(
+                  AppRouteName.articleDetail,
+                  pathParameters: const <String, String>{'id': '2'},
+                ),
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -429,111 +462,206 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-/// Banner hero gaya Stitch: kartu hijau muda + CTA + ilustrasi pohon.
-class _HeroCarouselCard extends StatelessWidget {
+/// Banner hero geser 3 slide: buang sampah, tukar reward, misi mingguan.
+///
+/// PageView manual (tanpa autoplay) agar hemat baterai; dots mengikuti
+/// halaman aktif dan tiap slide punya CTA ke rute terkait.
+class _HeroCarouselCard extends StatefulWidget {
   /// Membuat banner hero.
-  const _HeroCarouselCard({required this.onStart});
+  const _HeroCarouselCard({
+    required this.onStartWaste,
+    required this.onStartReward,
+    required this.onStartActivity,
+  });
+
+  /// Aksi slide buang sampah.
+  final VoidCallback onStartWaste;
+
+  /// Aksi slide tukar reward.
+  final VoidCallback onStartReward;
+
+  /// Aksi slide misi mingguan.
+  final VoidCallback onStartActivity;
+
+  @override
+  State<_HeroCarouselCard> createState() => _HeroCarouselCardState();
+}
+
+/// State carousel hero dengan indeks halaman aktif.
+class _HeroCarouselCardState extends State<_HeroCarouselCard> {
+  /// Pengendali halaman carousel.
+  final PageController _controller = PageController();
+
+  /// Indeks slide aktif untuk dots.
+  int _index = 0;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 200,
+          child: PageView(
+            controller: _controller,
+            onPageChanged: (int value) => setState(() => _index = value),
+            children: <Widget>[
+              _HeroSlide(
+                eyebrow: AppStrings.homeHeroEyebrow,
+                title: AppStrings.homeHeroTitle,
+                subtitle: AppStrings.homeHeroSubtitle,
+                cta: AppStrings.homeHeroCta,
+                icon: LucideIcons.leaf,
+                onStart: widget.onStartWaste,
+              ),
+              _HeroSlide(
+                eyebrow: AppStrings.homeHero2Eyebrow,
+                title: AppStrings.homeHero2Title,
+                subtitle: AppStrings.homeHero2Subtitle,
+                cta: AppStrings.homeHero2Cta,
+                icon: LucideIcons.gift,
+                onStart: widget.onStartReward,
+              ),
+              _HeroSlide(
+                eyebrow: AppStrings.homeHero3Eyebrow,
+                title: AppStrings.homeHero3Title,
+                subtitle: AppStrings.homeHero3Subtitle,
+                cta: AppStrings.homeHero3Cta,
+                icon: LucideIcons.activity,
+                onStart: widget.onStartActivity,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _CarouselDot(active: _index == 0),
+            const SizedBox(width: AppSpacing.xs),
+            _CarouselDot(active: _index == 1),
+            const SizedBox(width: AppSpacing.xs),
+            _CarouselDot(active: _index == 2),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+/// Satu slide hero dengan teks, CTA, dan ikon fungsional.
+class _HeroSlide extends StatelessWidget {
+  /// Membuat satu slide hero.
+  const _HeroSlide({
+    required this.eyebrow,
+    required this.title,
+    required this.subtitle,
+    required this.cta,
+    required this.icon,
+    required this.onStart,
+  });
+
+  /// Label kecil di atas judul.
+  final String eyebrow;
+
+  /// Judul slide.
+  final String title;
+
+  /// Deskripsi slide.
+  final String subtitle;
+
+  /// Label tombol aksi.
+  final String cta;
+
+  /// Ikon ilustrasi slide.
+  final IconData icon;
 
   /// Aksi tombol mulai.
   final VoidCallback onStart;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceDim,
-            borderRadius: BorderRadius.circular(AppRadius.xl),
-            border: Border.all(color: AppColors.borderLight),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceDim,
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+        border: Border.all(color: AppColors.borderLight),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Row(
                   children: <Widget>[
-                    const Row(
-                      children: <Widget>[
-                        Icon(
-                          LucideIcons.leaf,
-                          size: 14,
-                          color: AppColors.primary,
-                        ),
-                        SizedBox(width: AppSpacing.xs),
-                        Text(
-                          AppStrings.homeHeroEyebrow,
-                          style: AppTypography.labelMd,
-                        ),
-                      ],
+                    const Icon(
+                      LucideIcons.leaf,
+                      size: 14,
+                      color: AppColors.primary,
                     ),
-                    const SizedBox(height: AppSpacing.xs),
-                    const Text(
-                      AppStrings.homeHeroTitle,
-                      style: AppTypography.headlineMd,
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    const Text(
-                      AppStrings.homeHeroSubtitle,
-                      style: AppTypography.bodySm,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    SizedBox(
-                      height: 36,
-                      child: ElevatedButton(
-                        onPressed: onStart,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          foregroundColor: AppColors.textOnPrimary,
-                          minimumSize: const Size(0, 36),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.md,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              AppRadius.full,
-                            ),
-                          ),
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text(AppStrings.homeHeroCta),
-                            SizedBox(width: AppSpacing.xs),
-                            Icon(LucideIcons.arrow_right, size: 16),
-                          ],
+                    const SizedBox(width: AppSpacing.xs),
+                    Text(eyebrow, style: AppTypography.labelMd),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  title,
+                  style: AppTypography.headlineMd,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  subtitle,
+                  style: AppTypography.bodySm,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                SizedBox(
+                  height: 36,
+                  child: ElevatedButton(
+                    onPressed: onStart,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: AppColors.textOnPrimary,
+                      minimumSize: const Size(0, 36),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.md,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          AppRadius.full,
                         ),
                       ),
                     ),
-                  ],
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(cta),
+                        const SizedBox(width: AppSpacing.xs),
+                        const Icon(LucideIcons.arrow_right, size: 16),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(width: AppSpacing.md),
-              const Icon(
-                LucideIcons.leaf,
-                size: 72,
-                color: AppColors.tertiary,
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _CarouselDot(active: true),
-            SizedBox(width: AppSpacing.xs),
-            _CarouselDot(active: false),
-            SizedBox(width: AppSpacing.xs),
-            _CarouselDot(active: false),
-          ],
-        ),
-      ],
+          const SizedBox(width: AppSpacing.md),
+          Icon(icon, size: 64, color: AppColors.tertiary),
+        ],
+      ),
     );
   }
 }
@@ -548,7 +676,8 @@ class _CarouselDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
       width: active ? 20 : 6,
       height: 6,
       decoration: BoxDecoration(
@@ -651,10 +780,14 @@ class _PointsSummaryCard extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: AppSpacing.xs),
-                          Text(
-                            '${formatIndonesianNumber(totalPoints)} ${AppStrings.rewardPointSuffix}',
-                            style: AppTypography.headlineLg.copyWith(
-                              color: AppColors.textOnPrimary,
+                          AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            child: Text(
+                              '${formatIndonesianNumber(totalPoints)} ${AppStrings.rewardPointSuffix}',
+                              key: ValueKey<int>(totalPoints),
+                              style: AppTypography.headlineLg.copyWith(
+                                color: AppColors.textOnPrimary,
+                              ),
                             ),
                           ),
                         ],
@@ -868,12 +1001,19 @@ class _MissionCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           ClipRRect(
             borderRadius: BorderRadius.circular(AppRadius.full),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 8,
-              backgroundColor: AppColors.tertiaryLight,
-              valueColor:
-                  const AlwaysStoppedAnimation<Color>(AppColors.primary),
+            child: TweenAnimationBuilder<double>(
+              tween: Tween<double>(begin: 0, end: progress.clamp(0, 1)),
+              duration: const Duration(milliseconds: 600),
+              builder: (BuildContext context, double value, _) {
+                return LinearProgressIndicator(
+                  value: value,
+                  minHeight: 8,
+                  backgroundColor: AppColors.tertiaryLight,
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    AppColors.primary,
+                  ),
+                );
+              },
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -996,6 +1136,91 @@ class _ActivityTile extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Fade-in seksi sekali jalan agar Home terasa hidup tanpa loop.
+///
+/// Animasi opacity + geser 8px ke atas, durasi 350ms dengan jeda per
+/// seksi. Tidak berulang sehingga hemat baterai.
+class _FadeIn extends StatelessWidget {
+  /// Membuat pembungkus fade-in.
+  const _FadeIn({required this.child, this.delayMs = 0});
+
+  /// Konten seksi yang dianimasikan.
+  final Widget child;
+
+  /// Jeda sebelum animasi mulai (ms).
+  final int delayMs;
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: 0, end: 1),
+      duration: Duration(milliseconds: 350 + delayMs),
+      builder: (BuildContext context, double value, _) {
+        final double opacity = delayMs == 0
+            ? value
+            : ((value * (350 + delayMs) - delayMs) / 350).clamp(0, 1);
+        return Opacity(
+          opacity: opacity,
+          child: Transform.translate(
+            offset: Offset(0, 8 * (1 - opacity)),
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Skeleton statis Home saat memuat data login.
+///
+/// Kotak surfaceDim tanpa shimmer agar ringan dan layout tidak lompat.
+class _HomeSkeleton extends StatelessWidget {
+  /// Membuat skeleton Home.
+  const _HomeSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      children: const <Widget>[
+        SizedBox(height: AppSpacing.sm),
+        _SkeletonBlock(height: 52, radius: AppRadius.lg),
+        SizedBox(height: AppSpacing.md),
+        _SkeletonBlock(height: 172, radius: AppRadius.xl),
+        SizedBox(height: AppSpacing.md),
+        _SkeletonBlock(height: 220, radius: AppRadius.xl),
+        SizedBox(height: AppSpacing.md),
+        _SkeletonBlock(height: 140, radius: AppRadius.xl),
+        SizedBox(height: AppSpacing.lg),
+      ],
+    );
+  }
+}
+
+/// Satu blok placeholder skeleton.
+class _SkeletonBlock extends StatelessWidget {
+  /// Membuat blok skeleton.
+  const _SkeletonBlock({required this.height, required this.radius});
+
+  /// Tinggi blok.
+  final double height;
+
+  /// Radius sudut blok.
+  final double radius;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height,
+      decoration: BoxDecoration(
+        color: AppColors.surfaceDim,
+        borderRadius: BorderRadius.circular(radius),
+        border: Border.all(color: AppColors.borderLight),
       ),
     );
   }
