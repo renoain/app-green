@@ -53,6 +53,75 @@ class RewardRemoteDatasource {
     return row == null ? null : RewardModel.fromJson(row);
   }
 
+  /// Ambil semua reward untuk admin (aktif + nonaktif).
+  Future<List<RewardModel>> getAllForAdmin() async {
+    final List<Map<String, dynamic>> rows = await _client
+        .from(AppTables.rewards)
+        .select()
+        .order('points_cost', ascending: true);
+    return rows.map(RewardModel.fromJson).toList();
+  }
+
+  /// Tambah reward baru (admin, RLS di server).
+  Future<RewardModel> createReward({
+    required String name,
+    String? description,
+    required int pointsCost,
+    required int stock,
+    String? imageUrl,
+    required bool isActive,
+  }) async {
+    final Map<String, dynamic> row = await _client
+        .from(AppTables.rewards)
+        .insert(<String, dynamic>{
+      'name': name,
+      'description': description,
+      'points_cost': pointsCost,
+      'stock': stock,
+      'image_url': imageUrl,
+      'is_active': isActive,
+    }).select().single();
+    return RewardModel.fromJson(row);
+  }
+
+  /// Ubah reward (admin, RLS di server).
+  Future<RewardModel> updateReward({
+    required String id,
+    required String name,
+    String? description,
+    required int pointsCost,
+    required int stock,
+    String? imageUrl,
+    required bool isActive,
+  }) async {
+    final Map<String, dynamic> row = await _client
+        .from(AppTables.rewards)
+        .update(<String, dynamic>{
+      'name': name,
+      'description': description,
+      'points_cost': pointsCost,
+      'stock': stock,
+      'image_url': imageUrl,
+      'is_active': isActive,
+    }).eq('id', id).select().single();
+    return RewardModel.fromJson(row);
+  }
+
+  /// Ubah status aktif reward (admin).
+  Future<void> setRewardActive({
+    required String id,
+    required bool isActive,
+  }) async {
+    await _client
+        .from(AppTables.rewards)
+        .update(<String, dynamic>{'is_active': isActive}).eq('id', id);
+  }
+
+  /// Hapus reward (admin).
+  Future<void> deleteReward(String id) async {
+    await _client.from(AppTables.rewards).delete().eq('id', id);
+  }
+
   /// Mengajukan penukaran reward. Mengembalikan ID redemption yang dibuat.
   Future<String> redeemReward({
     required String userId,

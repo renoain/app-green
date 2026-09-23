@@ -161,14 +161,14 @@ Setelah reject:
 - Update status waste_log menjadi `rejected`.
 - Catat alasan di `notes`.
 
-### 6.4 Kelola Reward (Fase 2)
+### 6.4 Kelola Reward (Selesai baca + tulis)
 
 Fitur:
 
-- List reward.
-- Tambah/edit/hapus reward.
-- Update stok.
-- Aktif/nonaktif reward.
+- List semua reward (aktif + nonaktif).
+- Tambah/edit/hapus reward via form (/admin/rewards/new, /admin/rewards/:id/edit).
+- Update stok via form.
+- Aktif/nonaktif via switch (langsung tersimpan).
 
 ### 6.5 Kelola User (Fase 2)
 
@@ -249,6 +249,8 @@ text
 | `/admin/waste-verification`     | Verifikasi Waste |
 | `/admin/waste-verification/:id` | Detail Waste     |
 | `/admin/rewards`                | Kelola Reward    |
+| `/admin/rewards/new`            | Tambah Reward    |
+| `/admin/rewards/:id/edit`       | Ubah Reward      |
 | `/admin/users`                  | Kelola User      |
 | `/admin/settings`               | Pengaturan       |
 
@@ -295,7 +297,7 @@ text
 
 ## 13. Status dan Riwayat
 
-- Status: In Progress (MVP: shell, dasbor, kelola TPS, verifikasi waste; baca reward/user/pengaturan).
+- Status: In Progress (MVP: shell, dasbor, kelola TPS, verifikasi waste, kelola reward tulis; baca user/pengaturan).
 - 2026-09-20: Dokumen dibuat manual oleh owner.
 - 2026-09-20: Implementasi MVP selesai (fase 2: reward, user, pengaturan).
 - 2026-09-21: Section 6.2 diperbarui (filter + dropdown wilayah berjenjang, kode TPS otomatis KOTA-KEC-NOMOR, kolom code terpisah dari qr_code).
@@ -304,5 +306,6 @@ text
 - 2026-09-21: Masuk admin via go + kunci Scaffold per-instance (perbaiki layar merah); back root sekali ke /profile; splash redirect sesi sesuai role; retry+timeout API wilayah (522).
 - 2026-09-22: Reward/user/pengaturan jadi daftar real baca (skeleton + refresh); tulis (tambah/ubah role) tetap fase 2.
 - 2026-09-22: Nav ganda uji coba (drawer usap tepi + navbar 3 item + sheet usap-atas) dengan flag AppValues; Mode Pengguna khusus role admin via go.
+- 2026-09-23: Kelola Reward tulis selesai (tambah/ubah/hapus/stok/aktif via form + switch + konfirmasi, RLS admin); user/pengaturan tulis tetap fase 2.
 - Menunggu review dan uji device fisik.
 - Setelah disetujui, masuk ke pengembangan fase 2.

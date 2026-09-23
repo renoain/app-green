@@ -20,12 +20,12 @@ import 'package:go_green/features/rewards/data/datasources/reward_remote_datasou
 import 'package:go_green/features/rewards/data/models/reward_model.dart';
 import 'package:go_green/features/rewards/presentation/providers/reward_provider.dart';
 
-/// Datasource reward palsu dengan 2 item aktif.
+/// Datasource reward palsu dengan 2 item admin.
 class _FakeRewardDatasource extends RewardRemoteDatasource {
   _FakeRewardDatasource() : super(client: null, pointsDatasource: null);
 
   @override
-  Future<List<RewardModel>> getAllRewards() async {
+  Future<List<RewardModel>> getAllForAdmin() async {
     return <RewardModel>[
       RewardModel(
         id: 'r1',
@@ -75,7 +75,7 @@ class _FakeUsersDatasource extends AdminUsersDatasource {
 }
 
 void main() {
-  testWidgets('admin rewards menampilkan daftar real + catatan fase 2',
+  testWidgets('admin rewards menampilkan daftar + tambah + switch',
       (WidgetTester tester) async {
     await tester.pumpWidget(
       ProviderScope(
@@ -95,6 +95,8 @@ void main() {
     expect(find.text('Paket Sembako'), findsOneWidget);
     expect(find.text('Voucher Belanja'), findsOneWidget);
     expect(find.text(AppStrings.adminRewardManageNote), findsOneWidget);
+    expect(find.text(AppStrings.adminRewardAdd), findsOneWidget);
+    expect(find.byType(Switch), findsWidgets);
   });
 
   testWidgets('admin users menampilkan daftar user + role',

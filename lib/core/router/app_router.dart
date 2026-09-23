@@ -14,12 +14,14 @@ import '../../features/admin/presentation/admin_shell.dart';
 import '../../features/admin/presentation/pages/admin_checkpoint_form_page.dart';
 import '../../features/admin/presentation/pages/admin_checkpoint_page.dart';
 import '../../features/admin/presentation/pages/admin_dashboard_page.dart';
+import '../../features/admin/presentation/pages/admin_reward_form_page.dart';
 import '../../features/admin/presentation/pages/admin_rewards_page.dart';
 import '../../features/admin/presentation/pages/admin_settings_page.dart';
 import '../../features/admin/presentation/pages/admin_users_page.dart';
 import '../../features/admin/presentation/pages/admin_waste_detail_page.dart';
 import '../../features/admin/presentation/pages/admin_waste_verification_page.dart';
 import '../../features/checkpoints/domain/entities/checkpoint.dart';
+import '../../features/rewards/domain/entities/reward.dart';
 import '../../features/article/domain/entities/article.dart';
 import '../../features/article/presentation/pages/article_detail_page.dart';
 import '../../features/article/presentation/pages/article_page.dart';
@@ -215,6 +217,24 @@ final List<RouteBase> appRoutes = <RouteBase>[
             name: AppRouteName.adminRewards,
             builder: (BuildContext context, GoRouterState state) =>
                 const AdminRewardsPage(),
+            routes: <RouteBase>[
+              GoRoute(
+                path: 'new',
+                name: AppRouteName.adminRewardNew,
+                builder: (BuildContext context, GoRouterState state) =>
+                    const AdminRewardFormPage(),
+              ),
+              GoRoute(
+                path: ':id/edit',
+                name: AppRouteName.adminRewardEdit,
+                builder: (BuildContext context, GoRouterState state) {
+                  final Object? extra = state.extra;
+                  return AdminRewardFormPage(
+                    reward: extra is Reward ? extra : null,
+                  );
+                },
+              ),
+            ],
           ),
         ],
       ),
@@ -386,8 +406,14 @@ abstract final class AppRouteName {
   /// Nama route detail verifikasi waste admin.
   static const String adminWasteDetail = 'adminWasteDetail';
 
-  /// Nama route kelola reward admin (fase 2).
+  /// Nama route kelola reward admin.
   static const String adminRewards = 'adminRewards';
+
+  /// Nama route tambah reward admin.
+  static const String adminRewardNew = 'adminRewardNew';
+
+  /// Nama route ubah reward admin.
+  static const String adminRewardEdit = 'adminRewardEdit';
 
   /// Nama route kelola user admin (fase 2).
   static const String adminUsers = 'adminUsers';

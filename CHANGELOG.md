@@ -1,5 +1,43 @@
 # CHANGELOG - Go Green
 
+## [2026-09-23] - Admin kelola reward tulis (tambah/ubah/hapus/aktif)
+
+Status: Selesai (uji device fisik tambah/ubah/hapus + switch aktif)
+
+Laporan: /admin/rewards masih baca saja sehingga admin tidak bisa
+tambah/ubah/stok/aktif-nonaktif dari aplikasi.
+
+File yang dibuat:
+
+- lib/features/rewards/domain/repositories/reward_repository.dart (dibuat): kontrak getAllForAdmin/create/update/setActive/delete
+- lib/features/rewards/data/repositories/reward_repository_impl.dart (dibuat): teruskan ke RewardRemoteDatasource
+- lib/features/rewards/domain/usecases/manage_reward_usecase.dart (dibuat): validasi nama/harga/stok di domain
+- lib/features/admin/presentation/providers/admin_reward_provider.dart (dibuat): AdminRewardListNotifier + repository/usecase provider
+- lib/features/admin/presentation/pages/admin_reward_form_page.dart (dibuat): form tambah/ubah + switch katalog + pesan validasi
+- test/unit/features/rewards/manage_reward_test.dart (dibuat): 5 test validasi + delegasi create/update
+
+File yang diubah:
+
+- lib/features/rewards/data/datasources/reward_remote_datasource.dart (diedit): tambah getAllForAdmin/createReward/updateReward/setRewardActive/deleteReward
+- lib/features/admin/presentation/pages/admin_rewards_page.dart (ditulis ulang): pakai adminRewardListProvider + FAB + ketuk ubah + switch aktif + hapus konfirmasi
+- lib/core/router/app_router.dart (diedit): route /admin/rewards/new + /admin/rewards/:id/edit + nama route
+- lib/core/constants/app_strings.dart (diedit): 13 string form/validasi Bahasa Indonesia + catatan baru
+- test/widget/pages/admin_phase2_test.dart (diedit): fake getAllForAdmin + asersi FAB + switch
+- docs/UI_PAGES.md (diedit): section 23 tulis + route form
+- docs/PRD_ADMIN.md (diedit): 6.4 selesai tulis + route + riwayat + status
+- docs/ARCHITECTURE.md (diedit): route form + alur reward admin tulis
+
+Catatan:
+
+- Tanpa dependency baru; tulis lewat RLS admin di server, guard UI hanya UX.
+- Katalog user (aktif saja) tidak tersentuh; admin baca semua termasuk nonaktif.
+- Ubah role/nonaktifkan user dan pengaturan tulis tetap fase 2.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (210 test lulus, termasuk 5 test baru manage_reward)
+
 ## [2026-09-22] - Admin nav ganda uji coba + Mode Pengguna khusus admin
 
 Status: Selesai (uji device fisik gestur + pindah mode)

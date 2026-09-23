@@ -179,7 +179,7 @@ Daftar route:
 - /admin/checkpoints/:id/edit (ubah TPS)
 - /admin/waste-verification (antrean verifikasi, branch AdminShell)
 - /admin/waste-verification/:id (detail verifikasi)
-- /admin/rewards, /admin/users, /admin/settings (fase 2, placeholder)
+- /admin/rewards (+ new, :id/edit form reward), /admin/users, /admin/settings (users/settings baca; rewards baca + tulis)
 
 Route admin memakai StatefulShellRoute.indexedStack kedua dengan
 AdminShell (drawer, tanpa bottom nav user). Masuk admin selalu via go
@@ -570,6 +570,14 @@ Arsitektur auth berlapis presentation -> domain -> data:
 - Alur Aktivitas: ActivityPage (Consumer, wasteRepository.getWasteLogs +
   checkpoint names) daftar real; tap item kirim ActivityDetailExtra ke
   /activity/:id; tamu/error/kosong memakai demo.
+- Alur Reward admin (tulis): AdminRewardsPage (adminRewardListProvider,
+  semua aktif + nonaktif) -> FAB ke /admin/rewards/new atau ketuk item ke
+  /admin/rewards/:id/edit (AdminRewardFormPage) -> ManageRewardUsecase
+  (validasi nama/harga/stok di domain) -> RewardRepositoryImpl ->
+  RewardRemoteDatasource (insert/update/set aktif/delete, RLS admin di
+  server). Switch aktif dan hapus konfirmasi langsung via notifier +
+  reload. Katalog user (rewardNotifierProvider, hanya aktif) tidak
+  tersentuh agar alur tukar tetap stabil.
 
 ---
 

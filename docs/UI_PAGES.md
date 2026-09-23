@@ -523,14 +523,16 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 
 ## 23. Kelola Reward Admin [Selesai]
 
-- Tujuan: lihat katalog reward untuk admin.
-- Elemen: daftar reward real (nama, harga poin, stok, chip Aktif/Nonaktif),
-  catatan tambah/ubah fase 2.
-- State: rewardNotifierProvider (skeleton, error + retry, kosong,
-  pull-to-refresh).
-- Aksi: tarik untuk muat ulang; tambah/ubah menyusul fase 2.
-- Navigasi: /admin/rewards di AdminShell.
-- Prioritas MVP: Ya (baca).
+- Tujuan: kelola katalog reward untuk admin (tambah/ubah/hapus/stok/aktif).
+- Elemen: daftar semua reward (nama, harga poin, stok, chip Aktif/Nonaktif,
+  switch aktif, tombol hapus), FAB Tambah Reward, form (nama, deskripsi,
+  harga poin, stok, switch tampil di katalog).
+- State: adminRewardListProvider via RewardRepository + ManageRewardUsecase
+  (skeleton, error + retry, kosong, pull-to-refresh).
+- Aksi: tambah via /admin/rewards/new; ubah via /admin/rewards/:id/edit;
+  aktif/nonaktif via switch; hapus via konfirmasi; tulis via RLS admin.
+- Navigasi: /admin/rewards (+ new, :id/edit) di AdminShell.
+- Prioritas MVP: Ya (baca + tulis).
 
 ---
 

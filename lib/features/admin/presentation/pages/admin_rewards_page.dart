@@ -1,13 +1,15 @@
-// Halaman kelola reward admin (daftar real, tambah/ubah fase 2).
+// Halaman kelola reward admin (daftar + tulis).
 //
-// Daftar katalog real via rewardNotifierProvider; tambah dan ubah
-// reward menyusul di fase 2.
+// Daftar semua reward via adminRewardListProvider; tambah/ubah lewat
+// form, aktif/nonaktif via switch, hapus via konfirmasi.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -18,8 +20,8 @@ import '../../../../core/widgets/app_button_widgets.dart';
 import '../../../../core/widgets/feedback_widgets.dart';
 import '../../../../core/widgets/status_widgets.dart';
 import '../../../rewards/domain/entities/reward.dart';
-import '../../../rewards/presentation/providers/reward_provider.dart';
 import '../providers/admin_providers.dart';
+import '../providers/admin_reward_provider.dart';
 
 /// Halaman kelola reward admin.
 class AdminRewardsPage extends ConsumerStatefulWidget {
@@ -39,17 +41,46 @@ class _AdminRewardsPageState extends ConsumerState<AdminRewardsPage> {
 
   Future<void> _reload() async {
     if (!mounted) return;
-    await ref.read(rewardNotifierProvider.notifier).load();
+    await ref.read(adminRewardListProvider.notifier).loadAll();
+  }
+
+  Future<void> _confirmDelete(Reward reward) async {
+    final bool? ok = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext ctx) => AlertDialog(
+        title: const Text(AppStrings.adminRewardDelete),
+        content: Text(
+          '${AppStrings.adminRewardDeleteConfirm}\n${reward.name}',
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text(AppStrings.cancelButton),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text(AppStrings.adminRewardDelete),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    await ref.read(adminRewardListProvider.notifier).remove(reward.id);
   }
 
   @override
   Widget build(BuildContext context) {
-    final AsyncValue<List<Reward>> state = ref.watch(rewardNotifierProvider);
+    final AsyncValue<List<Reward>> state = ref.watch(adminRewardListProvider);
     return Scaffold(
       appBar: CustomAppBar(
         title: AppStrings.adminManageReward,
         leading: LucideIcons.menu,
         onLeadingTap: () => ref.read(adminDrawerOpenerProvider)?.call(),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.pushNamed(AppRouteName.adminRewardNew),
+        icon: const Icon(LucideIcons.plus),
+        label: const Text(AppStrings.adminRewardAdd),
       ),
       body: SafeArea(
         child: state.when(
@@ -115,48 +146,75 @@ class _AdminRewardsPageState extends ConsumerState<AdminRewardsPage> {
                         border:
                             Border.all(color: AppColors.borderLight),
                       ),
-                      child: Row(
+                      child: Column(
                         children: <Widget>[
-                          Container(
-                            width: 44,
-                            height: 44,
-                            decoration: const BoxDecoration(
-                              color: AppColors.tertiaryLight,
-                              shape: BoxShape.circle,
+                          InkWell(
+                            onTap: () => context.pushNamed(
+                              AppRouteName.adminRewardEdit,
+                              pathParameters: <String, String>{'id': reward.id},
+                              extra: reward,
                             ),
-                            child: const Icon(
-                              LucideIcons.gift,
-                              size: 22,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                          const SizedBox(width: AppSpacing.md),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                            child: Row(
                               children: <Widget>[
-                                Text(
-                                  reward.name,
-                                  style: AppTypography.labelLg,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                                Container(
+                                  width: 44,
+                                  height: 44,
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.tertiaryLight,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    LucideIcons.gift,
+                                    size: 22,
+                                    color: AppColors.primary,
+                                  ),
                                 ),
-                                const SizedBox(height: AppSpacing.xs),
-                                Text(
-                                  '${formatIndonesianNumber(reward.pointsCost)} ${AppStrings.rewardPointSuffix} • ${AppStrings.adminRewardStockLabel}: ${formatIndonesianNumber(reward.stock)}',
-                                  style: AppTypography.bodySm,
+                                const SizedBox(width: AppSpacing.md),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        reward.name,
+                                        style: AppTypography.labelLg,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: AppSpacing.xs),
+                                      Text(
+                                        '${formatIndonesianNumber(reward.pointsCost)} ${AppStrings.rewardPointSuffix} • ${AppStrings.adminRewardStockLabel}: ${formatIndonesianNumber(reward.stock)}',
+                                        style: AppTypography.bodySm,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(LucideIcons.trash),
+                                  onPressed: () => _confirmDelete(reward),
                                 ),
                               ],
                             ),
                           ),
-                          StatusChip(
-                            label: reward.isActive
-                                ? AppStrings.adminRewardActiveLabel
-                                : AppStrings.adminRewardInactiveLabel,
-                            type: reward.isActive
-                                ? StatusType.success
-                                : StatusType.warning,
+                          const SizedBox(height: AppSpacing.sm),
+                          Row(
+                            children: <Widget>[
+                              StatusChip(
+                                label: reward.isActive
+                                    ? AppStrings.adminRewardActiveLabel
+                                    : AppStrings.adminRewardInactiveLabel,
+                                type: reward.isActive
+                                    ? StatusType.success
+                                    : StatusType.warning,
+                              ),
+                              const Spacer(),
+                              Switch(
+                                value: reward.isActive,
+                                onChanged: (bool v) => ref
+                                    .read(adminRewardListProvider.notifier)
+                                    .setActive(id: reward.id, isActive: v),
+                              ),
+                            ],
                           ),
                         ],
                       ),

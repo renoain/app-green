@@ -974,9 +974,9 @@ class AppStrings {
   /// Pesan halaman admin fase 2 yang belum tersedia.
   static const String adminComingSoon = 'Halaman ini tersedia di fase 2.';
 
-  /// Catatan kelola reward admin (tambah/ubah fase 2).
+  /// Catatan kelola reward admin.
   static const String adminRewardManageNote =
-      'Daftar real dari katalog. Tambah dan ubah reward menyusul di fase 2.';
+      'Daftar real dari katalog. Ketuk item untuk ubah, geser status untuk aktif/nonaktif.';
 
   /// Pesan reward kosong di admin.
   static const String adminRewardEmpty = 'Belum ada reward di katalog.';
@@ -989,6 +989,49 @@ class AppStrings {
 
   /// Label status nonaktif reward di admin.
   static const String adminRewardInactiveLabel = 'Nonaktif';
+
+  /// Tombol tambah reward admin.
+  static const String adminRewardAdd = 'Tambah Reward';
+
+  /// Judul form tambah reward admin.
+  static const String adminRewardAddTitle = 'Tambah Reward Baru';
+
+  /// Judul form ubah reward admin.
+  static const String adminRewardEditTitle = 'Ubah Reward';
+
+  /// Label nama reward di form admin.
+  static const String adminRewardNameLabel = 'Nama reward';
+
+  /// Label deskripsi reward di form admin.
+  static const String adminRewardDescLabel = 'Deskripsi (opsional)';
+
+  /// Label harga poin reward di form admin.
+  static const String adminRewardCostLabel = 'Harga (poin)';
+
+  /// Label stok reward di form admin.
+  static const String adminRewardStockFieldLabel = 'Stok';
+
+  /// Label status aktif di form reward admin.
+  static const String adminRewardActiveSwitch = 'Tampilkan di katalog';
+
+  /// Tombol simpan reward admin.
+  static const String adminRewardSave = 'Simpan Reward';
+
+  /// Validasi nama reward kosong.
+  static const String adminRewardNameEmpty = 'Nama reward wajib diisi.';
+
+  /// Validasi harga poin reward.
+  static const String adminRewardCostInvalid = 'Harga poin harus lebih dari 0.';
+
+  /// Validasi stok reward.
+  static const String adminRewardStockInvalid = 'Stok tidak boleh negatif.';
+
+  /// Konfirmasi hapus reward admin.
+  static const String adminRewardDeleteConfirm =
+      'Hapus reward ini dari katalog?';
+
+  /// Tombol hapus reward admin.
+  static const String adminRewardDelete = 'Hapus';
 
   /// Pesan user kosong di admin.
   static const String adminUserEmpty = 'Belum ada user terdaftar.';
