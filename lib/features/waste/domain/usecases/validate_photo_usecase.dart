@@ -5,8 +5,8 @@
 
 import 'dart:math' as math;
 
+import '../../../../core/constants/app_config.dart';
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/constants/app_values.dart';
 import '../repositories/waste_repository.dart';
 
 /// Exception validasi waste; [message] aman ditampilkan ke user.
@@ -60,14 +60,14 @@ class ValidatePhotoUsecase {
       checkpointLatitude,
       checkpointLongitude,
     );
-    // Blokir radius dimatikan sementara via AppValues.enforceGpsRadius
-    // agar uji device bisa submit dari mana saja.
-    if (AppValues.enforceGpsRadius && distance > radiusMeters) {
+    // Penegakan radius + batas harian mengikuti pengaturan admin
+    // (AppConfig, fallback AppValues).
+    if (AppConfig.enforceGpsRadius && distance > radiusMeters) {
       throw const WasteValidationException(AppStrings.errorGpsOutOfRange);
     }
 
     final int todayCount = await _wasteRepository.countTodayWasteLogs(userId);
-    if (todayCount >= AppValues.maxWasteLogsPerDay) {
+    if (todayCount >= AppConfig.maxWasteLogsPerDay) {
       throw const WasteValidationException(AppStrings.errorRateLimitReached);
     }
   }

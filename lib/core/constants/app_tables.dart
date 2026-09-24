@@ -14,6 +14,7 @@ class AppTables {
   static const String rewards = 'rewards';
   static const String redemptions = 'redemptions';
   static const String articles = 'articles';
+  static const String appSettings = 'app_settings';
 
   static const String wastePhotosBucket = 'waste-photos';
   static const String avatarsBucket = 'avatars';

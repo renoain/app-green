@@ -260,6 +260,27 @@ RLS:
 Seed: 4 artikel sama dengan konten demo aplikasi (insert idempoten,
 on conflict do nothing).
 
+### 3.8 app_settings
+
+Konfigurasi operasional yang bisa diubah admin (migration 019).
+
+| Kolom | Tipe | Constraint | Keterangan |
+|---|---|---|---|
+| key | text | PK | gps_radius_meters, enforce_gps_radius, max_waste_logs_per_day, weekly_mission_target, max_photo_mb |
+| value | text | not null | Nilai mentah (angka/true/false) |
+| description | text | | Keterangan |
+| updated_at | timestamptz | default now() | |
+
+RLS:
+
+- Semua user (anon + authenticated) bisa baca (berlaku sebelum login).
+- Hanya admin yang bisa tulis (migration 019 policy
+  app_settings_read_all + app_settings_write_admin; perlu
+  `supabase db push` manual).
+
+Seed: 5 baris default sama dengan AppValues (insert idempoten,
+on conflict do nothing agar tidak menimpa perubahan admin).
+
 ---
 
 ## 4. Storage Bucket
@@ -369,6 +390,9 @@ where email = 'admin@green.com';
   (idempoten): rewards_select_all_admin (admin baca semua reward) dan
   profiles_update_role_admin (admin ubah role). Belum di-push ke remote
   (push manual oleh user sebelum uji ubah role/nonaktif).
+- Migration 019_app_settings.sql membuat tabel app_settings + RLS baca
+  semua/tulis admin + seed 5 default (idempoten, tidak menimpa).
+  Belum di-push ke remote (push manual bersama 018).
 
 ---
 
@@ -447,7 +471,7 @@ where user_id = auth.uid()
 
 ## 9. Status Dokumen
 
-Versi: 1.4
+Versi: 1.5
 
 Terakhir update: 2026-09-23
 
@@ -466,3 +490,4 @@ Riwayat:
   langsung 003).
 - 1.4: policy admin tulis (migration 018): rewards_select_all_admin +
   profiles_update_role_admin.
+- 1.5: tabel app_settings + RLS + seed default (migration 019).

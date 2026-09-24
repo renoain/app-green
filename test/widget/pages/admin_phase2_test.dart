@@ -1,7 +1,6 @@
 // Widget test halaman admin fase 2 lanjutan (rewards, users, settings).
 //
-// Rewards/users memakai override provider agar tanpa Supabase;
-// settings info langsung tanpa backend.
+// Semua memakai override provider agar tanpa Supabase.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,11 +9,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_green/core/constants/app_strings.dart';
 import 'package:go_green/core/constants/app_enums.dart';
 import 'package:go_green/core/theme/app_theme.dart';
+import 'package:go_green/features/admin/data/datasources/admin_settings_datasource.dart';
 import 'package:go_green/features/admin/data/datasources/admin_users_datasource.dart';
 import 'package:go_green/features/admin/domain/entities/admin_user.dart';
 import 'package:go_green/features/admin/presentation/pages/admin_rewards_page.dart';
 import 'package:go_green/features/admin/presentation/pages/admin_settings_page.dart';
 import 'package:go_green/features/admin/presentation/pages/admin_users_page.dart';
+import 'package:go_green/features/admin/presentation/providers/admin_settings_provider.dart';
 import 'package:go_green/features/admin/presentation/providers/admin_users_provider.dart';
 import 'package:go_green/features/rewards/data/datasources/reward_remote_datasource.dart';
 import 'package:go_green/features/rewards/data/models/reward_model.dart';
@@ -74,6 +75,25 @@ class _FakeUsersDatasource extends AdminUsersDatasource {
   }
 }
 
+/// Datasource pengaturan palsu (nilai default).
+class _FakeSettingsDatasource extends AdminSettingsDatasource {
+  _FakeSettingsDatasource() : super(client: null);
+
+  @override
+  Future<Map<String, String>> getAll() async {
+    return <String, String>{
+      'gps_radius_meters': '100',
+      'enforce_gps_radius': 'true',
+      'max_waste_logs_per_day': '5',
+      'weekly_mission_target': '5',
+      'max_photo_mb': '5',
+    };
+  }
+
+  @override
+  Future<void> saveAll(Map<String, String> values) async {}
+}
+
 void main() {
   testWidgets('admin rewards menampilkan daftar + tambah + switch',
       (WidgetTester tester) async {
@@ -122,10 +142,14 @@ void main() {
     expect(find.text(AppStrings.adminUserFilterAll), findsOneWidget);
   });
 
-  testWidgets('admin settings menampilkan info aplikasi + fase 2',
+  testWidgets('admin settings menampilkan form tulis + simpan',
       (WidgetTester tester) async {
     await tester.pumpWidget(
       ProviderScope(
+        overrides: <Override>[
+          adminSettingsDatasourceProvider
+              .overrideWithValue(_FakeSettingsDatasource()),
+        ],
         child: MaterialApp(
           theme: AppTheme.light(),
           home: const AdminSettingsPage(),
@@ -134,7 +158,6 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text(AppStrings.adminSettingsAppTitle), findsOneWidget);
     expect(
       find.text(AppStrings.adminSettingsSecurityTitle),
       findsOneWidget,
@@ -143,6 +166,8 @@ void main() {
       find.text(AppStrings.adminSettingsMissionTitle),
       findsOneWidget,
     );
+    expect(find.text(AppStrings.adminSettingsRadiusLabel), findsOneWidget);
+    expect(find.text(AppStrings.adminSettingsSave), findsOneWidget);
     expect(find.text(AppStrings.adminSettingsPhaseNote), findsOneWidget);
   });
 }

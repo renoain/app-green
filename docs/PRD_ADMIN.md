@@ -180,14 +180,18 @@ Fitur:
   (migration 018 policy profiles_update_role_admin, push manual).
 - Lihat detail user (profil, total poin via points, 10 riwayat waste).
 
-### 6.6 Pengaturan (Fase 2)
+### 6.6 Pengaturan (Selesai tulis; kategori fase lanjut)
 
 Fitur:
 
-- Radius default checkpoint.
-- Rate limit waste per hari.
-- Kategori sampah (tambah/edit).
-- Konfigurasi anti-kecurangan.
+- Radius default checkpoint (10-1000 m, jadi default form TPS baru).
+- Rate limit waste per hari (1-20, ditegakkan ValidatePhotoUsecase).
+- Penegakan blokir radius GPS on/off (waste/capture/validasi).
+- Target misi mingguan (1-30) + foto maksimal (1-10 MB).
+- Nilai dari tabel app_settings (migration 019, push manual),
+  dimuat saat splash best effort, fallback AppValues bila offline.
+- Kategori sampah (tambah/edit) menyusul fase lanjut (enum + bonus
+  poin masih di kode).
 
 ---
 
@@ -299,7 +303,7 @@ text
 
 ## 13. Status dan Riwayat
 
-- Status: In Progress (MVP: shell, dasbor, kelola TPS, verifikasi waste, kelola reward tulis, kelola user tulis; baca pengaturan).
+- Status: In Progress (MVP: shell, dasbor, kelola TPS, verifikasi waste, kelola reward tulis, kelola user tulis, pengaturan tulis; tersisa kategori, statistik, audit log).
 - 2026-09-20: Dokumen dibuat manual oleh owner.
 - 2026-09-20: Implementasi MVP selesai (fase 2: reward, user, pengaturan).
 - 2026-09-21: Section 6.2 diperbarui (filter + dropdown wilayah berjenjang, kode TPS otomatis KOTA-KEC-NOMOR, kolom code terpisah dari qr_code).
@@ -310,5 +314,6 @@ text
 - 2026-09-22: Nav ganda uji coba (drawer usap tepi + navbar 3 item + sheet usap-atas) dengan flag AppValues; Mode Pengguna khusus role admin via go.
 - 2026-09-23: Kelola Reward tulis selesai (tambah/ubah/hapus/stok/aktif via form + switch + konfirmasi, RLS admin); user/pengaturan tulis tetap fase 2.
 - 2026-09-23: Kelola User tulis selesai (cari/filter role/detail poin+riwayat/ubah role + cegah self-demote, migration 018 profiles_update_role_admin + rewards_select_all_admin); pengaturan tulis tetap fase 2.
+- 2026-09-23: Pengaturan tulis selesai (tabel app_settings migration 019 + form validasi + AppConfig runtime + wiring radius/batas/target/foto + load splash); kategori sampah fase lanjut.
 - Menunggu review dan uji device fisik.
 - Setelah disetujui, masuk ke pengembangan fase 2.

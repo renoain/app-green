@@ -9,7 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/constants/app_enums.dart';
 import '../../../../core/constants/app_tables.dart';
-import '../../../../core/constants/app_values.dart';
+import '../../../../core/constants/app_config.dart';
 import '../../../../core/services/supabase_service.dart';
 import '../models/waste_log_model.dart';
 
@@ -34,8 +34,10 @@ class WasteRemoteDatasource {
     required String fileName,
     required Uint8List bytes,
   }) async {
-    if (bytes.length > AppValues.maxPhotoBytes) {
-      throw ArgumentError('Ukuran foto melebihi batas maksimal 5 MB.');
+    if (bytes.length > AppConfig.maxPhotoBytes) {
+      throw ArgumentError(
+        'Ukuran foto melebihi batas maksimal ${AppConfig.maxPhotoMb} MB.',
+      );
     }
     return _client.storage
         .from(AppTables.wastePhotosBucket)

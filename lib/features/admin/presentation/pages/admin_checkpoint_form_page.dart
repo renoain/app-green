@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../core/constants/app_config.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/services/location_service.dart';
 import '../../../../core/utils/logger.dart';
@@ -92,7 +93,8 @@ class _AdminCheckpointFormPageState
       text: (checkpoint?.longitude ?? _defaultLng).toString(),
     );
     _radiusController = TextEditingController(
-      text: (checkpoint?.radius ?? 100).toString(),
+      text: (checkpoint?.radius ?? AppConfig.gpsRadiusMeters.toInt())
+          .toString(),
     );
     _codeController = TextEditingController(text: checkpoint?.code ?? '');
     _subdistrictController =

@@ -15,7 +15,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_enums.dart';
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/constants/app_values.dart';
+import '../../../../core/constants/app_config.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/services/supabase_service.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -212,7 +212,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     final String missionTarget = summary == null
         ? AppStrings.homeMissionTarget
         : '${AppStrings.homeMissionTargetPrefix} '
-            '${AppValues.weeklyMissionTargetDisposals} '
+            '${AppConfig.weeklyMissionTargetDisposals} '
             '${AppStrings.homeMissionTimesUnit}';
 
     return Scaffold(

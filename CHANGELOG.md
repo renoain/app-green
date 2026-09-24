@@ -1,5 +1,54 @@
 # CHANGELOG - Go Green
 
+## [2026-09-23] - Admin pengaturan tulis (tabel app_settings + berlaku langsung)
+
+Status: Selesai (migration 019 perlu `supabase db push` manual; uji device fisik ubah + efek)
+
+Laporan: /admin/settings masih info statis sehingga admin tidak bisa
+ubah radius/batas/target/foto dari aplikasi; AppValues const tidak bisa
+diubah runtime.
+
+File yang dibuat:
+
+- supabase/migrations/019_app_settings.sql (dibuat): tabel app_settings + RLS baca semua/tulis admin + seed 5 default, idempoten
+- lib/core/constants/app_config.dart (dibuat): AppSettingKeys + AppConfig override sinkron fallback AppValues + clear untuk test
+- lib/features/admin/domain/entities/app_settings_values.dart (dibuat): entity terketik + fromMap/toMap/defaults
+- lib/features/admin/data/datasources/admin_settings_datasource.dart (dibuat): getAll + saveAll upsert
+- lib/features/admin/domain/usecases/manage_settings_usecase.dart (dibuat): validasi batas wajar + fallback default
+- lib/features/admin/presentation/providers/admin_settings_provider.dart (dibuat): notifier load/save + terapkan AppConfig
+- test/unit/features/admin/manage_settings_test.dart (dibuat): 6 test validasi/fallback/AppConfig
+
+File yang diubah:
+
+- lib/features/admin/presentation/pages/admin_settings_page.dart (ditulis ulang): form angka + switch + simpan + snackbar sukses
+- lib/core/constants/app_tables.dart (diedit): tambah appSettings
+- lib/core/constants/app_strings.dart (diedit): 11 string form/validasi/sukses Bahasa Indonesia + catatan baru
+- lib/features/waste/domain/usecases/validate_photo_usecase.dart (diedit): penegakan + batas via AppConfig
+- lib/features/home/domain/usecases/build_home_summary_usecase.dart (diedit): target via AppConfig
+- lib/features/waste/presentation/pages/waste_page.dart (diedit): penegakan via AppConfig
+- lib/features/waste/presentation/pages/capture_photo_page.dart (diedit): penegakan via AppConfig
+- lib/features/home/presentation/pages/home_page.dart (diedit): target via AppConfig
+- lib/features/waste/data/datasources/waste_remote_datasource.dart (diedit): batas foto via AppConfig + pesan dinamis
+- lib/features/admin/presentation/pages/admin_checkpoint_form_page.dart (diedit): radius default via AppConfig
+- lib/features/splash/splash_page.dart (diedit): muat remote best effort timeout 3 dtk
+- test/widget/pages/admin_phase2_test.dart (diedit): fake settings + asersi form
+- docs/UI_PAGES.md (diedit): section 25 tulis
+- docs/PRD_ADMIN.md (diedit): 6.6 selesai tulis + riwayat + status
+- docs/ARCHITECTURE.md (diedit): alur pengaturan + AppConfig
+- docs/DATABASE_SCHEMA.md (diedit): section 3.8 + migration 019, versi 1.4 ke 1.5
+
+Catatan:
+
+- Tanpa dependency baru; tulis lewat RLS admin di server.
+- Tanpa `supabase db push` 019, form fallback default + simpan gagal RLS; push bersama 018.
+- Kategori sampah (tambah/edit) tetap fase lanjut (enum + bonus di kode).
+- Test deterministik: AppConfig.clear, tanpa override = AppValues.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue; sempat 1 info prefer_const, sudah diperbaiki)
+- hasil test: OK (219 test lulus, termasuk 6 test baru manage_settings)
+
 ## [2026-09-23] - Admin kelola user tulis (cari/filter/ubah role/detail)
 
 Status: Selesai (migration 018 perlu `supabase db push` manual; uji device fisik ubah role)

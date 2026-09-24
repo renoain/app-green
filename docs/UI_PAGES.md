@@ -554,10 +554,14 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 
 ## 25. Pengaturan Admin [Selesai]
 
-- Tujuan: info konfigurasi aktif untuk admin.
-- Elemen: info aplikasi (versi), anti-kecurangan (radius + penegakan +
-  hash/timestamp), misi (target, batas harian, foto maks),
-  catatan ubah nilai fase 2.
-- State: statis dari AppValues + pull-to-refresh tampilan.
+- Tujuan: ubah konfigurasi operasional (radius, batas harian, target
+  misi, foto maks) yang langsung berlaku.
+- Elemen: field angka (radius GPS, batas/hari, target/minggu, foto MB),
+  switch penegakan radius, tombol Simpan, snackbar sukses, catatan
+  kategori menyusul.
+- State: adminSettingsProvider via ManageSettingsUsecase
+  (loading, error + retry, pull-to-refresh, validasi batas wajar).
+- Aksi: simpan tervalidasi ke app_settings (RLS admin) + terapkan ke
+  AppConfig runtime; perlu `supabase db push` manual (migration 019).
 - Navigasi: /admin/settings di AdminShell.
-- Prioritas MVP: Ya (info).
+- Prioritas MVP: Ya (baca + tulis).

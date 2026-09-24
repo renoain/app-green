@@ -1073,9 +1073,44 @@ class AppStrings {
   /// Judul info misi di pengaturan admin.
   static const String adminSettingsMissionTitle = 'Misi Mingguan';
 
-  /// Catatan pengaturan admin lanjutan fase 2.
+  /// Catatan pengaturan admin (kategori sampah fase lanjut).
   static const String adminSettingsPhaseNote =
-      'Pengaturan lanjutan (ubah nilai dari aplikasi) menyusul di fase 2.';
+      'Nilai di bawah langsung berlaku. Kategori sampah menyusul fase lanjut.';
+
+  /// Label radius GPS di form pengaturan admin.
+  static const String adminSettingsRadiusLabel = 'Radius GPS default (meter)';
+
+  /// Label penegakan radius di form pengaturan admin.
+  static const String adminSettingsEnforceLabel = 'Tegakkan blokir radius GPS';
+
+  /// Label batas harian di form pengaturan admin.
+  static const String adminSettingsRateLabel = 'Batas setoran per hari';
+
+  /// Label target mingguan di form pengaturan admin.
+  static const String adminSettingsTargetLabel = 'Target misi mingguan (kali)';
+
+  /// Label foto maksimal di form pengaturan admin.
+  static const String adminSettingsPhotoLabel = 'Foto maksimal (MB)';
+
+  /// Tombol simpan pengaturan admin.
+  static const String adminSettingsSave = 'Simpan Pengaturan';
+
+  /// Pesan sukses simpan pengaturan admin.
+  static const String adminSettingsSaved =
+      'Pengaturan tersimpan dan langsung berlaku.';
+
+  /// Validasi radius GPS pengaturan admin.
+  static const String adminSettingsRadiusInvalid =
+      'Radius harus 10-1000 meter.';
+
+  /// Validasi batas harian pengaturan admin.
+  static const String adminSettingsRateInvalid = 'Batas harian harus 1-20.';
+
+  /// Validasi target mingguan pengaturan admin.
+  static const String adminSettingsTargetInvalid = 'Target harus 1-30 kali.';
+
+  /// Validasi foto maksimal pengaturan admin.
+  static const String adminSettingsPhotoInvalid = 'Foto maksimal harus 1-10 MB.';
 
   /// --- Dasbor Admin ---
 

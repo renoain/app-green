@@ -3,8 +3,8 @@
 // Murni Dart agar mudah diuji: hitung total buang, buang minggu ini
 // (Senin 00.00 lokal), dan yang terverifikasi dari daftar log.
 
+import '../../../../core/constants/app_config.dart';
 import '../../../../core/constants/app_enums.dart';
-import '../../../../core/constants/app_values.dart';
 import '../../../waste/domain/entities/waste_log.dart';
 
 /// Ringkasan angka Home dari data asli.
@@ -51,7 +51,7 @@ class BuildHomeSummaryUsecase {
       if (!log.createdAt.isBefore(start)) weekly++;
     }
     final double progress =
-        (weekly / AppValues.weeklyMissionTargetDisposals).clamp(0.0, 1.0);
+        (weekly / AppConfig.weeklyMissionTargetDisposals).clamp(0.0, 1.0);
     return HomeSummary(
       totalDisposals: logs.length,
       weeklyDisposals: weekly,

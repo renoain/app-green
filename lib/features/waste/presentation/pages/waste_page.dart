@@ -13,7 +13,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/constants/app_values.dart';
+import '../../../../core/constants/app_config.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/services/location_service.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -140,7 +140,7 @@ class _WastePageState extends ConsumerState<WastePage> {
     final double? overrideLng = debug?.longitude;
     final double? checkLat = overrideLat ?? position?.latitude;
     final double? checkLng = overrideLng ?? position?.longitude;
-    if (AppValues.enforceGpsRadius && checkLat != null && checkLng != null) {
+    if (AppConfig.enforceGpsRadius && checkLat != null && checkLng != null) {
       final int distance = GeoUtils.distanceMeters(
         checkLat,
         checkLng,

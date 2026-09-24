@@ -7,10 +7,12 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/constants/app_config.dart';
 import '../../core/constants/app_enums.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/router/app_router.dart';
 import '../../core/services/supabase_service.dart';
+import '../admin/data/datasources/admin_settings_datasource.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_radius.dart';
@@ -35,6 +37,17 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   }
 
   Future<void> _redirect() async {
+    if (!mounted) return;
+    // Muat pengaturan operasional best effort (gagal = fallback AppValues).
+    try {
+      final Map<String, String> remote =
+          await AdminSettingsDatasource().getAll().timeout(
+                const Duration(seconds: 3),
+              );
+      if (remote.isNotEmpty) AppConfig.apply(remote);
+    } catch (_) {
+      // Abaikan: fallback konstanta tetap berlaku.
+    }
     if (!mounted) return;
     if (SupabaseService.instance.currentUser == null) {
       if (mounted) context.goNamed(AppRouteName.onboarding);

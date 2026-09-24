@@ -12,7 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../admin/presentation/providers/admin_providers.dart';
 
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/constants/app_values.dart';
+import '../../../../core/constants/app_config.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/services/location_service.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -117,7 +117,7 @@ class _CapturePhotoPageState extends State<CapturePhotoPage> {
       final double? userLat = debug?.latitude ?? position?.latitude;
       final double? userLng = debug?.longitude ?? position?.longitude;
       final CaptureExtra? extra = widget.extra;
-      if (AppValues.enforceGpsRadius &&
+      if (AppConfig.enforceGpsRadius &&
           extra != null &&
           userLat != null &&
           userLng != null) {

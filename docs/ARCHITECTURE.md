@@ -179,7 +179,7 @@ Daftar route:
 - /admin/checkpoints/:id/edit (ubah TPS)
 - /admin/waste-verification (antrean verifikasi, branch AdminShell)
 - /admin/waste-verification/:id (detail verifikasi)
-- /admin/rewards (+ new, :id/edit form reward), /admin/users (+ :id detail user), /admin/settings (settings baca; rewards + users tulis)
+- /admin/rewards (+ new, :id/edit form reward), /admin/users (+ :id detail user), /admin/settings (form tulis operasional)
 
 Route admin memakai StatefulShellRoute.indexedStack kedua dengan
 AdminShell (drawer, tanpa bottom nav user). Masuk admin selalu via go
@@ -585,6 +585,15 @@ Arsitektur auth berlapis presentation -> domain -> data:
   cegah admin terkunci) -> AdminUsersDatasource.updateRole (policy
   profiles_update_role_admin, migration 018). Daftar admin baca semua
   profil (policy select_all_admin yang sudah ada).
+- Alur Pengaturan admin (tulis): AdminSettingsPage
+  (adminSettingsProvider -> ManageSettingsUsecase validasi batas wajar ->
+  AdminSettingsDatasource upsert app_settings, RLS admin) -> AppConfig
+  runtime (override sinkron, fallback AppValues) agar langsung berlaku.
+  Konsumen membaca AppConfig: ValidatePhotoUsecase (penegakan + batas
+  harian), BuildHomeSummaryUsecase + Home (target misi), Waste/Capture
+  (penegakan), upload foto (batas MB), form TPS (radius default).
+  Splash memuat remote best effort (timeout 3 dtk, gagal = fallback).
+  Test deterministik via AppConfig.clear (tanpa override = AppValues).
 
 ---
 
