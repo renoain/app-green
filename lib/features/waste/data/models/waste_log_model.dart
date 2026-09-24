@@ -27,6 +27,9 @@ class WasteLogModel extends WasteLog {
     required super.createdAt,
     super.submitterName,
     super.checkpointName,
+    super.riskScore,
+    super.exifOk,
+    super.riskDetail,
   });
 
   /// Membangun model dari respons JSON Supabase.
@@ -55,6 +58,9 @@ class WasteLogModel extends WasteLog {
       checkpointName: checkpoint is Map<String, dynamic>
           ? checkpoint['name'] as String?
           : null,
+      riskScore: json['risk_score'] as int?,
+      exifOk: json['exif_ok'] as bool?,
+      riskDetail: json['risk_detail'] as String?,
     );
   }
 

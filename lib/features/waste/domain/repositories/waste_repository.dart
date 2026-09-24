@@ -26,6 +26,9 @@ abstract interface class WasteRepository {
     double? latitude,
     double? longitude,
     WasteSource source = WasteSource.manual,
+    int? riskScore,
+    bool? exifOk,
+    String? riskDetail,
   });
 
   /// Mengambil daftar waste log milik user, terbaru di atas.

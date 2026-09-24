@@ -185,6 +185,8 @@ class _AdminWasteDetailPageState extends ConsumerState<AdminWasteDetailPage> {
             label: AppStrings.adminPointsEstimateLabel,
             value: '$estimate ${AppStrings.rewardPointSuffix}',
           ),
+          const SizedBox(height: AppSpacing.md),
+          _ForensicsSection(log: log),
           const SizedBox(height: AppSpacing.lg),
           if (_busy)
             const Center(child: LoadingIndicator())
@@ -235,6 +237,122 @@ class _DetailRow extends StatelessWidget {
           Text(label, style: AppTypography.labelMd),
           const SizedBox(height: AppSpacing.xs),
           Text(value, style: AppTypography.bodyMd),
+        ],
+      ),
+    );
+  }
+}
+
+/// Label tingkat risiko dari skor (selaras AssessPhotoRiskUsecase).
+String _riskLevelLabel(int score) {
+  if (score >= 60) return AppStrings.forensicHigh;
+  if (score >= 30) return AppStrings.forensicMedium;
+  return AppStrings.forensicLow;
+}
+
+/// Label sinyal risiko dari kode kolom risk_detail.
+String _riskReasonLabel(String code) {
+  return switch (code) {
+    'no_exif' => AppStrings.forensicNoExif,
+    'edited_software' => AppStrings.forensicEdited,
+    'far_gps' => AppStrings.forensicFarGps,
+    'rapid_submit' => AppStrings.forensicRapid,
+    _ => code,
+  };
+}
+
+/// Seksi forensik foto di detail verifikasi.
+class _ForensicsSection extends StatelessWidget {
+  /// Membuat seksi forensik.
+  const _ForensicsSection({required this.log});
+
+  /// Waste log yang dinilai.
+  final WasteLog log;
+
+  @override
+  Widget build(BuildContext context) {
+    final int? score = log.riskScore;
+    final List<String> reasons = (log.riskDetail ?? '')
+        .split(',')
+        .map((String s) => s.trim())
+        .where((String s) => s.isNotEmpty)
+        .toList();
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(color: AppColors.borderLight),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            AppStrings.forensicTitle,
+            style: AppTypography.labelLg,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          if (score == null)
+            Text(
+              AppStrings.forensicUnassessed,
+              style: AppTypography.bodySm,
+            )
+          else ...<Widget>[
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    '${AppStrings.forensicScoreLabel}: $score/100 '
+                    '(${_riskLevelLabel(score)})',
+                    style: AppTypography.labelMd,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: AppSpacing.xs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: log.exifOk == true
+                        ? AppColors.tertiaryLight
+                        : AppColors.surfaceDim,
+                    borderRadius: BorderRadius.circular(AppRadius.md),
+                  ),
+                  child: Text(
+                    log.exifOk == true
+                        ? AppStrings.forensicExifOk
+                        : AppStrings.forensicExifBad,
+                    style: AppTypography.labelSm,
+                  ),
+                ),
+              ],
+            ),
+            if (reasons.isNotEmpty) ...<Widget>[
+              const SizedBox(height: AppSpacing.sm),
+              Wrap(
+                spacing: AppSpacing.xs,
+                runSpacing: AppSpacing.xs,
+                children: <Widget>[
+                  for (final String reason in reasons)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.sm,
+                        vertical: AppSpacing.xs,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceDim,
+                        borderRadius:
+                            BorderRadius.circular(AppRadius.md),
+                      ),
+                      child: Text(
+                        _riskReasonLabel(reason),
+                        style: AppTypography.labelSm,
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ],
         ],
       ),
     );

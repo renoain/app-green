@@ -515,8 +515,9 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 - Tujuan: periksa bukti lalu setujui/tolak.
 - Elemen: foto bukti (signed URL storage privat), kategori, pengirim,
   timestamp server, lokasi, jarak ke checkpoint (haversine domain),
-  hash SHA-256, estimasi poin, tombol Setujui dan Tolak (dialog alasan
-  wajib).
+  hash SHA-256, estimasi poin, seksi Forensik Foto (skor 0-100 + level
+  + badge EXIF + chip alasan; pesan belum dinilai untuk data lama),
+  tombol Setujui dan Tolak (dialog alasan wajib).
 - State: busy saat approve/reject, snackbar sukses/gagal.
 - Aksi: Setujui mengubah status verified; Tolak mengubah rejected +
   alasan di notes. Poin earn tidak dicatat ulang (sudah tercatat saat

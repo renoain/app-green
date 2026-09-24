@@ -37,6 +37,9 @@ class FakeWasteRepository implements WasteRepository {
     double? latitude,
     double? longitude,
     WasteSource source = WasteSource.manual,
+    int? riskScore,
+    bool? exifOk,
+    String? riskDetail,
   }) async {
     final DateTime now = DateTime.utc(2026, 9, 18);
     return WasteLog(
@@ -217,6 +220,32 @@ void main() {
       expect(calls.single.userId, 'user-1');
       expect(calls.single.amount, 30);
       expect(calls.single.referenceId, result.log.id);
+    });
+
+    test('submit melampirkan risiko forensik', () async {
+      final FakeWasteRepository repo = FakeWasteRepository();
+      final SubmitWasteUsecase usecase = SubmitWasteUsecase(
+        wasteRepository: repo,
+        validatePhoto: ValidatePhotoUsecase(
+          repo,
+          distanceCalculator: (a, b, c, d) => 10,
+        ),
+        calculatePoints: const CalculatePointsUsecase(),
+      );
+
+      final SubmitWasteResult result = await usecase.execute(
+        userId: 'user-1',
+        checkpoint: _checkpoint(),
+        category: WasteCategory.organik,
+        photoBytes: Uint8List.fromList(<int>[7, 8, 9]),
+        latitude: -6.2,
+        longitude: 106.816667,
+      );
+
+      // Byte sampah tanpa EXIF: satu sinyal no_exif = skor 35.
+      expect(result.risk.score, 35);
+      expect(result.risk.exifOk, isFalse);
+      expect(result.risk.detailCodes, 'no_exif');
     });
 
     test('tanpa pencatat berarti hanya estimasi', () async {

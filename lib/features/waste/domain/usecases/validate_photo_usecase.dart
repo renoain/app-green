@@ -37,6 +37,16 @@ class ValidatePhotoUsecase {
   final WasteRepository _wasteRepository;
   final double Function(double, double, double, double) _distanceMeters;
 
+  /// Jarak meter dua koordinat (dipakai ulang penilaian risiko).
+  double distanceBetween(
+    double lat1,
+    double lon1,
+    double lat2,
+    double lon2,
+  ) {
+    return _distanceMeters(lat1, lon1, lat2, lon2);
+  }
+
   /// Memvalidasi [hash] (duplikat), posisi user terhadap checkpoint, dan
   /// rate limit [userId].
   ///

@@ -611,6 +611,12 @@ Arsitektur auth berlapis presentation -> domain -> data:
   harian), BuildHomeSummaryUsecase + Home (target misi), Waste/Capture
   (penegakan), upload foto (batas MB), form TPS (radius default),
   CalculatePointsUsecase (4 bonus kategori, seed migration 022).
+- Forensik submit: SubmitWasteUsecase (hash -> validasi -> analisis
+  EXIF via PhotoForensicsService core + skor via AssessPhotoRiskUsecase
+  murni Dart + jarak via ValidatePhotoUsecase + hitungan harian repo)
+  -> skor tersimpan (risk_score/exif_ok/risk_detail, migration 023,
+  non-blokir) -> tampil di detail verifikasi. Tanpa dependency/API
+  baru (paket exif yang sudah ada).
   Splash memuat remote best effort (timeout 3 dtk, gagal = fallback).
   Test deterministik via AppConfig.clear (tanpa override = AppValues).
 - Grafik dasbor admin: AdminDashboardDatasource.getWeeklyWasteTimestamps

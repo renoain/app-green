@@ -56,6 +56,9 @@ class WasteRemoteDatasource {
     double? latitude,
     double? longitude,
     WasteSource source = WasteSource.manual,
+    int? riskScore,
+    bool? exifOk,
+    String? riskDetail,
   }) async {
     final Map<String, dynamic> row = await _client
         .from(AppTables.wasteLogs)
@@ -68,6 +71,9 @@ class WasteRemoteDatasource {
           'latitude': latitude,
           'longitude': longitude,
           'source': source.value,
+          if (riskScore != null) 'risk_score': riskScore,
+          if (exifOk != null) 'exif_ok': exifOk,
+          if (riskDetail != null) 'risk_detail': riskDetail,
         })
         .select()
         .single();

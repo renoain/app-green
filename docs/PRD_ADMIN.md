@@ -148,6 +148,7 @@ Fitur:
   - Hash SHA-256.
   - Kategori sampah.
   - User yang submit.
+  - Forensik foto (skor risiko + badge EXIF + alasan sinyal).
 - Aksi: Approve / Reject.
 - Alasan reject (opsional).
 
@@ -326,5 +327,6 @@ text
 - 2026-09-23: QR TPS tampil lagi (dialog cetak + pratinjau form, pretty_qr_code existing).
 - 2026-09-23: Soft-delete TPS selesai (kolom is_active migration 021 + chip status + aktifkan; user hanya baca aktif); tersisa kategori sampah.
 - 2026-09-23: Bonus kategori selesai (4 seed migration 022 + seksi form + hitungan via AppConfig); tambah nilai kategori tetap level kode.
+- 2026-09-24: Forensik on-device selesai (EXIF + skor 0-100 tersimpan + seksi detail admin, migration 023); AI cloud (Hive/Sightengine) butuh API key.
 - Menunggu review dan uji device fisik.
 - Setelah disetujui, masuk ke pengembangan fase 2.

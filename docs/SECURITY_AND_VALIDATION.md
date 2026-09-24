@@ -28,13 +28,26 @@ Dokumen ini menjelaskan mekanisme anti-kecurangan dan validasi data di Go Green.
    - Duplikasi hash dicek sebelum simpan: jika ada hash sama, foto ditolak
      (kemungkinan foto sama diupload ulang).
 
-### Level Menengah (fase 2)
+### Level Menengah (selesai on-device; ELA/piksel fase lanjut)
 
-5. **EXIF Check**
-   - Analisis metadata EXIF foto: timestamp, GPS, model kamera.
-   - Cocokkan timestamp EXIF dengan timestamp server dan GPS EXIF dengan
-     GPS yang dilaporkan.
-   - Flag jika inkonsistensi.
+5. **EXIF Check (selesai)**
+   - Analisis metadata EXIF foto saat submit via PhotoForensicsService
+     (paket exif yang sudah ada, tanpa API cloud).
+   - Sinyal: tanpa EXIF kamera (+35), tag Software terisi = jejak edit
+     (+40). Byte rusak = tanpa EXIF (tidak pernah crash).
+   - Hasil tersimpan di kolom exif_ok + tampil badge di detail admin.
+
+6a. **Skor Risiko (selesai)**
+   - AssessPhotoRiskUsecase menggabungkan EXIF + jarak GPS + frekuensi
+     harian menjadi skor 0-100 (tersimpan risk_score + risk_detail).
+   - Level: 0-29 rendah, 30-59 sedang, 60-100 tinggi.
+   - Skor hanya membantu verifikator (tidak memblokir; status tetap
+     pending). Tampil di detail admin dengan alasan per sinyal.
+
+6. **ELA (Error Level Analysis, fase lanjut)**
+   - Analisis level kompresi untuk mendeteksi area yang diedit.
+   - Implementasi: package `image` untuk manipulasi piksel.
+   - Flag jika ada anomali signifikan.
 
 6. **ELA (Error Level Analysis)**
    - Analisis level kompresi untuk mendeteksi area yang diedit.
@@ -52,12 +65,14 @@ Dokumen ini menjelaskan mekanisme anti-kecurangan dan validasi data di Go Green.
    - Implementasi: server-side (Supabase Edge Function) atau client-side
      sebagai pertahanan pertama.
 
-### Level Lanjutan (fase 3+)
+### Level Lanjutan (fase 3+; butuh API key + backend)
 
-9. **AI Forensics**
+9. **AI Forensics (cloud, belum mulai)**
    - Integrasi dengan API eksternal untuk analisis forensik foto:
      Hive API, Sightengine, AWS Rekognition.
    - Flag foto yang kemungkinan besar dimanipulasi.
+   - Prasyarat: kunci API + anggaran + Edge Function (secret dilarang
+     di klien). Skor on-device di atas tetap dipakai berdampingan.
 
 10. **Approval Manual**
     - Admin/petugas bisa meninjau foto yang diflag.

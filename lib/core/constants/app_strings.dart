@@ -947,9 +947,45 @@ class AppStrings {
 
   /// Label status aktif reward di admin.
   static String get adminRewardActiveLabel => _t('adminRewardActiveLabel');
-
   /// Label status nonaktif reward di admin.
-  static String get adminRewardInactiveLabel => _t('adminRewardInactiveLabel');
+  static String get adminRewardInactiveLabel =>
+      _t('adminRewardInactiveLabel');
+
+  /// Judul seksi forensik di detail verifikasi.
+  static String get forensicTitle => _t('forensicTitle');
+
+  /// Label skor risiko forensik.
+  static String get forensicScoreLabel => _t('forensicScoreLabel');
+
+  /// Risiko forensik rendah.
+  static String get forensicLow => _t('forensicLow');
+
+  /// Risiko forensik sedang.
+  static String get forensicMedium => _t('forensicMedium');
+
+  /// Risiko forensik tinggi.
+  static String get forensicHigh => _t('forensicHigh');
+
+  /// EXIF kamera utuh.
+  static String get forensicExifOk => _t('forensicExifOk');
+
+  /// EXIF bermasalah.
+  static String get forensicExifBad => _t('forensicExifBad');
+
+  /// Sinyal tanpa EXIF kamera.
+  static String get forensicNoExif => _t('forensicNoExif');
+
+  /// Sinyal jejak edit.
+  static String get forensicEdited => _t('forensicEdited');
+
+  /// Sinyal jauh dari checkpoint.
+  static String get forensicFarGps => _t('forensicFarGps');
+
+  /// Sinyal setoran beruntun.
+  static String get forensicRapid => _t('forensicRapid');
+
+  /// Forensik belum dinilai (data lama).
+  static String get forensicUnassessed => _t('forensicUnassessed');
 
   /// Tombol tambah reward admin.
   static String get adminRewardAdd => _t('adminRewardAdd');
@@ -1609,6 +1645,18 @@ class AppStrings {
     'adminRewardStockLabel': 'Stok',
     'adminRewardActiveLabel': 'Aktif',
     'adminRewardInactiveLabel': 'Nonaktif',
+    'forensicTitle': 'Forensik Foto',
+    'forensicScoreLabel': 'Skor Risiko',
+    'forensicLow': 'Rendah',
+    'forensicMedium': 'Sedang',
+    'forensicHigh': 'Tinggi',
+    'forensicExifOk': 'EXIF utuh',
+    'forensicExifBad': 'EXIF bermasalah',
+    'forensicNoExif': 'Tanpa EXIF kamera',
+    'forensicEdited': 'Jejak edit terdeteksi',
+    'forensicFarGps': 'Jauh dari checkpoint',
+    'forensicRapid': 'Setoran beruntun',
+    'forensicUnassessed': 'Belum dinilai (data lama)',
     'adminRewardAdd': 'Tambah Reward',
     'adminRewardAddTitle': 'Tambah Reward Baru',
     'adminRewardEditTitle': 'Ubah Reward',
@@ -2044,6 +2092,18 @@ class AppStrings {
     'adminRewardStockLabel': 'Stock',
     'adminRewardActiveLabel': 'Active',
     'adminRewardInactiveLabel': 'Inactive',
+    'forensicTitle': 'Photo Forensics',
+    'forensicScoreLabel': 'Risk Score',
+    'forensicLow': 'Low',
+    'forensicMedium': 'Medium',
+    'forensicHigh': 'High',
+    'forensicExifOk': 'EXIF intact',
+    'forensicExifBad': 'EXIF issues',
+    'forensicNoExif': 'No camera EXIF',
+    'forensicEdited': 'Edit traces detected',
+    'forensicFarGps': 'Far from checkpoint',
+    'forensicRapid': 'Rapid submissions',
+    'forensicUnassessed': 'Not assessed (legacy data)',
     'adminRewardAdd': 'Add Reward',
     'adminRewardAddTitle': 'Add New Reward',
     'adminRewardEditTitle': 'Edit Reward',

@@ -161,6 +161,9 @@ Bukti pembuangan sampah.
 | verified_at | timestamptz | | Waktu verifikasi |
 | notes | text | | Catatan verifikator |
 | source | text | default 'manual', check in ('qr_scan','manual','nfc') | Asal data: scan QR, manual, NFC |
+| risk_score | integer | | Skor forensik 0-100, null = belum dinilai (migration 023) |
+| exif_ok | boolean | | EXIF kamera utuh (migration 023) |
+| risk_detail | text | | Kode sinyal koma-dipisah (migration 023) |
 | created_at | timestamptz | default now() | |
 
 RLS:
@@ -423,7 +426,9 @@ where email = 'admin@green.com';
   daftar user hanya membaca yang aktif. Sudah di-push 2026-09-24.
 - Migration 022_category_bonus_seeds.sql menambah 4 seed bonus
   kategori (idempoten, tidak menimpa). Daftar nilai kategori tetap
-  di check constraint waste_logs. Sudah di-push 2026-09-24.
+  di check constraint waste_logs.
+- Migration 023_waste_forensics.sql menambah kolom risk_score,
+  exif_ok, risk_detail di waste_logs (nullable, idempoten). Sudah di-push 2026-09-24.
 
 ---
 
@@ -502,9 +507,9 @@ where user_id = auth.uid()
 
 ## 9. Status Dokumen
 
-Versi: 1.8
+Versi: 1.9
 
-Terakhir update: 2026-09-23
+Terakhir update: 2026-09-24
 
 Riwayat:
 
@@ -525,3 +530,4 @@ Riwayat:
 - 1.6: tabel admin_audit_logs append-only + RLS (migration 020).
 - 1.7: kolom checkpoints.is_active + index (migration 021).
 - 1.8: seed 4 bonus kategori (migration 022).
+- 1.9: kolom forensik waste_logs (migration 023).

@@ -1,16 +1,19 @@
 // Use case pengiriman pembuangan sampah (domain).
 //
 // Mengorkestrasi alur anti-kecurangan: hash SHA-256 -> validasi (duplikat,
-// radius, rate limit) -> upload foto -> simpan waste_log -> hitung poin.
+// radius, rate limit) -> forensik EXIF + skor risiko -> upload foto ->
+// simpan waste_log (termasuk skor) -> hitung poin.
 
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 
 import '../../../../core/constants/app_enums.dart';
+import '../../../../core/services/photo_forensics_service.dart';
 import '../../../checkpoints/domain/entities/checkpoint.dart';
 import '../entities/waste_log.dart';
 import '../repositories/waste_repository.dart';
+import 'assess_photo_risk_usecase.dart';
 import 'calculate_points_usecase.dart';
 import 'validate_photo_usecase.dart';
 
@@ -20,6 +23,7 @@ class SubmitWasteResult {
   const SubmitWasteResult({
     required this.log,
     required this.estimatedPoints,
+    required this.risk,
   });
 
   /// Log yang berhasil disimpan.
@@ -27,6 +31,9 @@ class SubmitWasteResult {
 
   /// Estimasi poin dari pembuangan ini.
   final int estimatedPoints;
+
+  /// Penilaian risiko forensik foto.
+  final PhotoRisk risk;
 }
 
 /// Mencatat poin earn ke tabel points. Di-inject agar usecase tetap
@@ -50,17 +57,24 @@ class SubmitWasteUsecase {
     required CalculatePointsUsecase calculatePoints,
     String Function(Uint8List bytes)? hashFunction,
     RecordEarnPoints? recordEarnPoints,
+    AssessPhotoRiskUsecase assessRisk = const AssessPhotoRiskUsecase(),
+    Future<PhotoForensics> Function(Uint8List bytes)? analyzeForensics,
   })  : _wasteRepository = wasteRepository,
         _validatePhoto = validatePhoto,
         _calculatePoints = calculatePoints,
         _hashFunction = hashFunction ?? _sha256Hash,
-        _recordEarnPoints = recordEarnPoints;
+        _recordEarnPoints = recordEarnPoints,
+        _assessRisk = assessRisk,
+        _analyzeForensics =
+            analyzeForensics ?? PhotoForensicsService().analyze;
 
   final WasteRepository _wasteRepository;
   final ValidatePhotoUsecase _validatePhoto;
   final CalculatePointsUsecase _calculatePoints;
   final String Function(Uint8List bytes) _hashFunction;
   final RecordEarnPoints? _recordEarnPoints;
+  final AssessPhotoRiskUsecase _assessRisk;
+  final Future<PhotoForensics> Function(Uint8List bytes) _analyzeForensics;
 
   /// Menjalankan alur submit.
   ///
@@ -87,6 +101,21 @@ class SubmitWasteUsecase {
       radiusMeters: checkpoint.radius.toDouble(),
     );
 
+    final PhotoForensics forensics = await _analyzeForensics(photoBytes);
+    final int todayCount =
+        await _wasteRepository.countTodayWasteLogs(userId);
+    final PhotoRisk risk = _assessRisk.assess(
+      forensics: forensics,
+      distanceMeters: _validatePhoto.distanceBetween(
+        latitude,
+        longitude,
+        checkpoint.latitude,
+        checkpoint.longitude,
+      ),
+      radiusMeters: checkpoint.radius.toDouble(),
+      todayCount: todayCount,
+    );
+
     final String fileName =
         '$userId/${DateTime.now().millisecondsSinceEpoch}_$hash.jpg';
     final String photoUrl = await _wasteRepository.uploadPhoto(
@@ -103,6 +132,9 @@ class SubmitWasteUsecase {
       latitude: latitude,
       longitude: longitude,
       source: source,
+      riskScore: risk.score,
+      exifOk: risk.exifOk,
+      riskDetail: risk.detailCodes.isEmpty ? null : risk.detailCodes,
     );
 
     final int points = _calculatePoints.calculate(
@@ -121,7 +153,11 @@ class SubmitWasteUsecase {
       );
     }
 
-    return SubmitWasteResult(log: log, estimatedPoints: points);
+    return SubmitWasteResult(
+      log: log,
+      estimatedPoints: points,
+      risk: risk,
+    );
   }
 
   /// Hash SHA-256 default untuk foto bukti.

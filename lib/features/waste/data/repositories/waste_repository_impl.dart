@@ -36,6 +36,9 @@ class WasteRepositoryImpl implements WasteRepository {
     double? latitude,
     double? longitude,
     WasteSource source = WasteSource.manual,
+    int? riskScore,
+    bool? exifOk,
+    String? riskDetail,
   }) {
     return _remote.insertWasteLog(
       userId: userId,
@@ -46,6 +49,9 @@ class WasteRepositoryImpl implements WasteRepository {
       latitude: latitude,
       longitude: longitude,
       source: source,
+      riskScore: riskScore,
+      exifOk: exifOk,
+      riskDetail: riskDetail,
     );
   }
 

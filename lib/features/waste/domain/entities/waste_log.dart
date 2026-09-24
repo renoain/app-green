@@ -26,6 +26,9 @@ class WasteLog {
     required this.createdAt,
     this.submitterName,
     this.checkpointName,
+    this.riskScore,
+    this.exifOk,
+    this.riskDetail,
   });
 
   /// ID unik log.
@@ -78,4 +81,13 @@ class WasteLog {
 
   /// Nama checkpoint (dari join checkpoints, khusus daftar admin).
   final String? checkpointName;
+
+  /// Skor risiko forensik 0-100 (null = belum dinilai).
+  final int? riskScore;
+
+  /// Apakah EXIF kamera utuh (null = tak diketahui).
+  final bool? exifOk;
+
+  /// Kode sinyal risiko koma-dipisah (null = tidak ada).
+  final String? riskDetail;
 }

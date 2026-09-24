@@ -45,6 +45,9 @@ class FakeAdminWasteRepository implements WasteRepository {
     double? latitude,
     double? longitude,
     WasteSource source = WasteSource.manual,
+    int? riskScore,
+    bool? exifOk,
+    String? riskDetail,
   }) async =>
       throw UnimplementedError();
 

@@ -1,5 +1,51 @@
 # CHANGELOG - Go Green
 
+## [2026-09-24] - Forensik foto on-device (EXIF + skor risiko tersimpan)
+
+Status: Selesai (migration 023 perlu `supabase db push`; uji device foto kamera asli vs edit)
+
+Laporan: tidak ada analisis manipulasi foto (EXIF/AI fase lanjut)
+sehingga verifikator buta sinyal edit.
+
+File yang dibuat:
+
+- supabase/migrations/023_waste_forensics.sql (dibuat): kolom risk_score/exif_ok/risk_detail, idempoten
+- lib/core/services/photo_forensics_service.dart (dibuat): analisis EXIF tanpa throw (byte rusak = tanpa EXIF)
+- lib/features/waste/domain/usecases/assess_photo_risk_usecase.dart (dibuat): skor 0-100 + level + kode alasan, murni Dart
+- test/unit/features/waste/assess_photo_risk_test.dart (dibuat): 6 test matriks/ambang/batas
+- test/unit/core/photo_forensics_test.dart (dibuat): 2 test byte rusak/kosong
+- test/widget/pages/admin_waste_forensics_test.dart (dibuat): 2 test seksi + belum dinilai
+
+File yang diubah:
+
+- lib/features/waste/domain/usecases/submit_waste_usecase.dart (diedit): analisis + skor + simpan + hasil risk
+- lib/features/waste/domain/usecases/validate_photo_usecase.dart (diedit): distanceBetween publik untuk risiko
+- lib/features/waste/domain/repositories/waste_repository.dart (diedit): 3 param opsional insert
+- lib/features/waste/data/repositories/waste_repository_impl.dart (diedit): teruskan 3 param
+- lib/features/waste/data/datasources/waste_remote_datasource.dart (diedit): insert kondisional 3 kolom
+- lib/features/waste/domain/entities/waste_log.dart (diedit): 3 field nullable
+- lib/features/waste/data/models/waste_log_model.dart (diedit): parse 3 kolom
+- lib/features/admin/presentation/pages/admin_waste_detail_page.dart (diedit): seksi Forensik (skor/level/badge/alasan)
+- lib/core/constants/app_strings.dart (diedit): 12 string forensik ID/EN manual
+- test/unit/features/waste/waste_submit_notifier_test.dart (diedit): ikut signature + 1 test lampiran risiko
+- test/widget/pages/admin_waste_verification_page_test.dart (diedit): ikut signature insert
+- docs/SECURITY_AND_VALIDATION.md (diedit): EXIF + skor selesai, AI cloud prasyarat key
+- docs/DATABASE_SCHEMA.md (diedit): kolom 3.3 + migration 023, versi 1.8 ke 1.9
+- docs/UI_PAGES.md (diedit): section 22 seksi forensik
+- docs/PRD_ADMIN.md (diedit): 6.3 forensik + riwayat
+- docs/ARCHITECTURE.md (diedit): alur forensik submit
+
+Catatan:
+
+- Tanpa dependency/API baru (paket exif yang sudah ada); AI cloud (Hive/Sightengine/Rekognition) butuh API key + backend, belum mulai.
+- Skor non-blokir (status tetap pending); baris lama null = Belum dinilai.
+- Tanpa `supabase db push` 023, insert 3 kolom gagal sampai push (fallback: data lama tetap tampil).
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (258 test lulus, termasuk 11 test baru forensik)
+
 ## [2026-09-24] - Multi-bahasa Indonesia/Inggris (428 string + pemilih)
 
 Status: Selesai (uji device fisik ganti bahasa + restart persist)
