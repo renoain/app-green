@@ -449,7 +449,8 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 - Tujuan: daftar semua checkpoint untuk admin.
 - Elemen: search nama/kode TPS, filter wilayah berjenjang
   (Provinsi, Kota, Kecamatan), kartu TPS (kode TPS, nama, koordinat,
-  radius, kode QR, tombol Ubah dan Nonaktifkan), FAB Tambah TPS.
+  radius, kode QR, tombol QR + Ubah dan Nonaktifkan), FAB Tambah TPS.
+  Dialog QR (gambar + kode + petunjuk cetak) dari kartu.
 - State: daftar checkpoint (loading, error + retry, empty state),
   query pencarian, filter wilayah, pull-to-refresh.
 - Aksi: tap Ubah ke form edit, Nonaktifkan dengan dialog konfirmasi
@@ -477,8 +478,8 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   otomatis dari reverse-geocode (bisa diubah), deskripsi lokasi manual
   (wajib, menjelaskan titik spesifik), alamat lengkap otomatis
   (display_name Nominatim, bisa diubah), latitude, longitude, radius
-  (default 100), tombol Simpan. Kolom QR disembunyikan sementara
-  (menyusul fase berikut).
+  (default dari pengaturan), pratinjau QR (ubah) atau catatan otomatis
+  (tambah, CP-XXX), tombol Simpan.
 - State: validasi via ManageCheckpointUsecase (pesan Bahasa Indonesia),
   saving, locating, resolving wilayah (reverse-geocode Nominatim +
   kelurahan + alamat), generating code, muat ulang edit-by-id (loading +

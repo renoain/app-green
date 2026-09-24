@@ -1,5 +1,36 @@
 # CHANGELOG - Go Green
 
+## [2026-09-23] - QR TPS tampil lagi (dialog cetak + pratinjau form)
+
+Status: Selesai (uji device fisik buka QR + pindai dari cetakan)
+
+Laporan: QR disembunyikan sejak 2026-09-21 sehingga admin tidak bisa
+menampilkan kode untuk dicetak/ditempel di TPS.
+
+File yang dibuat:
+
+- lib/features/admin/presentation/widgets/checkpoint_qr_sheet.dart (dibuat): dialog gambar QR + kode + petunjuk cetak
+- test/widget/pages/admin_checkpoint_qr_test.dart (dibuat): 2 test dialog + tombol kartu
+
+File yang diubah:
+
+- lib/features/admin/presentation/widgets/tps_card.dart (diedit): tombol QR + tooltip buka dialog
+- lib/features/admin/presentation/pages/admin_checkpoint_form_page.dart (diedit): seksi pratinjau QR (ubah) / catatan otomatis (tambah)
+- lib/core/constants/app_strings.dart (diedit): 5 string QR Bahasa Indonesia
+- docs/UI_PAGES.md (diedit): section 19-20 QR kembali
+- docs/PRD_ADMIN.md (diedit): 6.2 QR tampil lagi
+- docs/COMPONENT_LIBRARY.md (diedit): TpsCard tombol QR + CheckpointQrSheet
+
+Catatan:
+
+- Tanpa dependency baru (pretty_qr_code 3.6.0 yang sudah ada).
+- Isi QR = qr_code (CP-XXX), fallback kode TPS.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue; sempat 1 warning unused import, sudah diperbaiki)
+- hasil test: OK (2 test baru QR; full suite menyusul di commit soft-delete/kategori)
+
 ## [2026-09-23] - Audit log aktivitas admin (tabel + hooks + daftar)
 
 Status: Selesai (migration 020 perlu `supabase db push` manual; uji device fisik aksi + cek daftar)

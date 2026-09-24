@@ -9,6 +9,7 @@ import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../checkpoints/domain/entities/checkpoint.dart';
+import 'checkpoint_qr_sheet.dart';
 
 /// Kartu satu TPS: nama, koordinat, radius, QR, aksi ubah/nonaktif.
 class TpsCard extends StatelessWidget {
@@ -52,6 +53,12 @@ class TpsCard extends StatelessWidget {
               if (checkpoint.qrCode != null &&
                   checkpoint.qrCode!.isNotEmpty)
                 StatusChipText(code: checkpoint.qrCode!),
+              IconButton(
+                tooltip: AppStrings.adminQrShowTooltip,
+                icon: const Icon(LucideIcons.qr_code, size: 20),
+                onPressed: () =>
+                    showCheckpointQrDialog(context, checkpoint),
+              ),
             ],
           ),
           const SizedBox(height: AppSpacing.xs),

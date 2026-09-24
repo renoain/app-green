@@ -1200,6 +1200,23 @@ class AppStrings {
   /// Label kode QR di form TPS.
   static const String adminQrCodeLabel = 'Kode QR (otomatis)';
 
+  /// Tombol tutup dialog umum.
+  static const String closeButton = 'Tutup';
+
+  /// Petunjuk cetak QR di dialog checkpoint.
+  static const String adminQrPrintHint =
+      'Tangkap layar lalu cetak dan tempel di lokasi TPS.';
+
+  /// Tooltip tombol lihat QR di kartu TPS.
+  static const String adminQrShowTooltip = 'Lihat QR';
+
+  /// Judul pratinjau QR di form TPS.
+  static const String adminQrPreviewTitle = 'QR Checkpoint';
+
+  /// Catatan QR otomatis saat tambah TPS baru.
+  static const String adminQrAutoNote =
+      'Kode QR dibuat otomatis saat disimpan (CP-XXX).';
+
   /// Label kode TPS di form/daftar.
   static const String adminTpsCodeLabel = 'Kode TPS (otomatis)';
 

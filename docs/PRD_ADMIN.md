@@ -116,8 +116,7 @@ Fitur:
 - Wilayah + kelurahan + alamat lengkap otomatis terisi dari GPS/peta
   (reverse-geocode Nominatim) lalu kode TPS tergenerate.
 - Generate kode TPS otomatis format <KOTA>-<KEC>-<NOMOR> (mis. SBY-KTT-01) dari kecamatan terpilih + nomor urut se-wilayah.
-- Kolom QR disembunyikan sementara, menyusul fase berikut (qr_code tetap tersimpan otomatis CP-XXX).
-- Tampilkan QR code (untuk dicetak/ditempel di TPS).
+- QR code tampil lagi: pratinjau di form + tombol QR di kartu membuka dialog gambar untuk dicetak/ditempel di TPS (qr_code otomatis CP-XXX).
 
 Form tambah/edit:
 

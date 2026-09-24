@@ -363,7 +363,14 @@ Props:
 - onDeactivate: VoidCallback
 
 Pemakaian: item daftar Kelola TPS (kode TPS, nama, koordinat, radius,
-kode QR).
+kode QR, tombol QR + Ubah + Nonaktifkan).
+
+### CheckpointQrSheet [Selesai]
+
+Fungsi: showCheckpointQrDialog(context, checkpoint).
+
+Pemakaian: dialog QR dari kartu TPS (gambar PrettyQrView + kode +
+petunjuk cetak); pratinjau serupa di form TPS.
 
 ### RegionPickerDropdown [Selesai]
 

@@ -11,8 +11,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
+import 'package:pretty_qr_code/pretty_qr_code.dart';
+
 import '../../../../core/constants/app_config.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_radius.dart';
 import '../../../../core/services/location_service.dart';
 import '../../../../core/utils/logger.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -547,6 +551,8 @@ class _AdminCheckpointFormPageState
                   labelText: AppStrings.adminCheckpointRadiusLabel,
                 ),
               ),
+              const SizedBox(height: AppSpacing.sm),
+              _QrPreviewSection(checkpoint: _effective),
               const SizedBox(height: AppSpacing.lg),
               if (_saving)
                 const Center(child: LoadingIndicator())
@@ -558,6 +564,60 @@ class _AdminCheckpointFormPageState
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+/// Pratinjau QR di form TPS (ada untuk ubah, catatan otomatis tambah).
+class _QrPreviewSection extends StatelessWidget {
+  /// Membuat pratinjau QR form.
+  const _QrPreviewSection({required this.checkpoint});
+
+  /// Checkpoint yang diubah (null untuk tambah baru).
+  final Checkpoint? checkpoint;
+
+  @override
+  Widget build(BuildContext context) {
+    final String? code = checkpoint?.qrCode;
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(color: AppColors.borderLight),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const Text(
+            AppStrings.adminQrPreviewTitle,
+            style: AppTypography.labelLg,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          if (code != null && code.isNotEmpty)
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 96,
+                  height: 96,
+                  child: PrettyQrView.data(data: code),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Text(
+                    code,
+                    style: AppTypography.labelLg,
+                  ),
+                ),
+              ],
+            )
+          else
+            const Text(
+              AppStrings.adminQrAutoNote,
+              style: AppTypography.bodySm,
+            ),
+        ],
       ),
     );
   }
