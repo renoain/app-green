@@ -51,4 +51,21 @@ class AdminDashboardDatasource {
       totalPoints: totalPoints,
     );
   }
+
+  /// Waktu pembuatan waste 7 hari terakhir (untuk grafik dasbor).
+  Future<List<DateTime>> getWeeklyWasteTimestamps() async {
+    final DateTime now = DateTime.now().toUtc();
+    final DateTime start =
+        DateTime.utc(now.year, now.month, now.day).subtract(
+      const Duration(days: 6),
+    );
+    final List<Map<String, dynamic>> rows = await _client
+        .from(AppTables.wasteLogs)
+        .select('created_at')
+        .gte('created_at', start.toIso8601String());
+    return <DateTime>[
+      for (final Map<String, dynamic> row in rows)
+        DateTime.tryParse('${row['created_at']}') ?? now,
+    ];
+  }
 }

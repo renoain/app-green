@@ -90,7 +90,7 @@ Ringkasan:
 - Total waste log hari ini.
 - Total waste log pending verifikasi.
 - Total poin beredar.
-- Grafik sederhana (opsional, fase 2).
+- Grafik batang setoran 7 hari terakhir (tanpa dependency baru).
 
 Aksi cepat:
 
@@ -315,5 +315,6 @@ text
 - 2026-09-23: Kelola Reward tulis selesai (tambah/ubah/hapus/stok/aktif via form + switch + konfirmasi, RLS admin); user/pengaturan tulis tetap fase 2.
 - 2026-09-23: Kelola User tulis selesai (cari/filter role/detail poin+riwayat/ubah role + cegah self-demote, migration 018 profiles_update_role_admin + rewards_select_all_admin); pengaturan tulis tetap fase 2.
 - 2026-09-23: Pengaturan tulis selesai (tabel app_settings migration 019 + form validasi + AppConfig runtime + wiring radius/batas/target/foto + load splash); kategori sampah fase lanjut.
+- 2026-09-23: Grafik dasbor selesai (batang 7 hari via bucket domain + Container, tanpa dependency baru); tersisa audit log + kategori + QR TPS + soft-delete.
 - Menunggu review dan uji device fisik.
 - Setelah disetujui, masuk ke pengembangan fase 2.

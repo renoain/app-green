@@ -16,10 +16,11 @@ import '../../../../core/widgets/app_bar_and_loading_widgets.dart';
 import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/widgets/display_widgets.dart';
 import '../../domain/entities/admin_dashboard_summary.dart';
+import '../../domain/usecases/build_weekly_chart_usecase.dart';
 import '../providers/admin_dashboard_provider.dart';
 import '../providers/admin_providers.dart';
 
-/// Dasbor admin: ringkasan angka + aksi cepat.
+/// Dasbor admin: ringkasan angka + grafik + aksi cepat.
 class AdminDashboardPage extends ConsumerWidget {
   /// Membuat halaman dasbor admin.
   const AdminDashboardPage({super.key});
@@ -28,6 +29,8 @@ class AdminDashboardPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AsyncValue<AdminDashboardSummary> summary =
         ref.watch(adminDashboardProvider);
+    final AsyncValue<List<DailyWasteCount>> chart =
+        ref.watch(adminWeeklyChartProvider);
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -104,6 +107,8 @@ class AdminDashboardPage extends ConsumerWidget {
                     ],
                   ),
                 ),
+                const SizedBox(height: AppSpacing.sm),
+                _WeeklyChartCard(chart: chart),
                 const SizedBox(height: AppSpacing.md),
                 FilledButton.icon(
                   onPressed: () => context.pushNamed(
@@ -127,6 +132,88 @@ class AdminDashboardPage extends ConsumerWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+/// Kartu grafik batang setoran 7 hari terakhir.
+class _WeeklyChartCard extends StatelessWidget {
+  /// Membuat kartu grafik dari state provider.
+  const _WeeklyChartCard({required this.chart});
+
+  /// State daftar hitungan harian.
+  final AsyncValue<List<DailyWasteCount>> chart;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(color: AppColors.borderLight),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const Text(
+            AppStrings.adminChartTitle,
+            style: AppTypography.labelLg,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          chart.when(
+            loading: () => const Center(child: LoadingIndicator()),
+            error: (_, __) => const Text(
+              AppStrings.adminChartEmpty,
+              style: AppTypography.bodySm,
+            ),
+            data: (List<DailyWasteCount> days) {
+              if (days.every((DailyWasteCount d) => d.count == 0)) {
+                return const Text(
+                  AppStrings.adminChartEmpty,
+                  style: AppTypography.bodySm,
+                );
+              }
+              final int max = days
+                  .map((DailyWasteCount d) => d.count)
+                  .reduce((int a, int b) => a > b ? a : b);
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  for (final DailyWasteCount day in days)
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Text(
+                            '${day.count}',
+                            style: AppTypography.bodySm,
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Container(
+                            width: 24,
+                            height: day.count == 0
+                                ? 4
+                                : 8 + (day.count / max) * 96,
+                            decoration: BoxDecoration(
+                              color: day.count == 0
+                                  ? AppColors.surfaceDim
+                                  : AppColors.primary,
+                              borderRadius:
+                                  BorderRadius.circular(AppRadius.sm),
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(day.label, style: AppTypography.bodySm),
+                        ],
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+        ],
       ),
     );
   }

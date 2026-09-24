@@ -594,6 +594,13 @@ Arsitektur auth berlapis presentation -> domain -> data:
   (penegakan), upload foto (batas MB), form TPS (radius default).
   Splash memuat remote best effort (timeout 3 dtk, gagal = fallback).
   Test deterministik via AppConfig.clear (tanpa override = AppValues).
+- Grafik dasbor admin: AdminDashboardDatasource.getWeeklyWasteTimestamps
+  (created_at 7 hari, RLS staff) -> BuildWeeklyChartUsecase (bucket per
+  hari kalender + label Sen..Min, murni Dart) -> adminWeeklyChartProvider
+  -> _WeeklyChartCard (batang Container proporsional, token saja, tanpa
+  dependency grafik). Evaluasi dependency (PROTOCOL Bagian C): paket
+  grafik (fl_chart dkk) DITOLAK untuk kebutuhan ini (beban bundle +
+  API tidak perlu; batang statis cukup dengan widget bawaan).
 
 ---
 

@@ -1135,6 +1135,12 @@ class AppStrings {
   /// Tombol lihat verifikasi pending di dasbor.
   static const String adminViewPending = 'Lihat Verifikasi Pending';
 
+  /// Judul grafik setoran 7 hari di dasbor admin.
+  static const String adminChartTitle = 'Setoran 7 Hari Terakhir';
+
+  /// Pesan grafik kosong di dasbor admin.
+  static const String adminChartEmpty = 'Belum ada setoran 7 hari terakhir.';
+
   /// --- Kelola TPS ---
 
   /// Judul halaman kelola TPS.

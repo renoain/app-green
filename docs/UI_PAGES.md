@@ -429,12 +429,14 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 
 ## 18. Dasbor Admin [Selesai]
 
-- Tujuan: ringkasan operasional + jalan pintas ke aksi admin.
+- Tujuan: ringkasan operasional + tren mingguan + jalan pintas aksi.
 - Elemen: 4 kartu angka (Total User, Total TPS, Waste Hari Ini,
-  Pending Verifikasi), kartu Poin Beredar, tombol Tambah TPS, tombol
+  Pending Verifikasi), kartu Poin Beredar, kartu grafik batang
+  Setoran 7 Hari Terakhir (7 batang + angka + label Sen..Min,
+  pesan empty bila nol), tombol Tambah TPS, tombol
   Lihat Verifikasi Pending (dengan jumlah).
-- State: AdminDashboardSummary dari Supabase (loading, error + retry,
-  pull-to-refresh).
+- State: AdminDashboardSummary + adminWeeklyChartProvider dari Supabase
+  (loading, error + retry, pull-to-refresh).
 - Aksi: ke form tambah TPS, ke antrean verifikasi.
 - Navigasi: branch pertama AdminShell (/admin/dashboard), dibuka lewat
   drawer atau menu Mode Admin di Profile.

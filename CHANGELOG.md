@@ -1,5 +1,40 @@
 # CHANGELOG - Go Green
 
+## [2026-09-23] - Grafik setoran 7 hari di dasbor admin
+
+Status: Selesai (uji device fisik angka batang vs data)
+
+Laporan: dasbor admin hanya angka sesaat tanpa tren sehingga susah
+lihat aktivitas seminggu terakhir (PRD 6.1 grafik fase 2).
+
+File yang dibuat:
+
+- lib/features/admin/domain/usecases/build_weekly_chart_usecase.dart (dibuat): bucket 7 hari + label Sen..Min, murni Dart
+- test/unit/features/admin/build_weekly_chart_test.dart (dibuat): 3 test urutan/label/bucket
+- test/widget/pages/admin_dashboard_chart_test.dart (dibuat): 2 test judul + batang + empty (viewport HP 400px)
+
+File yang diubah:
+
+- lib/features/admin/data/datasources/admin_dashboard_datasource.dart (diedit): tambah getWeeklyWasteTimestamps (created_at 7 hari)
+- lib/features/admin/presentation/providers/admin_dashboard_provider.dart (diedit): tambah adminWeeklyChartProvider
+- lib/features/admin/presentation/pages/admin_dashboard_page.dart (diedit): seksi _WeeklyChartCard batang proporsional + empty
+- lib/core/constants/app_strings.dart (diedit): 2 string judul/empty Bahasa Indonesia
+- test/unit/features/admin/admin_dashboard_provider_test.dart (diedit): fake timestamp + 1 test chart
+- docs/UI_PAGES.md (diedit): section 18 grafik
+- docs/PRD_ADMIN.md (diedit): 6.1 grafik selesai + riwayat
+- docs/ARCHITECTURE.md (diedit): alur grafik + evaluasi tolak dep grafik
+
+Catatan:
+
+- Tanpa dependency baru; batang dari Container + token (evaluasi Bagian C: fl_chart dkk ditolak, beban berlebih).
+- Tanpa migrasi baru (baca waste_logs via RLS staff yang sudah ada).
+- Test widget memakai viewport 400px: GridView aspect 1.0 di viewport default 800px mendorong kartu keluar layar malas (bukan bug aplikasi).
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (225 test lulus, termasuk 6 test baru grafik)
+
 ## [2026-09-23] - Admin pengaturan tulis (tabel app_settings + berlaku langsung)
 
 Status: Selesai (migration 019 perlu `supabase db push` manual; uji device fisik ubah + efek)
