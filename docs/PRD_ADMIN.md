@@ -65,7 +65,7 @@ Admin tidak melihat Home user. Admin punya layout sendiri.
 
 Admin memakai **drawer** (sidebar) sebagai navigasi utama, bukan bottom nav, karena menu admin lebih banyak dan lebih cocok untuk operasional. Tombol back di root branch sekali tekan langsung kembali ke UI user (/profile); di sub-route (form/detail) back berjalan normal (pop). Masuk admin selalu via go (bukan push) agar tidak menumpuk shell.
 
-Drawer berisi:
+Drawer berisi (admin penuh; petugas hanya 3 pertama):
 
 - Dashboard
 - Kelola TPS
@@ -73,6 +73,7 @@ Drawer berisi:
 - Kelola Reward
 - Kelola User
 - Pengaturan
+- Log Audit
 - Logout
 
 Header admin menampilkan: nama admin, role, tombol logout.
@@ -259,6 +260,7 @@ text
 | `/admin/users`                  | Kelola User      |
 | `/admin/users/:id`              | Detail User      |
 | `/admin/settings`               | Pengaturan       |
+| `/admin/audit-logs`             | Log Audit        |
 
 ---
 
@@ -282,13 +284,13 @@ text
 3. Kelola TPS (list, tambah, edit, nonaktif).
 4. Verifikasi waste (list, detail, approve, reject).
 
-### Fase 2
+### Fase 2 (5-9 selesai; tersisa kategori, QR TPS, soft-delete)
 
-5. Kelola reward.
-6. Kelola user.
-7. Pengaturan.
-8. Statistik dan grafik.
-9. Audit log.
+5. Kelola reward (selesai tulis).
+6. Kelola user (selesai tulis role).
+7. Pengaturan (selesai tulis; kategori fase lanjut).
+8. Statistik dan grafik (selesai batang 7 hari).
+9. Audit log (selesai tabel + hooks + daftar).
 
 ---
 
@@ -303,7 +305,7 @@ text
 
 ## 13. Status dan Riwayat
 
-- Status: In Progress (MVP: shell, dasbor, kelola TPS, verifikasi waste, kelola reward tulis, kelola user tulis, pengaturan tulis; tersisa kategori, statistik, audit log).
+- Status: In Progress (MVP admin selesai fungsional; tersisa kategori sampah, QR TPS, soft-delete TPS).
 - 2026-09-20: Dokumen dibuat manual oleh owner.
 - 2026-09-20: Implementasi MVP selesai (fase 2: reward, user, pengaturan).
 - 2026-09-21: Section 6.2 diperbarui (filter + dropdown wilayah berjenjang, kode TPS otomatis KOTA-KEC-NOMOR, kolom code terpisah dari qr_code).
@@ -316,5 +318,6 @@ text
 - 2026-09-23: Kelola User tulis selesai (cari/filter role/detail poin+riwayat/ubah role + cegah self-demote, migration 018 profiles_update_role_admin + rewards_select_all_admin); pengaturan tulis tetap fase 2.
 - 2026-09-23: Pengaturan tulis selesai (tabel app_settings migration 019 + form validasi + AppConfig runtime + wiring radius/batas/target/foto + load splash); kategori sampah fase lanjut.
 - 2026-09-23: Grafik dasbor selesai (batang 7 hari via bucket domain + Container, tanpa dependency baru); tersisa audit log + kategori + QR TPS + soft-delete.
+- 2026-09-23: Audit log selesai (tabel admin_audit_logs migration 020 append-only + hooks 5 notifier best effort + halaman daftar + menu drawer); tersisa kategori + QR TPS + soft-delete.
 - Menunggu review dan uji device fisik.
 - Setelah disetujui, masuk ke pengembangan fase 2.

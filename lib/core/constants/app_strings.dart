@@ -1135,6 +1135,54 @@ class AppStrings {
   /// Tombol lihat verifikasi pending di dasbor.
   static const String adminViewPending = 'Lihat Verifikasi Pending';
 
+  /// Menu + judul halaman log audit admin.
+  static const String adminAuditLog = 'Log Audit';
+
+  /// Pesan log audit kosong.
+  static const String adminAuditEmpty = 'Belum ada aktivitas admin tercatat.';
+
+  /// Label aksi audit: tambah.
+  static const String auditActionCreate = 'Tambah';
+
+  /// Label aksi audit: ubah.
+  static const String auditActionUpdate = 'Ubah';
+
+  /// Label aksi audit: hapus.
+  static const String auditActionDelete = 'Hapus';
+
+  /// Label aksi audit: aktifkan.
+  static const String auditActionActivate = 'Aktifkan';
+
+  /// Label aksi audit: nonaktifkan.
+  static const String auditActionDeactivate = 'Nonaktifkan';
+
+  /// Label aksi audit: setujui.
+  static const String auditActionApprove = 'Setujui';
+
+  /// Label aksi audit: tolak.
+  static const String auditActionReject = 'Tolak';
+
+  /// Label aksi audit: ubah role.
+  static const String auditActionChangeRole = 'Ubah Role';
+
+  /// Label aksi audit: simpan pengaturan.
+  static const String auditActionSaveSettings = 'Simpan Pengaturan';
+
+  /// Label entitas audit: reward.
+  static const String auditEntityReward = 'Reward';
+
+  /// Label entitas audit: user.
+  static const String auditEntityUser = 'User';
+
+  /// Label entitas audit: pengaturan.
+  static const String auditEntitySettings = 'Pengaturan';
+
+  /// Label entitas audit: TPS.
+  static const String auditEntityCheckpoint = 'TPS';
+
+  /// Label entitas audit: verifikasi.
+  static const String auditEntityVerification = 'Verifikasi';
+
   /// Judul grafik setoran 7 hari di dasbor admin.
   static const String adminChartTitle = 'Setoran 7 Hari Terakhir';
 

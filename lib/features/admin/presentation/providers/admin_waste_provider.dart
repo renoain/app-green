@@ -7,7 +7,9 @@ import '../../../checkpoints/presentation/providers/checkpoint_provider.dart';
 import '../../../waste/domain/entities/waste_log.dart';
 import '../../../waste/presentation/providers/waste_provider.dart'
     show wasteRepositoryProvider;
+import '../../domain/entities/audit_log.dart';
 import '../../domain/usecases/verify_waste_usecase.dart';
+import 'admin_audit_provider.dart';
 
 /// Rentang filter daftar verifikasi.
 enum AdminWasteFilter { today, week, all }
@@ -73,6 +75,11 @@ class AdminWasteListNotifier
     final String? verifiedBy = SupabaseService.instance.currentUser?.id;
     if (verifiedBy == null) throw StateError('Belum login');
     await _usecase.approve(id: id, verifiedBy: verifiedBy);
+    await _ref.read(adminAuditDatasourceProvider).log(
+          action: AuditAction.approve,
+          entity: AuditEntity.verification,
+          entityId: id,
+        );
     await loadPending();
   }
 
@@ -81,6 +88,12 @@ class AdminWasteListNotifier
     final String? verifiedBy = SupabaseService.instance.currentUser?.id;
     if (verifiedBy == null) throw StateError('Belum login');
     await _usecase.reject(id: id, verifiedBy: verifiedBy, reason: reason);
+    await _ref.read(adminAuditDatasourceProvider).log(
+          action: AuditAction.reject,
+          entity: AuditEntity.verification,
+          entityId: id,
+          detail: reason,
+        );
     await loadPending();
   }
 

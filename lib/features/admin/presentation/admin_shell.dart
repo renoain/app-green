@@ -27,6 +27,7 @@ const List<String> _adminBranchRoots = <String>[
   '/admin/rewards',
   '/admin/users',
   '/admin/settings',
+  '/admin/audit-logs',
 ];
 
 /// Kerangka admin: drawer + konten branch aktif, tanpa bottom nav user.

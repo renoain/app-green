@@ -14,6 +14,7 @@ import '../../features/admin/presentation/admin_shell.dart';
 import '../../features/admin/presentation/pages/admin_checkpoint_form_page.dart';
 import '../../features/admin/presentation/pages/admin_checkpoint_page.dart';
 import '../../features/admin/presentation/pages/admin_dashboard_page.dart';
+import '../../features/admin/presentation/pages/admin_audit_page.dart';
 import '../../features/admin/presentation/pages/admin_reward_form_page.dart';
 import '../../features/admin/presentation/pages/admin_rewards_page.dart';
 import '../../features/admin/presentation/pages/admin_user_detail_page.dart';
@@ -273,6 +274,16 @@ final List<RouteBase> appRoutes = <RouteBase>[
           ),
         ],
       ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '/admin/audit-logs',
+            name: AppRouteName.adminAuditLogs,
+            builder: (BuildContext context, GoRouterState state) =>
+                const AdminAuditPage(),
+          ),
+        ],
+      ),
     ],
   ),
   StatefulShellRoute.indexedStack(
@@ -436,6 +447,9 @@ abstract final class AppRouteName {
   /// Nama route detail user admin.
   static const String adminUserDetail = 'adminUserDetail';
 
-  /// Nama route pengaturan admin (fase 2).
+  /// Nama route pengaturan admin.
   static const String adminSettings = 'adminSettings';
+
+  /// Nama route log audit admin.
+  static const String adminAuditLogs = 'adminAuditLogs';
 }

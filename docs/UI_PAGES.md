@@ -567,3 +567,19 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   AppConfig runtime; perlu `supabase db push` manual (migration 019).
 - Navigasi: /admin/settings di AdminShell.
 - Prioritas MVP: Ya (baca + tulis).
+
+---
+
+## 26. Log Audit Admin [Selesai]
+
+- Tujuan: jejak aktivitas admin (siapa, aksi apa, kapan).
+- Elemen: daftar 50 terbaru (ikon, label Aksi + Entitas, pelaku,
+  waktu, detail opsional), empty state.
+- State: adminAuditProvider via AdminAuditDatasource (skeleton,
+  error + retry, kosong, pull-to-refresh).
+- Aksi: tarik untuk muat ulang; append-only (tanpa ubah/hapus).
+  Dicatat: reward tambah/ubah/hapus/aktif, user ubah role, pengaturan
+  simpan, TPS tambah/ubah/hapus, verifikasi setujui/tolak.
+- Navigasi: /admin/audit-logs branch AdminShell (drawer + sheet;
+  khusus admin penuh, petugas tetap 3 menu).
+- Prioritas MVP: Ya (baca).

@@ -179,7 +179,7 @@ Daftar route:
 - /admin/checkpoints/:id/edit (ubah TPS)
 - /admin/waste-verification (antrean verifikasi, branch AdminShell)
 - /admin/waste-verification/:id (detail verifikasi)
-- /admin/rewards (+ new, :id/edit form reward), /admin/users (+ :id detail user), /admin/settings (form tulis operasional)
+- /admin/rewards (+ new, :id/edit form reward), /admin/users (+ :id detail user), /admin/settings (form tulis operasional), /admin/audit-logs (daftar jejak, branch ke-7 khusus admin penuh)
 
 Route admin memakai StatefulShellRoute.indexedStack kedua dengan
 AdminShell (drawer, tanpa bottom nav user). Masuk admin selalu via go
@@ -601,6 +601,13 @@ Arsitektur auth berlapis presentation -> domain -> data:
   dependency grafik). Evaluasi dependency (PROTOCOL Bagian C): paket
   grafik (fl_chart dkk) DITOLAK untuk kebutuhan ini (beban bundle +
   API tidak perlu; batang statis cukup dengan widget bawaan).
+- Audit log admin: tabel admin_audit_logs append-only (migration 020,
+  RLS baca + insert admin, tanpa update/delete) -> AdminAuditDatasource
+  (log best effort: tanpa login dilewati, gagal = warning agar aksi
+  utama tidak ikut gagal; getRecent join username pelaku) -> hooks di
+  5 notifier (reward, user, pengaturan, TPS, verifikasi) -> halaman
+  /admin/audit-logs (50 terbaru + pull-to-refresh). Menu drawer + sheet
+  bertambah 1 (petugas tetap 3 pertama).
 
 ---
 

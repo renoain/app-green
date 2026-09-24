@@ -339,7 +339,8 @@ Props:
 - onUserMode: VoidCallback?
 
 Pemakaian: sidebar AdminShell (Dashboard, Kelola TPS, Verifikasi Waste,
-Kelola Reward, Kelola User, Pengaturan, Mode Pengguna admin, Logout).
+Kelola Reward, Kelola User, Pengaturan, Log Audit, Mode Pengguna admin,
+Logout; petugas hanya 3 pertama).
 
 ### AdminBottomBar [Selesai]
 

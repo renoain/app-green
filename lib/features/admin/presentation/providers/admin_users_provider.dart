@@ -6,9 +6,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_enums.dart';
+import '../../data/datasources/admin_audit_datasource.dart';
 import '../../data/datasources/admin_users_datasource.dart';
 import '../../domain/entities/admin_user.dart';
+import '../../domain/entities/audit_log.dart';
 import '../../domain/usecases/manage_user_usecase.dart';
+import 'admin_audit_provider.dart';
 
 /// Provider data source daftar user admin.
 final Provider<AdminUsersDatasource> adminUsersDatasourceProvider =
@@ -33,11 +36,13 @@ final StateProvider<UserRole?> adminUserRoleFilterProvider =
 /// Notifier daftar user admin.
 class AdminUsersNotifier extends StateNotifier<AsyncValue<List<AdminUser>>> {
   /// Membuat notifier dengan use case yang di-inject.
-  AdminUsersNotifier(this._usecase, this._datasource)
-      : super(const AsyncLoading<List<AdminUser>>());
+  AdminUsersNotifier(this._usecase, this._datasource, {AdminAuditDatasource? audit})
+      : _audit = audit ?? AdminAuditDatasource(),
+        super(const AsyncLoading<List<AdminUser>>());
 
   final ManageUserUsecase _usecase;
   final AdminUsersDatasource _datasource;
+  final AdminAuditDatasource _audit;
 
   /// Memuat daftar user terbaru.
   Future<void> load({int limit = 50}) async {
@@ -74,6 +79,12 @@ class AdminUsersNotifier extends StateNotifier<AsyncValue<List<AdminUser>>> {
       targetId: targetId,
       role: role,
     );
+    await _audit.log(
+      action: AuditAction.changeRole,
+      entity: AuditEntity.user,
+      entityId: targetId,
+      detail: role.value,
+    );
     await load();
   }
 }
@@ -85,5 +96,6 @@ final StateNotifierProvider<AdminUsersNotifier, AsyncValue<List<AdminUser>>>
   (Ref ref) => AdminUsersNotifier(
     ref.watch(manageUserUsecaseProvider),
     ref.watch(adminUsersDatasourceProvider),
+    audit: ref.watch(adminAuditDatasourceProvider),
   ),
 );

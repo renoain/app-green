@@ -9,6 +9,9 @@ import '../../../rewards/domain/entities/reward.dart';
 import '../../../rewards/domain/repositories/reward_repository.dart';
 import '../../../rewards/domain/usecases/manage_reward_usecase.dart';
 import '../../../rewards/presentation/providers/reward_provider.dart';
+import '../../data/datasources/admin_audit_datasource.dart';
+import '../../domain/entities/audit_log.dart';
+import 'admin_audit_provider.dart';
 
 /// Provider repository reward admin.
 final Provider<RewardRepository> adminRewardRepositoryProvider =
@@ -24,15 +27,17 @@ final Provider<ManageRewardUsecase> manageRewardUsecaseProvider =
   (Ref ref) => ManageRewardUsecase(ref.watch(adminRewardRepositoryProvider)),
 );
 
-/// Notifier daftar reward untuk admin (semua + tulis).
+/// Notifier daftar reward untuk admin (semua + tulis + audit).
 class AdminRewardListNotifier
     extends StateNotifier<AsyncValue<List<Reward>>> {
   /// Membuat notifier admin reward.
-  AdminRewardListNotifier(this._usecase, this._repository)
-      : super(const AsyncLoading<List<Reward>>());
+  AdminRewardListNotifier(this._usecase, this._repository, {AdminAuditDatasource? audit})
+      : _audit = audit ?? AdminAuditDatasource(),
+        super(const AsyncLoading<List<Reward>>());
 
   final ManageRewardUsecase _usecase;
   final RewardRepository _repository;
+  final AdminAuditDatasource _audit;
 
   /// Muat semua reward (aktif + nonaktif).
   Future<void> loadAll() async {
@@ -59,6 +64,12 @@ class AdminRewardListNotifier
       imageUrl: imageUrl,
       isActive: isActive,
     );
+    await _audit.log(
+      action: AuditAction.create,
+      entity: AuditEntity.reward,
+      entityId: created.id,
+      detail: created.name,
+    );
     await loadAll();
     return created;
   }
@@ -82,6 +93,12 @@ class AdminRewardListNotifier
       imageUrl: imageUrl,
       isActive: isActive,
     );
+    await _audit.log(
+      action: AuditAction.update,
+      entity: AuditEntity.reward,
+      entityId: id,
+      detail: updated.name,
+    );
     await loadAll();
     return updated;
   }
@@ -89,12 +106,22 @@ class AdminRewardListNotifier
   /// Ubah status aktif reward.
   Future<void> setActive({required String id, required bool isActive}) async {
     await _usecase.setActive(id: id, isActive: isActive);
+    await _audit.log(
+      action: isActive ? AuditAction.activate : AuditAction.deactivate,
+      entity: AuditEntity.reward,
+      entityId: id,
+    );
     await loadAll();
   }
 
   /// Hapus reward.
   Future<void> remove(String id) async {
     await _usecase.delete(id);
+    await _audit.log(
+      action: AuditAction.delete,
+      entity: AuditEntity.reward,
+      entityId: id,
+    );
     await loadAll();
   }
 }
@@ -106,5 +133,6 @@ final StateNotifierProvider<AdminRewardListNotifier,
   (Ref ref) => AdminRewardListNotifier(
     ref.watch(manageRewardUsecaseProvider),
     ref.watch(adminRewardRepositoryProvider),
+    audit: ref.watch(adminAuditDatasourceProvider),
   ),
 );

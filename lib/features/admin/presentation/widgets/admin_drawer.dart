@@ -29,6 +29,7 @@ const List<AdminMenuItem> adminMenuItems = <AdminMenuItem>[
   AdminMenuItem(title: AppStrings.adminManageReward, icon: LucideIcons.gift),
   AdminMenuItem(title: AppStrings.adminManageUser, icon: LucideIcons.users),
   AdminMenuItem(title: AppStrings.adminSettings, icon: LucideIcons.settings),
+  AdminMenuItem(title: AppStrings.adminAuditLog, icon: LucideIcons.file_text),
 ];
 
 /// Drawer sidebar admin dengan header identitas dan menu.

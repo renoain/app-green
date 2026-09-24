@@ -1,5 +1,52 @@
 # CHANGELOG - Go Green
 
+## [2026-09-23] - Audit log aktivitas admin (tabel + hooks + daftar)
+
+Status: Selesai (migration 020 perlu `supabase db push` manual; uji device fisik aksi + cek daftar)
+
+Laporan: tidak ada jejak siapa berbuat apa (PRD fase 2 audit log)
+sehingga aksi admin tidak bisa diaudit.
+
+File yang dibuat:
+
+- supabase/migrations/020_admin_audit_logs.sql (dibuat): tabel admin_audit_logs append-only + index + RLS baca/insert admin, idempoten
+- lib/features/admin/domain/entities/audit_log.dart (dibuat): AuditAction/AuditEntity + entity AuditLog
+- lib/features/admin/data/datasources/admin_audit_datasource.dart (dibuat): log best effort + getRecent join username
+- lib/features/admin/presentation/providers/admin_audit_provider.dart (dibuat): datasource provider + notifier daftar
+- lib/features/admin/presentation/pages/admin_audit_page.dart (dibuat): daftar 50 terbaru + skeleton/empty/refresh
+- test/unit/features/admin/admin_audit_test.dart (dibuat): 7 test hooks + lewati tanpa login
+- test/widget/pages/admin_audit_page_test.dart (dibuat): 2 test daftar + empty
+
+File yang diubah:
+
+- lib/features/admin/presentation/providers/admin_reward_provider.dart (diedit): hooks tambah/ubah/aktif/hapus + param audit opsional
+- lib/features/admin/presentation/providers/admin_users_provider.dart (diedit): hook ubah role + param audit opsional
+- lib/features/admin/presentation/providers/admin_settings_provider.dart (diedit): hook simpan + param audit opsional
+- lib/features/admin/presentation/providers/admin_checkpoint_provider.dart (diedit): hooks tambah/ubah/hapus via ref
+- lib/features/admin/presentation/providers/admin_waste_provider.dart (diedit): hooks setujui/tolak via ref
+- lib/features/admin/presentation/widgets/admin_drawer.dart (diedit): menu Log Audit (petugas tetap 3 pertama)
+- lib/features/admin/presentation/admin_shell.dart (diedit): root /admin/audit-logs
+- lib/core/router/app_router.dart (diedit): branch + route /admin/audit-logs + nama
+- lib/core/constants/app_tables.dart (diedit): tambah adminAuditLogs
+- lib/core/constants/app_strings.dart (diedit): 15 string judul/label Bahasa Indonesia
+- docs/UI_PAGES.md (diedit): section 26 baru
+- docs/PRD_ADMIN.md (diedit): drawer + route + fase 5-9 selesai + status + riwayat
+- docs/ARCHITECTURE.md (diedit): route + alur audit
+- docs/COMPONENT_LIBRARY.md (diedit): daftar menu drawer
+- docs/DATABASE_SCHEMA.md (diedit): section 3.9 + migration 020, versi 1.5 ke 1.6
+
+Catatan:
+
+- Tanpa dependency baru; tulis lewat RLS admin di server.
+- Tanpa `supabase db push` 020, daftar log gagal dimuat + hooks hanya warning; push bersama 018/019.
+- Audit best effort: tanpa login dilewati, gagal insert = warning, aksi utama tidak ikut gagal.
+- Guard approve tanpa login tetap menolak sebelum audit (StateError).
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue; sempat 2 warning unused import, sudah diperbaiki)
+- hasil test: OK (234 test lulus, termasuk 9 test baru audit)
+
 ## [2026-09-23] - Grafik setoran 7 hari di dasbor admin
 
 Status: Selesai (uji device fisik angka batang vs data)

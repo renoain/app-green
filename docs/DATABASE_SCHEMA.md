@@ -281,6 +281,25 @@ RLS:
 Seed: 5 baris default sama dengan AppValues (insert idempoten,
 on conflict do nothing agar tidak menimpa perubahan admin).
 
+### 3.9 admin_audit_logs
+
+Jejak aksi admin, append-only (migration 020).
+
+| Kolom | Tipe | Constraint | Keterangan |
+|---|---|---|---|
+| id | uuid | PK default gen_random_uuid() | |
+| actor_id | uuid | FK auth.users on delete set null | Admin pelaku |
+| action | text | not null | tambah/ubah/hapus/aktifkan/nonaktifkan/setujui/tolak/ubah_role/simpan_pengaturan |
+| entity | text | not null | reward/user/pengaturan/tps/verifikasi |
+| entity_id | text | | ID data yang diaksi |
+| detail | text | | Ringkasan bebas |
+| created_at | timestamptz | default now() | |
+
+RLS (tanpa update/delete agar jejak tidak bisa diubah):
+
+- Admin bisa baca semua.
+- Admin bisa insert (perlu `supabase db push` manual, bersama 018/019).
+
 ---
 
 ## 4. Storage Bucket
@@ -393,6 +412,9 @@ where email = 'admin@green.com';
 - Migration 019_app_settings.sql membuat tabel app_settings + RLS baca
   semua/tulis admin + seed 5 default (idempoten, tidak menimpa).
   Belum di-push ke remote (push manual bersama 018).
+- Migration 020_admin_audit_logs.sql membuat tabel admin_audit_logs +
+  index waktu/pelaku + RLS baca/insert admin (append-only, idempoten).
+  Belum di-push ke remote (push manual bersama 018/019).
 
 ---
 
@@ -471,7 +493,7 @@ where user_id = auth.uid()
 
 ## 9. Status Dokumen
 
-Versi: 1.5
+Versi: 1.6
 
 Terakhir update: 2026-09-23
 
@@ -491,3 +513,4 @@ Riwayat:
 - 1.4: policy admin tulis (migration 018): rewards_select_all_admin +
   profiles_update_role_admin.
 - 1.5: tabel app_settings + RLS + seed default (migration 019).
+- 1.6: tabel admin_audit_logs append-only + RLS (migration 020).

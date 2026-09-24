@@ -7,6 +7,8 @@ import '../../../checkpoints/domain/usecases/generate_checkpoint_qr_usecase.dart
 import '../../../checkpoints/domain/usecases/generate_tps_code_usecase.dart';
 import '../../../checkpoints/domain/usecases/manage_checkpoint_usecase.dart';
 import '../../../checkpoints/presentation/providers/checkpoint_provider.dart';
+import '../../domain/entities/audit_log.dart';
+import 'admin_audit_provider.dart';
 import 'admin_providers.dart' show manageCheckpointUsecaseProvider;
 
 /// Provider use case generate kode QR checkpoint.
@@ -126,6 +128,12 @@ class AdminCheckpointListNotifier
       districtCode: districtCode,
       subdistrict: subdistrict,
     );
+    await _ref.read(adminAuditDatasourceProvider).log(
+          action: AuditAction.create,
+          entity: AuditEntity.checkpoint,
+          entityId: created.id,
+          detail: created.name,
+        );
     await loadAll();
     return created;
   }
@@ -163,6 +171,12 @@ class AdminCheckpointListNotifier
       districtCode: districtCode,
       subdistrict: subdistrict,
     );
+    await _ref.read(adminAuditDatasourceProvider).log(
+          action: AuditAction.update,
+          entity: AuditEntity.checkpoint,
+          entityId: id,
+          detail: updated.name,
+        );
     await loadAll();
     return updated;
   }
@@ -170,6 +184,11 @@ class AdminCheckpointListNotifier
   /// Nonaktifkan TPS.
   Future<void> deactivate(String id) async {
     await _usecase.deactivate(id);
+    await _ref.read(adminAuditDatasourceProvider).log(
+          action: AuditAction.delete,
+          entity: AuditEntity.checkpoint,
+          entityId: id,
+        );
     await loadAll();
   }
 }
