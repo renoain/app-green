@@ -46,7 +46,7 @@ pembuangan berupa foto + timestamp server + GPS + hash (anti-edit AI).
 - Petugas checkpoint (mobile app).
 - Leaderboard, badge, streak.
 - Push notification.
-- Multi-bahasa.
+- Bahasa ketiga dan seterusnya (pondasi ID/EN selesai).
 
 ## 6. Model Bisnis
 

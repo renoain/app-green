@@ -34,22 +34,22 @@ class ManageCheckpointUsecase {
     required int radius,
   }) {
     if (name.trim().isEmpty) {
-      throw const CheckpointValidationException(
+      throw CheckpointValidationException(
         AppStrings.adminCheckpointNameEmpty,
       );
     }
     if (latitude < -90 || latitude > 90) {
-      throw const CheckpointValidationException(
+      throw CheckpointValidationException(
         AppStrings.adminCheckpointLatInvalid,
       );
     }
     if (longitude < -180 || longitude > 180) {
-      throw const CheckpointValidationException(
+      throw CheckpointValidationException(
         AppStrings.adminCheckpointLngInvalid,
       );
     }
     if (radius <= 0) {
-      throw const CheckpointValidationException(
+      throw CheckpointValidationException(
         AppStrings.adminCheckpointRadiusInvalid,
       );
     }

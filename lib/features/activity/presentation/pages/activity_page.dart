@@ -112,13 +112,13 @@ class _ActivityPageState extends ConsumerState<ActivityPage> {
             child: ListView(
               padding: const EdgeInsets.all(AppSpacing.md),
               children: <Widget>[
-                const Text(
+                Text(
                   AppStrings.activityTitle,
                   style: AppTypography.headlineLg,
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 if (_failed) ...<Widget>[
-                  const Text(
+                  Text(
                     AppStrings.genericError,
                     style: AppTypography.bodySm,
                     textAlign: TextAlign.center,
@@ -158,7 +158,7 @@ class _ActivityPageState extends ConsumerState<ActivityPage> {
           child: ListView(
             padding: const EdgeInsets.all(AppSpacing.md),
             children: <Widget>[
-              const Text(
+              Text(
                 AppStrings.activityTitle,
                 style: AppTypography.headlineLg,
               ),

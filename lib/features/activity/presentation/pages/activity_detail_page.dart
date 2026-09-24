@@ -41,7 +41,7 @@ class ActivityDetailPage extends StatelessWidget {
         WasteLogStatus.rejected => AppStrings.verificationFailed,
       };
       return Scaffold(
-        appBar: const CustomAppBar(
+        appBar: CustomAppBar(
           title: AppStrings.activityDetailTitle,
           leading: LucideIcons.arrow_left,
         ),
@@ -90,7 +90,7 @@ class ActivityDetailPage extends StatelessWidget {
     final ActivityDemo activity = found ?? demoActivities.first;
 
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: AppStrings.activityDetailTitle,
         leading: LucideIcons.arrow_left,
       ),
@@ -164,7 +164,7 @@ class _RealStatusHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppSpacing.md),
-          const Expanded(
+          Expanded(
             child: Text(
               AppStrings.activityStatusTitle,
               style: AppTypography.labelLg,
@@ -208,7 +208,7 @@ class _StatusHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppSpacing.md),
-          const Expanded(
+          Expanded(
             child: Text(
               AppStrings.activityStatusTitle,
               style: AppTypography.labelLg,

@@ -34,7 +34,7 @@ class RewardDemo {
 }
 
 /// Daftar reward demo aplikasi.
-const List<RewardDemo> demoRewards = <RewardDemo>[
+final List<RewardDemo> demoRewards = <RewardDemo>[
   RewardDemo(
     id: '1',
     title: AppStrings.rewardSembako,

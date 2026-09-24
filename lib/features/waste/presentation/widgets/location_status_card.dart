@@ -77,7 +77,7 @@ class LocationStatusCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Text(
+                    Text(
                       AppStrings.wasteGpsTitle,
                       style: AppTypography.labelLg,
                     ),

@@ -28,7 +28,7 @@ class ArticleDetailPage extends StatelessWidget {
     final Article? real = article;
     if (real != null) {
       return Scaffold(
-        appBar: const CustomAppBar(
+        appBar: CustomAppBar(
           title: AppStrings.articleTitle,
           leading: LucideIcons.arrow_left,
         ),
@@ -78,7 +78,7 @@ class ArticleDetailPage extends StatelessWidget {
     final ArticleDemo demoArticle = found ?? demoArticles.first;
 
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: AppStrings.articleTitle,
         leading: LucideIcons.arrow_left,
       ),

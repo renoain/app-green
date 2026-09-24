@@ -21,14 +21,14 @@ class PhotoUploadContainer extends StatelessWidget {
   /// Membuat container upload foto.
   const PhotoUploadContainer({
     super.key,
-    this.label = AppStrings.takePhotoButton,
+    this.label,
     this.hint,
     this.hasPhoto = false,
     this.onTap,
   });
 
-  /// Label utama, default "Ambil Foto".
-  final String label;
+  /// Label utama (default Ambil Foto bahasa aktif).
+  final String? label;
 
   /// Hint tambahan opsional.
   final String? hint;
@@ -76,7 +76,9 @@ class PhotoUploadContainer extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                hasPhoto ? AppStrings.photoAttachedLabel : label,
+                hasPhoto
+                    ? AppStrings.photoAttachedLabel
+                    : label ?? AppStrings.takePhotoButton,
                 style: AppTypography.labelLg,
               ),
               if (hint != null) ...<Widget>[

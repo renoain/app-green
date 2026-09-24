@@ -107,7 +107,7 @@ class _AdminSettingsPageState extends ConsumerState<AdminSettingsPage> {
       await ref.read(adminSettingsProvider.notifier).save(values);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(AppStrings.adminSettingsSaved)),
+        SnackBar(content: Text(AppStrings.adminSettingsSaved)),
       );
     } on SettingsValidationException catch (e) {
       setState(() => _error = e.message);
@@ -154,7 +154,7 @@ class _AdminSettingsPageState extends ConsumerState<AdminSettingsPage> {
               child: ListView(
                 padding: const EdgeInsets.all(AppSpacing.md),
                 children: <Widget>[
-                  const Text(
+                  Text(
                     AppStrings.adminSettingsSecurityTitle,
                     style: AppTypography.headlineSm,
                   ),
@@ -167,7 +167,7 @@ class _AdminSettingsPageState extends ConsumerState<AdminSettingsPage> {
                   const SizedBox(height: AppSpacing.sm),
                   Row(
                     children: <Widget>[
-                      const Expanded(
+                      Expanded(
                         child: Text(
                           AppStrings.adminSettingsEnforceLabel,
                           style: AppTypography.labelLg,
@@ -181,7 +181,7 @@ class _AdminSettingsPageState extends ConsumerState<AdminSettingsPage> {
                     ],
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  const Text(
+                  Text(
                     AppStrings.adminSettingsMissionTitle,
                     style: AppTypography.headlineSm,
                   ),
@@ -204,7 +204,7 @@ class _AdminSettingsPageState extends ConsumerState<AdminSettingsPage> {
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  const Text(
+                  Text(
                     AppStrings.adminSettingsBonusTitle,
                     style: AppTypography.headlineSm,
                   ),
@@ -250,7 +250,7 @@ class _AdminSettingsPageState extends ConsumerState<AdminSettingsPage> {
                       borderRadius: BorderRadius.circular(AppRadius.lg),
                       border: Border.all(color: AppColors.borderLight),
                     ),
-                    child: const Text(
+                    child: Text(
                       AppStrings.adminSettingsPhaseNote,
                       style: AppTypography.bodySm,
                     ),

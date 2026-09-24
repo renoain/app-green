@@ -114,17 +114,17 @@ class _RewardDetailPageState extends ConsumerState<RewardDetailPage> {
   Widget build(BuildContext context) {
     if (!_isDemoId) {
       if (_loadingReal) {
-        return const Scaffold(
+        return Scaffold(
           appBar: CustomAppBar(
             title: AppStrings.rewardDetailTitle,
             leading: LucideIcons.arrow_left,
           ),
-          body: SafeArea(child: _RewardDetailSkeleton()),
+          body: const SafeArea(child: _RewardDetailSkeleton()),
         );
       }
       if (_failedReal || _real == null) {
         return Scaffold(
-          appBar: const CustomAppBar(
+          appBar: CustomAppBar(
             title: AppStrings.rewardDetailTitle,
             leading: LucideIcons.arrow_left,
           ),
@@ -134,7 +134,7 @@ class _RewardDetailPageState extends ConsumerState<RewardDetailPage> {
               children: <Widget>[
                 Text('$AppStrings.rewardDetailTitle', style: AppTypography.headlineSm),
                 const SizedBox(height: AppSpacing.md),
-                const Text(
+                Text(
                   AppStrings.genericError,
                   style: AppTypography.bodySm,
                   textAlign: TextAlign.center,
@@ -212,14 +212,14 @@ class _RewardDetailPageState extends ConsumerState<RewardDetailPage> {
     if (userId == null || !mounted) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(AppStrings.redeemNeedLogin)),
+        SnackBar(content: Text(AppStrings.redeemNeedLogin)),
       );
       context.pushNamed(AppRouteName.login);
       return;
     }
     if (stock <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(AppStrings.redeemOutOfStock)),
+        SnackBar(content: Text(AppStrings.redeemOutOfStock)),
       );
       return;
     }
@@ -227,7 +227,7 @@ class _RewardDetailPageState extends ConsumerState<RewardDetailPage> {
         ref.read(pointsNotifierProvider).valueOrNull?.totalPoints;
     if (saldo != null && saldo < pointCost) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(AppStrings.redeemInsufficientPoints)),
+        SnackBar(content: Text(AppStrings.redeemInsufficientPoints)),
       );
       return;
     }
@@ -249,7 +249,7 @@ class _RewardDetailPageState extends ConsumerState<RewardDetailPage> {
       if (!mounted) return;
       setState(() => _redeeming = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(AppStrings.redeemFailedMessage)),
+        SnackBar(content: Text(AppStrings.redeemFailedMessage)),
       );
       return;
     }
@@ -289,7 +289,7 @@ class _RewardDetailBody extends ConsumerWidget {
     final int shownBalance = saldo ?? 250;
     final bool notEnough = saldo != null && saldo < pointCost;
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: AppStrings.rewardDetailTitle,
         leading: LucideIcons.arrow_left,
       ),
@@ -323,7 +323,7 @@ class _RewardDetailBody extends ConsumerWidget {
                       children: <Widget>[
                         Text(title, style: AppTypography.headlineMd),
                         const SizedBox(height: AppSpacing.xs),
-                        const Text(
+                        Text(
                           AppStrings.rewardDetailCostLabel,
                           style: AppTypography.bodySm,
                         ),
@@ -350,7 +350,7 @@ class _RewardDetailBody extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: AppSpacing.lg),
-              const Text(
+              Text(
                 AppStrings.rewardBenefitLabel,
                 style: AppTypography.headlineSm,
               ),
@@ -358,7 +358,7 @@ class _RewardDetailBody extends ConsumerWidget {
               Text(description, style: AppTypography.bodyLg),
               if (userId != null && notEnough) ...<Widget>[
                 const SizedBox(height: AppSpacing.md),
-                const Text(
+                Text(
                   AppStrings.redeemInsufficientPoints,
                   style: AppTypography.bodySm,
                 ),

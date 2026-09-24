@@ -131,7 +131,7 @@ class _WastePageState extends ConsumerState<WastePage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text(AppStrings.wasteCheckpointEmpty)),
+          SnackBar(content: Text(AppStrings.wasteCheckpointEmpty)),
         );
       return;
     }
@@ -151,7 +151,7 @@ class _WastePageState extends ConsumerState<WastePage> {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(
-            const SnackBar(content: Text(AppStrings.wasteGpsOutOfRadius)),
+            SnackBar(content: Text(AppStrings.wasteGpsOutOfRadius)),
           );
         return;
       }
@@ -184,12 +184,12 @@ class _WastePageState extends ConsumerState<WastePage> {
         child: ListView(
           padding: const EdgeInsets.all(AppSpacing.md),
           children: <Widget>[
-            const Text(
+            Text(
               AppStrings.wasteTitle,
               style: AppTypography.headlineLg,
             ),
             const SizedBox(height: AppSpacing.lg),
-            const Text(
+            Text(
               AppStrings.wasteCheckpointTitle,
               style: AppTypography.headlineSm,
             ),
@@ -208,7 +208,7 @@ class _WastePageState extends ConsumerState<WastePage> {
                 ),
                 child: Row(
                   children: <Widget>[
-                    const Expanded(
+                    Expanded(
                       child: Text(
                         AppStrings.wasteCheckpointError,
                         style: AppTypography.bodySm,
@@ -225,7 +225,7 @@ class _WastePageState extends ConsumerState<WastePage> {
               const SizedBox(height: AppSpacing.md),
             ],
             if (checkpoints.isEmpty) ...<Widget>[
-              const Text(
+              Text(
                 AppStrings.wasteCheckpointEmpty,
                 style: AppTypography.bodySm,
                 textAlign: TextAlign.center,
@@ -271,7 +271,7 @@ class _WastePageState extends ConsumerState<WastePage> {
                   size: 18,
                   color: AppColors.primary,
                 ),
-                label: const Text(AppStrings.wasteScanHint),
+                label: Text(AppStrings.wasteScanHint),
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -280,7 +280,7 @@ class _WastePageState extends ConsumerState<WastePage> {
               onPressed: () => _takePhoto(selected, debug),
             ),
             const SizedBox(height: AppSpacing.xl),
-            const Text(
+            Text(
               AppStrings.gpsDisclaimerHint,
               style: AppTypography.bodySm,
               textAlign: TextAlign.center,
@@ -381,10 +381,10 @@ class _GpsSection extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppRadius.lg),
           border: Border.all(color: AppColors.borderLight),
         ),
-        child: const Row(
+        child: Row(
           children: <Widget>[
-            LoadingIndicator(),
-            SizedBox(width: AppSpacing.md),
+            const LoadingIndicator(),
+            const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Text(
                 AppStrings.loading,
@@ -407,7 +407,7 @@ class _GpsSection extends StatelessWidget {
         ),
         child: Row(
           children: <Widget>[
-            const Expanded(
+            Expanded(
               child: Text(
                 AppStrings.wastePositionFailed,
                 style: AppTypography.bodySm,

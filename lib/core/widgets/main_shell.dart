@@ -70,7 +70,7 @@ class _MainShellState extends State<MainShell> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        const SnackBar(content: Text(AppStrings.backToExitHint)),
+        SnackBar(content: Text(AppStrings.backToExitHint)),
       );
   }
 

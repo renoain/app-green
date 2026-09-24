@@ -37,22 +37,22 @@ class ManageSettingsUsecase {
   /// Validasi nilai form pengaturan.
   void validate(AppSettingsValues values) {
     if (values.gpsRadiusMeters < 10 || values.gpsRadiusMeters > 1000) {
-      throw const SettingsValidationException(
+      throw SettingsValidationException(
         AppStrings.adminSettingsRadiusInvalid,
       );
     }
     if (values.maxWasteLogsPerDay < 1 || values.maxWasteLogsPerDay > 20) {
-      throw const SettingsValidationException(
+      throw SettingsValidationException(
         AppStrings.adminSettingsRateInvalid,
       );
     }
     if (values.weeklyMissionTarget < 1 || values.weeklyMissionTarget > 30) {
-      throw const SettingsValidationException(
+      throw SettingsValidationException(
         AppStrings.adminSettingsTargetInvalid,
       );
     }
     if (values.maxPhotoMb < 1 || values.maxPhotoMb > 10) {
-      throw const SettingsValidationException(
+      throw SettingsValidationException(
         AppStrings.adminSettingsPhotoInvalid,
       );
     }
@@ -63,7 +63,7 @@ class ManageSettingsUsecase {
       values.bonusB3,
     ]) {
       if (bonus < 0 || bonus > 50) {
-        throw const SettingsValidationException(
+        throw SettingsValidationException(
           AppStrings.adminSettingsBonusInvalid,
         );
       }

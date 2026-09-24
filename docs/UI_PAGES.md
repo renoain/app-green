@@ -341,8 +341,9 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   - Voucher Saya (route /vouchers): daftar redemptions asli + status,
     empty state bila kosong, notice login bila tamu.
   - Pengaturan (route /settings): menu akun, toggle Notifikasi dan Mode
-    Gelap (lokal), versi aplikasi, dialog Tentang Go Green. Mode Gelap
-    diterapkan pada fase berikutnya.
+    Gelap (lokal), pemilih Bahasa Indonesia/Inggris (tersimpan permanen,
+    langsung diterapkan), versi aplikasi, dialog Tentang Go Green.
+    Mode Gelap diterapkan pada fase berikutnya.
 - Catatan: bahwa status login dibaca dari authNotifierProvider (Supabase  Auth); stat login pakai pointsNotifier (saldo) + wasteRepository (hitungan buang) + AnimatedSwitcher 300ms + pull-to-refresh, fallback placeholder bila tamu/gagal. Logout menyimpan ke mode tamu
   dan kembali ke Home (notice login muncul kembali). Logout lanjutan
   (konfirmasi, hapus sesi device, sync) dicatat sebagai task fase berikutnya.

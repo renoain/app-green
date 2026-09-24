@@ -152,7 +152,7 @@ class _AdminCheckpointFormPageState
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Text(AppStrings.verificationLocationFailed),
             ),
           );
@@ -343,7 +343,7 @@ class _AdminCheckpointFormPageState
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(AppStrings.adminCheckpointSaved),
           ),
         );
@@ -359,7 +359,7 @@ class _AdminCheckpointFormPageState
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text(AppStrings.genericError)),
+          SnackBar(content: Text(AppStrings.genericError)),
         );
     } finally {
       if (mounted) setState(() => _saving = false);
@@ -378,14 +378,14 @@ class _AdminCheckpointFormPageState
       ),
       body: isAdmin.when(
         loading: () => const Center(child: LoadingIndicator()),
-        error: (_, __) => const Center(
+        error: (_, __) => Center(
           child: Text(AppStrings.adminAccessDenied),
         ),
         data: (bool allowed) {
           if (!allowed) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(AppSpacing.lg),
+                padding: const EdgeInsets.all(AppSpacing.lg),
                 child: Text(AppStrings.adminAccessDenied),
               ),
             );
@@ -417,7 +417,7 @@ class _AdminCheckpointFormPageState
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.md),
             children: <Widget>[
-              const Text(
+              Text(
                 AppStrings.adminMapHint,
                 style: AppTypography.bodySm,
               ),
@@ -441,12 +441,12 @@ class _AdminCheckpointFormPageState
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(LucideIcons.locate_fixed, size: 16),
-                    label: const Text(AppStrings.adminUseMyLocation),
+                    label: Text(AppStrings.adminUseMyLocation),
                   ),
                   TextButton.icon(
                     onPressed: _openFullMap,
                     icon: const Icon(LucideIcons.map, size: 16),
-                    label: const Text(AppStrings.adminPickOnMap),
+                    label: Text(AppStrings.adminPickOnMap),
                   ),
                 ],
               ),
@@ -490,14 +490,14 @@ class _AdminCheckpointFormPageState
               const SizedBox(height: AppSpacing.sm),
               TextField(
                 controller: _subdistrictController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: AppStrings.adminSubdistrictLabel,
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
               TextField(
                 controller: _nameController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: AppStrings.adminCheckpointNameLabel,
                   hintText: AppStrings.adminCheckpointNameHint,
                 ),
@@ -505,7 +505,7 @@ class _AdminCheckpointFormPageState
               const SizedBox(height: AppSpacing.sm),
               TextField(
                 controller: _addressController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: AppStrings.adminCheckpointAddressLabel,
                 ),
               ),
@@ -520,7 +520,7 @@ class _AdminCheckpointFormPageState
                         signed: true,
                         decimal: true,
                       ),
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: AppStrings.adminCheckpointLatLabel,
                       ),
                       onChanged: (_) => setState(() {}),
@@ -535,7 +535,7 @@ class _AdminCheckpointFormPageState
                         signed: true,
                         decimal: true,
                       ),
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: AppStrings.adminCheckpointLngLabel,
                       ),
                       onChanged: (_) => setState(() {}),
@@ -547,7 +547,7 @@ class _AdminCheckpointFormPageState
               TextField(
                 controller: _radiusController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: AppStrings.adminCheckpointRadiusLabel,
                 ),
               ),
@@ -590,7 +590,7 @@ class _QrPreviewSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const Text(
+          Text(
             AppStrings.adminQrPreviewTitle,
             style: AppTypography.labelLg,
           ),
@@ -613,7 +613,7 @@ class _QrPreviewSection extends StatelessWidget {
               ],
             )
           else
-            const Text(
+            Text(
               AppStrings.adminQrAutoNote,
               style: AppTypography.bodySm,
             ),

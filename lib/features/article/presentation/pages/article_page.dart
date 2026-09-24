@@ -87,7 +87,7 @@ class _ArticlePageState extends ConsumerState<ArticlePage> {
     final bool isReal = articleState.valueOrNull?.isNotEmpty ?? false;
 
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: AppStrings.articleTitle,
         leading: LucideIcons.arrow_left,
       ),
@@ -102,7 +102,7 @@ class _ArticlePageState extends ConsumerState<ArticlePage> {
             ),
             const SizedBox(height: AppSpacing.md),
             if (filtered.isEmpty)
-              const EmptyState(
+              EmptyState(
                 icon: LucideIcons.search,
                 title: AppStrings.articleNoResultsTitle,
                 message: AppStrings.articleNoResultsMessage,

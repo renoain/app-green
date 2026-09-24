@@ -111,7 +111,7 @@ class TpsCard extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: onEdit,
                   icon: const Icon(LucideIcons.pencil, size: 16),
-                  label: const Text(AppStrings.adminEditTps),
+                  label: Text(AppStrings.adminEditTps),
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
@@ -124,9 +124,9 @@ class TpsCard extends StatelessWidget {
                           size: 16,
                           color: AppColors.error,
                         ),
-                        label: const Text(
+                        label: Text(
                           AppStrings.adminDeactivate,
-                          style: TextStyle(color: AppColors.error),
+                          style: const TextStyle(color: AppColors.error),
                         ),
                       )
                     : OutlinedButton.icon(
@@ -136,10 +136,10 @@ class TpsCard extends StatelessWidget {
                           size: 16,
                           color: AppColors.primary,
                         ),
-                        label: const Text(
+                        label: Text(
                           AppStrings.adminActivate,
                           style:
-                              TextStyle(color: AppColors.primary),
+                              const TextStyle(color: AppColors.primary),
                         ),
                       ),
               ),

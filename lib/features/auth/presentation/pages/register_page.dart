@@ -150,9 +150,9 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(AppStrings.googleBrowserHint),
-          duration: Duration(seconds: 5),
+          duration: const Duration(seconds: 5),
         ),
       );
     final AuthRepository repository = ref.read(authRepositoryProvider);
@@ -210,12 +210,12 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                       color: AppColors.primary,
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    const Text(
+                    Text(
                       AppStrings.registerTitle,
                       style: AppTypography.headlineXl,
                     ),
                     const SizedBox(height: AppSpacing.xs),
-                    const Text(
+                    Text(
                       AppStrings.registerSubtitle,
                       style: AppTypography.bodyMd,
                     ),
@@ -281,11 +281,11 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                       onPressed: _isLoading ? null : _handleRegister,
                     ),
                     const SizedBox(height: AppSpacing.lg),
-                    const Row(
+                    Row(
                       children: <Widget>[
-                        Expanded(child: Divider(color: AppColors.border)),
+                        const Expanded(child: Divider(color: AppColors.border)),
                         Padding(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: AppSpacing.md,
                           ),
                           child: Text(
@@ -293,7 +293,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                             style: AppTypography.labelMd,
                           ),
                         ),
-                        Expanded(child: Divider(color: AppColors.border)),
+                        const Expanded(child: Divider(color: AppColors.border)),
                       ],
                     ),
                     const SizedBox(height: AppSpacing.lg),

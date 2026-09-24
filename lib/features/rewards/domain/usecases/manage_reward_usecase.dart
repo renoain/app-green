@@ -32,17 +32,17 @@ class ManageRewardUsecase {
     required int stock,
   }) {
     if (name.trim().isEmpty) {
-      throw const RewardValidationException(
+      throw RewardValidationException(
         AppStrings.adminRewardNameEmpty,
       );
     }
     if (pointsCost <= 0) {
-      throw const RewardValidationException(
+      throw RewardValidationException(
         AppStrings.adminRewardCostInvalid,
       );
     }
     if (stock < 0) {
-      throw const RewardValidationException(
+      throw RewardValidationException(
         AppStrings.adminRewardStockInvalid,
       );
     }

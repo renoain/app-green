@@ -91,7 +91,7 @@ class _AdminWasteVerificationPageState
                     .read(adminWasteListProvider.notifier)
                     .filtered(filter);
                 if (items.isEmpty) {
-                  return const EmptyState(
+                  return EmptyState(
                     icon: LucideIcons.shield_check,
                     title: AppStrings.adminVerificationEmpty,
                     message: AppStrings.adminVerificationEmpty,

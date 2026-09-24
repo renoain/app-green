@@ -169,7 +169,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     final int totalPoints = realPoints ?? _demoTotalPoints;
     final List<({IconData icon, String value, String label})> stats =
         summary == null
-            ? const <({IconData icon, String value, String label})>[
+            ? <({IconData icon, String value, String label})>[
                 (
                   icon: LucideIcons.trash,
                   value: AppStrings.homeStatWasteValue,
@@ -303,8 +303,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
               ),
             ] else if (realLogs.isEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
                 child: Text(
                   AppStrings.homeActivityEmpty,
                   style: AppTypography.bodySm,
@@ -413,7 +413,7 @@ class _HomeHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text(
+              Text(
                 AppStrings.greeting,
                 style: AppTypography.bodySm,
               ),
@@ -816,7 +816,7 @@ class _PointsSummaryCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         AppStrings.homeExchangeReward,
                         style: AppTypography.labelSm,
                       ),
@@ -846,7 +846,7 @@ class _PointsSummaryCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         AppStrings.homeViewHistory,
                         style: AppTypography.labelSm,
                       ),
@@ -974,15 +974,15 @@ class _MissionCard extends StatelessWidget {
         children: <Widget>[
           Row(
             children: <Widget>[
-              const Expanded(
+              Expanded(
                 child: Row(
                   children: <Widget>[
-                    Icon(
+                    const Icon(
                       LucideIcons.activity,
                       size: 16,
                       color: AppColors.primary,
                     ),
-                    SizedBox(width: AppSpacing.xs),
+                    const SizedBox(width: AppSpacing.xs),
                     Text(
                       AppStrings.homeMissionTitle,
                       style: AppTypography.labelLg,
@@ -994,7 +994,7 @@ class _MissionCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.xs),
-          const Text(
+          Text(
             AppStrings.homeMissionDesc,
             style: AppTypography.bodySm,
           ),
@@ -1045,7 +1045,7 @@ class _ActivityTile extends StatelessWidget {
     required this.time,
     required this.points,
     required this.onTap,
-    this.statusLabel = AppStrings.homeVerifiedLabel,
+    this.statusLabel,
   });
 
   /// Ikon aktivitas.
@@ -1063,8 +1063,8 @@ class _ActivityTile extends StatelessWidget {
   /// Aksi saat ditekan.
   final VoidCallback onTap;
 
-  /// Label chip status.
-  final String statusLabel;
+  /// Label chip status (default label Terverifikasi bahasa aktif).
+  final String? statusLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -1127,7 +1127,7 @@ class _ActivityTile extends StatelessWidget {
                       borderRadius: BorderRadius.circular(AppRadius.full),
                     ),
                     child: Text(
-                      statusLabel,
+                      statusLabel ?? AppStrings.homeVerifiedLabel,
                       style: AppTypography.labelSm,
                     ),
                   ),

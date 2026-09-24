@@ -27,7 +27,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
-  static const List<_OnboardingSlide> _slides = <_OnboardingSlide>[
+  static final List<_OnboardingSlide> _slides = <_OnboardingSlide>[
     _OnboardingSlide(
       icon: LucideIcons.recycle,
       title: AppStrings.onboardingTitle1,
@@ -83,7 +83,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 ),
                 child: TextButton(
                   onPressed: _goToHome,
-                  child: const Text(AppStrings.onboardingSkip),
+                  child: Text(AppStrings.onboardingSkip),
                 ),
               ),
             ),

@@ -233,7 +233,8 @@ Pisahkan tiap grup dengan baris kosong. Urutkan alfabetis dalam grup.
 
 - Tangkap error di layer data dan domain.
 - Gunakan Result/Either pattern atau exception terstruktur.
-- Tampilkan pesan ramah Bahasa Indonesia di presentation.
+- Tampilkan pesan ramah via AppStrings (mengikuti bahasa aktif) di
+  presentation.
 - Log error dengan logger.
 - Dilarang print() di produksi.
 - Error yang belum tertangani dicatat di CHANGELOG dengan status
@@ -251,6 +252,23 @@ Setiap penambahan dependency wajib:
 4. Ada minimal 1 alternatif yang dievaluasi.
 5. Lisensi aman (MIT, Apache, BSD).
 6. Aktif dipelihara (release di bawah 12 bulan terakhir).
+
+Evaluasi lokalisasi (PROTOCOL Bagian C): flutter_localizations (paket
+SDK resmi, tanpa beban baru) dipakai untuk delegate Material;
+intl 0.19.0 -> 0.20.3 mengikuti syarat SDK tersebut; alternatif
+slang/intl_utils DITOLAK (API AppStrings map bawaan cukup, tanpa
+codegen).
+
+## 8a. Lokalisasi (ID/EN)
+
+- Seluruh string UI di AppStrings sebagai getter runtime (`_t(kunci)`)
+  dengan map `_id`/`_en`; API pemanggil tidak berubah, tetapi widget
+  berisi string dilarang `const`.
+- Bahasa aktif: `AppStrings.locale` + `localeProvider`, tersimpan di
+  SharedPreferences, dimuat sebelum runApp, diterapkan ke MaterialApp
+  (didukung flutter_localizations SDK + intl 0.20.3).
+- String baru wajib menambah kunci + teks ID + teks EN sekaligus.
+- Format angka/tanggal (formatters) masih Indonesia (fase lanjut).
 
 Dependency yang tidak memenuhi syarat DILARANG dipakai.
 

@@ -71,7 +71,7 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
     showDialog<void>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: const Text(AppStrings.verificationHashLabel),
+        title: Text(AppStrings.verificationHashLabel),
         content: SelectableText(hash),
         actions: <Widget>[
           AppTextButton(
@@ -91,7 +91,7 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text(AppStrings.genericError)),
+          SnackBar(content: Text(AppStrings.genericError)),
         );
       return;
     }
@@ -101,7 +101,7 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text(AppStrings.wasteCheckpointEmpty)),
+          SnackBar(content: Text(AppStrings.wasteCheckpointEmpty)),
         );
       return;
     }
@@ -112,7 +112,7 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(AppStrings.verificationLocationFailed),
           ),
         );
@@ -124,7 +124,7 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text(AppStrings.wasteNeedLogin)),
+          SnackBar(content: Text(AppStrings.wasteNeedLogin)),
         );
       context.pushNamed(AppRouteName.login);
       return;
@@ -155,7 +155,7 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text(AppStrings.genericError)),
+          SnackBar(content: Text(AppStrings.genericError)),
         );
       return;
     }
@@ -210,13 +210,13 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
     final AsyncValue<dynamic> submitState =
         ref.watch(wasteSubmitNotifierProvider);
     final bool submitting = submitState.isLoading;
-    const String hashValue = AppStrings.verificationHashDemo;
+    final String hashValue = AppStrings.verificationHashDemo;
     final int estimatedPoints = ref
         .watch(calculatePointsUsecaseProvider)
         .calculate(category: _selectedCategory);
 
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: AppStrings.verificationTitle,
         leading: LucideIcons.arrow_left,
       ),
@@ -240,7 +240,7 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
                   ),
                 ),
                 const SizedBox(width: AppSpacing.md),
-                const Expanded(
+                Expanded(
                   child: Text(
                     AppStrings.verificationSuccess,
                     style: AppTypography.headlineSm,
@@ -249,7 +249,7 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
               ],
             ),
             const SizedBox(height: AppSpacing.md),
-            const StatusChip(
+            StatusChip(
               label: AppStrings.verificationSuccess,
               type: StatusType.success,
             ),
@@ -259,7 +259,7 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
               timestampLabel: timestampValue,
             ),
             const SizedBox(height: AppSpacing.lg),
-            const Text(
+            Text(
               AppStrings.wasteCategoryTitle,
               style: AppTypography.headlineSm,
             ),
@@ -295,7 +295,7 @@ class _VerificationPageState extends ConsumerState<VerificationPage> {
               label: AppStrings.verificationPointsLabel,
               value: '+${formatIndonesianNumber(estimatedPoints)}',
             ),
-            const _DetailRow(
+            _DetailRow(
               icon: LucideIcons.shield_check,
               label: AppStrings.verificationHashLabel,
               value: AppStrings.verificationHashDemo,
@@ -401,15 +401,15 @@ class _PhotoPreview extends StatelessWidget {
         fit: StackFit.expand,
         children: <Widget>[
           if (path == null)
-            const Column(
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Icon(
+                const Icon(
                   LucideIcons.camera,
                   size: 40,
                   color: AppColors.primary,
                 ),
-                SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.sm),
                 Text(
                   AppStrings.verificationTitle,
                   style: AppTypography.bodySm,

@@ -43,16 +43,16 @@ class _AdminCheckpointPageState extends ConsumerState<AdminCheckpointPage> {
     final bool? confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: const Text(AppStrings.adminDeactivateTitle),
+        title: Text(AppStrings.adminDeactivateTitle),
         content: Text(checkpoint.name),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text(AppStrings.cancelButton),
+            child: Text(AppStrings.cancelButton),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text(AppStrings.adminDeactivate),
+            child: Text(AppStrings.adminDeactivate),
           ),
         ],
       ),
@@ -71,7 +71,7 @@ class _AdminCheckpointPageState extends ConsumerState<AdminCheckpointPage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(AppStrings.adminCheckpointDeleted),
           ),
         );
@@ -80,7 +80,7 @@ class _AdminCheckpointPageState extends ConsumerState<AdminCheckpointPage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text(AppStrings.genericError)),
+          SnackBar(content: Text(AppStrings.genericError)),
         );
     }
   }
@@ -89,16 +89,16 @@ class _AdminCheckpointPageState extends ConsumerState<AdminCheckpointPage> {
     final bool? confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: const Text(AppStrings.adminActivate),
+        title: Text(AppStrings.adminActivate),
         content: Text(checkpoint.name),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text(AppStrings.cancelButton),
+            child: Text(AppStrings.cancelButton),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text(AppStrings.adminActivate),
+            child: Text(AppStrings.adminActivate),
           ),
         ],
       ),
@@ -117,7 +117,7 @@ class _AdminCheckpointPageState extends ConsumerState<AdminCheckpointPage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(AppStrings.adminCheckpointSaved),
           ),
         );
@@ -126,7 +126,7 @@ class _AdminCheckpointPageState extends ConsumerState<AdminCheckpointPage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text(AppStrings.genericError)),
+          SnackBar(content: Text(AppStrings.genericError)),
         );
     }
   }
@@ -157,7 +157,7 @@ class _AdminCheckpointPageState extends ConsumerState<AdminCheckpointPage> {
           }
         },
         icon: const Icon(LucideIcons.plus),
-        label: const Text(AppStrings.adminAddTps),
+        label: Text(AppStrings.adminAddTps),
       ),
       body: Column(
         children: <Widget>[
@@ -183,7 +183,7 @@ class _AdminCheckpointPageState extends ConsumerState<AdminCheckpointPage> {
               0,
             ),
             child: ExpansionTile(
-              title: const Text(AppStrings.adminRegionFilterTitle),
+              title: Text(AppStrings.adminRegionFilterTitle),
               tilePadding: EdgeInsets.zero,
               children: <Widget>[
                 RegionPickerDropdown(
@@ -221,7 +221,7 @@ class _AdminCheckpointPageState extends ConsumerState<AdminCheckpointPage> {
                       districtCode: districtFilter,
                     );
                 if (items.isEmpty) {
-                  return const EmptyState(
+                  return EmptyState(
                     icon: LucideIcons.map_pin,
                     title: AppStrings.adminCheckpointEmpty,
                     message: AppStrings.adminSearchTpsHint,

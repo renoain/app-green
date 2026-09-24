@@ -75,7 +75,7 @@ class _VouchersPageState extends ConsumerState<VouchersPage> {
     final String? userId = SupabaseService.instance.currentUser?.id;
     if (userId == null) {
       return Scaffold(
-        appBar: const CustomAppBar(
+        appBar: CustomAppBar(
           title: AppStrings.voucherTitle,
           leading: LucideIcons.arrow_left,
         ),
@@ -99,7 +99,7 @@ class _VouchersPageState extends ConsumerState<VouchersPage> {
     final AsyncValue<List<Redemption>> state =
         ref.watch(userVouchersProvider);
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: AppStrings.voucherTitle,
         leading: LucideIcons.arrow_left,
       ),
@@ -128,7 +128,7 @@ class _VouchersPageState extends ConsumerState<VouchersPage> {
                 onRefresh: _reload,
                 child: ListView(
                   padding: const EdgeInsets.all(AppSpacing.md),
-                  children: const <Widget>[
+                  children: <Widget>[
                     EmptyState(
                       icon: LucideIcons.ticket,
                       title: AppStrings.voucherTitle,

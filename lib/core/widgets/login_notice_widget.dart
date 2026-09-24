@@ -19,14 +19,14 @@ class LoginNoticeCard extends StatelessWidget {
     required this.message,
     required this.onLogin,
     this.onDismiss,
-    this.actionLabel = AppStrings.homeLoginNoticeAction,
+    this.actionLabel,
   });
 
   /// Teks pesan notice.
   final String message;
 
-  /// Label aksi login.
-  final String actionLabel;
+  /// Label aksi login (default label Masuk sesuai bahasa aktif).
+  final String? actionLabel;
 
   /// Aksi saat tombol login ditekan.
   final VoidCallback onLogin;
@@ -60,7 +60,7 @@ class LoginNoticeCard extends StatelessWidget {
             ),
           ),
           AppTextButton(
-            text: actionLabel,
+            text: actionLabel ?? AppStrings.homeLoginNoticeAction,
             onPressed: onLogin,
           ),
           if (onDismiss != null) ...<Widget>[

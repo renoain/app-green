@@ -39,7 +39,9 @@ bekerja di project ini. Semua aturan di sini mengikat selama project berjalan.
 
 ### Aturan Umum
 
-- Bahasa komunikasi: Bahasa Indonesia. Kode: Bahasa Inggris.
+- Bahasa komunikasi: Bahasa Indonesia. Kode: Bahasa Inggris. String UI:
+  dwibahasa ID/EN via AppStrings (setiap kunci wajib ada teks Indonesia
+  dan Inggris; widget berisi string dilarang const).
 - Dilarang emoji di kode, komentar, dokumentasi, commit.
 - Jangan menulis secret di kode/log/docs. Pakai .env, commit hanya .env.example.
 - Tanya sebelum berasumsi pada keputusan penting.
@@ -194,7 +196,7 @@ Aturan:
 ## Bagian J: Error Handling & Logging
 
 - Error handling: tangkap error di service/domain, tampilkan pesan ramah
-  Bahasa Indonesia di UI.
+  via AppStrings (mengikuti bahasa aktif) di UI.
 - Jangan biarkan error mentah muncul ke user.
 - Logging: pakai package logger (lihat lib/core/utils/logger.dart).
 - Dilarang print() di produksi.
@@ -222,7 +224,8 @@ Setiap task selesai wajib dicek:
 - CHANGELOG.md updated di paling atas.
 - Docs terkait diperbarui jika ada perubahan
   struktur/token/arsitektur/stack.
-- String UI Bahasa Indonesia. Kode Bahasa Inggris. Tidak ada emoji.
+- String UI dwibahasa ID/EN via AppStrings. Kode Bahasa Inggris.
+  Tidak ada emoji.
 - Tidak ada hardcode warna/spacing/radius/string yang seharusnya token.
 - Tidak ada secret tercommit.
 

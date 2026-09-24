@@ -2,9 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/localization/app_locale.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
@@ -17,15 +19,15 @@ import '../../../../core/widgets/display_widgets.dart';
 ///
 /// Berisi menu akun (edit profil), preferensi notifikasi, serta informasi
 /// aplikasi.
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends ConsumerStatefulWidget {
   /// Membuat halaman pengaturan.
   const SettingsPage({super.key});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  ConsumerState<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends ConsumerState<SettingsPage> {
   bool _notificationEnabled = true;
 
   void _showAbout() {
@@ -40,7 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: AppStrings.settings,
         leading: LucideIcons.arrow_left,
       ),
@@ -67,6 +69,8 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
             const SizedBox(height: AppSpacing.md),
+            _sectionTitle(AppStrings.settingsLanguage),
+            _buildLanguageTile(),
             const SizedBox(height: AppSpacing.lg),
             _sectionTitle(AppStrings.settingsInfoTitle),
             ListTileItem(
@@ -84,6 +88,72 @@ class _SettingsPageState extends State<SettingsPage> {
               icon: LucideIcons.heart_handshake,
               title: AppStrings.settingsAbout,
               onTap: _showAbout,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLanguageTile() {
+    final Locale locale = ref.watch(localeProvider);
+    final bool isEnglish =
+        locale.languageCode == AppLanguages.english;
+    return Material(
+      color: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(color: AppColors.borderLight),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: <Widget>[
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppColors.tertiaryLight,
+                borderRadius: BorderRadius.circular(AppRadius.md),
+              ),
+              child: const Icon(
+                LucideIcons.languages,
+                size: 20,
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Text(
+                isEnglish
+                    ? AppStrings.languageEnglish
+                    : AppStrings.languageIndonesian,
+                style: AppTypography.labelLg,
+              ),
+            ),
+            SegmentedButton<bool>(
+              segments: <ButtonSegment<bool>>[
+                ButtonSegment<bool>(
+                  value: false,
+                  label: Text(AppStrings.languageIndonesian),
+                ),
+                ButtonSegment<bool>(
+                  value: true,
+                  label: Text(AppStrings.languageEnglish),
+                ),
+              ],
+              selected: <bool>{isEnglish},
+              onSelectionChanged: (Set<bool> selected) {
+                final bool english = selected.first;
+                setAppLocale(
+                  ref,
+                  Locale(
+                    english
+                        ? AppLanguages.english
+                        : AppLanguages.indonesian,
+                  ),
+                );
+              },
             ),
           ],
         ),

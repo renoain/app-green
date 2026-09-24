@@ -34,7 +34,7 @@ Future<void> showCheckpointQrDialog(
           const SizedBox(height: AppSpacing.sm),
           Text(code, style: AppTypography.labelLg),
           const SizedBox(height: AppSpacing.xs),
-          const Text(
+          Text(
             AppStrings.adminQrPrintHint,
             style: AppTypography.bodySm,
             textAlign: TextAlign.center,
@@ -44,7 +44,7 @@ Future<void> showCheckpointQrDialog(
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.of(ctx).pop(),
-          child: const Text(AppStrings.closeButton),
+          child: Text(AppStrings.closeButton),
         ),
       ],
     ),

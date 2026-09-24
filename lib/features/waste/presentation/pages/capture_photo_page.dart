@@ -131,7 +131,7 @@ class _CapturePhotoPageState extends State<CapturePhotoPage> {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              const SnackBar(content: Text(AppStrings.wasteGpsOutOfRadius)),
+              SnackBar(content: Text(AppStrings.wasteGpsOutOfRadius)),
             );
           return;
         }
@@ -161,7 +161,7 @@ class _CapturePhotoPageState extends State<CapturePhotoPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(const SnackBar(content: Text(AppStrings.genericError)));
+        ..showSnackBar(SnackBar(content: Text(AppStrings.genericError)));
     }
   }
 
@@ -230,7 +230,7 @@ class _CapturePhotoPageState extends State<CapturePhotoPage> {
 
   Widget _buildFallback({required String message}) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: AppStrings.captureTitle,
         leading: LucideIcons.arrow_left,
       ),

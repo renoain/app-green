@@ -51,7 +51,7 @@ class ValidatePhotoUsecase {
     required double radiusMeters,
   }) async {
     if (await _wasteRepository.checkDuplicateHash(hash)) {
-      throw const WasteValidationException(AppStrings.errorPhotoDuplicate);
+      throw WasteValidationException(AppStrings.errorPhotoDuplicate);
     }
 
     final double distance = _distanceMeters(
@@ -63,12 +63,12 @@ class ValidatePhotoUsecase {
     // Penegakan radius + batas harian mengikuti pengaturan admin
     // (AppConfig, fallback AppValues).
     if (AppConfig.enforceGpsRadius && distance > radiusMeters) {
-      throw const WasteValidationException(AppStrings.errorGpsOutOfRange);
+      throw WasteValidationException(AppStrings.errorGpsOutOfRange);
     }
 
     final int todayCount = await _wasteRepository.countTodayWasteLogs(userId);
     if (todayCount >= AppConfig.maxWasteLogsPerDay) {
-      throw const WasteValidationException(AppStrings.errorRateLimitReached);
+      throw WasteValidationException(AppStrings.errorRateLimitReached);
     }
   }
 

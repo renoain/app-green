@@ -22,16 +22,16 @@ Future<bool> ensureLocationReady(BuildContext context) async {
     final bool? open = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) => AlertDialog(
-        title: const Text(AppStrings.adminEnableLocationTitle),
-        content: const Text(AppStrings.adminEnableLocationMessage),
+        title: Text(AppStrings.adminEnableLocationTitle),
+        content: Text(AppStrings.adminEnableLocationMessage),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text(AppStrings.cancelButton),
+            child: Text(AppStrings.cancelButton),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text(AppStrings.adminOpenSettings),
+            child: Text(AppStrings.adminOpenSettings),
           ),
         ],
       ),
@@ -51,7 +51,7 @@ Future<bool> ensureLocationReady(BuildContext context) async {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(AppStrings.verificationLocationFailed),
         ),
       );
@@ -62,16 +62,16 @@ Future<bool> ensureLocationReady(BuildContext context) async {
     final bool? open = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) => AlertDialog(
-        title: const Text(AppStrings.adminLocationPermissionTitle),
-        content: const Text(AppStrings.adminLocationPermissionMessage),
+        title: Text(AppStrings.adminLocationPermissionTitle),
+        content: Text(AppStrings.adminLocationPermissionMessage),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text(AppStrings.cancelButton),
+            child: Text(AppStrings.cancelButton),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text(AppStrings.adminOpenSettings),
+            child: Text(AppStrings.adminOpenSettings),
           ),
         ],
       ),

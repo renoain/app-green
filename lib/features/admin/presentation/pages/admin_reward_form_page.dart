@@ -139,7 +139,7 @@ class _AdminRewardFormPageState extends ConsumerState<AdminRewardFormPage> {
             const SizedBox(height: AppSpacing.md),
             Row(
               children: <Widget>[
-                const Expanded(
+                Expanded(
                   child: Text(
                     AppStrings.adminRewardActiveSwitch,
                     style: AppTypography.labelLg,

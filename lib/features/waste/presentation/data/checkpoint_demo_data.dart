@@ -25,7 +25,7 @@ class CheckpointDemo {
 }
 
 /// Daftar checkpoint demo.
-const List<CheckpointDemo> demoCheckpoints = <CheckpointDemo>[
+final List<CheckpointDemo> demoCheckpoints = <CheckpointDemo>[
   CheckpointDemo(
     name: AppStrings.wasteCheckpointTps,
     address: AppStrings.wasteCheckpointTpsAddress,

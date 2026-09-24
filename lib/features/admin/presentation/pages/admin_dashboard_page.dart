@@ -94,7 +94,7 @@ class AdminDashboardPage extends ConsumerWidget {
                         color: AppColors.primary,
                       ),
                       const SizedBox(width: AppSpacing.sm),
-                      const Expanded(
+                      Expanded(
                         child: Text(
                           AppStrings.adminPointsCirculating,
                           style: AppTypography.labelLg,
@@ -115,7 +115,7 @@ class AdminDashboardPage extends ConsumerWidget {
                     AppRouteName.adminCheckpointNew,
                   ),
                   icon: const Icon(LucideIcons.plus, size: 18),
-                  label: const Text(AppStrings.adminAddTps),
+                  label: Text(AppStrings.adminAddTps),
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 OutlinedButton.icon(
@@ -157,20 +157,20 @@ class _WeeklyChartCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const Text(
+          Text(
             AppStrings.adminChartTitle,
             style: AppTypography.labelLg,
           ),
           const SizedBox(height: AppSpacing.md),
           chart.when(
             loading: () => const Center(child: LoadingIndicator()),
-            error: (_, __) => const Text(
+            error: (_, __) => Text(
               AppStrings.adminChartEmpty,
               style: AppTypography.bodySm,
             ),
             data: (List<DailyWasteCount> days) {
               if (days.every((DailyWasteCount d) => d.count == 0)) {
-                return const Text(
+                return Text(
                   AppStrings.adminChartEmpty,
                   style: AppTypography.bodySm,
                 );

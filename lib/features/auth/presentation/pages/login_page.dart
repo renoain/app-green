@@ -98,9 +98,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(AppStrings.googleBrowserHint),
-          duration: Duration(seconds: 5),
+          duration: const Duration(seconds: 5),
         ),
       );
     final AuthRepository repository = ref.read(authRepositoryProvider);
@@ -152,7 +152,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        const SnackBar(content: Text(AppStrings.menuNotAvailable)),
+        SnackBar(content: Text(AppStrings.menuNotAvailable)),
       );
   }
 
@@ -184,12 +184,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       color: AppColors.primary,
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    const Text(
+                    Text(
                       AppStrings.loginTitle,
                       style: AppTypography.headlineXl,
                     ),
                     const SizedBox(height: AppSpacing.xs),
-                    const Text(
+                    Text(
                       AppStrings.loginSubtitle,
                       style: AppTypography.bodyMd,
                     ),
@@ -236,7 +236,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               ),
                             ),
                             const SizedBox(width: AppSpacing.xs),
-                            const Text(
+                            Text(
                               AppStrings.rememberMe,
                               style: AppTypography.bodySm,
                             ),
@@ -245,7 +245,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         TextButton(
                           onPressed:
                               _isLoading ? null : _showForgotPasswordNotice,
-                          child: const Text(AppStrings.forgotPassword),
+                          child: Text(AppStrings.forgotPassword),
                         ),
                       ],
                     ),
@@ -256,11 +256,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       onPressed: _isLoading ? null : _handleLogin,
                     ),
                     const SizedBox(height: AppSpacing.lg),
-                    const Row(
+                    Row(
                       children: <Widget>[
-                        Expanded(child: Divider(color: AppColors.border)),
+                        const Expanded(child: Divider(color: AppColors.border)),
                         Padding(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: AppSpacing.md,
                           ),
                           child: Text(
@@ -268,7 +268,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             style: AppTypography.labelMd,
                           ),
                         ),
-                        Expanded(child: Divider(color: AppColors.border)),
+                        const Expanded(child: Divider(color: AppColors.border)),
                       ],
                     ),
                     const SizedBox(height: AppSpacing.lg),

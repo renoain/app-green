@@ -50,7 +50,7 @@ class _AdminWasteDetailPageState extends ConsumerState<AdminWasteDetailPage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text(AppStrings.adminVerifySuccess)),
+          SnackBar(content: Text(AppStrings.adminVerifySuccess)),
         );
       context.pop();
     } catch (_) {
@@ -58,7 +58,7 @@ class _AdminWasteDetailPageState extends ConsumerState<AdminWasteDetailPage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text(AppStrings.genericError)),
+          SnackBar(content: Text(AppStrings.genericError)),
         );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -70,22 +70,22 @@ class _AdminWasteDetailPageState extends ConsumerState<AdminWasteDetailPage> {
     final String? reason = await showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: const Text(AppStrings.adminRejectReasonTitle),
+        title: Text(AppStrings.adminRejectReasonTitle),
         content: TextField(
           controller: controller,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             hintText: AppStrings.adminRejectReasonHint,
           ),
         ),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text(AppStrings.cancelButton),
+            child: Text(AppStrings.cancelButton),
           ),
           TextButton(
             onPressed: () =>
                 Navigator.of(context).pop(controller.text.trim()),
-            child: const Text(AppStrings.adminReject),
+            child: Text(AppStrings.adminReject),
           ),
         ],
       ),
@@ -96,7 +96,7 @@ class _AdminWasteDetailPageState extends ConsumerState<AdminWasteDetailPage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(AppStrings.adminRejectReasonEmpty),
           ),
         );
@@ -109,7 +109,7 @@ class _AdminWasteDetailPageState extends ConsumerState<AdminWasteDetailPage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text(AppStrings.adminRejectSuccess)),
+          SnackBar(content: Text(AppStrings.adminRejectSuccess)),
         );
       context.pop();
     } catch (_) {
@@ -117,7 +117,7 @@ class _AdminWasteDetailPageState extends ConsumerState<AdminWasteDetailPage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text(AppStrings.genericError)),
+          SnackBar(content: Text(AppStrings.genericError)),
         );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -133,7 +133,7 @@ class _AdminWasteDetailPageState extends ConsumerState<AdminWasteDetailPage> {
       orElse: () => widget.log,
     );
     if (log == null) {
-      return const Scaffold(
+      return Scaffold(
         appBar: CustomAppBar(
           title: AppStrings.adminDetailTitle,
           leading: LucideIcons.arrow_left,
@@ -146,7 +146,7 @@ class _AdminWasteDetailPageState extends ConsumerState<AdminWasteDetailPage> {
         .estimatePoints(log);
 
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: AppStrings.adminDetailTitle,
         leading: LucideIcons.arrow_left,
       ),
@@ -195,7 +195,7 @@ class _AdminWasteDetailPageState extends ConsumerState<AdminWasteDetailPage> {
                   child: OutlinedButton.icon(
                     onPressed: () => _askRejectReason(log),
                     icon: const Icon(LucideIcons.x, size: 18),
-                    label: const Text(AppStrings.adminReject),
+                    label: Text(AppStrings.adminReject),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
@@ -203,7 +203,7 @@ class _AdminWasteDetailPageState extends ConsumerState<AdminWasteDetailPage> {
                   child: FilledButton.icon(
                     onPressed: () => _approve(log),
                     icon: const Icon(LucideIcons.check, size: 18),
-                    label: const Text(AppStrings.adminApprove),
+                    label: Text(AppStrings.adminApprove),
                   ),
                 ),
               ],
@@ -284,7 +284,7 @@ class _PhotoSection extends ConsumerWidget {
           color: AppColors.surfaceDim,
           borderRadius: BorderRadius.circular(AppRadius.lg),
         ),
-        child: const Text(AppStrings.adminNoPhoto),
+        child: Text(AppStrings.adminNoPhoto),
       );
     }
     return FutureBuilder<String>(
@@ -309,7 +309,7 @@ class _PhotoSection extends ConsumerWidget {
               decoration: const BoxDecoration(
                 color: AppColors.surfaceDim,
               ),
-              child: const Text(AppStrings.adminNoPhoto),
+              child: Text(AppStrings.adminNoPhoto),
             ),
           ),
         );

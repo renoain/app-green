@@ -48,18 +48,18 @@ class _AdminRewardsPageState extends ConsumerState<AdminRewardsPage> {
     final bool? ok = await showDialog<bool>(
       context: context,
       builder: (BuildContext ctx) => AlertDialog(
-        title: const Text(AppStrings.adminRewardDelete),
+        title: Text(AppStrings.adminRewardDelete),
         content: Text(
           '${AppStrings.adminRewardDeleteConfirm}\n${reward.name}',
         ),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text(AppStrings.cancelButton),
+            child: Text(AppStrings.cancelButton),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text(AppStrings.adminRewardDelete),
+            child: Text(AppStrings.adminRewardDelete),
           ),
         ],
       ),
@@ -80,7 +80,7 @@ class _AdminRewardsPageState extends ConsumerState<AdminRewardsPage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.pushNamed(AppRouteName.adminRewardNew),
         icon: const Icon(LucideIcons.plus),
-        label: const Text(AppStrings.adminRewardAdd),
+        label: Text(AppStrings.adminRewardAdd),
       ),
       body: SafeArea(
         child: state.when(
@@ -107,7 +107,7 @@ class _AdminRewardsPageState extends ConsumerState<AdminRewardsPage> {
                 onRefresh: _reload,
                 child: ListView(
                   padding: const EdgeInsets.all(AppSpacing.md),
-                  children: const <Widget>[
+                  children: <Widget>[
                     EmptyState(
                       icon: LucideIcons.gift,
                       title: AppStrings.adminManageReward,
@@ -127,8 +127,8 @@ class _AdminRewardsPageState extends ConsumerState<AdminRewardsPage> {
                     const SizedBox(height: AppSpacing.sm),
                 itemBuilder: (BuildContext context, int index) {
                   if (index == 0) {
-                    return const Padding(
-                      padding: EdgeInsets.only(bottom: AppSpacing.sm),
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                       child: Text(
                         AppStrings.adminRewardManageNote,
                         style: AppTypography.bodySm,

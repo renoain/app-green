@@ -83,12 +83,12 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     if (!saved) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(const SnackBar(content: Text(AppStrings.genericError)));
+        ..showSnackBar(SnackBar(content: Text(AppStrings.genericError)));
       return;
     }
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(const SnackBar(content: Text(AppStrings.profileSaved)));
+      ..showSnackBar(SnackBar(content: Text(AppStrings.profileSaved)));
     if (context.canPop()) {
       context.pop();
     } else {
@@ -99,7 +99,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: AppStrings.editProfile,
         leading: LucideIcons.arrow_left,
       ),

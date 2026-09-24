@@ -1,5 +1,52 @@
 # CHANGELOG - Go Green
 
+## [2026-09-24] - Multi-bahasa Indonesia/Inggris (428 string + pemilih)
+
+Status: Selesai (uji device fisik ganti bahasa + restart persist)
+
+Laporan: seluruh UI Bahasa Indonesia (PROJECT_OVERVIEW fase berikut)
+tanpa pilihan bahasa.
+
+File yang dibuat:
+
+- lib/core/localization/app_locale.dart (dibuat): localeProvider + simpan/muat SharedPreferences + terapkan AppStrings
+- test/widget/pages/app_locale_test.dart (dibuat): 5 test default/EN/fallback/persist/ganti UI
+
+File yang diubah:
+
+- lib/core/constants/app_strings.dart (ditulis ulang): 428 const ke getter + map _id/_en (API pemanggil tetap)
+- lib/main.dart (ditulis ulang): muat bahasa sebelum runApp + locale MaterialApp + delegate SDK
+- pubspec.yaml (diedit): tambah flutter_localizations SDK, intl 0.19.0 ke 0.20.3 (syarat SDK)
+- pubspec.lock (diedit): hasil flutter pub get
+- lib/features/profile/presentation/pages/settings_page.dart (diedit): Consumer + seksi Bahasa SegmentedButton
+- lib/core/constants/app_strings.dart: 3 string bahasa (tambah manual di getter + kedua map)
+- 45 berkas lib (diedit skrip + cek manual): lepas const yang mengurung AppStrings (188), kembalikan 34 const valid
+- lib/core/widgets/login_notice_widget.dart (diedit): default label jadi nullable + fallback
+- lib/core/widgets/custom_bottom_nav_bar_widget.dart (diedit): daftar item final
+- lib/features/admin/presentation/widgets/admin_drawer.dart (diedit): daftar menu final
+- lib/features/home/presentation/pages/home_page.dart (diedit): list stat + default statusLabel nullable
+- lib/features/onboarding/onboarding_page.dart (diedit): daftar slide final
+- lib/features/points/presentation/data/reward_demo_data.dart (diedit): daftar final
+- lib/features/waste/presentation/data/checkpoint_demo_data.dart (diedit): daftar final
+- lib/features/waste/presentation/widgets/photo_upload_container.dart (diedit): label nullable + fallback
+- lib/features/verification/presentation/pages/verification_page.dart (diedit): hashValue final lokal
+- test/widget/pages/settings_page_test.dart (diedit): ProviderScope + asersi bahasa + scroll dialog
+- AGENTS.md, PROTOCOL.md (diedit): aturan string dwibahasa ID/EN
+- docs/PROJECT_OVERVIEW.md (diedit): multi-bahasa keluar fase berikut
+- docs/UI_PAGES.md (diedit): Pengaturan ada pemilih bahasa
+- docs/ARCHITECTURE.md (diedit): section 8a lokalisasi + evaluasi dep
+
+Catatan:
+
+- Tanpa dependency pihak ketiga baru (SDK + bump intl).
+- Format angka/tanggal masih Indonesia (fase lanjut).
+- Bahasa ketiga tinggal tambah kode + map (tanpa ubah pemanggil).
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue; sempat 216 error const + 35 info, diperbaiki via skrip presisi + cek manual)
+- hasil test: OK (247 test lulus, termasuk 5 test baru locale)
+
 ## [2026-09-24] - Push migrasi 018-022 ke Supabase remote
 
 Status: Selesai

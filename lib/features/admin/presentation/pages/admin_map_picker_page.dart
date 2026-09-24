@@ -70,7 +70,7 @@ class _AdminMapPickerPageState extends State<AdminMapPickerPage> {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Text(AppStrings.verificationLocationFailed),
             ),
           );
@@ -96,14 +96,14 @@ class _AdminMapPickerPageState extends State<AdminMapPickerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: AppStrings.adminMapPickerTitle,
         leading: LucideIcons.arrow_left,
       ),
       body: Column(
         children: <Widget>[
-          const Padding(
-            padding: EdgeInsets.all(AppSpacing.md),
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
             child: Text(
               AppStrings.adminMapPickerHint,
               style: AppTypography.bodySm,

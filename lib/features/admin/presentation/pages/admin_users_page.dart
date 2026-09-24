@@ -109,7 +109,7 @@ class _AdminUsersPageState extends ConsumerState<AdminUsersPage> {
               child: Row(
                 children: <Widget>[
                   ChoiceChip(
-                    label: const Text(AppStrings.adminUserFilterAll),
+                    label: Text(AppStrings.adminUserFilterAll),
                     selected: roleFilter == null,
                     onSelected: (_) => ref
                         .read(adminUserRoleFilterProvider.notifier)
@@ -160,7 +160,7 @@ class _AdminUsersPageState extends ConsumerState<AdminUsersPage> {
                       onRefresh: _reload,
                       child: ListView(
                         padding: const EdgeInsets.all(AppSpacing.md),
-                        children: const <Widget>[
+                        children: <Widget>[
                           EmptyState(
                             icon: LucideIcons.users,
                             title: AppStrings.adminManageUser,

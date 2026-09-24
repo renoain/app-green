@@ -137,10 +137,10 @@ class _RegionPickerDropdownState
     return Column(
       children: <Widget>[
         provinces.when(
-          loading: () => const _RegionLoading(
+          loading: () => _RegionLoading(
             label: AppStrings.adminRegionProvinceLabel,
           ),
-          error: (_, __) => const _RegionError(
+          error: (_, __) => _RegionError(
             label: AppStrings.adminRegionProvinceLabel,
           ),
           data: (List<RegionProvince> items) => DropdownSearch<RegionProvince>(
@@ -152,7 +152,7 @@ class _RegionPickerDropdownState
             ),
             itemAsString: (RegionProvince item) => _titleCase(item.name),
             compareFn: (RegionProvince a, RegionProvince b) => a.id == b.id,
-            decoratorProps: const DropDownDecoratorProps(
+            decoratorProps: DropDownDecoratorProps(
               decoration: InputDecoration(
                 labelText: AppStrings.adminRegionProvinceLabel,
               ),
@@ -168,10 +168,10 @@ class _RegionPickerDropdownState
         ),
         const SizedBox(height: AppSpacing.sm),
         cities.when(
-          loading: () => const _RegionLoading(
+          loading: () => _RegionLoading(
             label: AppStrings.adminRegionCityLabel,
           ),
-          error: (_, __) => const _RegionError(
+          error: (_, __) => _RegionError(
             label: AppStrings.adminRegionCityLabel,
           ),
           data: (List<RegionCity> items) => DropdownSearch<RegionCity>(
@@ -184,7 +184,7 @@ class _RegionPickerDropdownState
             ),
             itemAsString: (RegionCity item) => _titleCase(item.name),
             compareFn: (RegionCity a, RegionCity b) => a.id == b.id,
-            decoratorProps: const DropDownDecoratorProps(
+            decoratorProps: DropDownDecoratorProps(
               decoration: InputDecoration(
                 labelText: AppStrings.adminRegionCityLabel,
               ),
@@ -199,10 +199,10 @@ class _RegionPickerDropdownState
         ),
         const SizedBox(height: AppSpacing.sm),
         districts.when(
-          loading: () => const _RegionLoading(
+          loading: () => _RegionLoading(
             label: AppStrings.adminRegionDistrictLabel,
           ),
-          error: (_, __) => const _RegionError(
+          error: (_, __) => _RegionError(
             label: AppStrings.adminRegionDistrictLabel,
           ),
           data: (List<RegionDistrict> items) =>
@@ -216,7 +216,7 @@ class _RegionPickerDropdownState
             ),
             itemAsString: (RegionDistrict item) => _titleCase(item.name),
             compareFn: (RegionDistrict a, RegionDistrict b) => a.id == b.id,
-            decoratorProps: const DropDownDecoratorProps(
+            decoratorProps: DropDownDecoratorProps(
               decoration: InputDecoration(
                 labelText: AppStrings.adminRegionDistrictLabel,
               ),

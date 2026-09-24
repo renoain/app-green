@@ -72,7 +72,7 @@ class AdminBottomBar extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
-              const Text(
+              Text(
                 AppStrings.adminMoreMenu,
                 style: AppTypography.headlineSm,
               ),
@@ -96,7 +96,7 @@ class AdminBottomBar extends StatelessWidget {
                 ListTile(
                   leading:
                       const Icon(LucideIcons.smartphone, size: 20),
-                  title: const Text(AppStrings.adminUserMode),
+                  title: Text(AppStrings.adminUserMode),
                   onTap: () {
                     Navigator.of(sheetContext).pop();
                     onUserMode();

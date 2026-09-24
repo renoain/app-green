@@ -28,7 +28,7 @@ class _BottomNavItem {
 }
 
 /// Kumpulan item bottom navigation Go Green (sesuai UI_PAGES Home).
-const List<_BottomNavItem> _items = <_BottomNavItem>[
+final List<_BottomNavItem> _items = <_BottomNavItem>[
   _BottomNavItem(label: AppStrings.navHome, icon: LucideIcons.house),
   _BottomNavItem(label: AppStrings.navActivity, icon: LucideIcons.activity),
   _BottomNavItem(

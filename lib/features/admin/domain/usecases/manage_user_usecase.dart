@@ -39,7 +39,7 @@ class ManageUserUsecase {
     if (currentUserId.isNotEmpty &&
         currentUserId == targetId &&
         role != UserRole.admin) {
-      throw const UserValidationException(
+      throw UserValidationException(
         AppStrings.adminUserSelfDemoteBlocked,
       );
     }

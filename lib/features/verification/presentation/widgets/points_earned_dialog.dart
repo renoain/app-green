@@ -61,13 +61,13 @@ Future<void> showPointsEarnedDialog(
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: AppSpacing.xs),
-                const Text(
+                Text(
                   AppStrings.pointsEarnedTitle,
                   style: AppTypography.headlineSm,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                const Text(
+                Text(
                   AppStrings.pointsEarnedMessage,
                   style: AppTypography.bodySm,
                   textAlign: TextAlign.center,

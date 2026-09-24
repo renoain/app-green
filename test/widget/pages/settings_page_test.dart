@@ -1,6 +1,7 @@
 // Widget test halaman pengaturan.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,11 +13,13 @@ import 'package:go_green/features/profile/presentation/pages/settings_page.dart'
 void main() {
   Future<void> pumpSettings(WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp.router(
-        theme: AppTheme.light(),
-        routerConfig: GoRouter(
-          initialLocation: '/settings',
-          routes: appRoutes,
+      ProviderScope(
+        child: MaterialApp.router(
+          theme: AppTheme.light(),
+          routerConfig: GoRouter(
+            initialLocation: '/settings',
+            routes: appRoutes,
+          ),
         ),
       ),
     );
@@ -37,12 +40,19 @@ void main() {
     expect(find.text(AppStrings.settingsVersion), findsOneWidget);
     expect(find.text(AppStrings.settingsVersionValue), findsOneWidget);
     expect(find.text(AppStrings.settingsAbout), findsOneWidget);
+    expect(find.text(AppStrings.settingsLanguage), findsOneWidget);
+    expect(find.text(AppStrings.languageIndonesian), findsWidgets);
   });
 
   testWidgets('menampilkan dialog tentang saat baris tentang ditekan',
       (WidgetTester tester) async {
     await pumpSettings(tester);
 
+    await tester.scrollUntilVisible(
+      find.text(AppStrings.settingsAbout),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(find.text(AppStrings.settingsAbout));
     await tester.pumpAndSettle();
 

@@ -21,7 +21,7 @@ class ScanPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: AppStrings.scanTitle,
         leading: LucideIcons.arrow_left,
       ),
@@ -44,17 +44,17 @@ class ScanPage extends StatelessWidget {
                           width: 2,
                         ),
                       ),
-                      child: const Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Icon(
+                          const Icon(
                             LucideIcons.scan_line,
                             size: 80,
                             color: AppColors.textDisabled,
                           ),
-                          SizedBox(height: AppSpacing.lg),
+                          const SizedBox(height: AppSpacing.lg),
                           Padding(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: AppSpacing.lg,
                             ),
                             child: Text(
@@ -70,8 +70,8 @@ class ScanPage extends StatelessWidget {
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(AppSpacing.lg),
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
               child: Text(
                 AppStrings.scanNote,
                 style: AppTypography.bodySm,

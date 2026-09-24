@@ -115,7 +115,7 @@ class _AdminUserDetailPageState extends ConsumerState<AdminUserDetailPage> {
         widget.user.email?.split('@').first ??
         '-';
     return Scaffold(
-      appBar: const CustomAppBar(title: AppStrings.adminUserDetailTitle),
+      appBar: CustomAppBar(title: AppStrings.adminUserDetailTitle),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(AppSpacing.md),
@@ -155,7 +155,7 @@ class _AdminUserDetailPageState extends ConsumerState<AdminUserDetailPage> {
                 children: <Widget>[
                   const Icon(LucideIcons.star, color: AppColors.primary),
                   const SizedBox(width: AppSpacing.md),
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       AppStrings.adminUserTotalPoints,
                       style: AppTypography.labelLg,
@@ -171,7 +171,7 @@ class _AdminUserDetailPageState extends ConsumerState<AdminUserDetailPage> {
               ),
             ),
             const SizedBox(height: AppSpacing.md),
-            const Text(
+            Text(
               AppStrings.adminUserChangeRole,
               style: AppTypography.headlineSm,
             ),
@@ -198,7 +198,7 @@ class _AdminUserDetailPageState extends ConsumerState<AdminUserDetailPage> {
               isLoading: _saving,
             ),
             const SizedBox(height: AppSpacing.lg),
-            const Text(
+            Text(
               AppStrings.adminUserHistoryTitle,
               style: AppTypography.headlineSm,
             ),
@@ -206,7 +206,7 @@ class _AdminUserDetailPageState extends ConsumerState<AdminUserDetailPage> {
             if (_history == null)
               const Text('...', style: AppTypography.bodySm)
             else if (_history!.isEmpty)
-              const Text(
+              Text(
                 AppStrings.adminUserHistoryEmpty,
                 style: AppTypography.bodySm,
               )

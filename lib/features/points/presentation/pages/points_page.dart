@@ -88,7 +88,7 @@ class _PointsPageState extends ConsumerState<PointsPage> {
             onRefresh: _reload,
             child: _PointsList(
               children: <Widget>[
-                const Text(
+                Text(
                   AppStrings.pointsTitle,
                   style: AppTypography.headlineLg,
                 ),
@@ -113,7 +113,7 @@ class _PointsPageState extends ConsumerState<PointsPage> {
             onRefresh: _reload,
             child: _PointsList(
               children: <Widget>[
-                const Text(
+                Text(
                   AppStrings.pointsTitle,
                   style: AppTypography.headlineLg,
                 ),
@@ -132,13 +132,13 @@ class _PointsPageState extends ConsumerState<PointsPage> {
                 const SizedBox(height: AppSpacing.xl),
                 const _RewardsSection(),
                 const SizedBox(height: AppSpacing.lg),
-                const Text(
+                Text(
                   AppStrings.pointsHistoryTitle,
                   style: AppTypography.headlineSm,
                 ),
                 const SizedBox(height: AppSpacing.md),
                 if (points.history.isEmpty) ...<Widget>[
-                  const EmptyState(
+                  EmptyState(
                     icon: LucideIcons.coins,
                     title: AppStrings.pointsHistoryTitle,
                     message: AppStrings.pointsHistoryEmpty,
@@ -222,12 +222,12 @@ class _PointsSkeletonBlock extends StatelessWidget {
 
 /// Anak demo lengkap halaman poin (judul + saldo + reward + riwayat).
 final List<Widget> _demoChildren = <Widget>[
-  const Text(
+  Text(
     AppStrings.pointsTitle,
     style: AppTypography.headlineLg,
   ),
   const SizedBox(height: AppSpacing.lg),
-  const PointCard(
+  PointCard(
     point: 250,
     label: AppStrings.pointsBalance,
     icon: LucideIcons.coins,
@@ -235,7 +235,7 @@ final List<Widget> _demoChildren = <Widget>[
   const SizedBox(height: AppSpacing.xl),
   const _RewardsSection(),
   const SizedBox(height: AppSpacing.lg),
-  const Text(
+  Text(
     AppStrings.pointsHistoryTitle,
     style: AppTypography.headlineSm,
   ),
@@ -257,7 +257,7 @@ final List<Widget> _demoChildren = <Widget>[
 
 /// Isi demo tanpa judul (dipakai di bawah pesan error).
 final List<Widget> _demoBodyChildren = <Widget>[
-  const PointCard(
+  PointCard(
     point: 250,
     label: AppStrings.pointsBalance,
     icon: LucideIcons.coins,
@@ -265,7 +265,7 @@ final List<Widget> _demoBodyChildren = <Widget>[
   const SizedBox(height: AppSpacing.xl),
   const _RewardsSection(),
   const SizedBox(height: AppSpacing.lg),
-  const Text(
+  Text(
     AppStrings.pointsHistoryTitle,
     style: AppTypography.headlineSm,
   ),
@@ -350,7 +350,7 @@ class _RewardsSectionState extends ConsumerState<_RewardsSection> {
       children: <Widget>[
         Row(
           children: <Widget>[
-            const Expanded(
+            Expanded(
               child: Text(
                 AppStrings.rewardsSectionTitle,
                 style: AppTypography.headlineSm,

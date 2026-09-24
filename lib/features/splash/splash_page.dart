@@ -67,16 +67,16 @@ class _SplashPageState extends ConsumerState<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            _SplashLogo(),
-            SizedBox(height: AppSpacing.md),
+            const _SplashLogo(),
+            const SizedBox(height: AppSpacing.md),
             Text(AppStrings.appName, style: AppTypography.headlineXl),
-            SizedBox(height: AppSpacing.xl),
-            LoadingIndicator(size: 24),
+            const SizedBox(height: AppSpacing.xl),
+            const LoadingIndicator(size: 24),
           ],
         ),
       ),

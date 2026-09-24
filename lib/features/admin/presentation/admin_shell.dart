@@ -98,12 +98,12 @@ class _AdminShellState extends ConsumerState<AdminShell> {
       loading: () => const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       ),
-      error: (_, __) => const Scaffold(
+      error: (_, __) => Scaffold(
         body: Center(child: Text(AppStrings.adminAccessDenied)),
       ),
       data: (UserRole value) {
         if (value != UserRole.admin && value != UserRole.petugas) {
-          return const Scaffold(
+          return Scaffold(
             body: Center(child: Text(AppStrings.adminAccessDenied)),
           );
         }

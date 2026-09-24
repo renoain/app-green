@@ -105,7 +105,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           child: ListView(
             padding: const EdgeInsets.all(AppSpacing.md),
             children: <Widget>[
-              const Text(
+              Text(
                 AppStrings.profileTitle,
                 style: AppTypography.headlineLg,
               ),

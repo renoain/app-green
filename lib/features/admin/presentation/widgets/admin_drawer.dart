@@ -22,7 +22,7 @@ class AdminMenuItem {
 }
 
 /// Daftar menu admin lengkap (petugas hanya memakai 3 pertama).
-const List<AdminMenuItem> adminMenuItems = <AdminMenuItem>[
+final List<AdminMenuItem> adminMenuItems = <AdminMenuItem>[
   AdminMenuItem(title: AppStrings.adminDashboard, icon: LucideIcons.layout_dashboard),
   AdminMenuItem(title: AppStrings.adminManageTps, icon: LucideIcons.map_pin),
   AdminMenuItem(title: AppStrings.adminVerifyWaste, icon: LucideIcons.shield_check),
@@ -87,7 +87,7 @@ class AdminDrawer extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const Text(
+                  Text(
                     AppStrings.appName,
                     style: AppTypography.headlineSm,
                   ),
@@ -126,13 +126,13 @@ class AdminDrawer extends StatelessWidget {
               ListTile(
                 leading:
                     const Icon(LucideIcons.smartphone, size: 20),
-                title: const Text(AppStrings.adminUserMode),
+                title: Text(AppStrings.adminUserMode),
                 onTap: onUserMode,
               ),
             ],
             ListTile(
               leading: const Icon(LucideIcons.log_out, size: 20),
-              title: const Text(AppStrings.logout),
+              title: Text(AppStrings.logout),
               onTap: onLogout,
             ),
           ],

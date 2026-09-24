@@ -73,7 +73,8 @@ Skill bisa dipanggil dengan menyebut namanya. Lihat .opencode/skills/:
 
 - Komunikasi dalam Bahasa Indonesia.
 - Nama variabel/class/file/folder dalam Bahasa Inggris.
-- String UI dalam Bahasa Indonesia.
+- String UI dwibahasa ID/EN via AppStrings (tambah kunci + kedua teks,
+  dilarang hardcode di widget, dilarang const untuk widget berisi string).
 - Dilarang emoji di kode, komentar, dokumentasi, commit.
 - Dilarang hardcode warna/spacing/radius, wajib pakai token di
   lib/core/theme/.

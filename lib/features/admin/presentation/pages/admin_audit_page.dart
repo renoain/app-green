@@ -103,7 +103,7 @@ class _AdminAuditPageState extends ConsumerState<AdminAuditPage> {
                 onRefresh: _reload,
                 child: ListView(
                   padding: const EdgeInsets.all(AppSpacing.md),
-                  children: const <Widget>[
+                  children: <Widget>[
                     EmptyState(
                       icon: LucideIcons.file_text,
                       title: AppStrings.adminAuditLog,
