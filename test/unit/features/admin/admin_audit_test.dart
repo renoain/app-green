@@ -326,6 +326,10 @@ void main() {
             maxWasteLogsPerDay: 5,
             weeklyMissionTarget: 5,
             maxPhotoMb: 5,
+            bonusOrganik: 0,
+            bonusAnorganik: 5,
+            bonusDaurUlang: 10,
+            bonusB3: 15,
           ),
         );
 

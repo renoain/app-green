@@ -1073,9 +1073,9 @@ class AppStrings {
   /// Judul info misi di pengaturan admin.
   static const String adminSettingsMissionTitle = 'Misi Mingguan';
 
-  /// Catatan pengaturan admin (kategori sampah fase lanjut).
+  /// Catatan pengaturan admin (tambah nilai kategori level kode).
   static const String adminSettingsPhaseNote =
-      'Nilai di bawah langsung berlaku. Kategori sampah menyusul fase lanjut.';
+      'Nilai di bawah langsung berlaku. Tambah nilai kategori baru tetap lewat update aplikasi.';
 
   /// Label radius GPS di form pengaturan admin.
   static const String adminSettingsRadiusLabel = 'Radius GPS default (meter)';
@@ -1111,6 +1111,25 @@ class AppStrings {
 
   /// Validasi foto maksimal pengaturan admin.
   static const String adminSettingsPhotoInvalid = 'Foto maksimal harus 1-10 MB.';
+
+  /// Judul seksi bonus kategori di pengaturan admin.
+  static const String adminSettingsBonusTitle = 'Bonus Kategori (poin)';
+
+  /// Label bonus organik di pengaturan admin.
+  static const String adminSettingsBonusOrganik = 'Organik';
+
+  /// Label bonus anorganik di pengaturan admin.
+  static const String adminSettingsBonusAnorganik = 'Anorganik';
+
+  /// Label bonus daur ulang di pengaturan admin.
+  static const String adminSettingsBonusDaurUlang = 'Daur Ulang';
+
+  /// Label bonus B3 di pengaturan admin.
+  static const String adminSettingsBonusB3 = 'B3';
+
+  /// Validasi bonus kategori pengaturan admin.
+  static const String adminSettingsBonusInvalid =
+      'Bonus kategori harus 0-50 poin.';
 
   /// --- Dasbor Admin ---
 

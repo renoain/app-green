@@ -2,12 +2,15 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:go_green/core/constants/app_config.dart';
 import 'package:go_green/core/constants/app_enums.dart';
 import 'package:go_green/core/constants/app_values.dart';
 import 'package:go_green/features/waste/domain/usecases/calculate_points_usecase.dart';
 
 void main() {
   const CalculatePointsUsecase usecase = CalculatePointsUsecase();
+
+  tearDown(AppConfig.clear);
 
   group('CalculatePointsUsecase.calculate', () {
     test('poin dasar tanpa bonus kategori atau streak', () {
@@ -84,6 +87,12 @@ void main() {
         currentStreakDays: -3,
       );
       expect(points, AppValues.basePointsPerWaste);
+    });
+
+    test('override bonus admin berlaku di hitungan', () {
+      AppConfig.apply(<String, String>{AppSettingKeys.bonusAnorganik: '20'});
+      final int points = usecase.calculate(category: WasteCategory.anorganik);
+      expect(points, AppValues.basePointsPerWaste + 20);
     });
   });
 }

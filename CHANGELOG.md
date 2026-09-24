@@ -1,5 +1,44 @@
 # CHANGELOG - Go Green
 
+## [2026-09-23] - Bonus kategori sampah bisa diubah admin (live)
+
+Status: Selesai (migration 022 perlu `supabase db push` manual; uji device + cek estimasi poin)
+
+Laporan: bonus poin kategori hardcode di AppValues sehingga admin
+tidak bisa menyesuaikan insentif tanpa update aplikasi.
+
+File yang dibuat:
+
+- supabase/migrations/022_category_bonus_seeds.sql (dibuat): 4 seed bonus kategori, idempoten
+
+File yang diubah:
+
+- lib/core/constants/app_config.dart (diedit): 4 kunci + getter bonus kategori
+- lib/features/waste/domain/usecases/calculate_points_usecase.dart (diedit): bonus via AppConfig
+- lib/features/admin/domain/entities/app_settings_values.dart (diedit): 4 field bonus + map/default
+- lib/features/admin/domain/usecases/manage_settings_usecase.dart (diedit): validasi 0-50 poin
+- lib/features/admin/presentation/pages/admin_settings_page.dart (diedit): seksi Bonus Kategori 4 field
+- lib/core/constants/app_strings.dart (diedit): 6 string bonus Bahasa Indonesia + catatan baru
+- test/unit/features/admin/manage_settings_test.dart (diedit): 1 test tolak bonus 51
+- test/unit/features/waste/calculate_points_test.dart (diedit): 1 test override berlaku
+- test/widget/pages/admin_phase2_test.dart (diedit): asersi seksi bonus + viewport tinggi
+- test/unit/features/admin/admin_audit_test.dart (diedit): konstruktor 9 field
+- docs/PRD_ADMIN.md (diedit): 6.6 bonus selesai + status + riwayat
+- docs/UI_PAGES.md (diedit): section 25 seksi bonus
+- docs/ARCHITECTURE.md (diedit): hitungan via AppConfig
+- docs/DATABASE_SCHEMA.md (diedit): seed 022 + migration, versi 1.7 ke 1.8
+
+Catatan:
+
+- Tanpa dependency baru; seed tanpa perubahan skema (tabel app_settings sudah ada).
+- Daftar nilai kategori tetap di check constraint + enum (tambah nilai baru butuh update aplikasi).
+- Test form memakai viewport 400x1400: ListView malas di viewport default menyembunyikan tombol (bukan bug aplikasi).
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (242 test lulus, termasuk 2 test baru bonus)
+
 ## [2026-09-23] - Soft-delete TPS (kolom is_active + aktifkan kembali)
 
 Status: Selesai (migration 021 perlu `supabase db push` manual; uji device fisik nonaktif + user tak lihat)

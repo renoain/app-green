@@ -26,6 +26,18 @@ abstract final class AppSettingKeys {
 
   /// Foto maksimal (MB).
   static const String maxPhotoMb = 'max_photo_mb';
+
+  /// Bonus poin kategori organik.
+  static const String bonusOrganik = 'bonus_organik';
+
+  /// Bonus poin kategori anorganik.
+  static const String bonusAnorganik = 'bonus_anorganik';
+
+  /// Bonus poin kategori daur ulang.
+  static const String bonusDaurUlang = 'bonus_daur_ulang';
+
+  /// Bonus poin kategori B3.
+  static const String bonusB3 = 'bonus_b3';
 }
 
 /// Nilai konfigurasi efektif aplikasi (override atau fallback).
@@ -85,4 +97,28 @@ abstract final class AppConfig {
 
   /// Foto maksimal dalam MB (untuk form admin).
   static int get maxPhotoMb => _int(AppSettingKeys.maxPhotoMb, 5);
+
+  /// Bonus poin kategori organik.
+  static int get categoryBonusOrganik => _int(
+        AppSettingKeys.bonusOrganik,
+        AppValues.categoryBonusOrganik,
+      );
+
+  /// Bonus poin kategori anorganik.
+  static int get categoryBonusAnorganik => _int(
+        AppSettingKeys.bonusAnorganik,
+        AppValues.categoryBonusAnorganik,
+      );
+
+  /// Bonus poin kategori daur ulang.
+  static int get categoryBonusDaurUlang => _int(
+        AppSettingKeys.bonusDaurUlang,
+        AppValues.categoryBonusDaurUlang,
+      );
+
+  /// Bonus poin kategori B3.
+  static int get categoryBonusB3 => _int(
+        AppSettingKeys.bonusB3,
+        AppValues.categoryBonusB3,
+      );
 }

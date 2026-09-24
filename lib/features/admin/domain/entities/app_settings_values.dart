@@ -15,6 +15,10 @@ class AppSettingsValues {
     required this.maxWasteLogsPerDay,
     required this.weeklyMissionTarget,
     required this.maxPhotoMb,
+    required this.bonusOrganik,
+    required this.bonusAnorganik,
+    required this.bonusDaurUlang,
+    required this.bonusB3,
   });
 
   /// Nilai default (sama dengan AppValues).
@@ -25,6 +29,10 @@ class AppSettingsValues {
       maxWasteLogsPerDay: 5,
       weeklyMissionTarget: 5,
       maxPhotoMb: 5,
+      bonusOrganik: 0,
+      bonusAnorganik: 5,
+      bonusDaurUlang: 10,
+      bonusB3: 15,
     );
   }
 
@@ -59,6 +67,19 @@ class AppSettingsValues {
         AppValues.weeklyMissionTargetDisposals,
       ),
       maxPhotoMb: num(AppSettingKeys.maxPhotoMb, 5),
+      bonusOrganik: num(
+        AppSettingKeys.bonusOrganik,
+        AppValues.categoryBonusOrganik,
+      ),
+      bonusAnorganik: num(
+        AppSettingKeys.bonusAnorganik,
+        AppValues.categoryBonusAnorganik,
+      ),
+      bonusDaurUlang: num(
+        AppSettingKeys.bonusDaurUlang,
+        AppValues.categoryBonusDaurUlang,
+      ),
+      bonusB3: num(AppSettingKeys.bonusB3, AppValues.categoryBonusB3),
     );
   }
 
@@ -77,6 +98,18 @@ class AppSettingsValues {
   /// Foto maksimal (MB).
   final int maxPhotoMb;
 
+  /// Bonus poin kategori organik.
+  final int bonusOrganik;
+
+  /// Bonus poin kategori anorganik.
+  final int bonusAnorganik;
+
+  /// Bonus poin kategori daur ulang.
+  final int bonusDaurUlang;
+
+  /// Bonus poin kategori B3.
+  final int bonusB3;
+
   /// Ubah ke map key -> value untuk disimpan.
   Map<String, String> toMap() {
     return <String, String>{
@@ -85,6 +118,10 @@ class AppSettingsValues {
       AppSettingKeys.maxWasteLogsPerDay: '$maxWasteLogsPerDay',
       AppSettingKeys.weeklyMissionTarget: '$weeklyMissionTarget',
       AppSettingKeys.maxPhotoMb: '$maxPhotoMb',
+      AppSettingKeys.bonusOrganik: '$bonusOrganik',
+      AppSettingKeys.bonusAnorganik: '$bonusAnorganik',
+      AppSettingKeys.bonusDaurUlang: '$bonusDaurUlang',
+      AppSettingKeys.bonusB3: '$bonusB3',
     };
   }
 }

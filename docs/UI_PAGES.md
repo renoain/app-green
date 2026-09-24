@@ -561,8 +561,8 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 - Tujuan: ubah konfigurasi operasional (radius, batas harian, target
   misi, foto maks) yang langsung berlaku.
 - Elemen: field angka (radius GPS, batas/hari, target/minggu, foto MB),
-  switch penegakan radius, tombol Simpan, snackbar sukses, catatan
-  kategori menyusul.
+  switch penegakan radius, seksi Bonus Kategori (4 field 0-50 poin),
+  tombol Simpan, snackbar sukses, catatan tambah nilai level kode.
 - State: adminSettingsProvider via ManageSettingsUsecase
   (loading, error + retry, pull-to-refresh, validasi batas wajar).
 - Aksi: simpan tervalidasi ke app_settings (RLS admin) + terapkan ke

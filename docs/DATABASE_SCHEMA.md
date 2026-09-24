@@ -280,7 +280,9 @@ RLS:
   `supabase db push` manual).
 
 Seed: 5 baris default sama dengan AppValues (insert idempoten,
-on conflict do nothing agar tidak menimpa perubahan admin).
+on conflict do nothing agar tidak menimpa perubahan admin) +
+4 bonus kategori (migration 022: bonus_organik 0, bonus_anorganik 5,
+bonus_daur_ulang 10, bonus_b3 15).
 
 ### 3.9 admin_audit_logs
 
@@ -419,6 +421,9 @@ where email = 'admin@green.com';
 - Migration 021_checkpoint_is_active.sql menambah kolom is_active
   (default true) + index (idempoten). Nonaktifkan kini soft-delete;
   daftar user hanya membaca yang aktif.
+- Migration 022_category_bonus_seeds.sql menambah 4 seed bonus
+  kategori (idempoten, tidak menimpa). Daftar nilai kategori tetap
+  di check constraint waste_logs.
 
 ---
 
@@ -497,7 +502,7 @@ where user_id = auth.uid()
 
 ## 9. Status Dokumen
 
-Versi: 1.7
+Versi: 1.8
 
 Terakhir update: 2026-09-23
 
@@ -519,3 +524,4 @@ Riwayat:
 - 1.5: tabel app_settings + RLS + seed default (migration 019).
 - 1.6: tabel admin_audit_logs append-only + RLS (migration 020).
 - 1.7: kolom checkpoints.is_active + index (migration 021).
+- 1.8: seed 4 bonus kategori (migration 022).

@@ -56,6 +56,18 @@ class ManageSettingsUsecase {
         AppStrings.adminSettingsPhotoInvalid,
       );
     }
+    for (final int bonus in <int>[
+      values.bonusOrganik,
+      values.bonusAnorganik,
+      values.bonusDaurUlang,
+      values.bonusB3,
+    ]) {
+      if (bonus < 0 || bonus > 50) {
+        throw const SettingsValidationException(
+          AppStrings.adminSettingsBonusInvalid,
+        );
+      }
+    }
   }
 
   /// Simpan nilai setelah validasi.

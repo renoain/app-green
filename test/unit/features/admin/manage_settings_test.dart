@@ -42,6 +42,10 @@ void main() {
       maxWasteLogsPerDay: 5,
       weeklyMissionTarget: 5,
       maxPhotoMb: 5,
+      bonusOrganik: 0,
+      bonusAnorganik: 5,
+      bonusDaurUlang: 10,
+      bonusB3: 15,
     );
     expect(
       () => usecase.validate(values),
@@ -60,6 +64,10 @@ void main() {
           maxWasteLogsPerDay: 0,
           weeklyMissionTarget: 5,
           maxPhotoMb: 5,
+          bonusOrganik: 0,
+          bonusAnorganik: 5,
+          bonusDaurUlang: 10,
+          bonusB3: 15,
         ),
       ),
       throwsA(isA<SettingsValidationException>()),
@@ -72,6 +80,31 @@ void main() {
           maxWasteLogsPerDay: 5,
           weeklyMissionTarget: 5,
           maxPhotoMb: 11,
+          bonusOrganik: 0,
+          bonusAnorganik: 5,
+          bonusDaurUlang: 10,
+          bonusB3: 15,
+        ),
+      ),
+      throwsA(isA<SettingsValidationException>()),
+    );
+  });
+
+  test('bonus 51 ditolak', () {
+    final ManageSettingsUsecase usecase =
+        ManageSettingsUsecase(_FakeSettingsDatasource());
+    expect(
+      () => usecase.validate(
+        const AppSettingsValues(
+          gpsRadiusMeters: 100,
+          enforceGpsRadius: true,
+          maxWasteLogsPerDay: 5,
+          weeklyMissionTarget: 5,
+          maxPhotoMb: 5,
+          bonusOrganik: 0,
+          bonusAnorganik: 51,
+          bonusDaurUlang: 10,
+          bonusB3: 15,
         ),
       ),
       throwsA(isA<SettingsValidationException>()),

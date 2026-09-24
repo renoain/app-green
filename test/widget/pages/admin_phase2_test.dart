@@ -144,6 +144,10 @@ void main() {
 
   testWidgets('admin settings menampilkan form tulis + simpan',
       (WidgetTester tester) async {
+    // Form panjang: viewport tinggi agar semua field ter-build.
+    tester.view.physicalSize = const Size(400, 1400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
     await tester.pumpWidget(
       ProviderScope(
         overrides: <Override>[
@@ -167,6 +171,11 @@ void main() {
       findsOneWidget,
     );
     expect(find.text(AppStrings.adminSettingsRadiusLabel), findsOneWidget);
+    expect(find.text(AppStrings.adminSettingsBonusTitle), findsOneWidget);
+    expect(
+      find.text(AppStrings.adminSettingsBonusAnorganik),
+      findsOneWidget,
+    );
     expect(find.text(AppStrings.adminSettingsSave), findsOneWidget);
     expect(find.text(AppStrings.adminSettingsPhaseNote), findsOneWidget);
   });

@@ -591,7 +591,8 @@ Arsitektur auth berlapis presentation -> domain -> data:
   runtime (override sinkron, fallback AppValues) agar langsung berlaku.
   Konsumen membaca AppConfig: ValidatePhotoUsecase (penegakan + batas
   harian), BuildHomeSummaryUsecase + Home (target misi), Waste/Capture
-  (penegakan), upload foto (batas MB), form TPS (radius default).
+  (penegakan), upload foto (batas MB), form TPS (radius default),
+  CalculatePointsUsecase (4 bonus kategori, seed migration 022).
   Splash memuat remote best effort (timeout 3 dtk, gagal = fallback).
   Test deterministik via AppConfig.clear (tanpa override = AppValues).
 - Grafik dasbor admin: AdminDashboardDatasource.getWeeklyWasteTimestamps

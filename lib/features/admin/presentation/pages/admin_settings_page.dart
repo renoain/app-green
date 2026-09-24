@@ -35,6 +35,13 @@ class _AdminSettingsPageState extends ConsumerState<AdminSettingsPage> {
   final TextEditingController _rateController = TextEditingController();
   final TextEditingController _targetController = TextEditingController();
   final TextEditingController _photoController = TextEditingController();
+  final TextEditingController _bonusOrganikController =
+      TextEditingController();
+  final TextEditingController _bonusAnorganikController =
+      TextEditingController();
+  final TextEditingController _bonusDaurUlangController =
+      TextEditingController();
+  final TextEditingController _bonusB3Controller = TextEditingController();
   bool _enforce = true;
   bool _filled = false;
   bool _saving = false;
@@ -52,6 +59,10 @@ class _AdminSettingsPageState extends ConsumerState<AdminSettingsPage> {
     _rateController.dispose();
     _targetController.dispose();
     _photoController.dispose();
+    _bonusOrganikController.dispose();
+    _bonusAnorganikController.dispose();
+    _bonusDaurUlangController.dispose();
+    _bonusB3Controller.dispose();
     super.dispose();
   }
 
@@ -66,6 +77,10 @@ class _AdminSettingsPageState extends ConsumerState<AdminSettingsPage> {
     _rateController.text = '${values.maxWasteLogsPerDay}';
     _targetController.text = '${values.weeklyMissionTarget}';
     _photoController.text = '${values.maxPhotoMb}';
+    _bonusOrganikController.text = '${values.bonusOrganik}';
+    _bonusAnorganikController.text = '${values.bonusAnorganik}';
+    _bonusDaurUlangController.text = '${values.bonusDaurUlang}';
+    _bonusB3Controller.text = '${values.bonusB3}';
     _enforce = values.enforceGpsRadius;
     _filled = true;
   }
@@ -76,13 +91,18 @@ class _AdminSettingsPageState extends ConsumerState<AdminSettingsPage> {
       _error = null;
     });
     try {
+      int num(TextEditingController c) =>
+          int.tryParse(c.text.trim()) ?? -1;
       final AppSettingsValues values = AppSettingsValues(
-        gpsRadiusMeters: int.tryParse(_radiusController.text.trim()) ?? -1,
+        gpsRadiusMeters: num(_radiusController),
         enforceGpsRadius: _enforce,
-        maxWasteLogsPerDay: int.tryParse(_rateController.text.trim()) ?? -1,
-        weeklyMissionTarget:
-            int.tryParse(_targetController.text.trim()) ?? -1,
-        maxPhotoMb: int.tryParse(_photoController.text.trim()) ?? -1,
+        maxWasteLogsPerDay: num(_rateController),
+        weeklyMissionTarget: num(_targetController),
+        maxPhotoMb: num(_photoController),
+        bonusOrganik: num(_bonusOrganikController),
+        bonusAnorganik: num(_bonusAnorganikController),
+        bonusDaurUlang: num(_bonusDaurUlangController),
+        bonusB3: num(_bonusB3Controller),
       );
       await ref.read(adminSettingsProvider.notifier).save(values);
       if (!mounted) return;
@@ -181,6 +201,35 @@ class _AdminSettingsPageState extends ConsumerState<AdminSettingsPage> {
                   CustomTextField(
                     label: AppStrings.adminSettingsPhotoLabel,
                     controller: _photoController,
+                    keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  const Text(
+                    AppStrings.adminSettingsBonusTitle,
+                    style: AppTypography.headlineSm,
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  CustomTextField(
+                    label: AppStrings.adminSettingsBonusOrganik,
+                    controller: _bonusOrganikController,
+                    keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  CustomTextField(
+                    label: AppStrings.adminSettingsBonusAnorganik,
+                    controller: _bonusAnorganikController,
+                    keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  CustomTextField(
+                    label: AppStrings.adminSettingsBonusDaurUlang,
+                    controller: _bonusDaurUlangController,
+                    keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  CustomTextField(
+                    label: AppStrings.adminSettingsBonusB3,
+                    controller: _bonusB3Controller,
                     keyboardType: TextInputType.number,
                   ),
                   if (_error != null) ...<Widget>[

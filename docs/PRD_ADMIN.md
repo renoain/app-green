@@ -189,10 +189,13 @@ Fitur:
 - Rate limit waste per hari (1-20, ditegakkan ValidatePhotoUsecase).
 - Penegakan blokir radius GPS on/off (waste/capture/validasi).
 - Target misi mingguan (1-30) + foto maksimal (1-10 MB).
-- Nilai dari tabel app_settings (migration 019, push manual),
-  dimuat saat splash best effort, fallback AppValues bila offline.
-- Kategori sampah (tambah/edit) menyusul fase lanjut (enum + bonus
-  poin masih di kode).
+- Nilai dari tabel app_settings (migration 019 + seed bonus 022,
+  push manual), dimuat saat splash best effort, fallback AppValues
+  bila offline.
+- Bonus poin kategori bisa diubah admin (berlaku live di hitungan
+  poin); daftar nilai kategori (organik/anorganik/b3/daur_ulang)
+  tetap di check constraint + enum kode (tambah nilai baru butuh
+  update aplikasi).
 
 ---
 
@@ -305,7 +308,7 @@ text
 
 ## 13. Status dan Riwayat
 
-- Status: In Progress (MVP admin selesai fungsional; tersisa kategori sampah).
+- Status: In Progress (MVP admin selesai fungsional; tersisa uji device + push migrasi 018-022).
 - 2026-09-20: Dokumen dibuat manual oleh owner.
 - 2026-09-20: Implementasi MVP selesai (fase 2: reward, user, pengaturan).
 - 2026-09-21: Section 6.2 diperbarui (filter + dropdown wilayah berjenjang, kode TPS otomatis KOTA-KEC-NOMOR, kolom code terpisah dari qr_code).
@@ -321,5 +324,6 @@ text
 - 2026-09-23: Audit log selesai (tabel admin_audit_logs migration 020 append-only + hooks 5 notifier best effort + halaman daftar + menu drawer); tersisa kategori + QR TPS + soft-delete.
 - 2026-09-23: QR TPS tampil lagi (dialog cetak + pratinjau form, pretty_qr_code existing).
 - 2026-09-23: Soft-delete TPS selesai (kolom is_active migration 021 + chip status + aktifkan; user hanya baca aktif); tersisa kategori sampah.
+- 2026-09-23: Bonus kategori selesai (4 seed migration 022 + seksi form + hitungan via AppConfig); tambah nilai kategori tetap level kode.
 - Menunggu review dan uji device fisik.
 - Setelah disetujui, masuk ke pengembangan fase 2.

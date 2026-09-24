@@ -1,9 +1,9 @@
 // Use case perhitungan poin (domain).
 //
 // Aturan bisnis MVP: poin dasar tetap + bonus per kategori + bonus streak.
-// Nilai konstanta terpusat di AppValues agar mudah diubah tanpa menyentuh
-// widget.
+// Bonus kategori mengikuti pengaturan admin (AppConfig, fallback AppValues).
 
+import '../../../../core/constants/app_config.dart';
 import '../../../../core/constants/app_enums.dart';
 import '../../../../core/constants/app_values.dart';
 
@@ -22,10 +22,10 @@ class CalculatePointsUsecase {
   }) {
     final int streak = currentStreakDays < 0 ? 0 : currentStreakDays;
     final int categoryBonus = switch (category) {
-      WasteCategory.organik => AppValues.categoryBonusOrganik,
-      WasteCategory.anorganik => AppValues.categoryBonusAnorganik,
-      WasteCategory.daurUlang => AppValues.categoryBonusDaurUlang,
-      WasteCategory.b3 => AppValues.categoryBonusB3,
+      WasteCategory.organik => AppConfig.categoryBonusOrganik,
+      WasteCategory.anorganik => AppConfig.categoryBonusAnorganik,
+      WasteCategory.daurUlang => AppConfig.categoryBonusDaurUlang,
+      WasteCategory.b3 => AppConfig.categoryBonusB3,
     };
     final int streakBonus = streak >= AppValues.streakBonusThreshold
         ? AppValues.streakBonusPoints
