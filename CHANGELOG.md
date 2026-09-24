@@ -1,5 +1,49 @@
 # CHANGELOG - Go Green
 
+## [2026-09-23] - Soft-delete TPS (kolom is_active + aktifkan kembali)
+
+Status: Selesai (migration 021 perlu `supabase db push` manual; uji device fisik nonaktif + user tak lihat)
+
+Laporan: nonaktifkan TPS = hapus permanen karena skema tanpa kolom
+is_active sehingga data hilang dan salah tekan fatal.
+
+File yang dibuat:
+
+- supabase/migrations/021_checkpoint_is_active.sql (dibuat): kolom is_active default true + index, idempoten
+- test/widget/pages/admin_checkpoint_status_test.dart (dibuat): 2 test chip + tombol Aktifkan + reload
+
+File yang diubah:
+
+- lib/features/checkpoints/domain/entities/checkpoint.dart (diedit): field isActive default true (kompatibel)
+- lib/features/checkpoints/data/models/checkpoint_model.dart (diedit): parse is_active default true
+- lib/features/checkpoints/data/datasources/checkpoint_remote_datasource.dart (diedit): getActiveCheckpoints + deactivate/activate soft + nearby pakai aktif
+- lib/features/checkpoints/domain/repositories/checkpoint_repository.dart (diedit): kontrak getActive + activate
+- lib/features/checkpoints/data/repositories/checkpoint_repository_impl.dart (diedit): teruskan 2 method baru
+- lib/features/checkpoints/domain/usecases/manage_checkpoint_usecase.dart (diedit): deactivate soft + activate
+- lib/features/checkpoints/presentation/providers/checkpoint_provider.dart (diedit): loadAll user hanya aktif
+- lib/features/admin/presentation/providers/admin_checkpoint_provider.dart (diedit): activate + audit nonaktifkan/aktifkan
+- lib/features/admin/presentation/widgets/tps_card.dart (diedit): chip status + tombol Aktifkan/Nonaktifkan + onActivate
+- lib/features/admin/presentation/pages/admin_checkpoint_page.dart (diedit): dialog aktifkan + sinkron user
+- lib/core/constants/app_strings.dart (diedit): 3 string aktif Bahasa Indonesia
+- test fakes (diedit): manage_checkpoint, generate_tps_code, admin_checkpoint_page, waste_page, admin_audit, admin_checkpoint_qr ikut kontrak baru
+- test/unit/features/admin/admin_audit_test.dart (diedit): 2 test audit nonaktifkan/aktifkan TPS
+- docs/DATABASE_SCHEMA.md (diedit): kolom 3.2 + RLS + migration 021, versi 1.6 ke 1.7
+- docs/UI_PAGES.md (diedit): section 19 soft-delete + daftar user aktif
+- docs/PRD_ADMIN.md (diedit): 6.2 soft-delete + riwayat + status
+- docs/ARCHITECTURE.md (diedit): alur soft-delete
+
+Catatan:
+
+- Tanpa dependency baru; tulis lewat RLS admin di server.
+- Tanpa `supabase db push` 021, kolom belum ada: parse fallback true (daftar tetap tampil), tulis gagal sampai push.
+- Hapus permanen (delete) tetap ada di kontrak tapi tidak dipakai UI.
+- Hook audit nonaktifkan kini pakai aksi nonaktifkan (sebelumnya hapus).
+
+Verifikasi:
+
+- hasil linter/analyze: OK (flutter analyze tidak ada issue; sempat 6 error kontrak di fakes + 1 required arg, sudah diperbaiki)
+- hasil test: OK (240 test lulus, termasuk 4 test baru status/audit)
+
 ## [2026-09-23] - QR TPS tampil lagi (dialog cetak + pratinjau form)
 
 Status: Selesai (uji device fisik buka QR + pindai dari cetakan)

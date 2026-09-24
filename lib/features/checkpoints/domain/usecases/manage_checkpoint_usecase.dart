@@ -135,10 +135,14 @@ class ManageCheckpointUsecase {
     return trimmed.isEmpty ? null : trimmed;
   }
 
-  /// Hapus checkpoint.
+  /// Hapus checkpoint permanen (tidak dipakai UI; nonaktif = soft).
   Future<void> delete(String id) => _repository.deleteCheckpoint(id);
 
-  /// Nonaktifkan checkpoint (tanpa kolom is_active = hapus permanen).
+  /// Nonaktifkan checkpoint (soft-delete via is_active).
   Future<void> deactivate(String id) =>
       _repository.deactivateCheckpoint(id);
+
+  /// Aktifkan kembali checkpoint.
+  Future<void> activate(String id) =>
+      _repository.activateCheckpoint(id);
 }

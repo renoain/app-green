@@ -117,11 +117,12 @@ Lokasi pembuangan sampah terdaftar.
 | city_code | text | indexed | ID kota/kabupaten API wilayah (migration 017) |
 | district_code | text | indexed | ID kecamatan API wilayah (migration 017) |
 | subdistrict | text | | Kelurahan opsional (migration 017) |
+| is_active | boolean | default true | Status aktif, soft-delete (migration 021) |
 | created_at | timestamptz | default now() | |
 
 RLS:
 
-- Semua user bisa baca.
+- Semua user bisa baca (klien user memfilter is_active = true).
 - Hanya admin yang bisa insert/update/delete.
 
 Manajemen checkpoint (MVP):
@@ -415,6 +416,9 @@ where email = 'admin@green.com';
 - Migration 020_admin_audit_logs.sql membuat tabel admin_audit_logs +
   index waktu/pelaku + RLS baca/insert admin (append-only, idempoten).
   Belum di-push ke remote (push manual bersama 018/019).
+- Migration 021_checkpoint_is_active.sql menambah kolom is_active
+  (default true) + index (idempoten). Nonaktifkan kini soft-delete;
+  daftar user hanya membaca yang aktif.
 
 ---
 
@@ -493,7 +497,7 @@ where user_id = auth.uid()
 
 ## 9. Status Dokumen
 
-Versi: 1.6
+Versi: 1.7
 
 Terakhir update: 2026-09-23
 
@@ -514,3 +518,4 @@ Riwayat:
   profiles_update_role_admin.
 - 1.5: tabel app_settings + RLS + seed default (migration 019).
 - 1.6: tabel admin_audit_logs append-only + RLS (migration 020).
+- 1.7: kolom checkpoints.is_active + index (migration 021).

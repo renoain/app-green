@@ -7,8 +7,11 @@ import '../entities/checkpoint.dart';
 
 /// Kontrak repository checkpoint Go Green.
 abstract interface class CheckpointRepository {
-  /// Ambil semua checkpoint.
+  /// Ambil semua checkpoint (aktif + nonaktif, admin).
   Future<List<Checkpoint>> getAllCheckpoints();
+
+  /// Ambil checkpoint aktif saja (user).
+  Future<List<Checkpoint>> getActiveCheckpoints();
 
   /// Ambil checkpoint terdekat dari posisi user (client-side),
   /// diurutkan dari yang terdekat.
@@ -88,7 +91,9 @@ abstract interface class CheckpointRepository {
     String? subdistrict,
   });
 
-  /// Nonaktifkan checkpoint (admin). Tanpa kolom is_active di skema,
-  /// implementasi = hapus permanen.
+  /// Nonaktifkan checkpoint (admin, soft-delete).
   Future<void> deactivateCheckpoint(String id);
+
+  /// Aktifkan kembali checkpoint (admin).
+  Future<void> activateCheckpoint(String id);
 }

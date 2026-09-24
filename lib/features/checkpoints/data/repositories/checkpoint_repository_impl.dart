@@ -21,6 +21,11 @@ class CheckpointRepositoryImpl implements CheckpointRepository {
   }
 
   @override
+  Future<List<Checkpoint>> getActiveCheckpoints() {
+    return _remote.getActiveCheckpoints();
+  }
+
+  @override
   Future<List<Checkpoint>> getNearbyCheckpoints({
     required double latitude,
     required double longitude,
@@ -169,5 +174,10 @@ class CheckpointRepositoryImpl implements CheckpointRepository {
   @override
   Future<void> deactivateCheckpoint(String id) {
     return _remote.deactivateCheckpoint(id);
+  }
+
+  @override
+  Future<void> activateCheckpoint(String id) {
+    return _remote.activateCheckpoint(id);
   }
 }

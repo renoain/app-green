@@ -142,6 +142,9 @@ class _FakeCheckpointRepo implements CheckpointRepository {
   Future<List<Checkpoint>> getAllCheckpoints() async => <Checkpoint>[];
 
   @override
+  Future<List<Checkpoint>> getActiveCheckpoints() async => <Checkpoint>[];
+
+  @override
   Future<List<Checkpoint>> getNearbyCheckpoints({
     required double latitude,
     required double longitude,
@@ -238,6 +241,9 @@ class _FakeCheckpointRepo implements CheckpointRepository {
 
   @override
   Future<void> deactivateCheckpoint(String id) async {}
+
+  @override
+  Future<void> activateCheckpoint(String id) async {}
 }
 
 void main() {
@@ -349,6 +355,43 @@ void main() {
     expect(audit.calls, hasLength(1));
     expect(audit.calls.first.action, AuditAction.create);
     expect(audit.calls.first.entity, AuditEntity.checkpoint);
+  });
+
+  test('nonaktifkan TPS mencatat audit nonaktifkan/tps', () async {
+    final _FakeAudit audit = _FakeAudit();
+    final ProviderContainer container = ProviderContainer(
+      overrides: <Override>[
+        checkpointRepositoryProvider.overrideWithValue(_FakeCheckpointRepo()),
+        adminAuditDatasourceProvider.overrideWithValue(audit),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container
+        .read(adminCheckpointListProvider.notifier)
+        .deactivate('c1');
+
+    expect(audit.calls, hasLength(1));
+    expect(audit.calls.first.action, AuditAction.deactivate);
+    expect(audit.calls.first.entity, AuditEntity.checkpoint);
+  });
+
+  test('aktifkan TPS mencatat audit aktifkan/tps', () async {
+    final _FakeAudit audit = _FakeAudit();
+    final ProviderContainer container = ProviderContainer(
+      overrides: <Override>[
+        checkpointRepositoryProvider.overrideWithValue(_FakeCheckpointRepo()),
+        adminAuditDatasourceProvider.overrideWithValue(audit),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container
+        .read(adminCheckpointListProvider.notifier)
+        .activate('c1');
+
+    expect(audit.calls, hasLength(1));
+    expect(audit.calls.first.action, AuditAction.activate);
   });
 
   test('audit tulis tanpa login dilewati diam-diam', () async {

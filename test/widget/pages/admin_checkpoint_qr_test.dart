@@ -69,6 +69,7 @@ void main() {
               checkpoint: _checkpoint(),
               onEdit: () {},
               onDeactivate: () {},
+              onActivate: () {},
             ),
           ),
         ),

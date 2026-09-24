@@ -97,7 +97,13 @@ class FakeCheckpointRepository implements CheckpointRepository {
   Future<void> deactivateCheckpoint(String id) => deleteCheckpoint(id);
 
   @override
+  Future<void> activateCheckpoint(String id) async {}
+
+  @override
   Future<List<Checkpoint>> getAllCheckpoints() async => <Checkpoint>[];
+
+  @override
+  Future<List<Checkpoint>> getActiveCheckpoints() async => <Checkpoint>[];
 
   @override
   Future<Checkpoint?> getCheckpointById(String id) async => null;

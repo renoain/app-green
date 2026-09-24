@@ -19,6 +19,7 @@ class Checkpoint {
     this.cityCode,
     this.districtCode,
     this.subdistrict,
+    this.isActive = true,
     required this.createdAt,
   });
 
@@ -57,6 +58,9 @@ class Checkpoint {
 
   /// Kelurahan (opsional).
   final String? subdistrict;
+
+  /// Status aktif TPS (soft-delete admin, default tampil).
+  final bool isActive;
 
   /// Waktu checkpoint dibuat.
   final DateTime createdAt;

@@ -1203,6 +1203,15 @@ class AppStrings {
   /// Tombol tutup dialog umum.
   static const String closeButton = 'Tutup';
 
+  /// Tombol aktifkan kembali TPS.
+  static const String adminActivate = 'Aktifkan';
+
+  /// Label status aktif umum admin.
+  static const String adminActiveLabel = 'Aktif';
+
+  /// Label status nonaktif umum admin.
+  static const String adminInactiveLabel = 'Nonaktif';
+
   /// Petunjuk cetak QR di dialog checkpoint.
   static const String adminQrPrintHint =
       'Tangkap layar lalu cetak dan tempel di lokasi TPS.';

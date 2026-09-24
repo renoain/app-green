@@ -181,11 +181,22 @@ class AdminCheckpointListNotifier
     return updated;
   }
 
-  /// Nonaktifkan TPS.
+  /// Nonaktifkan TPS (soft-delete).
   Future<void> deactivate(String id) async {
     await _usecase.deactivate(id);
     await _ref.read(adminAuditDatasourceProvider).log(
-          action: AuditAction.delete,
+          action: AuditAction.deactivate,
+          entity: AuditEntity.checkpoint,
+          entityId: id,
+        );
+    await loadAll();
+  }
+
+  /// Aktifkan kembali TPS.
+  Future<void> activate(String id) async {
+    await _usecase.activate(id);
+    await _ref.read(adminAuditDatasourceProvider).log(
+          action: AuditAction.activate,
           entity: AuditEntity.checkpoint,
           entityId: id,
         );

@@ -85,6 +85,52 @@ class _AdminCheckpointPageState extends ConsumerState<AdminCheckpointPage> {
     }
   }
 
+  Future<void> _confirmActivate(Checkpoint checkpoint) async {
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text(AppStrings.adminActivate),
+        content: Text(checkpoint.name),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text(AppStrings.cancelButton),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text(AppStrings.adminActivate),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    try {
+      await ref
+          .read(adminCheckpointListProvider.notifier)
+          .activate(checkpoint.id);
+      try {
+        await ref.read(checkpointNotifierProvider.notifier).loadAll();
+      } catch (_) {
+        // Sinkron user best effort, abaikan bila gagal.
+      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(
+            content: Text(AppStrings.adminCheckpointSaved),
+          ),
+        );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text(AppStrings.genericError)),
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final AsyncValue<List<Checkpoint>> state =
@@ -199,6 +245,8 @@ class _AdminCheckpointPageState extends ConsumerState<AdminCheckpointPage> {
                       final Checkpoint checkpoint = items[index];
                       return TpsCard(
                         checkpoint: checkpoint,
+                        onActivate: () =>
+                            _confirmActivate(checkpoint),
                         onEdit: () async {
                           final Object? result =
                               await context.pushNamed(

@@ -46,7 +46,7 @@ class CheckpointNotifier extends StateNotifier<AsyncValue<List<Checkpoint>>> {
     );
   }
 
-  /// Memuat semua checkpoint (dipakai saat GPS tidak tersedia).
+  /// Memuat semua checkpoint aktif (dipakai saat GPS tidak tersedia).
   Future<void> loadAll() async {
     final CheckpointRepository? repository = _repository;
     if (repository == null) {
@@ -57,7 +57,7 @@ class CheckpointNotifier extends StateNotifier<AsyncValue<List<Checkpoint>>> {
     }
     state = const AsyncLoading<List<Checkpoint>>();
     state = await AsyncValue.guard<List<Checkpoint>>(
-      repository.getAllCheckpoints,
+      repository.getActiveCheckpoints,
     );
   }
 }

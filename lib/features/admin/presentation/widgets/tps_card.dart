@@ -11,7 +11,7 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../checkpoints/domain/entities/checkpoint.dart';
 import 'checkpoint_qr_sheet.dart';
 
-/// Kartu satu TPS: nama, koordinat, radius, QR, aksi ubah/nonaktif.
+/// Kartu satu TPS: nama, status, koordinat, radius, QR, aksi.
 class TpsCard extends StatelessWidget {
   /// Membuat kartu TPS.
   const TpsCard({
@@ -19,6 +19,7 @@ class TpsCard extends StatelessWidget {
     required this.checkpoint,
     required this.onEdit,
     required this.onDeactivate,
+    required this.onActivate,
   });
 
   /// Checkpoint yang ditampilkan.
@@ -27,8 +28,11 @@ class TpsCard extends StatelessWidget {
   /// Aksi ubah.
   final VoidCallback onEdit;
 
-  /// Aksi nonaktifkan.
+  /// Aksi nonaktifkan (soft-delete).
   final VoidCallback onDeactivate;
+
+  /// Aksi aktifkan kembali.
+  final VoidCallback onActivate;
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +66,35 @@ class TpsCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.xs),
-          if (checkpoint.code != null && checkpoint.code!.isNotEmpty)
-            Text(
-              checkpoint.code!,
-              style: AppTypography.labelSm,
-            ),
+          Row(
+            children: <Widget>[
+              if (checkpoint.code != null &&
+                  checkpoint.code!.isNotEmpty)
+                Text(
+                  checkpoint.code!,
+                  style: AppTypography.labelSm,
+                ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
+                ),
+                decoration: BoxDecoration(
+                  color: checkpoint.isActive
+                      ? AppColors.tertiaryLight
+                      : AppColors.surfaceDim,
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                ),
+                child: Text(
+                  checkpoint.isActive
+                      ? AppStrings.adminActiveLabel
+                      : AppStrings.adminInactiveLabel,
+                  style: AppTypography.labelSm,
+                ),
+              ),
+            ],
+          ),
           Text(
             '${checkpoint.latitude.toStringAsFixed(5)}, '
             '${checkpoint.longitude.toStringAsFixed(5)} '
@@ -88,18 +116,32 @@ class TpsCard extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: onDeactivate,
-                  icon: const Icon(
-                    LucideIcons.power,
-                    size: 16,
-                    color: AppColors.error,
-                  ),
-                  label: const Text(
-                    AppStrings.adminDeactivate,
-                    style: TextStyle(color: AppColors.error),
-                  ),
-                ),
+                child: checkpoint.isActive
+                    ? OutlinedButton.icon(
+                        onPressed: onDeactivate,
+                        icon: const Icon(
+                          LucideIcons.power,
+                          size: 16,
+                          color: AppColors.error,
+                        ),
+                        label: const Text(
+                          AppStrings.adminDeactivate,
+                          style: TextStyle(color: AppColors.error),
+                        ),
+                      )
+                    : OutlinedButton.icon(
+                        onPressed: onActivate,
+                        icon: const Icon(
+                          LucideIcons.power,
+                          size: 16,
+                          color: AppColors.primary,
+                        ),
+                        label: const Text(
+                          AppStrings.adminActivate,
+                          style:
+                              TextStyle(color: AppColors.primary),
+                        ),
+                      ),
               ),
             ],
           ),

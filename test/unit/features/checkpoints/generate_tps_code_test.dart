@@ -34,6 +34,10 @@ class FakeRegionCheckpointRepository implements CheckpointRepository {
   Future<List<Checkpoint>> getAllCheckpoints() async => items;
 
   @override
+  Future<List<Checkpoint>> getActiveCheckpoints() async =>
+      items.where((Checkpoint c) => c.isActive).toList();
+
+  @override
   Future<List<Checkpoint>> getNearbyCheckpoints({
     required double latitude,
     required double longitude,
@@ -117,6 +121,9 @@ class FakeRegionCheckpointRepository implements CheckpointRepository {
 
   @override
   Future<void> deactivateCheckpoint(String id) async {}
+
+  @override
+  Future<void> activateCheckpoint(String id) async {}
 }
 
 Checkpoint _tps(String code, {String? city, String? district}) {

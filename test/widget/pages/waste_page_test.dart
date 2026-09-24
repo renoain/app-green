@@ -56,6 +56,10 @@ class FakeCheckpointRepository implements CheckpointRepository {
   Future<List<Checkpoint>> getAllCheckpoints() async => checkpoints;
 
   @override
+  Future<List<Checkpoint>> getActiveCheckpoints() async =>
+      checkpoints.where((Checkpoint c) => c.isActive).toList();
+
+  @override
   Future<List<Checkpoint>> getNearbyCheckpoints({
     required double latitude,
     required double longitude,
@@ -144,6 +148,9 @@ class FakeCheckpointRepository implements CheckpointRepository {
 
   @override
   Future<void> deactivateCheckpoint(String id) async {}
+
+  @override
+  Future<void> activateCheckpoint(String id) async {}
 }
 
 Widget _wasteApp({List<Override> overrides = const <Override>[]}) {

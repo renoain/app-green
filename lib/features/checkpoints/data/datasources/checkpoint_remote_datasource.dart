@@ -27,11 +27,21 @@ class CheckpointRemoteDatasource {
   SupabaseClient get _client =>
       _override ?? SupabaseService.instance.client;
 
-  /// Ambil semua checkpoint, diurutkan berdasarkan nama.
+  /// Ambil semua checkpoint (aktif + nonaktif, untuk admin).
   Future<List<CheckpointModel>> getAllCheckpoints() async {
     final List<Map<String, dynamic>> rows = await _client
         .from(AppTables.checkpoints)
         .select()
+        .order('name', ascending: true);
+    return rows.map(CheckpointModel.fromJson).toList();
+  }
+
+  /// Ambil checkpoint aktif saja (untuk user).
+  Future<List<CheckpointModel>> getActiveCheckpoints() async {
+    final List<Map<String, dynamic>> rows = await _client
+        .from(AppTables.checkpoints)
+        .select()
+        .eq('is_active', true)
         .order('name', ascending: true);
     return rows.map(CheckpointModel.fromJson).toList();
   }
@@ -48,7 +58,7 @@ class CheckpointRemoteDatasource {
   }) async {
     final List<_CheckpointWithDistance> withDistance =
         <_CheckpointWithDistance>[];
-    final List<CheckpointModel> all = await getAllCheckpoints();
+    final List<CheckpointModel> all = await getActiveCheckpoints();
     for (final CheckpointModel checkpoint in all) {
       final int distanceMeters = GeoUtils.distanceMeters(
         latitude,
@@ -235,11 +245,17 @@ class CheckpointRemoteDatasource {
     );
   }
 
-  /// Nonaktifkan checkpoint.
-  ///
-  /// Skema checkpoints tidak punya kolom is_active dan skema dilarang
-  /// diubah, jadi nonaktif = hapus permanen (RLS: hanya admin).
-  Future<void> deactivateCheckpoint(String id) {
-    return deleteCheckpoint(id);
+  /// Nonaktifkan checkpoint (soft-delete, RLS: hanya admin).
+  Future<void> deactivateCheckpoint(String id) async {
+    await _client
+        .from(AppTables.checkpoints)
+        .update(<String, dynamic>{'is_active': false}).eq('id', id);
+  }
+
+  /// Aktifkan kembali checkpoint (RLS: hanya admin).
+  Future<void> activateCheckpoint(String id) async {
+    await _client
+        .from(AppTables.checkpoints)
+        .update(<String, dynamic>{'is_active': true}).eq('id', id);
   }
 }

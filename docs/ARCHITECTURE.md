@@ -608,6 +608,11 @@ Arsitektur auth berlapis presentation -> domain -> data:
   5 notifier (reward, user, pengaturan, TPS, verifikasi) -> halaman
   /admin/audit-logs (50 terbaru + pull-to-refresh). Menu drawer + sheet
   bertambah 1 (petugas tetap 3 pertama).
+- Soft-delete TPS: kolom checkpoints.is_active (migration 021, default
+  true) -> deactivate/activate update flag (RLS admin) -> admin baca
+  semua + chip status + tombol toggle; user baca aktif saja via
+  getActiveCheckpoints (daftar + terdekat). Tanpa kolom ini dulu
+  nonaktif = hapus permanen.
 
 ---
 

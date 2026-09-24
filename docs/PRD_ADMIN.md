@@ -107,7 +107,8 @@ Fitur:
 - Search by nama atau kode TPS.
 - Tambah checkpoint baru.
 - Edit checkpoint.
-- Nonaktifkan checkpoint (soft delete).
+- Nonaktifkan checkpoint (soft-delete is_active, migration 021) +
+  aktifkan kembali; daftar user hanya tampil yang aktif.
 - Ambil lokasi dari GPS admin saat tambah/edit (minta hidupkan GPS bila
   mati, arahkan ke pengaturan bila izin ditolak permanen).
 - Pilih titik di peta layar penuh (pin tengah, geser peta atau ketuk,
@@ -304,7 +305,7 @@ text
 
 ## 13. Status dan Riwayat
 
-- Status: In Progress (MVP admin selesai fungsional; tersisa kategori sampah, QR TPS, soft-delete TPS).
+- Status: In Progress (MVP admin selesai fungsional; tersisa kategori sampah).
 - 2026-09-20: Dokumen dibuat manual oleh owner.
 - 2026-09-20: Implementasi MVP selesai (fase 2: reward, user, pengaturan).
 - 2026-09-21: Section 6.2 diperbarui (filter + dropdown wilayah berjenjang, kode TPS otomatis KOTA-KEC-NOMOR, kolom code terpisah dari qr_code).
@@ -318,5 +319,7 @@ text
 - 2026-09-23: Pengaturan tulis selesai (tabel app_settings migration 019 + form validasi + AppConfig runtime + wiring radius/batas/target/foto + load splash); kategori sampah fase lanjut.
 - 2026-09-23: Grafik dasbor selesai (batang 7 hari via bucket domain + Container, tanpa dependency baru); tersisa audit log + kategori + QR TPS + soft-delete.
 - 2026-09-23: Audit log selesai (tabel admin_audit_logs migration 020 append-only + hooks 5 notifier best effort + halaman daftar + menu drawer); tersisa kategori + QR TPS + soft-delete.
+- 2026-09-23: QR TPS tampil lagi (dialog cetak + pratinjau form, pretty_qr_code existing).
+- 2026-09-23: Soft-delete TPS selesai (kolom is_active migration 021 + chip status + aktifkan; user hanya baca aktif); tersisa kategori sampah.
 - Menunggu review dan uji device fisik.
 - Setelah disetujui, masuk ke pengembangan fase 2.

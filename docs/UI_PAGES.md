@@ -453,10 +453,11 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   Dialog QR (gambar + kode + petunjuk cetak) dari kartu.
 - State: daftar checkpoint (loading, error + retry, empty state),
   query pencarian, filter wilayah, pull-to-refresh.
-- Aksi: tap Ubah ke form edit, Nonaktifkan dengan dialog konfirmasi
-  (hapus permanen karena skema tanpa kolom is_active). Kembali dari
-  form dengan hasil tersimpan memuat ulang daftar admin dan daftar
-  user (Supabase) agar lokasi baru/terubah langsung tampil.
+- Aksi: tap Ubah ke form edit, Nonaktifkan (soft-delete is_active)
+  atau Aktifkan kembali, masing-masing dialog konfirmasi + chip status
+  di kartu. Kembali dari form dengan hasil tersimpan memuat ulang
+  daftar admin dan daftar user (Supabase) agar lokasi baru/terubah
+  langsung tampil; daftar user hanya berisi TPS aktif.
 - Navigasi: /admin/checkpoints di AdminShell.
 - Prioritas MVP: Ya.
 
