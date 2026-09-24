@@ -30,6 +30,7 @@ class WasteLogModel extends WasteLog {
     super.riskScore,
     super.exifOk,
     super.riskDetail,
+    super.rejectionReason,
   });
 
   /// Membangun model dari respons JSON Supabase.
@@ -61,6 +62,7 @@ class WasteLogModel extends WasteLog {
       riskScore: json['risk_score'] as int?,
       exifOk: json['exif_ok'] as bool?,
       riskDetail: json['risk_detail'] as String?,
+      rejectionReason: json['rejection_reason'] as String?,
     );
   }
 
@@ -82,6 +84,7 @@ class WasteLogModel extends WasteLog {
       'notes': notes,
       'source': source.value,
       'created_at': createdAt.toIso8601String(),
+      if (rejectionReason != null) 'rejection_reason': rejectionReason,
     };
   }
 

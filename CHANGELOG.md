@@ -1,5 +1,25 @@
 # CHANGELOG - Go Green
 
+## [2026-09-24] - Push migrasi 023 ke Supabase remote
+
+Status: Selesai
+
+File yang diubah:
+
+- Tidak ada perubahan file (hanya `supabase db push` ke remote).
+
+Catatan:
+
+- Migration list remote kini 001-023 sinkron dengan local.
+- Aktif di remote: kolom waste_logs risk_score/exif_ok/risk_detail.
+- Langkah lanjut: uji device foto kamera asli (skor rendah, EXIF utuh) vs foto edit (skor tinggi).
+
+Verifikasi:
+
+- migration list: 001-023 Local = Remote.
+- hasil linter/analyze: belum dijalankan (tanpa perubahan kode)
+- hasil test: belum dijalankan (tanpa perubahan kode)
+
 ## [2026-09-24] - Forensik foto on-device (EXIF + skor risiko tersimpan)
 
 Status: Selesai (migration 023 perlu `supabase db push`; uji device foto kamera asli vs edit)

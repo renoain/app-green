@@ -29,6 +29,7 @@ abstract interface class WasteRepository {
     int? riskScore,
     bool? exifOk,
     String? riskDetail,
+    String? rejectionReason,
   });
 
   /// Mengambil daftar waste log milik user, terbaru di atas.

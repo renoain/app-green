@@ -1,4 +1,4 @@
-# AGENTS.md - Go Green
+    # AGENTS.md - Go Green
 
 File instruksi utama untuk AI/agent (OpenCode, Cursor, GitHub Copilot, dll).
 Wajib dibaca sebelum menulis kode atau membuat file.

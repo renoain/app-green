@@ -30,6 +30,11 @@
 	<string>Aplikasi membutuhkan kamera untuk mengambil foto bukti pembuangan sampah.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Aplikasi membutuhkan lokasi untuk memverifikasi pembuangan sampah di checkpoint.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

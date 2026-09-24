@@ -29,6 +29,7 @@ class WasteLog {
     this.riskScore,
     this.exifOk,
     this.riskDetail,
+    this.rejectionReason,
   });
 
   /// ID unik log.
@@ -90,4 +91,7 @@ class WasteLog {
 
   /// Kode sinyal risiko koma-dipisah (null = tidak ada).
   final String? riskDetail;
+
+  /// Alasan penolakan otomatis trigger (null = lolos atau bukan trigger rejection).
+  final String? rejectionReason;
 }

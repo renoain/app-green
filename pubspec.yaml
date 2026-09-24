@@ -56,6 +56,11 @@ dependencies:
   # Logging
   logger: ^2.3.0
 
+  # Push Notification
+  firebase_core: ^4.15.0
+  firebase_messaging: ^16.0.0
+  flutter_local_notifications: ^22.0.0
+
   # Utility
   intl: ^0.20.3
   uuid: ^4.4.0

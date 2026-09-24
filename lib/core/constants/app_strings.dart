@@ -656,6 +656,12 @@ class AppStrings {
   /// Label Bahasa Inggris di pemilih bahasa.
   static String get languageEnglish => _t('languageEnglish');
 
+  /// Nama channel notifikasi Android.
+  static String get notifChannelName => _t('notifChannelName');
+
+  /// Deskripsi channel notifikasi Android.
+  static String get notifChannelDesc => _t('notifChannelDesc');
+
   /// Judul dialog konfirmasi penukaran reward.
   static String get redeemConfirmTitle => _t('redeemConfirmTitle');
 
@@ -1526,6 +1532,8 @@ class AppStrings {
     'settingsLanguage': 'Bahasa',
     'languageIndonesian': 'Indonesia',
     'languageEnglish': 'Inggris',
+    'notifChannelName': 'Go Green',
+    'notifChannelDesc': 'Notifikasi aktivitas dan reward',
     'redeemConfirmTitle': 'Konfirmasi Penukaran',
     'redeemConfirmMessage': 'Kamu akan menukar poin untuk reward ini. Lanjutkan?',
     'redeemSuccessTitle': 'Penukaran Berhasil',
@@ -1973,6 +1981,8 @@ class AppStrings {
     'settingsLanguage': 'Language',
     'languageIndonesian': 'Indonesian',
     'languageEnglish': 'English',
+    'notifChannelName': 'Go Green',
+    'notifChannelDesc': 'Activity and reward notifications',
     'redeemConfirmTitle': 'Confirm Redemption',
     'redeemConfirmMessage': 'You are about to redeem points for this reward. Continue?',
     'redeemSuccessTitle': 'Redemption Successful',

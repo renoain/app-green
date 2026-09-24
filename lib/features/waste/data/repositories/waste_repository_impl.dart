@@ -39,6 +39,7 @@ class WasteRepositoryImpl implements WasteRepository {
     int? riskScore,
     bool? exifOk,
     String? riskDetail,
+    String? rejectionReason,
   }) {
     return _remote.insertWasteLog(
       userId: userId,
@@ -52,6 +53,7 @@ class WasteRepositoryImpl implements WasteRepository {
       riskScore: riskScore,
       exifOk: exifOk,
       riskDetail: riskDetail,
+      rejectionReason: rejectionReason,
     );
   }
 

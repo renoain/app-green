@@ -4,6 +4,8 @@
     <!-- GPS untuk verifikasi lokasi checkpoint (radius 100 m). -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!-- Notifikasi push (diminta runtime di Android 13+). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application
         android:label="go_green"
         android:name="${applicationName}"

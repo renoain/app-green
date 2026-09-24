@@ -59,6 +59,7 @@ class WasteRemoteDatasource {
     int? riskScore,
     bool? exifOk,
     String? riskDetail,
+    String? rejectionReason,
   }) async {
     final Map<String, dynamic> row = await _client
         .from(AppTables.wasteLogs)

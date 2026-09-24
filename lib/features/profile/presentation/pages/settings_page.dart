@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/localization/app_locale.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/services/push_notification_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -29,6 +30,14 @@ class SettingsPage extends ConsumerStatefulWidget {
 
 class _SettingsPageState extends ConsumerState<SettingsPage> {
   bool _notificationEnabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    PushNotificationService.isEnabled().then((bool value) {
+      if (mounted) setState(() => _notificationEnabled = value);
+    });
+  }
 
   void _showAbout() {
     showAboutDialog(
@@ -66,6 +75,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               value: _notificationEnabled,
               onChanged: (bool value) {
                 setState(() => _notificationEnabled = value);
+                PushNotificationService().setEnabled(value);
               },
             ),
             const SizedBox(height: AppSpacing.md),
