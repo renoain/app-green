@@ -1,5 +1,25 @@
 # CHANGELOG - Go Green
 
+## [2026-09-24] - Push migrasi 018-022 ke Supabase remote
+
+Status: Selesai
+
+File yang diubah:
+
+- Tidak ada perubahan file (hanya `supabase db push` ke remote).
+
+Catatan:
+
+- Migration list remote kini 001-022 sinkron dengan local.
+- Aktif di remote: policy ubah role + baca reward admin (018), tabel app_settings + seed (019/022), tabel audit log (020), kolom checkpoints.is_active (021).
+- Langkah lanjut: uji device fisik ubah role/pengaturan/nonaktif + cek daftar audit/grafik.
+
+Verifikasi:
+
+- migration list: 001-022 Local = Remote.
+- hasil linter/analyze: belum dijalankan (tanpa perubahan kode)
+- hasil test: belum dijalankan (tanpa perubahan kode)
+
 ## [2026-09-23] - Bonus kategori sampah bisa diubah admin (live)
 
 Status: Selesai (migration 022 perlu `supabase db push` manual; uji device + cek estimasi poin)

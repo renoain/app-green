@@ -178,7 +178,8 @@ Fitur:
 - List user (limit 50, terbaru di atas).
 - Cari nama/email + filter by role (Semua/User/Petugas/Admin).
 - Ubah role user (user/petugas/admin) via detail; cegah self-demote
-  (migration 018 policy profiles_update_role_admin, push manual).
+  (migration 018 policy profiles_update_role_admin, sudah di-push
+  2026-09-24).
 - Lihat detail user (profil, total poin via points, 10 riwayat waste).
 
 ### 6.6 Pengaturan (Selesai tulis; kategori fase lanjut)
@@ -190,8 +191,8 @@ Fitur:
 - Penegakan blokir radius GPS on/off (waste/capture/validasi).
 - Target misi mingguan (1-30) + foto maksimal (1-10 MB).
 - Nilai dari tabel app_settings (migration 019 + seed bonus 022,
-  push manual), dimuat saat splash best effort, fallback AppValues
-  bila offline.
+  sudah di-push 2026-09-24), dimuat saat splash best effort,
+  fallback AppValues bila offline.
 - Bonus poin kategori bisa diubah admin (berlaku live di hitungan
   poin); daftar nilai kategori (organik/anorganik/b3/daur_ulang)
   tetap di check constraint + enum kode (tambah nilai baru butuh

@@ -78,7 +78,7 @@ RLS:
 - Admin bisa baca semua profil.
 - User bisa update profil sendiri (kecuali role).
 - Admin bisa update semua profil termasuk role (migration 018 policy
-  profiles_update_role_admin; perlu `supabase db push` manual).
+  profiles_update_role_admin; sudah di-push 2026-09-24).
 
 Trigger:
 
@@ -217,7 +217,7 @@ RLS:
 
 - Semua user bisa baca yang aktif.
 - Admin bisa baca semua termasuk nonaktif (migration 018 policy
-  rewards_select_all_admin; perlu `supabase db push` manual).
+  rewards_select_all_admin; sudah di-push 2026-09-24).
 - Hanya admin yang bisa insert/update/delete.
 
 ### 3.6 redemptions
@@ -276,8 +276,8 @@ RLS:
 
 - Semua user (anon + authenticated) bisa baca (berlaku sebelum login).
 - Hanya admin yang bisa tulis (migration 019 policy
-  app_settings_read_all + app_settings_write_admin; perlu
-  `supabase db push` manual).
+  app_settings_read_all + app_settings_write_admin; sudah di-push
+  2026-09-24).
 
 Seed: 5 baris default sama dengan AppValues (insert idempoten,
 on conflict do nothing agar tidak menimpa perubahan admin) +
@@ -301,7 +301,7 @@ Jejak aksi admin, append-only (migration 020).
 RLS (tanpa update/delete agar jejak tidak bisa diubah):
 
 - Admin bisa baca semua.
-- Admin bisa insert (perlu `supabase db push` manual, bersama 018/019).
+- Admin bisa insert (sudah di-push 2026-09-24, bersama 018/019).
 
 ---
 
@@ -410,20 +410,20 @@ where email = 'admin@green.com';
   applied. Belum di-push ke remote (push manual bersama 015).
 - Migration 018_admin_write_policies.sql menambah policy RLS yang kurang
   (idempoten): rewards_select_all_admin (admin baca semua reward) dan
-  profiles_update_role_admin (admin ubah role). Belum di-push ke remote
-  (push manual oleh user sebelum uji ubah role/nonaktif).
+  profiles_update_role_admin (admin ubah role). Sudah di-push ke remote
+  2026-09-24.
 - Migration 019_app_settings.sql membuat tabel app_settings + RLS baca
   semua/tulis admin + seed 5 default (idempoten, tidak menimpa).
-  Belum di-push ke remote (push manual bersama 018).
+  Sudah di-push ke remote 2026-09-24.
 - Migration 020_admin_audit_logs.sql membuat tabel admin_audit_logs +
   index waktu/pelaku + RLS baca/insert admin (append-only, idempoten).
-  Belum di-push ke remote (push manual bersama 018/019).
+  Sudah di-push ke remote 2026-09-24.
 - Migration 021_checkpoint_is_active.sql menambah kolom is_active
   (default true) + index (idempoten). Nonaktifkan kini soft-delete;
-  daftar user hanya membaca yang aktif.
+  daftar user hanya membaca yang aktif. Sudah di-push 2026-09-24.
 - Migration 022_category_bonus_seeds.sql menambah 4 seed bonus
   kategori (idempoten, tidak menimpa). Daftar nilai kategori tetap
-  di check constraint waste_logs.
+  di check constraint waste_logs. Sudah di-push 2026-09-24.
 
 ---
 

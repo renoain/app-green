@@ -549,8 +549,8 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 - State: adminUsersProvider via AdminUsersDatasource + ManageUserUsecase
   (skeleton, error + retry, kosong, pull-to-refresh, limit 50).
 - Aksi: cari + filter lokal; ketuk ke /admin/users/:id; ubah role via
-  dropdown chip + simpan (cegah self-demote, migration 018); tulis via
-  RLS admin, perlu `supabase db push` manual sebelum uji.
+  dropdown chip + simpan (cegah self-demote, migration 018 sudah
+  di-push 2026-09-24); tulis via RLS admin.
 - Navigasi: /admin/users (+ :id detail) di AdminShell.
 - Prioritas MVP: Ya (baca + tulis role).
 
@@ -565,8 +565,8 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   tombol Simpan, snackbar sukses, catatan tambah nilai level kode.
 - State: adminSettingsProvider via ManageSettingsUsecase
   (loading, error + retry, pull-to-refresh, validasi batas wajar).
-- Aksi: simpan tervalidasi ke app_settings (RLS admin) + terapkan ke
-  AppConfig runtime; perlu `supabase db push` manual (migration 019).
+- Aksi: simpan tervalidasi ke app_settings (RLS admin, migration 019
+  sudah di-push 2026-09-24) + terapkan ke AppConfig runtime.
 - Navigasi: /admin/settings di AdminShell.
 - Prioritas MVP: Ya (baca + tulis).
 
