@@ -2,25 +2,21 @@
 
 ## [2026-09-26] - Push migrasi 024-025 ke Supabase remote
 
-Status: Sedang dikerjakan
+Status: Selesai
 
 File yang diubah:
 
-- supabase/migrations/024_auto_verify_waste.sql (dibuat): trigger auto-verify waste_logs (hash unik, rate limit, GPS radius, kategori valid, checkpoint aktif)
-- supabase/migrations/025_profile_fcm_token.sql (dibuat): kolom fcm_token di profiles untuk push notification
-- lib/core/services/push_notification_service.dart (dibuat): layanan FCM + local notification
-- lib/features/profile/data/datasources/push_token_datasource.dart (dibuat): simpan token push ke backend
+- Tidak ada perubahan file (hanya `supabase db push` ke remote).
 
 Catatan:
 
-- Migration 024: auto-approve jika semua kondisi terpenuhi (status = verified); gagal = pending + rejection_reason.
-- Migration 025: tambah kolom fcm_token (text) di tabel profiles.
-- Push notification service best-effort: tanpa Firebase config, layanan nonaktif diam-diam.
-- Langkah lanjut: `supabase db push` untuk 024 dan 025, lalu uji device.
+- Migration list remote kini 001-025 sinkron dengan local.
+- Aktif di remote: trigger auto-verify waste_logs (024), kolom fcm_token di profiles (025).
+- Langkah lanjut: uji device foto kamera asli (skor rendah, EXIF utuh) vs foto edit (skor tinggi).
 
 Verifikasi:
 
-- migration list: 001-025 Local = Remote (belum di-push).
+- migration list: 001-025 Local = Remote.
 - hasil linter/analyze: belum dijalankan
 - hasil test: belum dijalankan
 
