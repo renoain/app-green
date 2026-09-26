@@ -17,8 +17,9 @@ Catatan:
 Verifikasi:
 
 - migration list: 001-025 Local = Remote.
-- hasil linter/analyze: belum dijalankan
-- hasil test: belum dijalankan
+- hasil linter/analyze: OK (flutter analyze tidak ada issue)
+- hasil test: OK (258 test lulus)
+- Catatan: perbaiki push_notification_service.dart (named parameter initialize/show) dan fake repositories (tambah rejectionReason).
 
 ## [2026-09-24] - Push migrasi 023 ke Supabase remote
 
