@@ -48,6 +48,7 @@ class FakeAdminWasteRepository implements WasteRepository {
     int? riskScore,
     bool? exifOk,
     String? riskDetail,
+    String? rejectionReason,
   }) async =>
       throw UnimplementedError();
 

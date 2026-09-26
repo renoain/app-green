@@ -40,6 +40,7 @@ class FakeWasteRepository implements WasteRepository {
     int? riskScore,
     bool? exifOk,
     String? riskDetail,
+    String? rejectionReason,
   }) async {
     final DateTime now = DateTime.utc(2026, 9, 18);
     return WasteLog(

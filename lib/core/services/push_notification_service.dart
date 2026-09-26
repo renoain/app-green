@@ -89,7 +89,7 @@ class PushNotificationService {
       final FlutterLocalNotificationsPlugin local =
           _localOverride ?? FlutterLocalNotificationsPlugin();
       await local.initialize(
-        const InitializationSettings(
+        settings: const InitializationSettings(
           android: AndroidInitializationSettings('@mipmap/ic_launcher'),
         ),
         onDidReceiveNotificationResponse:
@@ -131,11 +131,11 @@ class PushNotificationService {
       if (title == null && body == null) return;
       final FlutterLocalNotificationsPlugin local =
           _localOverride ?? FlutterLocalNotificationsPlugin();
-      await local.show(
-        message.hashCode,
-        title ?? AppStrings.appName,
-        body ?? '',
-        NotificationDetails(
+await local.show(
+        id: message.hashCode,
+        title: title ?? AppStrings.appName,
+        body: body ?? '',
+        notificationDetails: NotificationDetails(
           android: AndroidNotificationDetails(
             _channelId,
             AppStrings.notifChannelName,
@@ -144,7 +144,6 @@ class PushNotificationService {
             priority: Priority.high,
           ),
         ),
-        payload: PushRouteMapper.routeNameFor(message.data),
       );
     } catch (_) {
       // Notifikasi lokal opsional: abaikan kegagalan.
