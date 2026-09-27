@@ -170,6 +170,7 @@ class _FakeCheckpointRepo implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async {
     return Checkpoint(
       id: 'c1',
@@ -179,6 +180,7 @@ class _FakeCheckpointRepo implements CheckpointRepository {
       longitude: longitude,
       radius: radius,
       qrCode: qrCode ?? 'CP-TEST',
+      maxUses: maxUses,
       createdAt: DateTime(2026, 9, 23),
     );
   }
@@ -197,6 +199,7 @@ class _FakeCheckpointRepo implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) {
     throw UnimplementedError();
   }
@@ -217,6 +220,7 @@ class _FakeCheckpointRepo implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) {
     throw UnimplementedError();
   }
@@ -235,6 +239,7 @@ class _FakeCheckpointRepo implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) {
     throw UnimplementedError();
   }

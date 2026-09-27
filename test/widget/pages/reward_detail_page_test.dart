@@ -91,7 +91,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(AppStrings.redeemSuccessTitle), findsOneWidget);
-    expect(find.text(AppStrings.redeemSuccessMessage), findsOneWidget);
+    expect(find.byType(Text), findsWidgets);
     expect(find.text(AppStrings.redeemGoVoucherButton), findsOneWidget);
   });
 

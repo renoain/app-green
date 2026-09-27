@@ -90,6 +90,7 @@ class FakeCheckpointRepository implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async =>
       checkpoints.first;
 
@@ -107,6 +108,7 @@ class FakeCheckpointRepository implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async =>
       checkpoints.first;
 
@@ -126,6 +128,7 @@ class FakeCheckpointRepository implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async =>
       checkpoints.first;
 
@@ -143,6 +146,7 @@ class FakeCheckpointRepository implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async =>
       checkpoints.first;
 

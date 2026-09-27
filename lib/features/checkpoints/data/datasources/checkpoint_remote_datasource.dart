@@ -114,6 +114,7 @@ class CheckpointRemoteDatasource {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async {
     final Map<String, dynamic> row = await _client
         .from(AppTables.checkpoints)
@@ -132,6 +133,7 @@ class CheckpointRemoteDatasource {
             'district_code': districtCode,
           if (subdistrict != null && subdistrict.isNotEmpty)
             'subdistrict': subdistrict,
+          if (maxUses != null) 'max_uses': maxUses,
         })
         .select()
         .single();
@@ -152,6 +154,7 @@ class CheckpointRemoteDatasource {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async {
     final Map<String, dynamic> row = await _client
         .from(AppTables.checkpoints)
@@ -173,6 +176,7 @@ class CheckpointRemoteDatasource {
               : districtCode,
           'subdistrict':
               (subdistrict == null || subdistrict.isEmpty) ? null : subdistrict,
+          if (maxUses != null) 'max_uses': maxUses,
         })
         .eq('id', id)
         .select()
@@ -198,6 +202,7 @@ class CheckpointRemoteDatasource {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) {
     return createCheckpoint(
       name: name,
@@ -211,6 +216,7 @@ class CheckpointRemoteDatasource {
       cityCode: cityCode,
       districtCode: districtCode,
       subdistrict: subdistrict,
+      maxUses: maxUses,
     );
   }
 
@@ -228,6 +234,7 @@ class CheckpointRemoteDatasource {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) {
     return updateCheckpoint(
       id: id,
@@ -242,6 +249,7 @@ class CheckpointRemoteDatasource {
       cityCode: cityCode,
       districtCode: districtCode,
       subdistrict: subdistrict,
+      maxUses: maxUses,
     );
   }
 

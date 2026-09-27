@@ -14,6 +14,7 @@ class RedemptionModel extends Redemption {
     super.rewardId,
     super.rewardName,
     required super.status,
+    super.voucherCode,
     required super.createdAt,
   });
 
@@ -26,6 +27,7 @@ class RedemptionModel extends Redemption {
       rewardName:
           rewards is Map<String, dynamic> ? rewards['name'] as String? : null,
       status: RedemptionStatus.fromDb(json['status'] as String?),
+      voucherCode: json['voucher_code'] as String?,
       createdAt: _parseDateTime(json['created_at']),
     );
   }

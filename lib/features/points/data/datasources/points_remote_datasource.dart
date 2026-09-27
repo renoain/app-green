@@ -70,28 +70,36 @@ class PointsRemoteDatasource {
     });
   }
 
-  /// Mengajukan penukaran hadiah (insert redemption berstatus pending).
-  ///
-  /// Mengembalikan ID redemption yang dibuat. Pemotongan poin dilakukan
-  /// sisi server saat redemption disetujui.
+  /// Mengajukan penukaran hadiah. Mengembalikan voucher code.
   Future<String> redeemPoints({
     required String userId,
     required String rewardId,
   }) async {
-    final Map<String, dynamic> row = await _client
-        .from(AppTables.redemptions)
-        .insert(<String, dynamic>{
-          'user_id': userId,
-          'reward_id': rewardId,
-          'qr_code': _generateQrCode(),
-        })
-        .select('id')
-        .single();
-    return row['id'] as String;
+    final String voucherCode = _generateVoucherCode();
+    await _client.from(AppTables.redemptions).insert(<String, dynamic>{
+      'user_id': userId,
+      'reward_id': rewardId,
+      'status': 'pending',
+      'qr_code': _generateQrCode(),
+      'voucher_code': voucherCode,
+    });
+    await _client.from(AppTables.points).insert(<String, dynamic>{
+      'user_id': userId,
+      'amount': 0,
+      'type': 'redeem',
+      'reference_id': voucherCode,
+      'description': 'Redeem reward: $rewardId',
+    });
+    return voucherCode;
   }
 
   /// Menghasilkan kode QR unik untuk klaim redemption.
   String _generateQrCode() {
     return const Uuid().v4();
+  }
+
+  /// Menghasilkan kode voucher unik.
+  String _generateVoucherCode() {
+    return const Uuid().v4().toUpperCase().substring(0, 8);
   }
 }

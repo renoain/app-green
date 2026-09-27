@@ -61,6 +61,7 @@ class _AdminCheckpointFormPageState
   late final TextEditingController _radiusController;
   late final TextEditingController _codeController;
   late final TextEditingController _subdistrictController;
+  late final TextEditingController _maxUsesController;
   RegionSelection _region = (
     province: null,
     city: null,
@@ -103,6 +104,8 @@ class _AdminCheckpointFormPageState
     _codeController = TextEditingController(text: checkpoint?.code ?? '');
     _subdistrictController =
         TextEditingController(text: checkpoint?.subdistrict ?? '');
+    _maxUsesController =
+        TextEditingController(text: checkpoint?.maxUses?.toString() ?? '');
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       if (widget.checkpoint != null) return;
@@ -117,6 +120,7 @@ class _AdminCheckpointFormPageState
   void dispose() {
     _codeController.dispose();
     _subdistrictController.dispose();
+    _maxUsesController.dispose();
     _nameController.dispose();
     _addressController.dispose();
     _latController.dispose();
@@ -239,6 +243,7 @@ class _AdminCheckpointFormPageState
         _radiusController.text = found.radius.toString();
         _codeController.text = found.code ?? '';
         _subdistrictController.text = found.subdistrict ?? '';
+        _maxUsesController.text = found.maxUses?.toString() ?? '';
       });
     } catch (error, stackTrace) {
       AppLogger.error('Gagal memuat checkpoint admin', error, stackTrace);
@@ -304,6 +309,9 @@ class _AdminCheckpointFormPageState
       final String? subdistrict = _subdistrictController.text.trim().isEmpty
           ? null
           : _subdistrictController.text.trim();
+      final int? maxUses = _maxUsesController.text.trim().isEmpty
+          ? null
+          : int.tryParse(_maxUsesController.text.trim());
       if (existing == null) {
         await notifier.create(
           name: name,
@@ -317,6 +325,7 @@ class _AdminCheckpointFormPageState
           cityCode: cityCode,
           districtCode: districtCode,
           subdistrict: subdistrict,
+          maxUses: maxUses,
         );
       } else {
         await notifier.update(
@@ -332,6 +341,7 @@ class _AdminCheckpointFormPageState
           cityCode: cityCode,
           districtCode: districtCode,
           subdistrict: subdistrict,
+          maxUses: maxUses,
         );
       }
       try {
@@ -470,6 +480,22 @@ class _AdminCheckpointFormPageState
               ),
               const SizedBox(height: AppSpacing.sm),
               TextField(
+                controller: _subdistrictController,
+                decoration: InputDecoration(
+                  labelText: AppStrings.adminSubdistrictLabel,
+                ),
+              ),
+               const SizedBox(height: AppSpacing.sm),
+              TextField(
+                controller: _maxUsesController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: AppStrings.adminCheckpointMaxUsesLabel,
+                  hintText: AppStrings.adminCheckpointMaxUsesHint,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              TextField(
                 controller: _codeController,
                 readOnly: true,
                 decoration: InputDecoration(
@@ -485,13 +511,6 @@ class _AdminCheckpointFormPageState
                           ),
                         )
                       : null,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              TextField(
-                controller: _subdistrictController,
-                decoration: InputDecoration(
-                  labelText: AppStrings.adminSubdistrictLabel,
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),

@@ -1,5 +1,67 @@
 # CHANGELOG - Go Green
 
+## [2026-09-27] - Fitur: Batas penggunaan checkpoint, poin auto-deduct, voucher code
+
+Status: Selesai
+
+File yang diubah:
+
+- `supabase/migrations/025_checkpoint_limits_and_voucher.sql` - Tambah `max_uses`/`remaining_uses` ke checkpoints, `voucher_code` ke redemptions, trigger auto-decrement remaining_uses saat waste_logs verified, check remaining_uses di auto-verify trigger, fungsi `generate_voucher_code()`.
+- `lib/features/regions/domain/usecases/resolve_region_usecase.dart` - `pickSubdistrict()` strips akhiran `RW XX`, fallback ke `display_name`.
+- `lib/features/admin/presentation/pages/admin_checkpoint_form_page.dart` - Tambah field `maxUses`, tukar posisi kelurahan di atas kode TPS.
+- `lib/features/checkpoints/domain/entities/checkpoint.dart` - Tambah `maxUses` dan `remainingUses` fields.
+- `lib/features/checkpoints/data/models/checkpoint_model.dart` - Update fromJson/toJson untuk `max_uses`/`remaining_uses`.
+- `lib/features/checkpoints/domain/repositories/checkpoint_repository.dart` - Update signatures.
+- `lib/features/checkpoints/data/datasources/checkpoint_remote_datasource.dart` - Update create/update methods.
+- `lib/features/checkpoints/data/repositories/checkpoint_repository_impl.dart` - Pass `maxUses` through.
+- `lib/features/checkpoints/domain/usecases/manage_checkpoint_usecase.dart` - Tambah `maxUses` parameter.
+- `lib/features/admin/presentation/providers/admin_checkpoint_provider.dart` - Tambah `maxUses`.
+- `lib/features/points/data/datasources/points_remote_datasource.dart` - `redeemPoints()` sekarang generate `voucher_code`, insert `type='redeem'` ke points, return voucher code.
+- `lib/features/rewards/data/datasources/reward_remote_datasource.dart` - Return voucher code.
+- `lib/features/rewards/domain/entities/redemption.dart` - Tambah `voucherCode` field.
+- `lib/features/rewards/data/models/redemption_model.dart` - Update fromJson for `voucher_code`.
+- `lib/features/rewards/presentation/providers/reward_provider.dart` - `redeem()` return voucher code.
+- `lib/features/rewards/presentation/widgets/redeem_dialogs.dart` - `showRedeemSuccessDialog` accept optional `voucherCode`.
+- `lib/features/rewards/presentation/pages/vouchers_page.dart` - Display voucher code, click to copy.
+- `lib/features/rewards/presentation/pages/reward_detail_page.dart` - Pass voucher code to success dialog.
+- `lib/core/constants/app_strings.dart` - Tambah `adminCheckpointMaxUsesLabel`, `adminCheckpointMaxUsesHint`, `redeemVoucherCopied`.
+- `test/unit/features/regions/resolve_region_test.dart` - Test case baru.
+- `test/unit/features/checkpoints/*` - Update FakeRepository signatures.
+- `test/widget/pages/reward_detail_page_test.dart` - Update for voucher code display.
+
+Catatan:
+
+1. **Checkpoint Limit**: Admin bisa set `max_uses` per checkpoint. Saat user membuang sampah dan waste_logs diverifikasi, `remaining_uses` berkurang otomatis via trigger. Jika `remaining_uses` mencapai 0, checkpoint ditolak dengan alasan `checkpoint_limit_reached`.
+
+2. **Point Deduction**: Poin langsung dicatat sebagai `type='redeem'` di tabel `points` saat tukar reward (client-side). Server-side approval tetap memvalidasi. `getTotalPoints()` sudah menghitung earn - redeem.
+
+3. **Voucher Code**: Setiap redemption menghasilkan `voucher_code` unik (UUID 8 karakter). Voucher code ditampilkan di popup sukses dan daftar voucher. User bisa menyalin kode voucher.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- hasil test: OK (261 test lulus)
+
+## [2026-09-27] - Perbaiki kelurahan terisi nama RW saat tambah lokasi admin + urutan field form
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/features/regions/domain/usecases/resolve_region_usecase.dart` - `pickSubdistrict()` strips akhiran `RW XX` dari nilai `suburb` fallback, dan fallback ke `display_name` bila suburb hanya berisi "RW XX".
+- `lib/features/admin/presentation/pages/admin_checkpoint_form_page.dart` - Tukar posisi field kelurahan di atas kode TPS.
+- `test/unit/features/regions/resolve_region_test.dart` - Tambah test case `akhiran RW XX dibersihkan dari suburb` dan `suburb hanya RW 04, fallback ke display_name`.
+
+Catatan:
+
+- Saat admin menambah checkpoint baru via reverse geocode Nominatim, `suburb` sering berisi `"Sekaran RW 04"` (nama RW) atau hanya `"RW 04"`. `pickSubdistrict()` kini membersihkan akhiran RW dan fallback ke `display_name` untuk mendapatkan nama kelurahan sebenarnya (mis. "Jetis Kulon").
+- Field kelurahan dipindahkan di atas field kode TPS dalam form admin.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- hasil test: OK (40 test lulus)
+
 ## [2026-09-26] - Push migrasi 024-025 ke Supabase remote
 
 Status: Selesai

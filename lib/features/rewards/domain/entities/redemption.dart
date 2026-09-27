@@ -13,6 +13,7 @@ class Redemption {
     this.rewardId,
     this.rewardName,
     required this.status,
+    this.voucherCode,
     required this.createdAt,
   });
 
@@ -27,6 +28,9 @@ class Redemption {
 
   /// Status penukaran.
   final RedemptionStatus status;
+
+  /// Kode voucher unik.
+  final String? voucherCode;
 
   /// Waktu penukaran dibuat.
   final DateTime createdAt;

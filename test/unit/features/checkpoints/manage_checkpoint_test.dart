@@ -23,6 +23,7 @@ class FakeCheckpointRepository implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async {
     createCalls++;
     return Checkpoint(
@@ -38,6 +39,7 @@ class FakeCheckpointRepository implements CheckpointRepository {
       cityCode: cityCode,
       districtCode: districtCode,
       subdistrict: subdistrict,
+      maxUses: maxUses,
       createdAt: DateTime(2026, 9, 20),
     );
   }
@@ -58,6 +60,7 @@ class FakeCheckpointRepository implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) =>
       createCheckpoint(
         name: name,
@@ -66,6 +69,7 @@ class FakeCheckpointRepository implements CheckpointRepository {
         longitude: longitude,
         radius: radius,
         qrCode: qrCode,
+        maxUses: maxUses,
       );
 
   @override
@@ -82,6 +86,7 @@ class FakeCheckpointRepository implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) =>
       updateCheckpoint(
         id: id,
@@ -91,6 +96,7 @@ class FakeCheckpointRepository implements CheckpointRepository {
         longitude: longitude,
         radius: radius,
         qrCode: qrCode,
+        maxUses: maxUses,
       );
 
   @override
@@ -132,6 +138,7 @@ class FakeCheckpointRepository implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async {
     return Checkpoint(
       id: id,
@@ -141,6 +148,7 @@ class FakeCheckpointRepository implements CheckpointRepository {
       longitude: longitude,
       radius: radius,
       qrCode: qrCode,
+      maxUses: maxUses,
       createdAt: DateTime(2026, 9, 20),
     );
   }

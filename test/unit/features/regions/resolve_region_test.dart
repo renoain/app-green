@@ -176,6 +176,46 @@ void main() {
       );
     });
 
+    test('akhiran RW XX dibersihkan dari suburb', () {
+      expect(
+        ResolveRegionFromCoordinatesUsecase.pickSubdistrict(
+          <String, String>{'suburb': 'Sekaran RW 04'},
+          'Wonokromo',
+        ),
+        'Sekaran',
+      );
+      expect(
+        ResolveRegionFromCoordinatesUsecase.pickSubdistrict(
+          <String, String>{'suburb': 'Sekaran RW.04'},
+          'Wonokromo',
+        ),
+        'Sekaran',
+      );
+    });
+
+    test('suburb hanya RW 04, fallback ke display_name', () {
+      expect(
+        ResolveRegionFromCoordinatesUsecase.pickSubdistrict(
+          <String, String>{
+            'suburb': 'RW 04',
+            'display_name': 'Jetis Kulon, Wonokromo, Surabaya, Jawa Timur',
+          },
+          'Wonokromo',
+        ),
+        'Jetis Kulon',
+      );
+    });
+
+    test('suburb hanya RW 04 tanpa display_name mengembalikan null', () {
+      expect(
+        ResolveRegionFromCoordinatesUsecase.pickSubdistrict(
+          <String, String>{'suburb': 'RW 04'},
+          'Wonokromo',
+        ),
+        isNull,
+      );
+    });
+
     test('alamat lengkap dari display_name', () {
       expect(
         ResolveRegionFromCoordinatesUsecase.pickFullAddress(

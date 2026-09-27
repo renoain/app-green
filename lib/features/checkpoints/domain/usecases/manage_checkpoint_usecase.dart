@@ -68,6 +68,7 @@ class ManageCheckpointUsecase {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async {
     validateInput(
       name: name,
@@ -88,6 +89,7 @@ class ManageCheckpointUsecase {
       districtCode: _cleanCode(districtCode),
       subdistrict:
           subdistrict?.trim().isEmpty ?? true ? null : subdistrict?.trim(),
+      maxUses: maxUses,
     );
   }
 
@@ -105,6 +107,7 @@ class ManageCheckpointUsecase {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async {
     validateInput(
       name: name,
@@ -126,6 +129,7 @@ class ManageCheckpointUsecase {
       districtCode: _cleanCode(districtCode),
       subdistrict:
           subdistrict?.trim().isEmpty ?? true ? null : subdistrict?.trim(),
+      maxUses: maxUses,
     );
   }
 

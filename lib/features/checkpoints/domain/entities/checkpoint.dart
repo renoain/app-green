@@ -20,6 +20,8 @@ class Checkpoint {
     this.districtCode,
     this.subdistrict,
     this.isActive = true,
+    this.maxUses,
+    this.remainingUses,
     required this.createdAt,
   });
 
@@ -61,6 +63,12 @@ class Checkpoint {
 
   /// Status aktif TPS (soft-delete admin, default tampil).
   final bool isActive;
+
+  /// Maksimal buang sampah per checkpoint (null = tidak terbatas).
+  final int? maxUses;
+
+  /// Sisa buang sampah yang masih diperbolehkan (null = tidak terbatas).
+  final int? remainingUses;
 
   /// Waktu checkpoint dibuat.
   final DateTime createdAt;

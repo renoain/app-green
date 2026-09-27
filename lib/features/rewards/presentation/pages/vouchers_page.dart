@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../core/constants/app_enums.dart';
 import '../../../../core/constants/app_strings.dart';
@@ -194,6 +195,38 @@ class _VouchersPageState extends ConsumerState<VouchersPage> {
                                   ),
                                   style: AppTypography.bodySm,
                                 ),
+                                if (voucher.voucherCode != null &&
+                                    voucher.voucherCode!.isNotEmpty) ...<Widget>[
+                                  const SizedBox(height: AppSpacing.xs),
+                                  InkWell(
+                                    onTap: () {
+                                      Clipboard.setData(
+                                  ClipboardData(
+                                    text: voucher.voucherCode!,
+                                  ),
+                                );
+                                      if (!mounted) return;
+                                      ScaffoldMessenger.of(context)
+                                        ..hideCurrentSnackBar()
+                                        ..showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              AppStrings.redeemVoucherCopied,
+                                              style: AppTypography.bodySm,
+                                            ),
+                                          ),
+                                        );
+                                    },
+                                    child: Text(
+                                      voucher.voucherCode!,
+                                      style: AppTypography.labelMd
+                                          .copyWith(
+                                            color: AppColors.primary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  ),
+                                ],
                               ],
                             ),
                           ),

@@ -31,7 +31,7 @@ class RewardNotifier extends StateNotifier<AsyncValue<List<Reward>>> {
     );
   }
 
-  /// Mengajukan penukaran reward untuk user.
+  /// Mengajukan penukaran reward untuk user. Mengembalikan voucher code.
   Future<String> redeem({
     required String userId,
     required String rewardId,

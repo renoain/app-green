@@ -16,6 +16,7 @@ class FakeRegionCheckpointRepository implements CheckpointRepository {
     String? code,
     String? cityCode,
     String? districtCode,
+    int? maxUses,
   }) {
     return Checkpoint(
       id: 'id-$code',
@@ -26,6 +27,7 @@ class FakeRegionCheckpointRepository implements CheckpointRepository {
       code: code,
       cityCode: cityCode,
       districtCode: districtCode,
+      maxUses: maxUses,
       createdAt: DateTime(2026, 9, 21),
     );
   }
@@ -63,8 +65,9 @@ class FakeRegionCheckpointRepository implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async =>
-      _stub(code: code, cityCode: cityCode, districtCode: districtCode);
+      _stub(code: code, cityCode: cityCode, districtCode: districtCode, maxUses: maxUses);
 
   @override
   Future<Checkpoint> updateCheckpoint({
@@ -80,8 +83,9 @@ class FakeRegionCheckpointRepository implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async =>
-      _stub(code: code, cityCode: cityCode, districtCode: districtCode);
+      _stub(code: code, cityCode: cityCode, districtCode: districtCode, maxUses: maxUses);
 
   @override
   Future<void> deleteCheckpoint(String id) async {}
@@ -99,8 +103,9 @@ class FakeRegionCheckpointRepository implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async =>
-      _stub(code: code, cityCode: cityCode, districtCode: districtCode);
+      _stub(code: code, cityCode: cityCode, districtCode: districtCode, maxUses: maxUses);
 
   @override
   Future<Checkpoint> updateCheckpointRecord({
@@ -116,8 +121,9 @@ class FakeRegionCheckpointRepository implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async =>
-      _stub(code: code, cityCode: cityCode, districtCode: districtCode);
+      _stub(code: code, cityCode: cityCode, districtCode: districtCode, maxUses: maxUses);
 
   @override
   Future<void> deactivateCheckpoint(String id) async {}
@@ -126,7 +132,7 @@ class FakeRegionCheckpointRepository implements CheckpointRepository {
   Future<void> activateCheckpoint(String id) async {}
 }
 
-Checkpoint _tps(String code, {String? city, String? district}) {
+Checkpoint _tps(String code, {String? city, String? district, int? maxUses}) {
   return Checkpoint(
     id: 'id-$code',
     name: 'TPS',
@@ -136,6 +142,7 @@ Checkpoint _tps(String code, {String? city, String? district}) {
     code: code,
     cityCode: city,
     districtCode: district,
+    maxUses: maxUses,
     createdAt: DateTime(2026, 9, 21),
   );
 }

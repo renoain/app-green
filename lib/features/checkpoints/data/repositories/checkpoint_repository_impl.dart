@@ -59,6 +59,7 @@ class CheckpointRepositoryImpl implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) {
     return _remote.createCheckpoint(
       name: name,
@@ -72,6 +73,7 @@ class CheckpointRepositoryImpl implements CheckpointRepository {
       cityCode: cityCode,
       districtCode: districtCode,
       subdistrict: subdistrict,
+      maxUses: maxUses,
     );
   }
 
@@ -89,6 +91,7 @@ class CheckpointRepositoryImpl implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) {
     return _remote.updateCheckpoint(
       id: id,
@@ -103,6 +106,7 @@ class CheckpointRepositoryImpl implements CheckpointRepository {
       cityCode: cityCode,
       districtCode: districtCode,
       subdistrict: subdistrict,
+      maxUses: maxUses,
     );
   }
 
@@ -124,6 +128,7 @@ class CheckpointRepositoryImpl implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) {
     return _remote.insertCheckpoint(
       name: name,
@@ -137,6 +142,7 @@ class CheckpointRepositoryImpl implements CheckpointRepository {
       cityCode: cityCode,
       districtCode: districtCode,
       subdistrict: subdistrict,
+      maxUses: maxUses,
     );
   }
 
@@ -154,6 +160,7 @@ class CheckpointRepositoryImpl implements CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) {
     return _remote.updateCheckpointRecord(
       id: id,
@@ -168,6 +175,7 @@ class CheckpointRepositoryImpl implements CheckpointRepository {
       cityCode: cityCode,
       districtCode: districtCode,
       subdistrict: subdistrict,
+      maxUses: maxUses,
     );
   }
 

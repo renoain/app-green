@@ -22,6 +22,8 @@ class CheckpointModel extends Checkpoint {
     super.districtCode,
     super.subdistrict,
     super.isActive = true,
+    super.maxUses,
+    super.remainingUses,
     required super.createdAt,
   });
 
@@ -41,6 +43,8 @@ class CheckpointModel extends Checkpoint {
       districtCode: json['district_code'] as String?,
       subdistrict: json['subdistrict'] as String?,
       isActive: json['is_active'] as bool? ?? true,
+      maxUses: json['max_uses'] as int?,
+      remainingUses: json['remaining_uses'] as int?,
       createdAt: _parseDateTime(json['created_at']),
     );
   }
@@ -60,6 +64,9 @@ class CheckpointModel extends Checkpoint {
       'city_code': cityCode,
       'district_code': districtCode,
       'subdistrict': subdistrict,
+      'is_active': isActive,
+      if (maxUses != null) 'max_uses': maxUses,
+      if (remainingUses != null) 'remaining_uses': remainingUses,
       'created_at': createdAt.toIso8601String(),
     };
   }

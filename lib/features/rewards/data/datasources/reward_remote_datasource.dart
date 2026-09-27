@@ -122,7 +122,7 @@ class RewardRemoteDatasource {
     await _client.from(AppTables.rewards).delete().eq('id', id);
   }
 
-  /// Mengajukan penukaran reward. Mengembalikan ID redemption yang dibuat.
+  /// Mengajukan penukaran reward. Mengembalikan voucher code.
   Future<String> redeemReward({
     required String userId,
     required String rewardId,

@@ -39,6 +39,7 @@ abstract interface class CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   });
 
   /// Ubah checkpoint (admin).
@@ -55,6 +56,7 @@ abstract interface class CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   });
 
   /// Hapus checkpoint (admin).
@@ -73,6 +75,7 @@ abstract interface class CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   });
 
   /// Ubah checkpoint (admin, alias update).
@@ -89,6 +92,7 @@ abstract interface class CheckpointRepository {
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   });
 
   /// Nonaktifkan checkpoint (admin, soft-delete).

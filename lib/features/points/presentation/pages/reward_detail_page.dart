@@ -203,7 +203,10 @@ class _RewardDetailPageState extends ConsumerState<RewardDetailPage> {
         pointCost: pointCost,
       );
       if (!confirmed || !mounted) return;
-      final bool goVouchers = await showRedeemSuccessDialog(context);
+      final bool goVouchers = await showRedeemSuccessDialog(
+        context,
+        voucherCode: 'DEMO-${widget.rewardId}-${DateTime.now().millisecondsSinceEpoch.toString().substring(9)}',
+      );
       if (!goVouchers || !mounted) return;
       context.pushNamed(AppRouteName.vouchers);
       return;
@@ -238,8 +241,9 @@ class _RewardDetailPageState extends ConsumerState<RewardDetailPage> {
     );
     if (!confirmed || !mounted) return;
     setState(() => _redeeming = true);
+    String? voucherCode;
     try {
-      await ref.read(rewardNotifierProvider.notifier).redeem(
+      voucherCode = await ref.read(rewardNotifierProvider.notifier).redeem(
             userId: userId,
             rewardId: widget.rewardId,
           );
@@ -255,7 +259,10 @@ class _RewardDetailPageState extends ConsumerState<RewardDetailPage> {
     }
     if (!mounted) return;
     setState(() => _redeeming = false);
-    final bool goVouchers = await showRedeemSuccessDialog(context);
+    final bool goVouchers = await showRedeemSuccessDialog(
+      context,
+      voucherCode: voucherCode,
+    );
     if (!goVouchers || !mounted) return;
     context.pushNamed(AppRouteName.vouchers);
   }

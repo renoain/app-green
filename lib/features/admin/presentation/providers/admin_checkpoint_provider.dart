@@ -110,6 +110,7 @@ class AdminCheckpointListNotifier
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async {
     String? qr = qrCode?.trim().isEmpty ?? true ? null : qrCode?.trim();
     qr ??= await _ref
@@ -127,6 +128,7 @@ class AdminCheckpointListNotifier
       cityCode: cityCode,
       districtCode: districtCode,
       subdistrict: subdistrict,
+      maxUses: maxUses,
     );
     await _ref.read(adminAuditDatasourceProvider).log(
           action: AuditAction.create,
@@ -152,6 +154,7 @@ class AdminCheckpointListNotifier
     String? cityCode,
     String? districtCode,
     String? subdistrict,
+    int? maxUses,
   }) async {
     String? qr = qrCode?.trim().isEmpty ?? true ? null : qrCode?.trim();
     qr ??= await _ref
@@ -170,6 +173,7 @@ class AdminCheckpointListNotifier
       cityCode: cityCode,
       districtCode: districtCode,
       subdistrict: subdistrict,
+      maxUses: maxUses,
     );
     await _ref.read(adminAuditDatasourceProvider).log(
           action: AuditAction.update,

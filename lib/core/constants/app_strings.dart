@@ -683,6 +683,9 @@ class AppStrings {
   /// Pesan wajib login sebelum tukar reward.
   static String get redeemNeedLogin => _t('redeemNeedLogin');
 
+  /// Pesan kode voucher disalin ke clipboard.
+  static String get redeemVoucherCopied => _t('redeemVoucherCopied');
+
   /// Pesan saldo poin tidak cukup untuk tukar reward.
   static String get redeemInsufficientPoints => _t('redeemInsufficientPoints');
 
@@ -861,6 +864,8 @@ class AppStrings {
   static String get adminCheckpointLngLabel => _t('adminCheckpointLngLabel');
   static String get adminCheckpointRadiusLabel => _t('adminCheckpointRadiusLabel');
   static String get adminCheckpointQrLabel => _t('adminCheckpointQrLabel');
+  static String get adminCheckpointMaxUsesLabel => _t('adminCheckpointMaxUsesLabel');
+  static String get adminCheckpointMaxUsesHint => _t('adminCheckpointMaxUsesHint');
   static String get adminCheckpointNameEmpty => _t('adminCheckpointNameEmpty');
   static String get adminCheckpointLatInvalid => _t('adminCheckpointLatInvalid');
   static String get adminCheckpointLngInvalid => _t('adminCheckpointLngInvalid');
@@ -1538,6 +1543,7 @@ class AppStrings {
     'redeemConfirmMessage': 'Kamu akan menukar poin untuk reward ini. Lanjutkan?',
     'redeemSuccessTitle': 'Penukaran Berhasil',
     'redeemSuccessMessage': 'Voucher sudah masuk daftar Voucher Saya.',
+    'redeemVoucherCopied': 'Kode voucher disalin.',
     'redeemGoVoucherButton': 'Lihat Voucher Saya',
     'redeemCloseButton': 'Tutup',
     'redeemNeedLogin': 'Masuk dulu untuk menukar reward.',
@@ -1608,6 +1614,8 @@ class AppStrings {
     'adminCheckpointLngLabel': 'Longitude',
     'adminCheckpointRadiusLabel': 'Radius (meter)',
     'adminCheckpointQrLabel': 'Kode QR (opsional)',
+    'adminCheckpointMaxUsesLabel': 'Maksimal Buang (kosong = tak terbatas)',
+    'adminCheckpointMaxUsesHint': 'Contoh: 100',
     'adminCheckpointNameEmpty': 'Deskripsi lokasi wajib diisi.',
     'adminCheckpointLatInvalid': 'Latitude harus di antara -90 dan 90.',
     'adminCheckpointLngInvalid': 'Longitude harus di antara -180 dan 180.',
@@ -1987,6 +1995,7 @@ class AppStrings {
     'redeemConfirmMessage': 'You are about to redeem points for this reward. Continue?',
     'redeemSuccessTitle': 'Redemption Successful',
     'redeemSuccessMessage': 'The voucher is now in My Vouchers.',
+    'redeemVoucherCopied': 'Voucher code copied.',
     'redeemGoVoucherButton': 'View My Vouchers',
     'redeemCloseButton': 'Close',
     'redeemNeedLogin': 'Sign in first to redeem rewards.',
@@ -2200,6 +2209,8 @@ class AppStrings {
     'adminRegionCityLabel': 'City/Regency',
     'adminRegionDistrictLabel': 'District',
     'adminSubdistrictLabel': 'Subdistrict (automatic)',
+    'adminCheckpointMaxUsesLabel': 'Max Disposal (empty = unlimited)',
+    'adminCheckpointMaxUsesHint': 'E.g. 100',
     'adminRegionFilterTitle': 'Region Filter',
     'adminDeactivate': 'Deactivate',
     'adminDeactivateTitle': 'Deactivate this drop-off point?',

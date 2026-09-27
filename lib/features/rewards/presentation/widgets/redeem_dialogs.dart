@@ -154,12 +154,17 @@ Future<bool> showRedeemConfirmDialog(
 }
 
 /// Popup penukaran berhasil; true bila user menekan Lihat Voucher Saya.
-Future<bool> showRedeemSuccessDialog(BuildContext context) {
+Future<bool> showRedeemSuccessDialog(
+  BuildContext context, {
+  String? voucherCode,
+}) {
   return _showAnimatedPopup(
     context: context,
     icon: LucideIcons.check,
     title: AppStrings.redeemSuccessTitle,
-    message: AppStrings.redeemSuccessMessage,
+    message: voucherCode != null
+        ? '${AppStrings.redeemSuccessMessage}\n\nKode voucher: $voucherCode'
+        : AppStrings.redeemSuccessMessage,
     cancelText: AppStrings.redeemCloseButton,
     confirmText: AppStrings.redeemGoVoucherButton,
     stackActions: true,

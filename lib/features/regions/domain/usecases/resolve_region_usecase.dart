@@ -224,12 +224,25 @@ class ResolveRegionFromCoordinatesUsecase {
       if (raw != null && raw.trim().isNotEmpty) return raw.trim();
     }
     final String? suburb = address['suburb'];
-    if (suburb == null || suburb.trim().isEmpty) return null;
-    final String districtNorm = normalize(districtName ?? '');
-    if (districtNorm.isNotEmpty && normalize(suburb) == districtNorm) {
-      return null;
+    if (suburb != null && suburb.trim().isNotEmpty) {
+      final String districtNorm = normalize(districtName ?? '');
+      if (districtNorm.isEmpty || normalize(suburb) != districtNorm) {
+        final String cleaned =
+            suburb.trim().replaceAll(RegExp(r'\s*RW\.?\s*\d+\s*$'), '').trim();
+        if (cleaned.isNotEmpty) return cleaned;
+      }
     }
-    return suburb.trim();
+    final String? displayName = address['display_name'];
+    if (displayName != null && displayName.isNotEmpty) {
+      final String firstPart = displayName.split(', ').first.trim();
+      if (firstPart.isNotEmpty) {
+        final String districtNorm = normalize(districtName ?? '');
+        if (districtNorm.isEmpty || normalize(firstPart) != districtNorm) {
+          return firstPart;
+        }
+      }
+    }
+    return null;
   }
 
   /// Ambil alamat lengkap display_name Nominatim (null bila kosong).
