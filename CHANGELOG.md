@@ -1,5 +1,25 @@
 # CHANGELOG - Go Green
 
+## [2026-10-01] - Push migrasi 026 ke Supabase remote
+
+Status: Selesai
+
+File yang diubah:
+
+- Tidak ada perubahan file (hanya `supabase db push` ke remote).
+
+Catatan:
+
+- Migration list remote kini 001-026 sinkron dengan local.
+- Aktif di remote: kolom `profiles.fcm_token` untuk push notification.
+- Langkah lanjut: uji device fisik simpan token push + terima notifikasi.
+
+Verifikasi:
+
+- migration list: 001-026 Local = Remote.
+- hasil linter/analyze: belum dijalankan (tanpa perubahan kode)
+- hasil test: belum dijalankan (tanpa perubahan kode)
+
 ## [2026-10-01] - Perbaiki duplikat migrasi 025 jadi 026
 
 Status: Selesai
