@@ -239,26 +239,20 @@ class AppStrings {
   /// Judul kartu ringkasan poin di Home (Stitch).
   static String get homeTotalPointsTitle => _t('homeTotalPointsTitle');
 
+  /// Subjudul kartu poin Home V3 minimalist.
+  static String get homePointsSubtitle => _t('homePointsSubtitle');
+
   /// Tombol tukar reward di kartu poin Home.
   static String get homeExchangeReward => _t('homeExchangeReward');
 
   /// Tombol lihat riwayat di kartu poin Home.
   static String get homeViewHistory => _t('homeViewHistory');
 
-  /// Nilai stat sampah terpilah di Home.
-  static String get homeStatWasteValue => _t('homeStatWasteValue');
-
   /// Label stat sampah terpilah di Home.
   static String get homeStatWasteLabel => _t('homeStatWasteLabel');
 
-  /// Nilai stat karbon dihindari di Home.
-  static String get homeStatCarbonValue => _t('homeStatCarbonValue');
-
   /// Label stat karbon dikurangi di Home (Stitch Enhanced).
   static String get homeStatCarbonLabel => _t('homeStatCarbonLabel');
-
-  /// Nilai stat pohon selamat di Home.
-  static String get homeStatTreeValue => _t('homeStatTreeValue');
 
   /// Label stat pohon selamat di Home.
   static String get homeStatTreeLabel => _t('homeStatTreeLabel');
@@ -269,29 +263,11 @@ class AppStrings {
   /// Deskripsi misi mingguan di Home.
   static String get homeMissionDesc => _t('homeMissionDesc');
 
-  /// Progres terkumpul misi mingguan di Home.
-  static String get homeMissionCollected => _t('homeMissionCollected');
-
-  /// Target misi mingguan di Home.
-  static String get homeMissionTarget => _t('homeMissionTarget');
-
   /// Judul section aktivitas terkini di Home.
   static String get homeLatestActivity => _t('homeLatestActivity');
 
   /// Label ringkas lihat semua (Stitch memakai kata pendek).
   static String get seeAllShort => _t('seeAllShort');
-
-  /// Judul setoran botol plastik demo di Home.
-  static String get homeActivity1Title => _t('homeActivity1Title');
-
-  /// Waktu setoran botol plastik demo di Home.
-  static String get homeActivity1Time => _t('homeActivity1Time');
-
-  /// Judul setoran kertas karton demo di Home.
-  static String get homeActivity2Title => _t('homeActivity2Title');
-
-  /// Waktu setoran kertas karton demo di Home.
-  static String get homeActivity2Time => _t('homeActivity2Time');
 
   /// Label status terverifikasi di Home.
   static String get homeVerifiedLabel => _t('homeVerifiedLabel');
@@ -866,6 +842,12 @@ class AppStrings {
   static String get adminCheckpointQrLabel => _t('adminCheckpointQrLabel');
   static String get adminCheckpointMaxUsesLabel => _t('adminCheckpointMaxUsesLabel');
   static String get adminCheckpointMaxUsesHint => _t('adminCheckpointMaxUsesHint');
+  static String get adminCheckpointMaxUsesInvalid => _t('adminCheckpointMaxUsesInvalid');
+  static String get adminCheckpointRemainingLabel => _t('adminCheckpointRemainingLabel');
+  static String get checkpointQuotaRemaining => _t('checkpointQuotaRemaining');
+  static String get checkpointUnlimited => _t('checkpointUnlimited');
+  static String get checkpointFull => _t('checkpointFull');
+  static String get wasteCheckpointFull => _t('wasteCheckpointFull');
   static String get adminCheckpointNameEmpty => _t('adminCheckpointNameEmpty');
   static String get adminCheckpointLatInvalid => _t('adminCheckpointLatInvalid');
   static String get adminCheckpointLngInvalid => _t('adminCheckpointLngInvalid');
@@ -1397,24 +1379,16 @@ class AppStrings {
     'homeHero3Cta': 'Lihat Aktivitas',
     'homeHero3Eyebrow': 'Misi Hijau',
     'homeTotalPointsTitle': 'Total Poin Kamu',
+    'homePointsSubtitle': 'Kumpulkan poin, tukar reward',
     'homeExchangeReward': 'Tukar Reward',
     'homeViewHistory': 'Lihat Riwayat',
-    'homeStatWasteValue': '12,5 kg',
     'homeStatWasteLabel': 'Sampah Terpilah',
-    'homeStatCarbonValue': '35 kg',
     'homeStatCarbonLabel': 'Karbon Dikurangi',
-    'homeStatTreeValue': '5',
     'homeStatTreeLabel': 'Pohon Selamat',
     'homeMissionTitle': 'Misi Hijau Mingguan',
     'homeMissionDesc': 'Kumpulkan 5 kg sampah anorganik minggu ini',
-    'homeMissionCollected': '3,25 kg terkumpul',
-    'homeMissionTarget': 'Target: 5,0 kg',
     'homeLatestActivity': 'Aktivitas Terkini',
     'seeAllShort': 'Semua',
-    'homeActivity1Title': 'Setor Botol Plastik (PET)',
-    'homeActivity1Time': 'Hari ini, 08.30',
-    'homeActivity2Title': 'Setor Kertas Karton',
-    'homeActivity2Time': 'Kemarin, 14.15',
     'homeVerifiedLabel': 'Terverifikasi',
     'homeStatTimesLabel': 'Kali Buang',
     'homeStatWeekLabel': 'Minggu Ini',
@@ -1614,8 +1588,14 @@ class AppStrings {
     'adminCheckpointLngLabel': 'Longitude',
     'adminCheckpointRadiusLabel': 'Radius (meter)',
     'adminCheckpointQrLabel': 'Kode QR (opsional)',
-    'adminCheckpointMaxUsesLabel': 'Maksimal Buang (kosong = tak terbatas)',
-    'adminCheckpointMaxUsesHint': 'Contoh: 100',
+    'adminCheckpointMaxUsesLabel': 'Batas Maksimal Penggunaan',
+    'adminCheckpointMaxUsesHint': 'Contoh: 100. Kosongkan jika tidak ada batas.',
+    'adminCheckpointMaxUsesInvalid': 'Batas maksimal harus 1-9999 atau kosong.',
+    'adminCheckpointRemainingLabel': 'Sisa kuota',
+    'checkpointQuotaRemaining': 'Sisa kuota',
+    'checkpointUnlimited': 'Tanpa batas',
+    'checkpointFull': 'Penuh',
+    'wasteCheckpointFull': 'Checkpoint penuh, pilih checkpoint lain.',
     'adminCheckpointNameEmpty': 'Deskripsi lokasi wajib diisi.',
     'adminCheckpointLatInvalid': 'Latitude harus di antara -90 dan 90.',
     'adminCheckpointLngInvalid': 'Longitude harus di antara -180 dan 180.',
@@ -1854,24 +1834,16 @@ class AppStrings {
     'homeHero3Cta': 'View Activity',
     'homeHero3Eyebrow': 'Green Mission',
     'homeTotalPointsTitle': 'Your Total Points',
+    'homePointsSubtitle': 'Collect points, redeem rewards',
     'homeExchangeReward': 'Redeem Reward',
     'homeViewHistory': 'View History',
-    'homeStatWasteValue': '12.5 kg',
     'homeStatWasteLabel': 'Sorted Waste',
-    'homeStatCarbonValue': '35 kg',
     'homeStatCarbonLabel': 'Carbon Reduced',
-    'homeStatTreeValue': '5',
     'homeStatTreeLabel': 'Trees Saved',
     'homeMissionTitle': 'Weekly Green Mission',
     'homeMissionDesc': 'Collect 5 kg of inorganic waste this week',
-    'homeMissionCollected': '3.25 kg collected',
-    'homeMissionTarget': 'Target: 5.0 kg',
     'homeLatestActivity': 'Latest Activity',
     'seeAllShort': 'All',
-    'homeActivity1Title': 'Dropped Off Plastic Bottles (PET)',
-    'homeActivity1Time': 'Today, 08:30',
-    'homeActivity2Title': 'Dropped Off Cardboard',
-    'homeActivity2Time': 'Yesterday, 14:15',
     'homeVerifiedLabel': 'Verified',
     'homeStatTimesLabel': 'Drop-offs',
     'homeStatWeekLabel': 'This Week',
@@ -2209,8 +2181,14 @@ class AppStrings {
     'adminRegionCityLabel': 'City/Regency',
     'adminRegionDistrictLabel': 'District',
     'adminSubdistrictLabel': 'Subdistrict (automatic)',
-    'adminCheckpointMaxUsesLabel': 'Max Disposal (empty = unlimited)',
-    'adminCheckpointMaxUsesHint': 'E.g. 100',
+    'adminCheckpointMaxUsesLabel': 'Max Usage Limit',
+    'adminCheckpointMaxUsesHint': 'E.g. 100. Leave empty for unlimited.',
+    'adminCheckpointMaxUsesInvalid': 'Max uses must be 1-9999 or empty.',
+    'adminCheckpointRemainingLabel': 'Remaining quota',
+    'checkpointQuotaRemaining': 'Remaining quota',
+    'checkpointUnlimited': 'Unlimited',
+    'checkpointFull': 'Full',
+    'wasteCheckpointFull': 'Checkpoint is full, choose another one.',
     'adminRegionFilterTitle': 'Region Filter',
     'adminDeactivate': 'Deactivate',
     'adminDeactivateTitle': 'Deactivate this drop-off point?',

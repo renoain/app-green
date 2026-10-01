@@ -201,6 +201,59 @@ void main() {
       );
     });
 
+    test('maxUses nol ditolak', () {
+      final ManageCheckpointUsecase usecase =
+          ManageCheckpointUsecase(FakeCheckpointRepository());
+      expect(
+        () => usecase.validateInput(
+          name: 'TPS A',
+          latitude: -6.2,
+          longitude: 106.8,
+          radius: 100,
+          maxUses: 0,
+        ),
+        throwsA(isA<CheckpointValidationException>()),
+      );
+    });
+
+    test('maxUses di atas 9999 ditolak', () {
+      final ManageCheckpointUsecase usecase =
+          ManageCheckpointUsecase(FakeCheckpointRepository());
+      expect(
+        () => usecase.validateInput(
+          name: 'TPS A',
+          latitude: -6.2,
+          longitude: 106.8,
+          radius: 100,
+          maxUses: 10000,
+        ),
+        throwsA(isA<CheckpointValidationException>()),
+      );
+    });
+
+    test('maxUses null dan 100 diterima', () async {
+      final FakeCheckpointRepository repository = FakeCheckpointRepository();
+      final ManageCheckpointUsecase usecase =
+          ManageCheckpointUsecase(repository);
+
+      final Checkpoint unlimited = await usecase.create(
+        name: 'TPS A',
+        latitude: -6.2,
+        longitude: 106.8,
+        radius: 100,
+      );
+      expect(unlimited.maxUses, isNull);
+
+      final Checkpoint limited = await usecase.create(
+        name: 'TPS B',
+        latitude: -6.2,
+        longitude: 106.8,
+        radius: 100,
+        maxUses: 100,
+      );
+      expect(limited.maxUses, 100);
+    });
+
     test('input valid memanggil repository', () async {
       final FakeCheckpointRepository repository = FakeCheckpointRepository();
       final ManageCheckpointUsecase usecase =

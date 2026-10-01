@@ -32,6 +32,7 @@ class ManageCheckpointUsecase {
     required double latitude,
     required double longitude,
     required int radius,
+    int? maxUses,
   }) {
     if (name.trim().isEmpty) {
       throw CheckpointValidationException(
@@ -51,6 +52,11 @@ class ManageCheckpointUsecase {
     if (radius <= 0) {
       throw CheckpointValidationException(
         AppStrings.adminCheckpointRadiusInvalid,
+      );
+    }
+    if (maxUses != null && (maxUses < 1 || maxUses > 9999)) {
+      throw CheckpointValidationException(
+        AppStrings.adminCheckpointMaxUsesInvalid,
       );
     }
   }
@@ -75,6 +81,7 @@ class ManageCheckpointUsecase {
       latitude: latitude,
       longitude: longitude,
       radius: radius,
+      maxUses: maxUses,
     );
     return _repository.createCheckpoint(
       name: name.trim(),
@@ -114,6 +121,7 @@ class ManageCheckpointUsecase {
       latitude: latitude,
       longitude: longitude,
       radius: radius,
+      maxUses: maxUses,
     );
     return _repository.updateCheckpoint(
       id: id,

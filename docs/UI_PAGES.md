@@ -90,22 +90,29 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 ## 5. Home [Selesai]
 
 - Tujuan: beranda, ringkasan aktivitas dan akses cepat.
-- Elemen: header sapaan ("Halo," + nama tampilan + avatar inisial),
-  notice login (hanya bila belum login), banner hero carousel 3 slide
-  geser manual (Buang Sampah, Tukar Reward, Misi Mingguan) dengan CTA
-  "Mulai Sekarang" / "Lihat Reward" / "Lihat Aktivitas" dan
-  indikator 3 titik fungsional, kartu "Total Poin Kamu" dengan tombol
-  "Tukar Reward" dan "Lihat Riwayat" plus 3 stat, kartu "Misi Hijau
-  Mingguan" dengan progress, section "Aktivitas Terkini" berisi dua
-  tile, section "Artikel & Edukasi Hijau" dengan thumbnail gambar dari
+- Elemen (referensi Stitch V3 Minimalist): header environmental
+  ("Halo," + nama tampilan + avatar inisial + bell notifikasi
+  dengan titik merah), notice login (hanya bila belum login),
+  kartu "Total Poin Kamu" solid primary (judul + angka headlineXl
+  + subtitle + tombol Tukar Reward putih) dengan 3 stat
+   (Kali Buang, Minggu Ini, Terverifikasi) yang dapat diklik
+   (Total Poin ke /points, Kali Buang ke /activity; 3 stat Expanded
+   sama lebar, tinggi 72px, ikon 18px, anti-overflow di 360px),
+   grid aksi
+  cepat 4 menu (Buang Sampah ke /waste, Scan QR ke /scan,
+  Artikel ke /article, Reward ke /points), kartu
+  "Misi Hijau Mingguan" dengan progress, section
+  "Aktivitas Terkini" berisi dua tile, section "Artikel &
+  Edukasi Hijau" dengan thumbnail gambar dari
   assets/images/ref/ (article_1.png, article_2.png).
-  Tamu/gagal backend: konten demo (4.324 Poin; Sampah Terpilah,
-  Karbon Dikurangi, Pohon Selamat; misi 63% 3,25 kg / 5,0 kg; tile
-  Botol Plastik PET +150, Kertas Karton +80). User login: data asli
+  Tamu/gagal backend: semua 0 (0 Poin, stat 0/0/0, misi 0%,
+  terkumpul 0) dan aktivitas empty state (ajakan buang sampah).
+  User login tanpa data: sama (0 + empty state). User login: data asli
   selaras Poin & Aktivitas (saldo points, stat Kali Buang/Minggu
   Ini/Terverifikasi, misi hitungan vs target mingguan, 2 log terbaru
   dengan status asli; kosong menampilkan pesan ajakan).
-- Akses cepat: CTA hero ke tab Buang Sampah, Tukar Reward ke tab Poin,
+- Akses cepat: 4 menu aksi cepat (Buang Sampah, Scan QR, Artikel,
+  Reward), tombol Tukar Reward di kartu poin ke tab Poin,
   Lihat Riwayat/Semua ke tab Aktivitas, tile aktivitas ke detail
   aktivitas, Lihat Semua artikel ke halaman Artikel.
 - State: data user (nama dari AuthSession: displayName ?? username ??
@@ -114,10 +121,26 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   refresh otomatis tiap submit sukses + pull-to-refresh),
   loading (skeleton statis saat user login memuat data),
   tampil/hilang notice login.
-- Aksi: geser hero + tap CTA / menu ke halaman terkait, tutup notice login, tap
+- Aksi: tap menu aksi cepat ke halaman terkait, tutup notice login,
+  tap "Masuk" pada notice (buka Login), tap "Lihat semua" ke halaman
+  Artikel, tarik untuk memuat ulang Home, tap Total Poin dan
+  Tukar Reward ke /points, tap Kali Buang ke /activity.
+- State: data user (nama dari AuthSession: displayName ?? username ??
+  prefix email ?? nama tamu; tamu/gagal backend: demo; login: saldo
+  pointsNotifierProvider + waste log via BuildHomeSummaryUsecase +
+  refresh otomatis tiap submit sukses + pull-to-refresh),
+  loading (skeleton statis saat user login memuat data),
+  tampil/hilang notice login.
+- Aksi: tap menu aksi cepat ke halaman terkait, tutup notice login, tap
   "Masuk" pada notice (buka Login), tap "Lihat semua" ke halaman Artikel,
   tarik untuk memuat ulang Home.
 - Navigasi: bottom nav ke Home, Aktivitas, Buang Sampah, Poin, Profile.
+  Bottom nav pakai BottomNavActiveIcon dengan 3 gaya aktif
+  (default Versi 2 final: elevated icon; ganti via
+  AppValues.bottomNavActiveStyle: 1/2/3). Item aksen "Buang
+  Sampah" tidak aktif sama seperti item lain (ikon textSecondary tanpa
+  lingkaran primary); saat aktif jadi lingkaran primary 56px menonjol
+  ke atas bar + membesar 1.15x + shadow level2.
 - Keperilakuan back: dari tab selain Beranda, back kembali ke tab Beranda
   dulu (tidak langsung keluar aplikasi); di tab Beranda, back pertama
   menampilkan hint "Tekan kembali lagi untuk keluar" dan back kedua dalam
@@ -130,15 +153,15 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   Angka Home user login selalu selaras dengan Poin & Aktivitas karena
   memakai sumber yang sama (tabel points + waste_logs); Poin dan
   Aktivitas ikut refresh otomatis tiap submit sukses. Kartu poin
-  hijau tua elegan (gradient primary ke primaryLight, teks putih,
-  padding vertikal lg agar lebih panjang, hiasan statis daun samar
-  + lingkaran lembut, tombol Lihat Riwayat translusen, divider putih
-  20 persen, 3 stat putih solid). Token Stitch dipetakan ke token
-  existing (surfaceDim/tertiaryLight/surface, primary, borderLight,
-  elevation-1, spacing xs/sm/md/lg, radius lg/xl/full) sehingga
-  DESIGN_SYSTEM.md tidak perlu token baru. Hero tanpa autoplay,
-  angka poin AnimatedSwitcher 300ms, progres misi animasi 600ms sekali
-  jalan, seksi fade-in 0-360ms sekali jalan, thumbnail artikel
+  V3 minimalist solid primary (tanpa gradient, tanpa hiasan daun,
+  teks putih, angka headlineXl, subtitle + tombol Tukar Reward putih,
+  divider putih 20 persen, 3 stat putih solid). Token Stitch dipetakan
+  ke token existing (surfaceDim/tertiaryLight/surface, primary,
+  borderLight, elevation-1, spacing xs/sm/md/lg, radius lg/xl/full,
+  info/warning untuk ikon aksi) sehingga DESIGN_SYSTEM.md tidak perlu
+  token baru. String baru homePointsSubtitle (ID/EN). Angka poin
+  AnimatedSwitcher 300ms, progres misi animasi 600ms sekali jalan,
+  seksi fade-in 0-360ms sekali jalan, thumbnail artikel
   gaplessPlayback. Bottom nav tidak diubah
   (CustomBottomNavBar tetap 5 item via StatefulShellRoute).
 - Prioritas MVP: Ya.
@@ -149,7 +172,9 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 
 - Tujuan: buang sampah ke checkpoint, dapat poin.
 - Elemen: daftar checkpoint real dari Supabase via checkpointNotifierProvider
-  (fallback demo bila error/kosong/offline), pilihan checkpoint (centang),
+   (fallback demo bila error/kosong/offline), pilihan checkpoint (centang;
+   checkpoint penuh sisa kuota 0 tampil redup + label Penuh dan tidak
+   bisa dipilih),
   kartu status GPS real (LocationStatusCard: jarak GeoUtils vs radius
   checkpoint, tombol muat ulang), tombol/link "Scan QR di checkpoint",
   tombol "Ambil Foto" (PrimaryButton), disclaimer antikecurangan.
@@ -414,6 +439,9 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   Mode Pengguna khusus admin). Pindah mode selalu via go ke /profile
   agar shell tidak menumpuk. Tombol Mode Pengguna hanya untuk role
   admin (petugas tanpa switch, tetap back root ke /profile).
+  Perilaku back di admin shell: di branch root, back pertama
+  menampilkan snackbar "Tekan kembali lagi untuk keluar",
+  back kedua dalam 2 detik kembali ke /profile.
 - State: role admin (profiles.role), daftar checkpoint, lokasi uji
   debug (in-memory), antrean pending.
 - Aksi: CRUD checkpoint via RLS admin (policy
@@ -449,8 +477,10 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 
 - Tujuan: daftar semua checkpoint untuk admin.
 - Elemen: search nama/kode TPS, filter wilayah berjenjang
-  (Provinsi, Kota, Kecamatan), kartu TPS (kode TPS, nama, koordinat,
-  radius, kode QR, tombol QR + Ubah dan Nonaktifkan), FAB Tambah TPS.
+   (Provinsi, Kota, Kecamatan), kartu TPS (kode TPS, nama, koordinat,
+   radius, kode QR, label sisa kuota Sisa kuota X/Y hijau/kuning/merah
+   atau Tanpa batas bila null, tombol QR + Ubah dan Nonaktifkan),
+   FAB Tambah TPS.
   Dialog QR (gambar + kode + petunjuk cetak) dari kartu.
 - State: daftar checkpoint (loading, error + retry, empty state),
   query pencarian, filter wilayah, pull-to-refresh.
@@ -479,9 +509,11 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   ulang saat kecamatan dipilih bila kode masih kosong), kelurahan
   otomatis dari reverse-geocode (bisa diubah), deskripsi lokasi manual
   (wajib, menjelaskan titik spesifik), alamat lengkap otomatis
-  (display_name Nominatim, bisa diubah), latitude, longitude, radius
-  (default dari pengaturan), pratinjau QR (ubah) atau catatan otomatis
-  (tambah, CP-XXX), tombol Simpan.
+   (display_name Nominatim, bisa diubah), latitude, longitude, radius
+   (default dari pengaturan), batas maksimal penggunaan max_uses
+   (1-9999 atau kosong; remaining_uses tampil baca-saja saat ubah),
+   pratinjau QR (ubah) atau catatan otomatis
+   (tambah, CP-XXX), tombol Simpan.
 - State: validasi via ManageCheckpointUsecase (pesan Bahasa Indonesia),
   saving, locating, resolving wilayah (reverse-geocode Nominatim +
   kelurahan + alamat), generating code, muat ulang edit-by-id (loading +

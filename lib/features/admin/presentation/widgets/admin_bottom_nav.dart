@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/constants/app_values.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/bottom_nav_active_icon.dart';
 import 'admin_drawer.dart';
 
 /// Index branch untuk 3 tombol navbar bawah admin.
@@ -47,6 +49,8 @@ class AdminBottomBar extends StatelessWidget {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
+      enableDrag: true,
+      isDismissible: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(AppRadius.sheet),
@@ -186,8 +190,6 @@ class _AdminBottomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color =
-        selected ? AppColors.primary : AppColors.textSecondary;
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -195,11 +197,17 @@ class _AdminBottomButton extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Icon(item.icon, size: 22, color: color),
+            BottomNavActiveIcon(
+              icon: item.icon,
+              selected: selected,
+              style: AppValues.bottomNavActiveStyle,
+            ),
             const SizedBox(height: AppSpacing.xs),
             Text(
               item.title,
-              style: AppTypography.labelSm.copyWith(color: color),
+              style: AppTypography.labelSm.copyWith(
+                color: selected ? AppColors.primary : AppColors.textSecondary,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

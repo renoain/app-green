@@ -1,4 +1,4 @@
--- Migration 024: kolom fcm_token di profiles (push notification).
+-- Migration 026: kolom fcm_token di profiles (push notification).
 -- Referensi: docs/ARCHITECTURE.md (push notification).
 -- Idempoten: aman dijalankan ulang.
 --

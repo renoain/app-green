@@ -170,6 +170,10 @@ void main() {
       (WidgetTester tester) async {
     final FakeStatusCheckpointRepository repo =
         FakeStatusCheckpointRepository();
+    tester.view.physicalSize = const Size(800, 1400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(
       ProviderScope(
         overrides: <Override>[
@@ -183,6 +187,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    await tester.ensureVisible(find.text(AppStrings.adminActivate));
+    await tester.pumpAndSettle();
     await tester.tap(find.text(AppStrings.adminActivate));
     await tester.pumpAndSettle();
 

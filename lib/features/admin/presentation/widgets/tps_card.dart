@@ -104,6 +104,8 @@ class TpsCard extends StatelessWidget {
           if (checkpoint.address != null &&
               checkpoint.address!.isNotEmpty)
             Text(checkpoint.address!, style: AppTypography.bodySm),
+          const SizedBox(height: AppSpacing.xs),
+          _QuotaLabel(checkpoint: checkpoint),
           const SizedBox(height: AppSpacing.sm),
           Row(
             children: <Widget>[
@@ -147,6 +149,55 @@ class TpsCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Label sisa kuota checkpoint dengan warna status.
+class _QuotaLabel extends StatelessWidget {
+  /// Membuat label kuota.
+  const _QuotaLabel({required this.checkpoint});
+
+  /// Checkpoint yang ditampilkan.
+  final Checkpoint checkpoint;
+
+  @override
+  Widget build(BuildContext context) {
+    final int? maxUses = checkpoint.maxUses;
+    if (maxUses == null) {
+      return Row(
+        children: <Widget>[
+          const Icon(
+            LucideIcons.ticket,
+            size: 14,
+            color: AppColors.textSecondary,
+          ),
+          const SizedBox(width: AppSpacing.xs),
+          Text(
+            AppStrings.checkpointUnlimited,
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
+      );
+    }
+    final int remaining = checkpoint.remainingUses ?? maxUses;
+    final double ratio = maxUses <= 0 ? 0 : remaining / maxUses;
+    final Color statusColor = ratio > 0.5
+        ? AppColors.success
+        : ratio >= 0.1
+            ? AppColors.warning
+            : AppColors.error;
+    return Row(
+      children: <Widget>[
+        Icon(LucideIcons.ticket, size: 14, color: statusColor),
+        const SizedBox(width: AppSpacing.xs),
+        Text(
+          '${AppStrings.checkpointQuotaRemaining}: $remaining / $maxUses',
+          style: AppTypography.bodySm.copyWith(color: statusColor),
+        ),
+      ],
     );
   }
 }

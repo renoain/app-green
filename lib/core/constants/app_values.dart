@@ -68,4 +68,9 @@ abstract final class AppValues {
   ///
   /// False berarti drawer hanya dibuka lewat tombol menu.
   static const bool adminDrawerSwipeEnabled = true;
+
+  /// Versi gaya bottom nav aktif: 1 (circle), 2 (elevated), 3 (pill).
+  ///
+  /// Dipakai BottomNavActiveIcon di bottom nav user dan admin.
+  static const int bottomNavActiveStyle = 2;
 }

@@ -1,11 +1,16 @@
-// Halaman utama (home) Go Green, redesign sesuai referensi Stitch.
+// Halaman utama (home) Go Green, referensi Stitch V3 Minimalist.
 //
-// Section: notice login, hero carousel "Ayo Mulai", ringkasan poin +
-// 3 stat dampak, misi hijau mingguan, aktivitas terkini, artikel &
-// edukasi hijau. Tamu memakai konten demo; user login memakai data asli
-// (poin + waste log) agar selaras dengan halaman Poin & Aktivitas.
-// Bottom nav tetap via MainShell (CustomBottomNavBar), tidak diubah di
-// halaman ini.
+// Section: header environmental + bell, notice login, kartu poin solid
+// primary dengan siluet daun, aksi cepat 4 menu, misi hijau mingguan,
+// aktivitas terkini, artikel & edukasi hijau.
+//
+// Background atas: gradasi secondaryContainer ke background.
+// Kartu poin: siluet daun putih opacity 12% di pojok kanan bawah.
+//
+// Tamu dan user login tanpa data menampilkan 0 dan empty state;
+// user login memakai data asli (poin + waste log) agar selaras
+// dengan halaman Poin & Aktivitas.
+// Bottom nav tetap via MainShell (CustomBottomNavBar), tidak diubah.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -46,11 +51,7 @@ final DateTime _demoArticle1Date = DateTime(2026, 9, 10);
 /// Tanggal terbit artikel demo kedua.
 final DateTime _demoArticle2Date = DateTime(2026, 9, 5);
 
-/// Total poin demo di Home (Stitch menampilkan 4.324).
-const int _demoTotalPoints = 4324;
 
-/// Progres misi mingguan demo (63%).
-const double _demoMissionProgress = 0.63;
 
 /// Halaman beranda Go Green.
 class HomePage extends ConsumerStatefulWidget {
@@ -166,23 +167,23 @@ class _HomePageState extends ConsumerState<HomePage> {
         realLogs == null ? null : summaryUsecase.build(logs: realLogs);
     const CalculatePointsUsecase calculatePoints = CalculatePointsUsecase();
 
-    final int totalPoints = realPoints ?? _demoTotalPoints;
+    final int totalPoints = realPoints ?? 0;
     final List<({IconData icon, String value, String label})> stats =
         summary == null
             ? <({IconData icon, String value, String label})>[
                 (
                   icon: LucideIcons.trash,
-                  value: AppStrings.homeStatWasteValue,
+                  value: '0',
                   label: AppStrings.homeStatWasteLabel,
                 ),
                 (
                   icon: LucideIcons.globe,
-                  value: AppStrings.homeStatCarbonValue,
+                  value: '0',
                   label: AppStrings.homeStatCarbonLabel,
                 ),
                 (
                   icon: LucideIcons.leaf,
-                  value: AppStrings.homeStatTreeValue,
+                  value: '0',
                   label: AppStrings.homeStatTreeLabel,
                 ),
               ]
@@ -203,199 +204,219 @@ class _HomePageState extends ConsumerState<HomePage> {
                   label: AppStrings.homeVerifiedLabel,
                 ),
               ];
-    final double missionProgress =
-        summary?.missionProgress ?? _demoMissionProgress;
+    final double missionProgress = summary?.missionProgress ?? 0;
     final String missionCollected = summary == null
-        ? AppStrings.homeMissionCollected
+        ? '0 ${AppStrings.homeMissionCollectedSuffix}'
         : '${summary.weeklyDisposals} ${AppStrings.homeMissionTimesUnit} '
             '${AppStrings.homeMissionCollectedSuffix}';
-    final String missionTarget = summary == null
-        ? AppStrings.homeMissionTarget
-        : '${AppStrings.homeMissionTargetPrefix} '
+    final String missionTarget =
+        '${AppStrings.homeMissionTargetPrefix} '
             '${AppConfig.weeklyMissionTargetDisposals} '
             '${AppStrings.homeMissionTimesUnit}';
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: SafeArea(
-        child: RefreshIndicator(
-          color: AppColors.primary,
-          onRefresh: _reload,
-          child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-            children: <Widget>[
-              const SizedBox(height: AppSpacing.sm),
-              _HomeHeader(displayName: displayName),
-              const SizedBox(height: AppSpacing.md),
-              if (showNotice) ...<Widget>[
-                LoginNoticeCard(
-                  message: AppStrings.homeLoginNotice,
-                  onLogin: () => context.pushNamed(AppRouteName.login),
-                  onDismiss: () => setState(() => _showLoginNotice = false),
-                ),
-                const SizedBox(height: AppSpacing.md),
-              ],
-              _FadeIn(
-                delayMs: 0,
-                child: RepaintBoundary(
-                  child: _HeroCarouselCard(
-                    onStartWaste: () =>
-                        context.goNamed(AppRouteName.waste),
-                    onStartReward: () =>
-                        context.goNamed(AppRouteName.points),
-                    onStartActivity: () =>
-                        context.goNamed(AppRouteName.activity),
-                  ),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              _FadeIn(
-                delayMs: 60,
-                child: RepaintBoundary(
-                  child: _PointsSummaryCard(
-                    totalPoints: totalPoints,
-                    stats: stats,
-                    onExchange: () =>
-                        context.goNamed(AppRouteName.points),
-                    onHistory: () =>
-                        context.goNamed(AppRouteName.activity),
-                  ),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              _FadeIn(
-                delayMs: 120,
-                child: _MissionCard(
-                  progress: missionProgress,
-                  collected: missionCollected,
-                  target: missionTarget,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              _FadeIn(
-                delayMs: 180,
-                child: _SectionHeader(
-                  title: AppStrings.homeLatestActivity,
-                  actionLabel: AppStrings.seeAllShort,
-                  onAction: () => context.goNamed(AppRouteName.activity),
-                ),
-              ),
-            const SizedBox(height: AppSpacing.sm),
-            if (realLogs == null) ...<Widget>[
-              _ActivityTile(
-                icon: LucideIcons.recycle,
-                title: AppStrings.homeActivity1Title,
-                time: AppStrings.homeActivity1Time,
-                points: 150,
-                onTap: () => context.pushNamed(
-                  AppRouteName.activityDetail,
-                  pathParameters: const <String, String>{'id': '1'},
-                ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              _ActivityTile(
-                icon: LucideIcons.trash,
-                title: AppStrings.homeActivity2Title,
-                time: AppStrings.homeActivity2Time,
-                points: 80,
-                onTap: () => context.pushNamed(
-                  AppRouteName.activityDetail,
-                  pathParameters: const <String, String>{'id': '2'},
-                ),
-              ),
-            ] else if (realLogs.isEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-                child: Text(
-                  AppStrings.homeActivityEmpty,
-                  style: AppTypography.bodySm,
-                  textAlign: TextAlign.center,
-                ),
-              )
-            else
-              for (final WasteLog log in realLogs.take(2)) ...<Widget>[
-                Builder(
-                  builder: (BuildContext context) {
-                    final String checkpointName =
-                        _checkpointNames[log.checkpointId] ??
-                            log.checkpointName ??
-                            (log.checkpointId ?? '-');
-                    final int points = calculatePoints.calculate(
-                      category: log.category,
-                    );
-                    final String statusLabel =
-                        activityStatusOf(log.status).label;
-                    return _ActivityTile(
-                      icon: _iconForCategory(log.category),
-                      title: activityDescriptionOf(log, checkpointName),
-                      time: formatIndonesianTimestamp(log.createdAt),
-                      points: points,
-                      statusLabel: statusLabel,
-                      onTap: () => context.pushNamed(
-                        AppRouteName.activityDetail,
-                        pathParameters: <String, String>{'id': log.id},
-                        extra: ActivityDetailExtra(
-                          description: activityDescriptionOf(
-                            log,
-                            checkpointName,
-                          ),
-                          date: log.createdAt,
-                          status: log.status,
-                          checkpointName: checkpointName,
-                          points: points,
-                        ),
+        child: Stack(
+          children: <Widget>[
+            // Layer 1: gradasi hijau di background atas.
+            const Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 280,
+              child: _TopGradientBackground(),
+            ),
+            // Layer 2: konten utama.
+            RefreshIndicator(
+              color: AppColors.primary,
+              onRefresh: _reload,
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                children: <Widget>[
+                  const SizedBox(height: AppSpacing.sm),
+                  _HomeHeader(displayName: displayName),
+                  const SizedBox(height: AppSpacing.md),
+                  if (showNotice) ...<Widget>[
+                    LoginNoticeCard(
+                      message: AppStrings.homeLoginNotice,
+                      onLogin: () => context.pushNamed(AppRouteName.login),
+                      onDismiss: () => setState(() => _showLoginNotice = false),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
+                  _FadeIn(
+                    delayMs: 0,
+                    child: RepaintBoundary(
+                      child: _PointsSummaryCard(
+                        totalPoints: totalPoints,
+                        stats: stats,
                       ),
-                    );
-                  },
-                ),
-                const SizedBox(height: AppSpacing.sm),
-              ],
-            const SizedBox(height: AppSpacing.lg),
-            _FadeIn(
-              delayMs: 240,
-              child: _SectionHeader(
-                title: AppStrings.homeArticleSection,
-                actionLabel: AppStrings.seeAll,
-                onAction: () => context.pushNamed(AppRouteName.article),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  _FadeIn(
+                    delayMs: 60,
+                    child: RepaintBoundary(
+                      child: _QuickActionsGrid(
+                        onWaste: () => context.goNamed(AppRouteName.waste),
+                        onScan: () => context.goNamed(AppRouteName.scan),
+                        onArticle: () =>
+                            context.pushNamed(AppRouteName.article),
+                        onReward: () => context.goNamed(AppRouteName.points),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  _FadeIn(
+                    delayMs: 120,
+                    child: _MissionCard(
+                      progress: missionProgress,
+                      collected: missionCollected,
+                      target: missionTarget,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  _FadeIn(
+                    delayMs: 180,
+                    child: _SectionHeader(
+                      title: AppStrings.homeLatestActivity,
+                      actionLabel: AppStrings.seeAllShort,
+                      onAction: () => context.goNamed(AppRouteName.activity),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  if (realLogs == null || realLogs.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.md,
+                      ),
+                      child: Text(
+                        AppStrings.homeActivityEmpty,
+                        style: AppTypography.bodySm,
+                        textAlign: TextAlign.center,
+                      ),
+                    )
+                  else
+                    for (final WasteLog log in realLogs.take(2)) ...<Widget>[
+                      Builder(
+                        builder: (BuildContext context) {
+                          final String checkpointName =
+                              _checkpointNames[log.checkpointId] ??
+                                  log.checkpointName ??
+                                  (log.checkpointId ?? '-');
+                          final int points = calculatePoints.calculate(
+                            category: log.category,
+                          );
+                          final String statusLabel =
+                              activityStatusOf(log.status).label;
+                          return _ActivityTile(
+                            icon: _iconForCategory(log.category),
+                            title: activityDescriptionOf(log, checkpointName),
+                            time: formatIndonesianTimestamp(log.createdAt),
+                            points: points,
+                            statusLabel: statusLabel,
+                            onTap: () => context.pushNamed(
+                              AppRouteName.activityDetail,
+                              pathParameters: <String, String>{
+                                'id': log.id,
+                              },
+                              extra: ActivityDetailExtra(
+                                description: activityDescriptionOf(
+                                  log,
+                                  checkpointName,
+                                ),
+                                date: log.createdAt,
+                                status: log.status,
+                                checkpointName: checkpointName,
+                                points: points,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                    ],
+                  const SizedBox(height: AppSpacing.lg),
+                  _FadeIn(
+                    delayMs: 240,
+                    child: _SectionHeader(
+                      title: AppStrings.homeArticleSection,
+                      actionLabel: AppStrings.seeAll,
+                      onAction: () => context.pushNamed(AppRouteName.article),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  _FadeIn(
+                    delayMs: 300,
+                    child: ArticleCard(
+                      title: AppStrings.homeArticle1Title,
+                      excerpt: AppStrings.homeArticle1Excerpt,
+                      date: _demoArticle1Date,
+                      thumbnailImage: AppAssets.articleThumb1,
+                      onTap: () => context.pushNamed(
+                        AppRouteName.articleDetail,
+                        pathParameters: const <String, String>{'id': '1'},
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  _FadeIn(
+                    delayMs: 360,
+                    child: ArticleCard(
+                      title: AppStrings.homeArticle2Title,
+                      excerpt: AppStrings.homeArticle2Excerpt,
+                      date: _demoArticle2Date,
+                      thumbnailImage: AppAssets.articleThumb2,
+                      onTap: () => context.pushNamed(
+                        AppRouteName.articleDetail,
+                        pathParameters: const <String, String>{'id': '2'},
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                ],
               ),
             ),
-            const SizedBox(height: AppSpacing.sm),
-            _FadeIn(
-              delayMs: 300,
-              child: ArticleCard(
-                title: AppStrings.homeArticle1Title,
-                excerpt: AppStrings.homeArticle1Excerpt,
-                date: _demoArticle1Date,
-                thumbnailImage: AppAssets.articleThumb1,
-                onTap: () => context.pushNamed(
-                  AppRouteName.articleDetail,
-                  pathParameters: const <String, String>{'id': '1'},
-                ),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            _FadeIn(
-              delayMs: 360,
-              child: ArticleCard(
-                title: AppStrings.homeArticle2Title,
-                excerpt: AppStrings.homeArticle2Excerpt,
-                date: _demoArticle2Date,
-                thumbnailImage: AppAssets.articleThumb2,
-                onTap: () => context.pushNamed(
-                  AppRouteName.articleDetail,
-                  pathParameters: const <String, String>{'id': '2'},
-                ),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            ],
-          ),
+          ],
         ),
       ),
     );
   }
 }
 
-/// Sapaan header Home dengan nama tampilan user.
+/// Background gradasi hijau ke putih di bagian atas Home.
+///
+/// Gradasi dari secondaryContainer ke background, tinggi 280px,
+/// ditempatkan di belakang konten utama agar header dan kartu poin
+/// terasa menyatu dengan tema environmental.
+class _TopGradientBackground extends StatelessWidget {
+  /// Membuat background gradasi atas.
+  const _TopGradientBackground();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[
+            AppColors.secondaryContainer,
+            AppColors.secondaryContainer.withValues(alpha: 0.6),
+            AppColors.background,
+          ],
+          stops: const <double>[0.0, 0.5, 1.0],
+        ),
+      ),
+    );
+  }
+}
+
+/// Sapaan header Home V3 minimalist dengan bell notifikasi.
+///
+/// Avatar + sapaan kiri, tombol bell kanan dengan titik oranye
+/// sebagai penanda environmental header ala Stitch V3.
 class _HomeHeader extends StatelessWidget {
   /// Membuat sapaan header Home.
   const _HomeHeader({required this.displayName});
@@ -425,6 +446,43 @@ class _HomeHeader extends StatelessWidget {
               ),
             ],
           ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Stack(
+          clipBehavior: Clip.none,
+          children: <Widget>[
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.borderLight),
+                boxShadow: AppElevation.level1,
+              ),
+              child: const Icon(
+                LucideIcons.bell,
+                size: 20,
+                color: AppColors.primary,
+              ),
+            ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: AppColors.warning,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AppColors.surface,
+                    width: 1,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -462,242 +520,159 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-/// Banner hero geser 3 slide: buang sampah, tukar reward, misi mingguan.
+/// Aksi cepat Home V3 minimalist: 4 menu grid ala Stitch.
 ///
-/// PageView manual (tanpa autoplay) agar hemat baterai; dots mengikuti
-/// halaman aktif dan tiap slide punya CTA ke rute terkait.
-class _HeroCarouselCard extends StatefulWidget {
-  /// Membuat banner hero.
-  const _HeroCarouselCard({
-    required this.onStartWaste,
-    required this.onStartReward,
-    required this.onStartActivity,
+/// Buang Sampah, Scan QR, Artikel, Reward. Ikon lingkaran pastel di atas
+/// kartu putih agar bersih dan minimalis.
+class _QuickActionsGrid extends StatelessWidget {
+  /// Membuat grid aksi cepat.
+  const _QuickActionsGrid({
+    required this.onWaste,
+    required this.onScan,
+    required this.onArticle,
+    required this.onReward,
   });
 
-  /// Aksi slide buang sampah.
-  final VoidCallback onStartWaste;
+  /// Aksi ke halaman Buang Sampah.
+  final VoidCallback onWaste;
 
-  /// Aksi slide tukar reward.
-  final VoidCallback onStartReward;
+  /// Aksi ke halaman Scan QR.
+  final VoidCallback onScan;
 
-  /// Aksi slide misi mingguan.
-  final VoidCallback onStartActivity;
+  /// Aksi ke halaman Artikel.
+  final VoidCallback onArticle;
 
-  @override
-  State<_HeroCarouselCard> createState() => _HeroCarouselCardState();
-}
-
-/// State carousel hero dengan indeks halaman aktif.
-class _HeroCarouselCardState extends State<_HeroCarouselCard> {
-  /// Pengendali halaman carousel.
-  final PageController _controller = PageController();
-
-  /// Indeks slide aktif untuk dots.
-  int _index = 0;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  /// Aksi ke halaman Poin/Reward.
+  final VoidCallback onReward;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       children: <Widget>[
-        SizedBox(
-          height: 200,
-          child: PageView(
-            controller: _controller,
-            onPageChanged: (int value) => setState(() => _index = value),
-            children: <Widget>[
-              _HeroSlide(
-                eyebrow: AppStrings.homeHeroEyebrow,
-                title: AppStrings.homeHeroTitle,
-                subtitle: AppStrings.homeHeroSubtitle,
-                cta: AppStrings.homeHeroCta,
-                icon: LucideIcons.leaf,
-                onStart: widget.onStartWaste,
-              ),
-              _HeroSlide(
-                eyebrow: AppStrings.homeHero2Eyebrow,
-                title: AppStrings.homeHero2Title,
-                subtitle: AppStrings.homeHero2Subtitle,
-                cta: AppStrings.homeHero2Cta,
-                icon: LucideIcons.gift,
-                onStart: widget.onStartReward,
-              ),
-              _HeroSlide(
-                eyebrow: AppStrings.homeHero3Eyebrow,
-                title: AppStrings.homeHero3Title,
-                subtitle: AppStrings.homeHero3Subtitle,
-                cta: AppStrings.homeHero3Cta,
-                icon: LucideIcons.activity,
-                onStart: widget.onStartActivity,
-              ),
-            ],
+        Expanded(
+          child: _QuickActionButton(
+            icon: LucideIcons.recycle,
+            label: AppStrings.navWaste,
+            iconColor: AppColors.primary,
+            iconBackground: AppColors.surfaceDim,
+            onTap: onWaste,
           ),
         ),
-        const SizedBox(height: AppSpacing.sm),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _CarouselDot(active: _index == 0),
-            const SizedBox(width: AppSpacing.xs),
-            _CarouselDot(active: _index == 1),
-            const SizedBox(width: AppSpacing.xs),
-            _CarouselDot(active: _index == 2),
-          ],
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: _QuickActionButton(
+            icon: LucideIcons.qr_code,
+            label: AppStrings.scanTitle,
+            iconColor: AppColors.info,
+            iconBackground: AppColors.surfaceDim,
+            onTap: onScan,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: _QuickActionButton(
+            icon: LucideIcons.book_open,
+            label: AppStrings.articleTitle,
+            iconColor: AppColors.warning,
+            iconBackground: AppColors.surfaceDim,
+            onTap: onArticle,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: _QuickActionButton(
+            icon: LucideIcons.gift,
+            label: AppStrings.rewardsSectionTitle,
+            iconColor: AppColors.primaryLight,
+            iconBackground: AppColors.surfaceDim,
+            onTap: onReward,
+          ),
         ),
       ],
     );
   }
 }
 
-/// Satu slide hero dengan teks, CTA, dan ikon fungsional.
-class _HeroSlide extends StatelessWidget {
-  /// Membuat satu slide hero.
-  const _HeroSlide({
-    required this.eyebrow,
-    required this.title,
-    required this.subtitle,
-    required this.cta,
+/// Satu tombol aksi cepat dengan ikon lingkaran + label.
+class _QuickActionButton extends StatelessWidget {
+  /// Membuat tombol aksi cepat.
+  const _QuickActionButton({
     required this.icon,
-    required this.onStart,
+    required this.label,
+    required this.iconColor,
+    required this.iconBackground,
+    required this.onTap,
   });
 
-  /// Label kecil di atas judul.
-  final String eyebrow;
-
-  /// Judul slide.
-  final String title;
-
-  /// Deskripsi slide.
-  final String subtitle;
-
-  /// Label tombol aksi.
-  final String cta;
-
-  /// Ikon ilustrasi slide.
+  /// Ikon menu.
   final IconData icon;
 
-  /// Aksi tombol mulai.
-  final VoidCallback onStart;
+  /// Label menu via AppStrings.
+  final String label;
+
+  /// Warna ikon.
+  final Color iconColor;
+
+  /// Warna latar lingkaran ikon.
+  final Color iconBackground;
+
+  /// Aksi saat ditekan.
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceDim,
-        borderRadius: BorderRadius.circular(AppRadius.xl),
-        border: Border.all(color: AppColors.borderLight),
+    return Material(
+      color: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(color: AppColors.borderLight),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    const Icon(
-                      LucideIcons.leaf,
-                      size: 14,
-                      color: AppColors.primary,
-                    ),
-                    const SizedBox(width: AppSpacing.xs),
-                    Text(eyebrow, style: AppTypography.labelMd),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  title,
-                  style: AppTypography.headlineMd,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  subtitle,
-                  style: AppTypography.bodySm,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: AppSpacing.md),
-                SizedBox(
-                  height: 36,
-                  child: ElevatedButton(
-                    onPressed: onStart,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: AppColors.textOnPrimary,
-                      minimumSize: const Size(0, 36),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.md,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          AppRadius.full,
-                        ),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(cta),
-                        const SizedBox(width: AppSpacing.xs),
-                        const Icon(LucideIcons.arrow_right, size: 16),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.md,
           ),
-          const SizedBox(width: AppSpacing.md),
-          Icon(icon, size: 64, color: AppColors.tertiary),
-        ],
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: iconBackground,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 20, color: iconColor),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                label,
+                style: AppTypography.labelMd,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
-/// Titik indikator carousel hero.
-class _CarouselDot extends StatelessWidget {
-  /// Membuat titik indikator.
-  const _CarouselDot({required this.active});
-
-  /// Apakah titik sedang aktif.
-  final bool active;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
-      width: active ? 20 : 6,
-      height: 6,
-      decoration: BoxDecoration(
-        color: active ? AppColors.primary : AppColors.border,
-        borderRadius: BorderRadius.circular(AppRadius.full),
-      ),
-    );
-  }
-}
-
-/// Kartu ringkasan poin hijau tua elegan: gradient primary, teks putih,
+/// Kartu ringkasan poin V3 minimalist: solid primary, teks putih,
+/// siluet daun putih opacity 12% di pojok kanan bawah.
 ///
-/// Hiasan statis daun samar + lingkaran lembut, stat putih solid.
+/// Berisi judul, angka besar, subtitle, tombol Tukar Reward
+/// (kuning), divider putih 20%, dan 3 stat putih.
 class _PointsSummaryCard extends StatelessWidget {
   /// Membuat kartu ringkasan poin.
   const _PointsSummaryCard({
     required this.totalPoints,
     required this.stats,
-    required this.onExchange,
-    required this.onHistory,
   });
 
   /// Total poin tampil (asli atau demo).
@@ -706,107 +681,100 @@ class _PointsSummaryCard extends StatelessWidget {
   /// Tiga stat dampak (asli atau demo).
   final List<({IconData icon, String value, String label})> stats;
 
-  /// Aksi tukar reward.
-  final VoidCallback onExchange;
-
-  /// Aksi lihat riwayat.
-  final VoidCallback onHistory;
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: <Color>[AppColors.primary, AppColors.primaryLight],
-        ),
+        color: AppColors.primary,
         borderRadius: BorderRadius.circular(AppRadius.xl),
-        border: Border.all(color: AppColors.primaryLight),
+        border: Border.all(color: AppColors.primary),
         boxShadow: AppElevation.level1,
       ),
+      clipBehavior: Clip.antiAlias,
       child: Stack(
         children: <Widget>[
+          // Siluet daun putih di pojok kanan bawah.
           Positioned(
-            top: -AppSpacing.lg,
-            right: -AppSpacing.lg,
+            right: -28,
+            bottom: -28,
             child: Icon(
               LucideIcons.leaf,
-              size: 120,
-              color: AppColors.textOnPrimary.withValues(alpha: 0.08),
+              size: 160,
+              color: AppColors.textOnPrimary.withValues(alpha: 0.12),
             ),
           ),
-          Positioned(
-            bottom: -AppSpacing.xl,
-            left: -AppSpacing.xl,
-            child: Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.textOnPrimary.withValues(alpha: 0.06),
-              ),
-            ),
-          ),
+          // Konten kartu.
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.md,
               vertical: AppSpacing.lg,
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              const Icon(
-                                LucideIcons.star,
-                                size: 14,
-                                color: AppColors.textOnPrimary,
-                              ),
-                              const SizedBox(width: AppSpacing.xs),
-                              Text(
-                                AppStrings.homeTotalPointsTitle,
-                                style: AppTypography.labelMd.copyWith(
-                                  color: AppColors.textOnPrimary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: AppSpacing.xs),
-                          AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 300),
-                            child: Text(
-                              '${formatIndonesianNumber(totalPoints)} ${AppStrings.rewardPointSuffix}',
-                              key: ValueKey<int>(totalPoints),
-                              style: AppTypography.headlineLg.copyWith(
-                                color: AppColors.textOnPrimary,
-                              ),
-                            ),
-                          ),
-                        ],
+                    const Icon(
+                      LucideIcons.star,
+                      size: 16,
+                      color: AppColors.warning,
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Text(
+                      AppStrings.homeTotalPointsTitle,
+                      style: AppTypography.labelMd.copyWith(
+                        color: AppColors.textOnPrimary.withValues(alpha: 0.85),
                       ),
                     ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  SizedBox(
-                    height: 30,
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                GestureDetector(
+                  onTap: () => context.goNamed(AppRouteName.points),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: <Widget>[
+                        Text(
+                          formatIndonesianNumber(totalPoints),
+                          key: ValueKey<int>(totalPoints),
+                          style: AppTypography.headlineXl.copyWith(
+                            color: AppColors.textOnPrimary,
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
+                        Text(
+                          AppStrings.rewardPointSuffix,
+                          style: AppTypography.labelLg.copyWith(
+                            color:
+                                AppColors.textOnPrimary.withValues(alpha: 0.9),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  AppStrings.homePointsSubtitle,
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.textOnPrimary.withValues(alpha: 0.7),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: SizedBox(
+                    height: 36,
                     child: ElevatedButton(
-                      onPressed: onExchange,
+                      onPressed: () => context.goNamed(AppRouteName.points),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.surface,
+                        backgroundColor: AppColors.warning,
                         foregroundColor: AppColors.primary,
-                        elevation: 0,
-                        minimumSize: const Size(0, 30),
+                        minimumSize: const Size(0, 36),
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        side: const BorderSide(color: AppColors.border),
                         padding: const EdgeInsets.symmetric(
                           horizontal: AppSpacing.md,
                         ),
@@ -815,73 +783,60 @@ class _PointsSummaryCard extends StatelessWidget {
                             AppRadius.full,
                           ),
                         ),
+                        elevation: 0,
                       ),
                       child: Text(
                         AppStrings.homeExchangeReward,
-                        style: AppTypography.labelSm,
+                        style: AppTypography.labelMd.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  SizedBox(
-                    height: 30,
-                    child: OutlinedButton(
-                      onPressed: onHistory,
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: AppColors.textOnPrimary
-                            .withValues(alpha: 0.15),
-                        foregroundColor: AppColors.textOnPrimary,
-                        minimumSize: const Size(0, 30),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        side: BorderSide(
-                          color: AppColors.surface
-                              .withValues(alpha: 0.4),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.md,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            AppRadius.full,
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        AppStrings.homeViewHistory,
-                        style: AppTypography.labelSm,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Container(
-            height: 1,
-            color: AppColors.surface.withValues(alpha: 0.2),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Row(
-            children: <Widget>[
-              for (int i = 0; i < stats.length; i++) ...<Widget>[
-                if (i > 0) const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: _MiniStat(
-                    icon: stats[i].icon,
-                    value: stats[i].value,
-                    label: stats[i].label,
                   ),
                 ),
-              ],
-            ],
-          ),
+                const SizedBox(height: AppSpacing.md),
+                Container(
+                  height: 1,
+                  color: AppColors.surface.withValues(alpha: 0.2),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      if (stats.isNotEmpty)
+                        Expanded(
+                          child: InkWell(
+                            onTap: () =>
+                                context.goNamed(AppRouteName.activity),
+                            child: _MiniStat(
+                              icon: stats.first.icon,
+                              value: stats.first.value,
+                              label: stats.first.label,
+                            ),
+                          ),
+                        ),
+                      if (stats.length > 1) ...<Widget>[
+                        const SizedBox(width: AppSpacing.sm),
+                        for (int i = 1; i < stats.length; i++)
+                          Expanded(
+                            child: _MiniStat(
+                              icon: stats[i].icon,
+                              value: stats[i].value,
+                              label: stats[i].label,
+                            ),
+                          ),
+                      ],
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
         ],
       ),
-      );
+    );
   }
 }
 
@@ -906,6 +861,7 @@ class _MiniStat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 72,
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm,
         vertical: AppSpacing.sm,
@@ -916,6 +872,7 @@ class _MiniStat extends StatelessWidget {
         border: Border.all(color: AppColors.borderLight),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(icon, size: 18, color: AppColors.primary),
           const SizedBox(height: AppSpacing.xs),
@@ -926,13 +883,20 @@ class _MiniStat extends StatelessWidget {
               fontWeight: FontWeight.w700,
             ),
             textAlign: TextAlign.center,
-          ),
-          Text(
-            label,
-            style: AppTypography.bodySm,
-            textAlign: TextAlign.center,
-            maxLines: 2,
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 2),
+          Expanded(
+            child: Text(
+              label,
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),
@@ -1191,9 +1155,9 @@ class _HomeSkeleton extends StatelessWidget {
         SizedBox(height: AppSpacing.sm),
         _SkeletonBlock(height: 52, radius: AppRadius.lg),
         SizedBox(height: AppSpacing.md),
-        _SkeletonBlock(height: 172, radius: AppRadius.xl),
+        _SkeletonBlock(height: 260, radius: AppRadius.xl),
         SizedBox(height: AppSpacing.md),
-        _SkeletonBlock(height: 220, radius: AppRadius.xl),
+        _SkeletonBlock(height: 110, radius: AppRadius.lg),
         SizedBox(height: AppSpacing.md),
         _SkeletonBlock(height: 140, radius: AppRadius.xl),
         SizedBox(height: AppSpacing.lg),

@@ -116,14 +116,27 @@ class _WastePageState extends ConsumerState<WastePage> {
     return _fallbackCheckpoints();
   }
 
+  /// Checkpoint penuh bila maxUses terpasang dan sisa habis.
+  bool _isFull(Checkpoint checkpoint) {
+    final int? maxUses = checkpoint.maxUses;
+    final int? remaining = checkpoint.remainingUses;
+    return maxUses != null && remaining != null && remaining <= 0;
+  }
+
   Checkpoint? _selectedCheckpoint(List<Checkpoint> checkpoints) {
     final String? selectedId = _selectedCheckpointId;
     if (checkpoints.isEmpty) return null;
-    if (selectedId == null) return checkpoints.first;
+    Checkpoint firstAvailable() {
+      for (final Checkpoint item in checkpoints) {
+        if (!_isFull(item)) return item;
+      }
+      return checkpoints.first;
+    }
+    if (selectedId == null) return firstAvailable();
     for (final Checkpoint item in checkpoints) {
       if (item.id == selectedId) return item;
     }
-    return checkpoints.first;
+    return firstAvailable();
   }
 
   void _takePhoto(Checkpoint? checkpoint, DebugLocation? debug) {
@@ -132,6 +145,14 @@ class _WastePageState extends ConsumerState<WastePage> {
         ..hideCurrentSnackBar()
         ..showSnackBar(
           SnackBar(content: Text(AppStrings.wasteCheckpointEmpty)),
+        );
+      return;
+    }
+    if (_isFull(checkpoint)) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(content: Text(AppStrings.wasteCheckpointFull)),
         );
       return;
     }
@@ -233,21 +254,64 @@ class _WastePageState extends ConsumerState<WastePage> {
               const SizedBox(height: AppSpacing.md),
             ],
             for (final Checkpoint checkpoint in checkpoints) ...<Widget>[
-              ListTileItem(
-                title: checkpoint.name,
-                subtitle: checkpoint.address ??
-                    '${checkpoint.latitude.toStringAsFixed(4)}, '
-                        '${checkpoint.longitude.toStringAsFixed(4)}',
-                icon: LucideIcons.map_pin,
-                trailing: selected?.id == checkpoint.id
-                    ? const Icon(
-                        LucideIcons.check,
-                        size: 20,
-                        color: AppColors.primary,
-                      )
-                    : null,
-                onTap: () =>
-                    setState(() => _selectedCheckpointId = checkpoint.id),
+              Builder(
+                builder: (BuildContext context) {
+                  final bool isFull = _isFull(checkpoint);
+                  final String baseSubtitle = checkpoint.address ??
+                      '${checkpoint.latitude.toStringAsFixed(4)}, '
+                          '${checkpoint.longitude.toStringAsFixed(4)}';
+                  return Opacity(
+                    opacity: isFull ? 0.6 : 1,
+                    child: ListTileItem(
+                      title: checkpoint.name,
+                      subtitle: isFull
+                          ? '$baseSubtitle - ${AppStrings.checkpointFull}'
+                          : baseSubtitle,
+                      icon: LucideIcons.map_pin,
+                      trailing: isFull
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.sm,
+                                vertical: AppSpacing.xs,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.surfaceDim,
+                                borderRadius:
+                                    BorderRadius.circular(AppRadius.md),
+                              ),
+                              child: Text(
+                                AppStrings.checkpointFull,
+                                style: AppTypography.labelSm.copyWith(
+                                  color: AppColors.error,
+                                ),
+                              ),
+                            )
+                          : selected?.id == checkpoint.id
+                              ? const Icon(
+                                  LucideIcons.check,
+                                  size: 20,
+                                  color: AppColors.primary,
+                                )
+                              : null,
+                      onTap: isFull
+                          ? () {
+                              ScaffoldMessenger.of(context)
+                                ..hideCurrentSnackBar()
+                                ..showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      AppStrings.wasteCheckpointFull,
+                                    ),
+                                  ),
+                                );
+                            }
+                          : () => setState(
+                                () =>
+                                    _selectedCheckpointId = checkpoint.id,
+                              ),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: AppSpacing.sm),
             ],
@@ -288,6 +352,12 @@ class _WastePageState extends ConsumerState<WastePage> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _takePhoto(selected, debug),
+        child: const Icon(LucideIcons.camera),
+      ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.endFloat,
     );
   }
 }

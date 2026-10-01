@@ -494,6 +494,20 @@ class _AdminCheckpointFormPageState
                   hintText: AppStrings.adminCheckpointMaxUsesHint,
                 ),
               ),
+              if (_isEdit) ...<Widget>[
+                const SizedBox(height: AppSpacing.sm),
+                TextField(
+                  controller: TextEditingController(
+                    text: _effective?.remainingUses?.toString() ??
+                        AppStrings.checkpointUnlimited,
+                  ),
+                  readOnly: true,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    labelText: AppStrings.adminCheckpointRemainingLabel,
+                  ),
+                ),
+              ],
               const SizedBox(height: AppSpacing.sm),
               TextField(
                 controller: _codeController,

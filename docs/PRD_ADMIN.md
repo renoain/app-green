@@ -131,6 +131,10 @@ Form tambah/edit:
 - Latitude (wajib, bisa dari GPS).
 - Longitude (wajib, bisa dari GPS).
 - Radius (default 100 m, bisa diubah).
+- Batas maksimal penggunaan (max_uses 1-9999 atau kosong = tanpa batas;
+  remaining_uses tampil baca-saja saat ubah; kartu TPS menampilkan
+  Sisa kuota X/Y hijau/kuning/merah atau Tanpa batas; checkpoint
+  penuh tidak bisa dipilih user di Buang Sampah).
 - QR code (otomatis, unik).
 - Status aktif (default true).
 

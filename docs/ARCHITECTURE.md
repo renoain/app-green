@@ -73,10 +73,12 @@ Project ini memakai **feature-first + clean architecture** ringan.
 ### 2.1 Layer
 
 1. **Presentation**
-   - Widget, halaman, komponen.
-   - State management (Riverpod).
-   - Dilarang akses data langsung.
-   - Dilarang logic bisnis.
+    - Widget, halaman, komponen.
+    - State management (Riverpod).
+    - Dilarang akses data langsung.
+    - Dilarang logic bisnis.
+    - Widget global di `lib/core/widgets/` (mis. `BottomNavActiveIcon`, `CustomBottomNavBar`).
+    - Komponen fitur di `lib/features/*/presentation/`.
 
 2. **Domain**
    - Entity (model bisnis).
@@ -186,16 +188,17 @@ AdminShell (drawer, tanpa bottom nav user). Masuk admin selalu via go
 (bukan push) agar satu instance shell; tiap instance punya kunci
 Scaffold sendiri dan mendaftarkan pembuka drawer via
 adminDrawerOpenerProvider (tanpa GlobalKey bersama). Back di root
-branch admin sekali tekan kembali ke UI user (/profile); di sub-route
+branch admin menampilkan snackbar "Tekan kembali lagi untuk keluar",
+back kedua dalam 2 detik kembali ke UI user (/profile); di sub-route
 admin back berjalan normal (pop). Redirect berbasis role di Splash
 (sesi tersimpan) dan halaman Login via getCurrentUserRole: admin ->
 /admin/dashboard, petugas -> /admin/waste-verification, user -> /home.
 Menu Mode Admin di Profile (khusus admin/petugas) ke /admin/dashboard
 via go. Di dalam admin ada nav ganda uji coba: drawer (usap tepi kiri,
 flag adminDrawerSwipeEnabled) + navbar bawah 3 item (Dasbor, TPS,
-Verifikasi) + sheet usap-atas semua menu (flag adminBottomNavEnabled);
-Mode Pengguna khusus role admin kembali via go ke /profile agar shell
-tidak menumpuk. GET wilayah memakai timeout + retry galat transien (timeout/
+Verifikasi) + sheet usap-atas semua menu (flag adminBottomNavEnabled,
+enableDrag + isDismissible); Mode Pengguna khusus role admin kembali
+via go ke /profile agar shell tidak menumpuk. GET wilayah memakai timeout + retry galat transien (timeout/
 koneksi/HTTP 5xx) agar tahan terhadap gangguan sesaat API statis.
 
 ---
@@ -390,7 +393,11 @@ Migration dijalankan manual (supabase db push oleh user, bukan agent).
 - profiles (id, email, username, role, created_at) + trigger
   on_auth_user_created -> handle_new_user
 - checkpoints (id, name, address, latitude, longitude, radius, qr_code,
-  code, province_code, city_code, district_code, subdistrict, created_at)
+  code, province_code, city_code, district_code, subdistrict, is_active,
+  max_uses, remaining_uses, created_at); limit kuota: admin set max_uses
+  (validasi domain 1-9999/null), trigger server decrement remaining_uses
+  saat waste_logs verified dan tolak bila sisa 0, user tidak bisa pilih
+  checkpoint penuh di WastePage
 - waste_logs (id, user_id, checkpoint_id, category, item_type, photo_url,
   hash, latitude, longitude, server_timestamp, status, verified_by,
   verified_at, notes, source, created_at); kolom source menyimpan asal data

@@ -28,13 +28,43 @@ Implementasi yang sudah ada di lib/core/widgets/:
 - features/rewards/presentation/widgets/redeem_dialogs.dart: showRedeemConfirmDialog/showRedeemSuccessDialog
 - features/waste/presentation/widgets/photo_upload_container.dart: PhotoUploadContainer
 - features/admin/presentation/widgets/admin_drawer.dart: AdminDrawer, AdminMenuItem
+- features/admin/presentation/widgets/admin_bottom_nav.dart: AdminBottomBar
 - features/admin/presentation/widgets/tps_card.dart: TpsCard
 - features/admin/presentation/widgets/region_picker_dropdown.dart: RegionPickerDropdown
 - features/admin/presentation/widgets/waste_verification_card.dart: WasteVerificationCard
+- features/core/widgets/bottom_nav_active_icon.dart: BottomNavActiveIcon
 
 ---
 
-## 1. Button
+## 0.6. BottomNavActiveIcon [Selesai]
+
+Props:
+- icon: IconData (dari flutter_lucide)
+- selected: bool (apakah item aktif)
+- style: int (1, 2, atau 3)
+
+Gaya aktif (dipilih via AppValues.bottomNavActiveStyle):
+- Versi 1: Circle background (ikon putih di lingkaran primary + shadow).
+- Versi 2 (default, final): Elevated icon (ikon primary + shadow + scale 1.15 saat aktif).
+- Versi 3: Pill indicator (ikon primary + pill indicator di atas saat aktif).
+
+Pemakaian:
+- CustomBottomNavBar (user): non-accent item pakai BottomNavActiveIcon.
+  Item aksen "Buang Sampah" gaya khusus: lingkaran primary 56px + ikon
+  recycle 28px putih yang menonjol ke atas bar; saat aktif membesar
+  1.15x + shadow level2 (bahasa Versi 2), tidak ikut versi style.
+- AdminBottomBar: semua item pakai BottomNavActiveIcon.
+
+Catatan: Ganti style cukup ubah AppValues.bottomNavActiveStyle (1/2/3), hot reload langsung terlihat.
+
+### FAB Kamera di WastePage [Selesai]
+
+Props:
+- onPressed: VoidCallback (ambil foto, memanggil _takePhoto)
+- icon: LucideIcons.camera
+
+Pemakaian: halaman Buang Sampah (WastePage), posisi endFloat di atas bottom nav.
+Aksi sama dengan PrimaryButton "Ambil Foto" di atas halaman.
 
 ### PrimaryButton [Selesai]
 
@@ -184,9 +214,11 @@ Props:
 - onTap: ValueChanged<int>
 
 Pemakaian: bottom navigation bar (Home, Aktivitas, Buang Sampah, Poin,
-Profile). Item "Buang Sampah" tampil sebagai tombol bulat warna primary
-di tengah. Item aktif ditandai ikon primary dan titik indikator di bawah
-label; tinggi bar 72.
+Profile). Item "Buang Sampah" saat tidak aktif tampil sama seperti item
+lain (ikon recycle textSecondary 24px tanpa lingkaran primary); saat
+aktif menjadi lingkaran primary 56px + ikon 28px textOnPrimary yang
+menonjol ke atas bar dengan scale 1.15 + shadow level2. Item aktif
+ditandai ikon primary dan titik indikator di bawah label; tinggi bar 72.
 
 ### CustomAppBar [Selesai]
 
@@ -363,7 +395,9 @@ Props:
 - onDeactivate: VoidCallback
 
 Pemakaian: item daftar Kelola TPS (kode TPS, nama, koordinat, radius,
-kode QR, tombol QR + Ubah + Nonaktifkan).
+kode QR, label sisa kuota Sisa kuota X/Y hijau >50% / kuning 10-50% /
+merah <10% atau Tanpa batas bila max_uses null, tombol QR + Ubah +
+Nonaktifkan).
 
 ### CheckpointQrSheet [Selesai]
 

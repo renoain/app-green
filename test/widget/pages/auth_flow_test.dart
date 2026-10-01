@@ -10,6 +10,7 @@ import 'package:go_green/core/constants/app_strings.dart';
 import 'package:go_green/core/router/app_router.dart';
 import 'package:go_green/core/theme/app_theme.dart';
 import 'package:go_green/core/widgets/app_button_widgets.dart';
+import 'package:go_green/core/widgets/custom_bottom_nav_bar_widget.dart';
 import 'package:go_green/core/widgets/custom_text_field_widget.dart';
 import 'package:go_green/features/activity/presentation/pages/activity_page.dart';
 import 'package:go_green/features/auth/presentation/pages/login_page.dart';
@@ -139,7 +140,12 @@ void main() {
 
     expect(find.byType(HomePage), findsOneWidget);
 
-    await tester.tap(find.text(AppStrings.navActivity));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(CustomBottomNavBar),
+        matching: find.text(AppStrings.navActivity),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.byType(ActivityPage), findsOneWidget);
@@ -149,7 +155,12 @@ void main() {
     await tester.pumpWidget(_app('/home'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text(AppStrings.navPoints));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(CustomBottomNavBar),
+        matching: find.text(AppStrings.navPoints),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.byType(PointsPage), findsOneWidget);
 

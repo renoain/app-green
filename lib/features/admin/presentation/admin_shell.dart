@@ -1,9 +1,10 @@
 // Kerangka admin dengan drawer (presentation).
 //
-// Perilaku tombol back: di branch root sekali tekan langsung kembali
-// ke UI user (/profile); di sub-route (form/detail) back berjalan
-// normal (pop). Masuk admin selalu via go (bukan push) agar hanya
-// ada satu instance shell.
+// Perilaku tombol back: di branch root sekali tekan tampilkan
+// snackbar "Tekan kembali lagi untuk keluar", tekan kedua dalam
+// 2 detik kembali ke UI user (/profile); di sub-route (form/detail)
+// back berjalan normal (pop). Masuk admin selalu via go (bukan
+// push) agar hanya ada satu instance shell.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,6 +31,9 @@ const List<String> _adminBranchRoots = <String>[
   '/admin/audit-logs',
 ];
 
+/// Jeda maksimal antara dua back agar admin benar-benar keluar.
+const Duration _adminExitConfirmDuration = Duration(seconds: 2);
+
 /// Kerangka admin: drawer + konten branch aktif, tanpa bottom nav user.
 class AdminShell extends ConsumerStatefulWidget {
   /// Membuat kerangka admin.
@@ -44,6 +48,7 @@ class AdminShell extends ConsumerStatefulWidget {
 
 class _AdminShellState extends ConsumerState<AdminShell> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  DateTime? _lastBackPressed;
 
   void _openDrawer() => _scaffoldKey.currentState?.openDrawer();
 
@@ -65,7 +70,24 @@ class _AdminShellState extends ConsumerState<AdminShell> {
   void _onPopInvokedWithResult(bool didPop, Object? result) {
     if (didPop) return;
     if (!mounted) return;
-    context.goNamed(AppRouteName.profile);
+    final String path = GoRouterState.of(context).uri.path;
+    if (!_adminBranchRoots.contains(path)) {
+      context.goNamed(AppRouteName.profile);
+      return;
+    }
+    final DateTime now = DateTime.now();
+    final DateTime? last = _lastBackPressed;
+    if (last != null && now.difference(last) <= _adminExitConfirmDuration) {
+      _lastBackPressed = null;
+      context.goNamed(AppRouteName.profile);
+      return;
+    }
+    _lastBackPressed = now;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(content: Text(AppStrings.backToExitHint)),
+      );
   }
 
   void _goUserMode() {

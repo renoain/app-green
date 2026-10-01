@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 import 'package:go_green/core/constants/app_strings.dart';
 import 'package:go_green/core/router/app_router.dart';
 import 'package:go_green/core/theme/app_theme.dart';
+import 'package:go_green/core/widgets/custom_bottom_nav_bar_widget.dart';
 import 'package:go_green/features/article/presentation/pages/article_detail_page.dart';
 import 'package:go_green/features/article/presentation/pages/article_page.dart';
 import 'package:go_green/features/home/presentation/pages/home_page.dart';
@@ -108,7 +109,12 @@ void main() {
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text(AppStrings.navPoints));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(CustomBottomNavBar),
+        matching: find.text(AppStrings.navPoints),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.byType(PointsPage), findsOneWidget);

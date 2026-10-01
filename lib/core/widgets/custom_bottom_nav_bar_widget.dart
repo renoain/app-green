@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 
 import '../constants/app_strings.dart';
+import '../constants/app_values.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_elevation.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
+import 'bottom_nav_active_icon.dart';
 
 /// Item tunggal pada bottom navigation bar.
 class _BottomNavItem {
@@ -43,7 +45,10 @@ final List<_BottomNavItem> _items = <_BottomNavItem>[
 /// Bottom navigation bar aplikasi Go Green.
 ///
 /// Terdiri dari 5 item: Beranda, Aktivitas, Buang Sampah (aksen), Poin,
-/// Profile. Item "Buang Sampah" tampil sebagai tombol bulat warna primary.
+/// Profile. Item "Buang Sampah" saat tidak aktif tampil sama seperti item
+/// lain (ikon recycle textSecondary tanpa lingkaran primary); saat aktif
+/// menjadi lingkaran primary 56px + ikon 28px textOnPrimary yang menonjol
+/// ke atas bar dengan scale 1.15 + shadow level2.
 class CustomBottomNavBar extends StatelessWidget {
   /// Membuat bottom navigation bar.
   const CustomBottomNavBar({
@@ -88,22 +93,61 @@ class CustomBottomNavBar extends StatelessWidget {
     if (item.accent) {
       return InkWell(
         onTap: () => onTap(index),
+        child: Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.topCenter,
+          children: <Widget>[
+            Positioned(
+              top: -16,
+              child: AnimatedScale(
+                duration: const Duration(milliseconds: 200),
+                scale: selected ? 1.15 : 1.0,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: selected
+                        ? AppColors.primary
+                        : Colors.transparent,
+                    shape: BoxShape.circle,
+                    boxShadow: selected ? AppElevation.level2 : null,
+                  ),
+                  child: Icon(
+                    LucideIcons.recycle,
+                    size: selected ? 28 : 24,
+                    color: selected
+                        ? AppColors.textOnPrimary
+                        : AppColors.textSecondary,
+                  ),
+                ),
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 40),
+                Text(
+                  item.label,
+                  style: _itemLabelStyle(selected),
+                ),
+                _buildActiveIndicator(selected),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
+    return InkWell(
+        onTap: () => onTap(index),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-              width: 44,
-              height: 44,
-              decoration: const BoxDecoration(
-                color: AppColors.primary,
-                shape: BoxShape.circle,
-                boxShadow: AppElevation.level1,
-              ),
-              child: const Icon(
-                LucideIcons.recycle,
-                size: 24,
-                color: AppColors.textOnPrimary,
-              ),
+            BottomNavActiveIcon(
+              icon: item.icon,
+              selected: selected,
+              style: AppValues.bottomNavActiveStyle,
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
@@ -114,27 +158,6 @@ class CustomBottomNavBar extends StatelessWidget {
           ],
         ),
       );
-    }
-
-    return InkWell(
-      onTap: () => onTap(index),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(
-            item.icon,
-            size: 24,
-            color: selected ? AppColors.primary : AppColors.textSecondary,
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            item.label,
-            style: _itemLabelStyle(selected),
-          ),
-          _buildActiveIndicator(selected),
-        ],
-      ),
-    );
   }
 
   Widget _buildActiveIndicator(bool selected) {

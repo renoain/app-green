@@ -1,5 +1,280 @@
 # CHANGELOG - Go Green
 
+## [2026-10-01] - Perbaiki duplikat migrasi 025 jadi 026
+
+Status: Selesai
+
+File yang diubah:
+
+- `supabase/migrations/025_profile_fcm_token.sql` -> `supabase/migrations/026_profile_fcm_token.sql` (rename, isi tetap; header `Migration 024` diperbaiki jadi `026`)
+- `docs/DATABASE_SCHEMA.md` - Tambah baris `profiles.fcm_token` (migration 026) dan `redemptions.voucher_code` (migration 025) yang belum tercatat; tambah catatan migration 024 auto-verify dan 026; versi 2.0 ke 2.1.
+
+Catatan:
+
+- Akar masalah: dua file memakai nomor `025` (`025_checkpoint_limits_and_voucher.sql` dan `025_profile_fcm_token.sql` yang headernya tertulis `024`). Supabase menerapkan migrasi berurutan berdasar nama file, jadi duplikat nomor berisiko urutan apply tidak deterministik.
+- Isi SQL tidak diubah (idempoten, `add column if not exists`); hanya nomor file + header + docs.
+- Langkah lanjut: jalankan `supabase migration list` untuk cek status remote, lalu `supabase db push` bila 026 belum applied. Tanpa push, kolom `fcm_token` belum ada di remote dan simpan token push gagal sampai push.
+- Tidak ada hardcode warna/spacing/radius/string; tidak ada dependency baru.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- flutter test: OK (271 test lulus)
+
+## [2026-09-28] - Rapikan stat Home + limit kuota checkpoint tampil penuh
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/features/home/presentation/pages/home_page.dart` - `_MiniStat` tinggi fixed 72px, label warna textSecondary + jarak nilai-label 2px + label dibungkus Expanded anti-overflow; Row tetap Expanded sama lebar + spasi sm + IntrinsicHeight.
+- `lib/core/constants/app_strings.dart` - Label max_uses jadi `Batas Maksimal Penggunaan`/`Max Usage Limit` + hint kosong-tanpa-batas; tambah 6 kunci ID/EN: `adminCheckpointMaxUsesInvalid`, `adminCheckpointRemainingLabel`, `checkpointQuotaRemaining`, `checkpointUnlimited`, `checkpointFull`, `wasteCheckpointFull`.
+- `lib/features/checkpoints/domain/usecases/manage_checkpoint_usecase.dart` - `validateInput` tambah param opsional `maxUses` (null atau 1-9999, selain itu `adminCheckpointMaxUsesInvalid`); dipakai `create`/`update`.
+- `lib/features/admin/presentation/pages/admin_checkpoint_form_page.dart` - Tampil `remaining_uses` baca-saja (atau Tanpa batas) saat mode ubah.
+- `lib/features/admin/presentation/widgets/tps_card.dart` - Tambah `_QuotaLabel`: `Sisa kuota: X/Y` hijau >50% / kuning 10-50% / merah <10%, `Tanpa batas` bila max_uses null.
+- `lib/features/waste/presentation/pages/waste_page.dart` - Checkpoint penuh (remaining 0) tampil redup + badge Penuh, ketuk menampilkan snackbar, `_takePhoto` menolak, pilihan default melewati yang penuh.
+- `test/unit/features/checkpoints/manage_checkpoint_test.dart` - 3 test baru validasi maxUses (0 ditolak, 10000 ditolak, null/100 diterima).
+- `test/widget/pages/admin_checkpoint_status_test.dart` - Viewport 800x1400 + ensureVisible agar tombol Aktifkan tidak tertutup FAB setelah kartu bertambah tinggi.
+- `test/widget/pages/back_navigation_test.dart` - Tap nav Poin dibatasi turunan `CustomBottomNavBar` (pola sama seperti auth_flow_test) karena kartu poin Home juga memuat teks Poin.
+- `docs/UI_PAGES.md` - Catat layout stat 72px, checkpoint Penuh di Waste, kuota di kartu TPS, field max_uses + remaining baca-saja di form.
+- `docs/PRD_ADMIN.md` - Section 6.2 catat max_uses/remaining_uses + kuota + blokir penuh.
+- `docs/COMPONENT_LIBRARY.md` - Catat label kuota TpsCard + ambang warna.
+- `docs/DATABASE_SCHEMA.md` - Tambah kolom max_uses/remaining_uses + migrasi 025 yang belum terdokumentasi, versi 1.9 ke 2.0.
+- `docs/ARCHITECTURE.md` - Kolom checkpoints + alur limit kuota.
+
+Catatan:
+
+- Kolom max_uses/remaining_uses sudah ada dari migrasi 025 (trigger decrement + tolak limit_reached ikut aktif); tidak ada migrasi baru dan tidak perlu `supabase db push`.
+- RLS tidak diubah: policy checkpoints_update_admin sudah mencakup kolom max_uses.
+- Jarak nilai-label 2px memakai konstanta literal karena token terkecil AppSpacing.xs adalah 4px.
+- Tidak ada hardcode warna/spacing/radius/string lain; tidak ada dependency baru.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- flutter test: OK (271 test lulus; 2 gagal perantara diperbaiki: ambiguitas Poin via descendant, tombol Aktifkan via viewport + ensureVisible)
+
+## [2026-09-28] - Home Fix: poin 0 + gradasi 280px + stat simetris
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/features/home/presentation/pages/home_page.dart` - Hapus `_demoTotalPoints`/`_demoMissionProgress`; tamu/gagal backend kini 0 (poin, 3 stat, misi 0% + terkumpul 0) dan aktivitas empty state; fallback tile demo 150/80 dihapus; gradasi atas 260 ke 280px (stops 0.0/0.5/1.0, alpha 0.6); 3 stat simetris via `IntrinsicHeight` + `stretch` (perbaikan: `stretch` saja menyebabkan error infinite height di ListView).
+- `lib/core/constants/app_strings.dart` - Hapus 9 kunci demo tak terpakai (ID/EN): `homeStatWasteValue`, `homeStatCarbonValue`, `homeStatTreeValue`, `homeMissionCollected`, `homeMissionTarget`, `homeActivity1Title/Time`, `homeActivity2Title/Time`. Label stat dan suffix misi tetap dipakai.
+- `test/widget/pages/auth_flow_test.dart` - Tap nav Aktivitas/Poin kini dibatasi ke turunan `CustomBottomNavBar` agar tidak ambigu dengan teks "Poin" di kartu poin.
+- `docs/UI_PAGES.md` - Catat konten tamu 0 + empty state.
+
+Catatan:
+
+- Tugas 2 sudah terpenuhi versi user yang ada (gradasi, siluet daun 12%, tombol dan bintang `warning`, layout kartu); bottom nav dan routing tidak diubah.
+- `AppColors.secondaryContainer` (#92F7C3) dan `warning` (#F4A261) TIDAK diubah sesuai DESIGN_SYSTEM.md; tidak ada token baru dan tidak ada file `.bak` (rollback via git).
+- Tidak ada hardcode warna/spacing/radius/string; tidak ada dependency baru.
+
+Verifikasi:
+
+- dart analyze home_page + app_strings: OK (tidak ada issue)
+- flutter test auth_flow + bottom nav: OK (14 test lulus; 2 error perantara diperbaiki: infinite height via IntrinsicHeight, ambiguitas finder via descendant)
+
+## [2026-09-28] - Fix: 2 error AppColors.bg di Home
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/features/home/presentation/pages/home_page.dart` - Ganti 2 referensi `AppColors.bg` (tidak ada) ke `AppColors.background` (token existing #EAF4E8).
+
+Catatan:
+
+- `AppColors.secondaryContainer` dan `AppColors.warning` TIDAK ditambah/diubah karena sudah ada di `app_colors.dart` sesuai DESIGN_SYSTEM.md (`secondaryContainer` #92F7C3, `warning` #F4A261). Nilai usulan (#D8F3DC / #F4B400) tidak dipakai agar tidak merusak token global; warna mint terdekat sudah ada (`tertiaryLight`, `surfaceDim`).
+- Tidak ada token baru, tidak ada hardcode warna.
+
+Verifikasi:
+
+- dart analyze home_page: OK (tidak ada issue, sebelumnya 2 error undefined_getter)
+- flutter test bottom nav: OK (2 test lulus)
+
+## [2026-09-28] - Home V3 Minimalist ala Stitch
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/features/home/presentation/pages/home_page.dart` - Header tambah bell + titik merah; hero carousel diganti grid aksi cepat 4 menu (Buang Sampah, Scan QR, Artikel, Reward); kartu poin jadi solid primary minimalist + subtitle + tombol Tukar Reward putih; skeleton disesuaikan.
+- `lib/core/constants/app_strings.dart` - Tambah `homePointsSubtitle` ID/EN.
+- `docs/UI_PAGES.md` - Catat struktur Home V3 minimalist.
+
+Catatan:
+
+- Referensi: Stitch go green Home Go Green V3 Environmental Header Minimalist.
+- Tidak ada token baru, semua pakai AppColors/AppSpacing/AppRadius/AppTypography/AppElevation.
+- Tidak ada hardcode string, semua via AppStrings ID/EN.
+- Hero strings lama tidak dipakai lagi di Home tapi tetap ada di AppStrings.
+
+Verifikasi:
+
+- dart analyze home_page: OK (tidak ada issue)
+- flutter analyze app_strings + bottom nav: OK
+- hasil test: OK (bottom nav + auth_flow 14 test lulus)
+
+## [2026-09-28] - UX: Ikon Buang Sampah default sama seperti item lain
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/core/widgets/custom_bottom_nav_bar_widget.dart` - Item aksen tidak aktif kini transparan + ikon recycle textSecondary 24px (sama seperti item lain); saat aktif jadi lingkaran primary 56px + ikon textOnPrimary 28px dengan scale 1.15 + shadow level2.
+- `docs/COMPONENT_LIBRARY.md` - Catat perilaku default aksen sama seperti item lain.
+- `docs/UI_PAGES.md` - Catat perilaku default aksen sama seperti item lain.
+
+Catatan:
+
+- Tidak ada hardcode warna, semua pakai token AppColors.
+- Label dan indikator titik tetap mengikuti status selected seperti sebelumnya.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- hasil test: OK (test bottom nav + bottom nav aktif lulus)
+
+## [2026-09-27] - UX: Aksen Buang Sampah 56px menonjol + status aktif
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/core/widgets/custom_bottom_nav_bar_widget.dart` - Item aksen jadi lingkaran primary 56px + ikon 28px yang menonjol ke atas bar; saat aktif scale 1.15 + shadow level2.
+- `docs/COMPONENT_LIBRARY.md` - Catat gaya aksen baru.
+- `docs/UI_PAGES.md` - Catat gaya aksen baru.
+
+Catatan:
+
+- Gambar ikon tetap recycle (Lucide tidak punya varian isi); yang berubah saat aktif adalah ukuran + shadow, bukan gambar ikon.
+- Item non-aksen tidak berubah, tetap ikut Versi 2.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- hasil test: OK (test bottom nav lulus)
+
+## [2026-09-27] - UX: Bottom nav aktif final Versi 2 (elevated)
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/core/constants/app_values.dart` - `bottomNavActiveStyle` 3 ke 2 (final).
+- `docs/COMPONENT_LIBRARY.md` - Penanda default final di Versi 2.
+- `docs/UI_PAGES.md` - Penanda default final di Versi 2.
+
+Catatan:
+
+- Versi 2 dipilih sebagai gaya final: ikon primary + shadow + scale 1.15 saat aktif.
+- Item aksen "Buang Sampah" tidak berubah, tetap gaya khusus.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- hasil test: OK (test bottom nav aktif lulus)
+
+## [2026-09-27] - UX: Bottom nav aktif ganti ke Versi 3 (pill)
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/core/constants/app_values.dart` - `bottomNavActiveStyle` 2 ke 3.
+- `docs/COMPONENT_LIBRARY.md` - Penanda default pindah ke Versi 3.
+- `docs/UI_PAGES.md` - Penanda default pindah ke Versi 3.
+
+Catatan:
+
+- Ikon aktif bottom nav user dan admin kini memakai gaya pill (ikon primary + pill indicator di atas saat aktif).
+- Item aksen "Buang Sampah" tidak berubah, tetap gaya khusus.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- hasil test: OK (test bottom nav aktif lulus)
+
+## [2026-09-27] - UX: Bottom nav aktif ganti ke Versi 2 (elevated)
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/core/constants/app_values.dart` - `bottomNavActiveStyle` 1 ke 2, perbaiki komentar.
+- `docs/COMPONENT_LIBRARY.md` - Penanda default pindah ke Versi 2.
+- `docs/UI_PAGES.md` - Penanda default pindah ke Versi 2.
+
+Catatan:
+
+- Ikon aktif bottom nav user dan admin kini memakai gaya elevated (ikon primary + shadow + scale 1.15 saat aktif).
+- Item aksen "Buang Sampah" tidak berubah, tetap gaya khusus.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- hasil test: OK (test bottom nav aktif lulus)
+
+## [2026-09-27] - UX: Bottom nav 3 gaya aktif (circle/elevated/pill)
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/core/constants/app_values.dart` - Tambah `bottomNavActiveStyle` (default 1).
+- `lib/core/widgets/bottom_nav_active_icon.dart` - Komponen baru: `BottomNavActiveIcon` dengan 3 gaya aktif (circle, elevated, pill).
+- `lib/core/widgets/custom_bottom_nav_bar_widget.dart` - Non-accent item pakai `BottomNavActiveIcon`; item aksen "Buang Sampah" tetap gaya khusus.
+- `lib/features/admin/presentation/widgets/admin_bottom_nav.dart` - `_AdminBottomButton` pakai `BottomNavActiveIcon`.
+- `test/widget/components/bottom_nav_active_icon_test.dart` - Test 3 gaya aktif.
+- `docs/COMPONENT_LIBRARY.md` - Tambah BottomNavActiveIcon + 3 gaya.
+- `docs/UI_PAGES.md` - Catat bottom nav pakai BottomNavActiveIcon, default Versi 1.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- hasil test: OK (261 test lulus)
+
+Catatan:
+
+1. **BottomNavActiveIcon**: Ikon bottom nav user dan admin kini menggunakan `BottomNavActiveIcon` yang mendukung 3 gaya aktif:
+   - Versi 1 (default): Circle background (ikon putih di lingkaran primary + shadow).
+   - Versi 2: Elevated icon (ikon primary + shadow + scale 1.15 saat aktif).
+   - Versi 3: Pill indicator (ikon primary + pill indicator di atas saat aktif).
+   Ganti ganti via `AppValues.bottomNavActiveStyle` (1/2/3). Hot reload langsung terlihat.
+
+2. **Item Aksen Tetap Spesial**: Item "Buang Sampah" di bottom nav user tetap menggunakan gaya khusus (circle primary + shadow) dan tidak mengikuti `bottomNavActiveStyle`.
+
+## [2026-09-27] - UX: Konfirmasi back admin, sheet bisa usap tutup, FAB kamera di Waste, hapus tombol kartu poin Home
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/features/admin/presentation/admin_shell.dart` - Back di branch root kini menampilkan snackbar "Tekan kembali lagi untuk keluar", back kedua dalam 2 detik kembali ke /profile (logika double-back mirip MainShell).
+- `lib/features/admin/presentation/widgets/admin_bottom_nav.dart` - `showModalBottomSheet` tambah `enableDrag: true` dan `isDismissible: true` sehingga sheet admin bisa ditutup dengan usap ke bawah.
+- `lib/features/waste/presentation/pages/waste_page.dart` - Tambah `FloatingActionButton` dengan ikon kamera (LucideIcons.camera) di posisi `endFloat` di atas bottom nav, memanggil `_takePhoto(selected, debug)`.
+- `lib/features/home/presentation/pages/home_page.dart` - Hapus tombol "Tukar Reward" dan "Lihat Riwayat" dari `_PointsSummaryCard`. Total Poin kini klikable navigasi ke `/points`; stat "Kali Buang" klikable navigasi ke `/activity`.
+- `docs/UI_PAGES.md` - Update section 5 (Home) dan section 17 (Admin Kelola Lokasi) untuk catat FAB kamera dan double-back admin.
+- `docs/COMPONENT_LIBRARY.md` - Tambah entry AdminBottomBar dan section FAB Kamera di WastePage.
+- `docs/ARCHITECTURE.md` - Update deskripsi admin shell back behavior dan nav ganda.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- hasil test: OK (261 test lulus)
+
+Catatan:
+
+1. **Double-Back Admin**: `PopScope` di AdminShell kini menyimpan `_lastBackPressed` timestamp. Di branch root admin, back pertama menampilkan snackbar "Tekan kembali lagi untuk keluar"; back kedua dalam 2 detik menavigasi ke /profile. Di sub-route (form/detail), back berjalan normal (pop).
+
+2. **Sheet Admin Bisa Dismiss**: `showModalBottomSheet` di `AdminBottomBar` kini menerima drag ke bawah (`enableDrag: true`) dan bisa ditutup dengan gesture (`isDismissible: true`).
+
+3. **FAB Kamera WastePage**: `WastePage` kini memiliki `FloatingActionButton` dengan ikon kamera yang memanggil `_takePhoto()` yang sama dengan tombol "Ambil Foto" di atas halaman.
+
+4. **Kartu Poin Home Diperjelas**: Tombol "Tukar Reward" dan "Lihat Riwayat" dihapus dari kartu poin. Total Poin dan stat "Kali Buang" kini bisa diklik untuk navigasi ke halaman Poin dan Aktivitas.
+
 ## [2026-09-27] - Fitur: Batas penggunaan checkpoint, poin auto-deduct, voucher code
 
 Status: Selesai

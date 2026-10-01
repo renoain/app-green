@@ -70,6 +70,7 @@ Menyimpan data user + role.
 | email | text | | Dari auth.users.email |
 | username | text | unique | Username unik |
 | role | text | default 'user', check in ('user','admin','petugas') | Role user |
+| fcm_token | text | nullable | Token FCM perangkat untuk push notification (migration 026) |
 | created_at | timestamptz | default now() | |
 
 RLS:
@@ -118,6 +119,8 @@ Lokasi pembuangan sampah terdaftar.
 | district_code | text | indexed | ID kecamatan API wilayah (migration 017) |
 | subdistrict | text | | Kelurahan opsional (migration 017) |
 | is_active | boolean | default true | Status aktif, soft-delete (migration 021) |
+| max_uses | integer | nullable | Maksimal buang sampah, null = tanpa batas (migration 025) |
+| remaining_uses | integer | nullable | Sisa kuota, null = tanpa batas; decrement otomatis via trigger saat waste_logs verified (migration 025) |
 | created_at | timestamptz | default now() | |
 
 RLS:
@@ -234,6 +237,7 @@ Riwayat penukaran hadiah.
 | reward_id | uuid | FK ke rewards, on delete set null | Hadiah |
 | status | text | default 'pending', check in ('pending','approved','rejected','claimed') | Status |
 | qr_code | text | unique | Kode QR klaim |
+| voucher_code | text | nullable, unique per baris terisi | Kode voucher klaim reward oleh user (migration 025) |
 | created_at | timestamptz | default now() | |
 | claimed_at | timestamptz | | Waktu klaim |
 
@@ -429,6 +433,19 @@ where email = 'admin@green.com';
   di check constraint waste_logs.
 - Migration 023_waste_forensics.sql menambah kolom risk_score,
   exif_ok, risk_detail di waste_logs (nullable, idempoten). Sudah di-push 2026-09-24.
+- Migration 024_auto_verify_waste.sql membuat trigger auto_verify_waste_trigger
+  di waste_logs (tolak duplikat hash, rate limit 5/hari, GPS radius,
+  kategori valid; verified otomatis + verified_at). Sudah di-push 2026-09-26.
+- Migration 025_checkpoint_limits_and_voucher.sql menambah kolom
+  max_uses/remaining_uses di checkpoints (nullable, idempoten) +
+  kolom voucher_code di redemptions + trigger auto_verify_waste_trigger
+  (tolak checkpoint_limit_reached bila sisa 0, decrement remaining_uses
+  saat verified). Sudah di-push 2026-09-26.
+- Migration 026_profile_fcm_token.sql menambah kolom fcm_token di profiles
+  (nullable, idempoten) untuk push notification. Perbaikan penomoran:
+  file sebelumnya bernama 025_profile_fcm_token.sql (duplikat nomor 025,
+  header tertulis 024); di-rename ke 026 tanpa ubah isi. Status push:
+  cek `supabase migration list` sebelum `db push`.
 
 ---
 
@@ -507,9 +524,9 @@ where user_id = auth.uid()
 
 ## 9. Status Dokumen
 
-Versi: 1.9
+Versi: 2.1
 
-Terakhir update: 2026-09-24
+Terakhir update: 2026-09-28
 
 Riwayat:
 
@@ -531,3 +548,5 @@ Riwayat:
 - 1.7: kolom checkpoints.is_active + index (migration 021).
 - 1.8: seed 4 bonus kategori (migration 022).
 - 1.9: kolom forensik waste_logs (migration 023).
+- 2.0: kolom checkpoints max_uses/remaining_uses + trigger limit (migration 025).
+- 2.1: kolom profiles.fcm_token (migration 026, rename dari duplikat 025) + kolom redemptions.voucher_code + trigger auto-verify (migration 024).
