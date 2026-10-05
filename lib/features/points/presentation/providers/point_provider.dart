@@ -1,8 +1,4 @@
 // Provider data poin.
-//
-// Menyediakan datasource dan notifier saldo + riwayat poin user
-// (AsyncValue) agar halaman Poin & Reward bisa memuat data tanpa akses
-// langsung ke data layer.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,7 +14,6 @@ final Provider<PointsRemoteDatasource> pointsRemoteDatasourceProvider =
 
 /// State saldo dan riwayat poin.
 class PointsState {
-  /// Membuat state poin.
   const PointsState({required this.totalPoints, required this.history});
 
   /// Saldo poin (earn dikurangi redeem).
@@ -30,7 +25,6 @@ class PointsState {
 
 /// Notifier saldo dan riwayat poin.
 class PointsNotifier extends StateNotifier<AsyncValue<PointsState>> {
-  /// Membuat notifier dengan data source yang di-inject.
   PointsNotifier(this._datasource)
       : super(const AsyncLoading<PointsState>());
 

@@ -1,7 +1,4 @@
 // Halaman riwayat aktivitas Go Green.
-//
-// Menampilkan waste log milik user dari Supabase; tamu atau saat backend
-// gagal memakai daftar demo.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,7 +24,6 @@ import '../data/activity_texts.dart';
 
 /// Halaman riwayat aktivitas Go Green.
 class ActivityPage extends ConsumerStatefulWidget {
-  /// Membuat halaman aktivitas.
   const ActivityPage({super.key});
 
   @override
@@ -205,11 +201,8 @@ class _ActivityPageState extends ConsumerState<ActivityPage> {
   }
 }
 
-/// Skeleton statis Aktivitas saat memuat data.
-///
-/// Kotak surfaceDim tanpa animasi loop agar ringan.
+/// Skeleton statis Aktivitas saat memuat data. Kotak surfaceDim tanpa animasi loop agar ringan.
 class _ActivitySkeleton extends StatelessWidget {
-  /// Membuat skeleton Aktivitas.
   const _ActivitySkeleton();
 
   @override
@@ -230,7 +223,6 @@ class _ActivitySkeleton extends StatelessWidget {
 
 /// Satu blok placeholder skeleton Aktivitas.
 class _ActivitySkeletonBlock extends StatelessWidget {
-  /// Membuat blok skeleton.
   const _ActivitySkeletonBlock({required this.height});
 
   /// Tinggi blok.

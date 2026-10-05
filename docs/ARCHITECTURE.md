@@ -373,6 +373,8 @@ Admin butuh internet saat tambah TPS (wajib untuk Supabase juga).
 - print() di produksi.
 - Secret di kode.
 - Emoji di kode, komentar, dokumentasi.
+- Pemisah dekoratif di komentar kode (contoh garis sama dengan, strip,
+  underscore berulang); pakai komentar 1 baris polos.
 - Duplikasi widget/komponen.
 - Import lintas layer yang melanggar aturan dependency.
 - Dependency tanpa evaluasi.

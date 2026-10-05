@@ -2,7 +2,6 @@
 
 /// Angka ringkasan untuk dasbor admin.
 class AdminDashboardSummary {
-  /// Membuat ringkasan dasbor admin.
   const AdminDashboardSummary({
     required this.totalUsers,
     required this.totalCheckpoints,

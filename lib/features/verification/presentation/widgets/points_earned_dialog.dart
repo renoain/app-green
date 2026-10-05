@@ -1,7 +1,4 @@
 // Popup poin masuk dengan animasi scale + fade (presentation).
-//
-// Ditampilkan sekali setelah bukti terkirim (timestamp, lokasi, hash
-// terverifikasi). Tombol menutup popup agar pemanggil lanjut ke Beranda.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';

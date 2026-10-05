@@ -1,8 +1,4 @@
 // Entry point aplikasi Go Green.
-//
-// Memuat bahasa tersimpan, menginisialisasi Supabase, membungkus
-// aplikasi dengan ProviderScope, dan menampilkan MaterialApp.router
-// dengan tema, router, dan locale aplikasi.
 
 import 'dart:async';
 
@@ -71,7 +67,6 @@ Future<void> _initPush() async {
 
 /// Widget root aplikasi Go Green.
 class GoGreenApp extends ConsumerWidget {
-  /// Membuat widget root aplikasi.
   const GoGreenApp({super.key});
 
   @override

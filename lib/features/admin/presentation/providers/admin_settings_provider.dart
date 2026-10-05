@@ -1,7 +1,4 @@
 // Provider pengaturan operasional admin (presentation).
-//
-// State nilai terketik + simpan via ManageSettingsUsecase; usai simpan
-// terapkan ke AppConfig agar langsung berlaku tanpa restart.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -27,7 +24,6 @@ final Provider<ManageSettingsUsecase> manageSettingsUsecaseProvider =
 
 /// Notifier nilai pengaturan admin.
 class AdminSettingsNotifier extends StateNotifier<AsyncValue<AppSettingsValues>> {
-  /// Membuat notifier pengaturan admin.
   AdminSettingsNotifier(this._usecase, {AdminAuditDatasource? audit})
       : _audit = audit ?? AdminAuditDatasource(),
         super(const AsyncLoading<AppSettingsValues>());

@@ -14,7 +14,6 @@ import '../data/article_demo_data.dart';
 
 /// Halaman detail artikel Go Green.
 class ArticleDetailPage extends StatelessWidget {
-  /// Membuat halaman detail artikel.
   const ArticleDetailPage({super.key, this.articleId = '1', this.article});
 
   /// Identitas artikel yang dibuka.

@@ -1,7 +1,7 @@
 -- Migration 003: tabel waste_logs + RLS.
 -- Referensi skema: docs/DATABASE_SCHEMA.md bagian 3.3.
 
--- ============ WASTE_LOGS ============
+-- WASTE_LOGS
 create table if not exists public.waste_logs (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
@@ -37,7 +37,7 @@ create index if not exists waste_logs_status_created_at_idx
 create index if not exists waste_logs_hash_idx
   on public.waste_logs (hash);
 
--- ============ RLS: WASTE_LOGS ============
+-- RLS: WASTE_LOGS
 alter table public.waste_logs enable row level security;
 
 -- User bisa baca log miliknya.

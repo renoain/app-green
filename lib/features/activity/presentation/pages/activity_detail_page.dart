@@ -17,7 +17,6 @@ import '../data/activity_detail_extra.dart';
 
 /// Halaman detail satu aktivitas pembuangan sampah.
 class ActivityDetailPage extends StatelessWidget {
-  /// Membuat halaman detail aktivitas.
   const ActivityDetailPage({super.key, this.activityId = '1', this.extra});
 
   /// Identitas aktivitas yang dibuka.

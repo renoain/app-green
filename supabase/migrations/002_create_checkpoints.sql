@@ -1,7 +1,7 @@
 -- Migration 002: tabel checkpoints + RLS.
 -- Referensi skema: docs/DATABASE_SCHEMA.md bagian 3.2.
 
--- ============ CHECKPOINTS ============
+-- CHECKPOINTS
 create table if not exists public.checkpoints (
   id uuid primary key default gen_random_uuid(),
   name text not null,
@@ -18,7 +18,7 @@ comment on table public.checkpoints is 'Lokasi pembuangan sampah terdaftar.';
 create index if not exists checkpoints_name_idx
   on public.checkpoints (name);
 
--- ============ RLS: CHECKPOINTS ============
+-- RLS: CHECKPOINTS
 alter table public.checkpoints enable row level security;
 
 -- Semua user (dan guest) bisa membaca daftar checkpoint.

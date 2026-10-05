@@ -22,9 +22,7 @@ class VerificationExtra {
   /// Path file foto bukti yang diambil kamera in-app.
   final String? imagePath;
 
-  /// Label timestamp pengambilan foto.
-  ///
-  /// Sementara memakai waktu device sampai timestamp server terpasang.
+  /// Label timestamp pengambilan foto. Sementara memakai waktu device sampai timestamp server terpasang.
   final String? timestampLabel;
 
   /// ID checkpoint tempat foto diambil (null bila alur lama/demo).

@@ -1,8 +1,4 @@
 // Data source poin dan redemption berbasis Supabase.
-//
-// Membungkus pembacaan saldo/riwayat poin dan pengajuan penukaran reward.
-// Dipanggil oleh repository/use case, bukan dari widget. Model poin khusus
-// belum dibuat (mengembalikan Map sampai model poin disediakan).
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -13,10 +9,7 @@ import '../../../../core/services/supabase_service.dart';
 
 /// Data source poin dan redemption Go Green.
 class PointsRemoteDatasource {
-  /// Membuat data source poin. [client] bisa di-inject untuk test.
-  ///
-  /// Client Supabase diambil malas (lazy) agar konstruksi provider tidak
-  /// crash di mode demo/test saat Supabase belum terinisialisasi.
+  /// Client Supabase diambil malas (lazy) agar konstruksi provider tidak crash di mode demo/test saat Supabase belum terinisialisasi.
   PointsRemoteDatasource({SupabaseClient? client}) : _override = client;
 
   final SupabaseClient? _override;
@@ -39,8 +32,7 @@ class PointsRemoteDatasource {
     return total;
   }
 
-  /// Riwayat poin user, terbaru di atas. Mengembalikan Map mentah karena
-  /// model poin belum tersedia.
+  /// Riwayat poin user, terbaru di atas. Mengembalikan Map mentah karena model poin belum tersedia.
   Future<List<Map<String, dynamic>>> getPointsHistory(String userId) async {
     return _client
         .from(AppTables.points)
@@ -49,11 +41,7 @@ class PointsRemoteDatasource {
         .order('created_at', ascending: false);
   }
 
-  /// Mencatat poin ke tabel points.
-  ///
-  /// Catatan: untuk mencegah kecurangan, insert ke tabel points dibatasi
-  /// sisi server (tanpa policy insert untuk klien). Method ini dipakai
-  /// oleh edge function/RPC pada fase lanjut.
+  /// Mencatat poin ke tabel points. Catatan: untuk mencegah kecurangan, insert ke tabel points dibatasi sisi server (tanpa policy insert untuk klien). Method ini dipakai oleh edge function/RPC pada fase lanjut.
   Future<void> addPoints({
     required String userId,
     required int amount,

@@ -1,8 +1,4 @@
 // Header reusable untuk halaman responsif Login & Register Go Green.
-//
-// Menampilkan logo daun, judul halaman, dan deskripsi singkat dengan
-// spacing konsisten. Widget ini dipakai bersama oleh LoginPage dan
-// RegisterPage agar kedua halaman punya tampilan yang seragam.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -14,7 +10,6 @@ import '../theme/app_typography.dart';
 
 /// Header halaman autentikasi (logo + judul + deskripsi).
 class AuthHeaderWidget extends StatelessWidget {
-  /// Membuat header autentikasi.
   const AuthHeaderWidget({
     super.key,
     required this.title,

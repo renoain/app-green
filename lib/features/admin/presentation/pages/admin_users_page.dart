@@ -1,7 +1,4 @@
 // Halaman kelola user admin (daftar + filter + ubah role).
-//
-// Daftar profil terbaru via AdminUsersNotifier; cari nama/email, filter
-// role, ketuk item ke detail (total poin + riwayat + ubah role).
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -46,7 +43,6 @@ StatusType _roleType(UserRole role) {
 
 /// Halaman kelola user admin.
 class AdminUsersPage extends ConsumerStatefulWidget {
-  /// Membuat halaman kelola user admin.
   const AdminUsersPage({super.key});
 
   @override

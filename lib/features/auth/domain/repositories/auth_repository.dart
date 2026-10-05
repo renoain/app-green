@@ -1,8 +1,4 @@
 // Interface repository autentikasi (domain).
-//
-// Implementasi data layer (SupabaseAuthRepository) wajib mengikuti kontrak
-// ini. Hasil operasi berupa enum hasil agar UI bisa menampilkan pesan
-// yang sesuai, bukan exception mentah.
 
 import '../entities/auth_session.dart';
 
@@ -53,10 +49,7 @@ enum SignUpResult {
 
 /// Kontrak repository autentikasi Go Green.
 abstract interface class AuthRepository {
-  /// Login email/password atau username/password.
-  ///
-  /// [identifier] berisi email atau username; implementasi menyelesaikan
-  /// username menjadi email lewat RPC sebelum login.
+  /// Login email/password atau username/password. [identifier] berisi email atau username; implementasi menyelesaikan username menjadi email lewat RPC sebelum login.
   Future<SignInResult> signIn({
     required String identifier,
     required String password,
@@ -65,10 +58,7 @@ abstract interface class AuthRepository {
   /// Login sekali klik dengan akun Google (OAuth), tanpa isi email manual.
   Future<SignInResult> signInWithGoogle();
 
-  /// Registrasi akun baru.
-  ///
-  /// [username] dipakai untuk login dan baris profiles (unik, lowercase);
-  /// [displayName] disimpan di metadata auth untuk tampilan.
+  /// Registrasi akun baru. [username] dipakai untuk login dan baris profiles (unik, lowercase); [displayName] disimpan di metadata auth untuk tampilan.
   Future<SignUpResult> signUp({
     required String username,
     required String displayName,
@@ -79,24 +69,17 @@ abstract interface class AuthRepository {
   /// Keluar dari sesi.
   Future<void> signOut();
 
-  /// Mengecek apakah [username] sudah dipakai user lain.
-  ///
-  /// Normalisasi lowercase + trim sebelum cek agar konsisten dengan
-  /// constraint unik di profiles. Mengembalikan true bila sudah dipakai.
+  /// Mengecek apakah [username] sudah dipakai user lain. Normalisasi lowercase + trim sebelum cek agar konsisten dengan constraint unik di profiles. Mengembalikan true bila sudah dipakai.
   Future<bool> isUsernameTaken(String username);
 
   /// Sesi saat ini (belum login bila null email).
   AuthSession get currentSession;
 
-  /// Atribut akun saat ini (email, nama tampilan, username, telepon).
-  ///
-  /// Nilai null bila belum login atau Supabase belum terinisialisasi.
+  /// Atribut akun saat ini (email, nama tampilan, username, telepon). Nilai null bila belum login atau Supabase belum terinisialisasi.
   ({String? email, String? displayName, String? username, String? phone})
   get currentAccount;
 
-  /// Memperbarui nama tampilan dan/atau telepon di metadata auth.
-  ///
-  /// Mengembalikan true bila tersimpan.
+  /// Memperbarui nama tampilan dan/atau telepon di metadata auth. Mengembalikan true bila tersimpan.
   Future<bool> updateProfile({String? displayName, String? phone});
 
   /// Aliran perubahan sesi login.

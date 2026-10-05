@@ -1,7 +1,4 @@
 // Use case kelola checkpoint untuk admin (domain).
-//
-// Validasi bisnis (nama, koordinat, radius) tinggal di domain agar widget
-// tetap tipis. Murni Dart sehingga mudah diuji.
 
 import '../../../../core/constants/app_strings.dart';
 import '../entities/checkpoint.dart';
@@ -9,7 +6,6 @@ import '../repositories/checkpoint_repository.dart';
 
 /// Exception validasi form checkpoint; [message] aman tampil ke user.
 class CheckpointValidationException implements Exception {
-  /// Membuat exception dengan pesan ramah user.
   const CheckpointValidationException(this.message);
 
   /// Pesan kesalahan.
@@ -21,7 +17,6 @@ class CheckpointValidationException implements Exception {
 
 /// Use case tambah/ubah/hapus checkpoint oleh admin.
 class ManageCheckpointUsecase {
-  /// Membuat use case.
   const ManageCheckpointUsecase(this._repository);
 
   final CheckpointRepository _repository;

@@ -1,7 +1,4 @@
 // Halaman scan QR checkpoint Go Green.
-//
-// Viewfinder diperlihatkan; deteksi QR memakai mobile_scanner menunggu
-// pengujian di device fisik.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -15,7 +12,6 @@ import '../../../../core/widgets/app_bar_and_loading_widgets.dart';
 
 /// Halaman scan QR checkpoint Go Green.
 class ScanPage extends StatelessWidget {
-  /// Membuat halaman scan QR.
   const ScanPage({super.key});
 
   @override

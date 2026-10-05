@@ -1,7 +1,4 @@
 // Use case ringkasan Home dari waste log (domain).
-//
-// Murni Dart agar mudah diuji: hitung total buang, buang minggu ini
-// (Senin 00.00 lokal), dan yang terverifikasi dari daftar log.
 
 import '../../../../core/constants/app_config.dart';
 import '../../../../core/constants/app_enums.dart';
@@ -9,7 +6,6 @@ import '../../../waste/domain/entities/waste_log.dart';
 
 /// Ringkasan angka Home dari data asli.
 class HomeSummary {
-  /// Membuat ringkasan Home.
   const HomeSummary({
     required this.totalDisposals,
     required this.weeklyDisposals,
@@ -32,7 +28,6 @@ class HomeSummary {
 
 /// Use case membangun ringkasan Home.
 class BuildHomeSummaryUsecase {
-  /// Membuat use case (stateless).
   const BuildHomeSummaryUsecase();
 
   /// Awal minggu berjalan (Senin 00.00 lokal) untuk [now].

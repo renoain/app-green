@@ -1,7 +1,4 @@
 // Data source pembuangan sampah berbasis Supabase.
-//
-// Membungkus upload foto bukti (storage) dan CRUD waste_logs. Dipanggil
-// oleh repository/use case, bukan dari widget.
 
 import 'dart:typed_data';
 
@@ -15,10 +12,7 @@ import '../models/waste_log_model.dart';
 
 /// Data source waste log Go Green.
 class WasteRemoteDatasource {
-  /// Membuat data source waste log. [client] bisa di-inject untuk test.
-  ///
-  /// Client Supabase diambil malas (lazy) agar konstruksi provider tidak
-  /// crash di mode demo/test saat Supabase belum terinisialisasi.
+  /// Client Supabase diambil malas (lazy) agar konstruksi provider tidak crash di mode demo/test saat Supabase belum terinisialisasi.
   WasteRemoteDatasource({SupabaseClient? client}) : _override = client;
 
   final SupabaseClient? _override;
@@ -26,10 +20,7 @@ class WasteRemoteDatasource {
   SupabaseClient get _client =>
       _override ?? SupabaseService.instance.client;
 
-  /// Upload foto bukti ke bucket waste-photos.
-  ///
-  /// [fileName] adalah path lengkap `<userId>/<timestamp>_<hash>.jpg`.
-  /// Mengembalikan path yang disimpan di kolom photo_url.
+  /// Upload foto bukti ke bucket waste-photos. [fileName] adalah path lengkap `<userId>/<timestamp>_<hash>.jpg`. Mengembalikan path yang disimpan di kolom photo_url.
   Future<String> uploadPhoto({
     required String fileName,
     required Uint8List bytes,
@@ -44,9 +35,7 @@ class WasteRemoteDatasource {
         .uploadBinary(fileName, bytes);
   }
 
-  /// Menyimpan log pembuangan sampah. Timestamp dan status diisi server
-  /// (server_timestamp default now(), status default pending). Kolom source
-  /// diisi [WasteSource.qrScan] saat audit dari QR, manual saat pilih manual.
+  /// Menyimpan log pembuangan sampah. Timestamp dan status diisi server (server_timestamp default now(), status default pending). Kolom source diisi [WasteSource.qrScan] saat audit dari QR, manual saat pilih manual.
   Future<WasteLogModel> insertWasteLog({
     required String userId,
     String? checkpointId,
@@ -91,8 +80,7 @@ class WasteRemoteDatasource {
     return rows.map(WasteLogModel.fromJson).toList();
   }
 
-  /// Mengambil waste log berstatus pending untuk verifikasi admin/petugas,
-  /// lengkap dengan username pengirim dan nama checkpoint.
+  /// Mengambil waste log berstatus pending untuk verifikasi admin/petugas, lengkap dengan username pengirim dan nama checkpoint.
   Future<List<WasteLogModel>> getPendingWasteLogs() async {
     final List<Map<String, dynamic>> rows = await _client
         .from(AppTables.wasteLogs)
@@ -123,10 +111,7 @@ class WasteRemoteDatasource {
     return WasteLogModel.fromJson(row);
   }
 
-  /// Menyetujui waste log (status verified oleh admin/petugas).
-  ///
-  /// Poin earn sudah dicatat saat submit (SubmitWasteUsecase), jadi approve
-  /// hanya mengubah status tanpa insert poin ulang.
+  /// Menyetujui waste log (status verified oleh admin/petugas). Poin earn sudah dicatat saat submit (SubmitWasteUsecase), jadi approve hanya mengubah status tanpa insert poin ulang.
   Future<WasteLogModel> approveWasteLog({
     required String id,
     required String verifiedBy,
@@ -158,7 +143,6 @@ class WasteRemoteDatasource {
         .from(AppTables.wastePhotosBucket)
         .createSignedUrl(path, expiresIn);
   }
-  ///
   /// Mengembalikan true bila ada waste log dengan hash yang sama.
   Future<bool> checkDuplicateHash(String hash) async {
     final Map<String, dynamic>? row = await _client
@@ -169,9 +153,7 @@ class WasteRemoteDatasource {
     return row != null;
   }
 
-  /// Menghitung jumlah waste log user sejak awal hari ini (UTC).
-  ///
-  /// Dipakai untuk rate limit (docs/DATABASE_SCHEMA.md bagian 8.6).
+  /// Menghitung jumlah waste log user sejak awal hari ini (UTC). Dipakai untuk rate limit (docs/DATABASE_SCHEMA.md bagian 8.6).
   Future<int> countTodayWasteLogs(String userId) async {
     final DateTime start = DateTime.now().toUtc();
     final DateTime startOfDayUtc = DateTime.utc(

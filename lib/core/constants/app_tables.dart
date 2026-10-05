@@ -1,7 +1,4 @@
 // Konstanta nama tabel dan bucket Supabase.
-//
-// Semua nama tabel mengacu ke docs/DATABASE_SCHEMA.md. Dilarang hardcode
-// nama tabel/bucket langsung di datasource.
 
 /// Nama tabel dan bucket Supabase untuk Go Green.
 class AppTables {

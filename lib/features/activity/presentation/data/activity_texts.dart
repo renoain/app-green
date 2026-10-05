@@ -1,7 +1,4 @@
 // Teks tampilan aktivitas bersama (presentation).
-//
-// Dipakai ActivityPage dan Home agar deskripsi + label status dari
-// waste log tidak diduplikasi.
 
 import '../../../../core/constants/app_enums.dart';
 import '../../../../core/constants/app_strings.dart';

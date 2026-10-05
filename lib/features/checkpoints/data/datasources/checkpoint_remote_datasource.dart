@@ -1,8 +1,4 @@
 // Data source checkpoint berbasis Supabase.
-//
-// Membungkus pembacaan daftar checkpoint. Strategi MVP: ambil semua
-// checkpoint lalu hitung jarak di sisi client (docs/ARCHITECTURE.md 10.5);
-// PostGIS baru dipakai nanti kalau jumlah checkpoint sudah banyak.
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -16,10 +12,7 @@ typedef _CheckpointWithDistance = ({CheckpointModel checkpoint, int distanceMete
 
 /// Data source checkpoint Go Green.
 class CheckpointRemoteDatasource {
-  /// Membuat data source checkpoint. [client] bisa di-inject untuk test.
-  ///
-  /// Client Supabase diambil malas (lazy) agar konstruksi provider tidak
-  /// crash di mode demo/test saat Supabase belum terinisialisasi.
+  /// Client Supabase diambil malas (lazy) agar konstruksi provider tidak crash di mode demo/test saat Supabase belum terinisialisasi.
   CheckpointRemoteDatasource({SupabaseClient? client}) : _override = client;
 
   final SupabaseClient? _override;
@@ -46,11 +39,7 @@ class CheckpointRemoteDatasource {
     return rows.map(CheckpointModel.fromJson).toList();
   }
 
-  /// Ambil checkpoint terdekat dari posisi user (client-side).
-  ///
-  /// Jarak dihitung memakai [GeoUtils.distanceMeters]; hasil diurutkan dari
-  /// yang terdekat. Bila [onlyWithinRadius] true (default), hanya checkpoint
-  /// yang berada di dalam radius masing-masing yang dikembalikan.
+  /// Ambil checkpoint terdekat dari posisi user (client-side). Jarak dihitung memakai [GeoUtils.distanceMeters]; hasil diurutkan dari yang terdekat. Bila [onlyWithinRadius] true (default), hanya checkpoint yang berada di dalam radius masing-masing yang dikembalikan.
   Future<List<CheckpointModel>> getNearbyCheckpoints({
     required double latitude,
     required double longitude,
@@ -100,8 +89,7 @@ class CheckpointRemoteDatasource {
     return row == null ? null : CheckpointModel.fromJson(row);
   }
 
-  /// Tambah checkpoint baru (RLS: hanya admin, policy
-  /// checkpoints_insert_admin).
+  /// Tambah checkpoint baru (RLS: hanya admin, policy checkpoints_insert_admin).
   Future<CheckpointModel> createCheckpoint({
     required String name,
     String? address,

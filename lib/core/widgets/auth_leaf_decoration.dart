@@ -1,21 +1,12 @@
 // Dekorasi latar halaman autentikasi (Login/Register) bertema daun.
-//
-// Menghadirkan lingkaran lembut dan ikon daun di sudut layar agar
-// halaman tidak polos, meniru nuansa ilustrasi daun pada referensi
-// assets/images/ref/login_leaves.png. Warna memakai token tema, bukan
-// hardcode.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 
 import '../theme/app_colors.dart';
 
-/// Dekorasi latar (background) halaman autentikasi Go Green.
-///
-/// Dipakai sebagai lapisan bawah dalam [Stack] halaman Login/Register;
-/// konten halaman ditulis di atasnya.
+/// Dekorasi latar (background) halaman autentikasi Go Green. Dipakai sebagai lapisan bawah dalam [Stack] halaman Login/Register; konten halaman ditulis di atasnya.
 class AuthLeafDecoration extends StatelessWidget {
-  /// Membuat dekorasi latar autentikasi.
   const AuthLeafDecoration({super.key});
 
   @override
@@ -51,12 +42,8 @@ class AuthLeafDecoration extends StatelessWidget {
   }
 }
 
-/// Ilustrasi daun di pojok kanan bawah halaman autentikasi.
-///
-/// Dipakai sebagai aksen dekoratif di akhir konten, mengikuti contoh
-/// "daun di kanan bawah" pada kode login referensi.
+/// Ilustrasi daun di pojok kanan bawah halaman autentikasi. Dipakai sebagai aksen dekoratif di akhir konten, mengikuti contoh "daun di kanan bawah" pada kode login referensi.
 class AuthLeafSprig extends StatelessWidget {
-  /// Membuat ilustrasi daun pojok kanan bawah.
   const AuthLeafSprig({super.key});
 
   @override

@@ -1,5 +1,323 @@
 # CHANGELOG - Go Green
 
+## [2026-10-05] - Rename baseline_7 jadi schema_snapshot
+
+Status: Selesai
+
+File yang diubah:
+
+- `supabase/baseline_7/` (di-rename lokal) - Pindah jadi `supabase/schema_snapshot/` (isi sama: 000 peta + 001-007).
+- `supabase/schema_snapshot/000_migration_map.sql` (diedit) - Header peta ikut nama baru.
+- `docs/DATABASE_SCHEMA.md` (diedit) - Bullet bagian 7 ikut nama baru.
+
+Catatan:
+
+- Alasan: nama baseline_7 dikira versi migrasi; schema_snapshot lebih jelas sebagai snapshot state final dan tidak dibaca CLI.
+- Folder `supabase/migrations/` tidak diubah.
+- Tanpa perubahan SQL logic; tanpa perubahan Dart.
+
+Verifikasi:
+
+- flutter analyze: OK (No issues found)
+- Folder lama hilang, folder baru ada (8 file); grep `============` di schema_snapshot = 0
+
+## [2026-10-05] - Baseline 7 file + peta di folder baru
+
+Status: Selesai
+
+File yang dibuat:
+
+- `supabase/baseline_7/000_migration_map.sql` (dibuat) - Peta 001-027 ke baseline, hanya komentar.
+- `supabase/baseline_7/001_core_identity.sql` (dibuat) - Profiles final + fungsi role + trigger user baru + RLS.
+- `supabase/baseline_7/002_checkpoints.sql` (dibuat) - Checkpoints final + region + is_active + limit + RLS.
+- `supabase/baseline_7/003_waste.sql` (dibuat) - Waste_logs final + trigger auto-verify v025 + RLS.
+- `supabase/baseline_7/004_points_rewards.sql` (dibuat) - Points + rewards + redemptions + articles + RLS + voucher.
+- `supabase/baseline_7/005_settings_audit.sql` (dibuat) - App_settings + seed + audit log + RLS.
+- `supabase/baseline_7/006_storage.sql` (dibuat) - Bucket + policy storage.
+- `supabase/baseline_7/007_seeds.sql` (dibuat) - Seed checkpoint + reward + artikel + set admin.
+
+File yang diubah:
+
+- `docs/DATABASE_SCHEMA.md` (diedit) - Tambah 1 bullet pointer baseline_7 di bagian 7.
+
+Catatan:
+
+- Folder `supabase/migrations/` tidak diubah sama sekali.
+- Baseline menyimpan state final saja; perantara yang dibuang: klaim 004, trigger 007 v1, policy 014, trigger 024 v1.
+- Baseline hanya untuk DB baru/reset; remote yang sudah applied 001-027 wajib repair/baseline dulu sebelum pakai.
+- Seed reward ikut sumber 009 (tanpa dedup, jalan sekali saja).
+- Tanpa dependency baru; tanpa perubahan Dart.
+
+Verifikasi:
+
+- flutter analyze: OK (No issues found, tanpa perubahan Dart)
+- SQL: grep `============` di baseline_7 = 0; pola `[-=_*]{10,}` di awal komentar = 0; 8 file ada
+- Git: `supabase/migrations/` tidak ada file baru/ubah dari task ini
+
+## [2026-10-05] - Hapus pemisah dekoratif di komentar kode
+
+Status: Selesai
+
+File yang diubah:
+
+- `supabase/migrations/001_create_profiles.sql` (diedit) - Banner `-- ============ ... ============` jadi `-- ...` polos.
+- `supabase/migrations/002_create_checkpoints.sql` (diedit) - Sama.
+- `supabase/migrations/003_create_waste_logs.sql` (diedit) - Sama.
+- `supabase/migrations/004_create_points.sql` (diedit) - Sama.
+- `supabase/migrations/005_create_rewards.sql` (diedit) - Sama.
+- `supabase/migrations/006_create_redemptions.sql` (diedit) - Sama.
+- `supabase/migrations/007_create_triggers.sql` (diedit) - Sama.
+- `supabase/migrations/008_create_storage_buckets.sql` (diedit) - Sama.
+- `supabase/migrations/009_seed_data.sql` (diedit) - Sama.
+- `supabase/migrations/010_fix_rls_recursion.sql` (diedit) - Sama.
+- `supabase/migrations/011_login_username.sql` (diedit) - Sama.
+- `supabase/migrations/015_articles_and_points_redeem.sql` (diedit) - Sama.
+- `supabase/migrations/025_checkpoint_limits_and_voucher.sql` (diedit) - Sama.
+- `AGENTS.md` (diedit) - Tambah larangan pemisah dekoratif di komentar kode.
+- `PROTOCOL.md` (diedit) - Tambah larangan yang sama di Bagian M.
+- `docs/ARCHITECTURE.md` (diedit) - Tambah larangan yang sama di bagian 9.
+
+Catatan:
+
+- Hanya komentar, tidak ada perubahan fungsi/SQL logic.
+- Total 39 banner dibersihkan, format akhir contoh: `-- RLS: PROFILES`.
+- Aturan baru: dilarang garis sama dengan, strip, underscore berulang di komentar; pakai komentar 1 baris polos.
+
+Verifikasi:
+
+- flutter analyze: OK (No issues found)
+- flutter test: OK (273 test lulus)
+- SQL: grep `============` di lib/supabase/test/docs = 0 hasil; cek pola `[-=_*]{10,}` di awal komentar = 0 hasil
+
+## [2026-10-04] - Koreksi penjelasan policy insert points via migration 027
+
+Status: Selesai
+
+File yang diubah:
+
+- `supabase/migrations/027_points_policy_comment.sql` (dibuat) - COMMENT ON POLICY points_insert_own (idempoten, tanpa ubah struktur/policy); header mencatat latar: klaim 004 sudah digantikan 014 lalu 015.
+- `docs/DATABASE_SCHEMA.md` (diedit) - Tambah entri migration 027 di bagian 7.
+
+Catatan:
+
+- Header 004 yang usang ("tidak ada policy insert klien") tidak diedit karena file sudah applied di remote (edit tidak jalan ulang, sesuai peringatan di header 012).
+- Belum di-push ke remote; cek `supabase migration list` sebelum `supabase db push` (konvensi proyek: push manual).
+- Tanpa dependency baru; tanpa perubahan Dart.
+
+Verifikasi:
+
+- flutter analyze: OK (No issues found)
+- flutter test: OK (273 test lulus)
+- SQL: cek manual (sintaks COMMENT ON POLICY standar, quote balance OK, policy dijamin ada oleh 015 yang jalan lebih dulu)
+
+## [2026-10-03] - Ringkas semua komentar lib jadi 1 baris
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/**/*.dart` (168 file) - Header `//` multi-baris digabung lalu dipadatkan ke 1 baris kalimat pertama; blok `///` multi-baris digabung ke 1 baris; 167 baris `/// Membuat ...` trivial dihapus, penjelasan non-trivial dipertahankan.
+- Contoh: `lib/main.dart`, `lib/core/services/supabase_service.dart`, `lib/features/waste/domain/entities/waste_log.dart`, `lib/features/waste/domain/usecases/submit_waste_usecase.dart`, `lib/features/verification/presentation/pages/verification_page.dart`.
+
+Catatan:
+
+- Hanya komentar, tidak ada perubahan fungsi/visual/API.
+- Aturan PROTOCOL Bagian M: header 1 baris, class 1 baris, method hanya bila tidak jelas dari nama/kode.
+- Konteks penting dipertahankan: policy Supabase, lazy client anti-crash demo/test, orkestrasi anti-kecurangan, arti flag.
+
+Verifikasi:
+
+- flutter analyze: OK (No issues found)
+- flutter test: OK (273 test lulus)
+
+## [2026-10-02] - Ringkas komentar kode tanpa ubah fungsi
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/core/widgets/bottom_nav_active_icon.dart` - Dok kelas 8 baris jadi 1 baris; hapus dok konstruktor/field trivial; dok tiap style jadi 1 baris.
+- `lib/core/widgets/custom_bottom_nav_bar_widget.dart` - Dok kelas 5 baris jadi 1 baris; hapus dok field/label/callback trivial.
+- `lib/core/constants/app_values.dart` - Dok tiap konstanta jadi 1 baris; hapus path file dan penjelasan duplikat.
+- `lib/features/home/presentation/pages/home_page.dart` - Header 15 baris jadi 3 baris; hapus semua dok `Membuat ...` dan field trivial; sisa hanya konteks penting (tamu 0 vs login real, 44px di bar, ripple via Material+InkWell).
+
+Catatan:
+
+- Hanya komentar, tidak ada perubahan fungsi/visual/API.
+- Konteks penting dipertahankan: arti flag style 1-4, beda tamu vs login, ukuran bar.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue, 4 file)
+- flutter test: OK (273 test lulus)
+
+## [2026-10-01] - Samakan item Buang Sampah dengan item nav lain
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/core/widgets/custom_bottom_nav_bar_widget.dart` - Hapus total perlakuan khusus aksen: field `accent` di `_BottomNavItem`, cabang `if (item.accent)` (lingkaran 44px + `LucideIcons.recycle` hardcode), dan `Stack`/`Positioned` sisa; item Buang Sampah kini memakai `BottomNavActiveIcon` seperti 4 item lain (aktif = lingkaran pop, tidak aktif = ikon abu).
+- `docs/COMPONENT_LIBRARY.md` - Catat 5 item setara tanpa aksen (2 lokasi).
+- `docs/UI_PAGES.md` - Catat item Buang Sampah setara item lain.
+
+Catatan:
+
+- Tab Buang Sampah tetap ada di posisi tengah dengan ikon recycle + label; yang hilang hanya gaya khususnya. Saat berada di page Buang Sampah, ikonnya mendapat lingkaran pop sama seperti tab lain.
+- Tidak ada hardcode warna/spacing/radius/string; tidak ada dependency baru; tidak ada perubahan routing.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- flutter test: OK (273 test lulus, tanpa ubah test)
+
+## [2026-10-01] - Gaya 4 jadi lingkaran pop di belakang ikon nav
+
+Status: Selesai (uji coba, mudah dikembalikan via flag)
+
+File yang diubah:
+
+- `lib/core/widgets/bottom_nav_active_icon.dart` - `_buildLeaf` (daun borderRadius, dinilai jelek) diganti `_buildPopCircle`: kotak fixed 44px + `Stack` + lingkaran primary 44px `AnimatedScale` 0 ke 1 (250ms `easeOutBack`) + ikon 24px (putih saat aktif, textSecondary saat tidak aktif); tambah `const` BoxDecoration (perbaikan info lint).
+- `test/widget/components/bottom_nav_active_icon_test.dart` - 2 test gaya 4 ditulis ulang (lingkaran primary + ikon putih saat aktif; skala 0 + ikon abu saat tidak aktif).
+- `lib/core/constants/app_values.dart`, `docs/COMPONENT_LIBRARY.md`, `docs/UI_PAGES.md` - Komentar daun jadi lingkaran pop.
+
+Catatan:
+
+- Semua tab kini berlingkaran 44px yang timbul membesar persis saat berada di page tersebut; sejalan bahasa lingkaran aksen 44px; total kolom 70px di dalam bar 72px (tidak ada yang keluar bar).
+- Kembalikan ke gaya final lama: set `AppValues.bottomNavActiveStyle = 2`.
+- Tidak ada hardcode warna/spacing/radius/string; tidak ada dependency baru; tidak ada perubahan routing.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue, 1 info prefer_const diperbaiki)
+- flutter test: OK (273 test lulus)
+
+## [2026-10-01] - Coba indikator daun di belakang ikon nav aktif
+
+Status: Selesai (uji coba, mudah dikembalikan via flag)
+
+File yang diubah:
+
+- `lib/core/widgets/bottom_nav_active_icon.dart` - Tambah gaya 4 `_buildLeaf`: `AnimatedContainer` 200ms berisi ikon 24px; aktif = daun primary (borderRadius asimetris topRight/bottomLeft 20px) + ikon putih + shadow level1, tidak aktif = transparan + ikon textSecondary; tambah header komentar 1 baris + dok gaya 4.
+- `lib/core/constants/app_values.dart` - `bottomNavActiveStyle` 2 ke 4 (default coba daun) + komentar gaya 4.
+- `test/widget/components/bottom_nav_active_icon_test.dart` - 2 test baru gaya 4 (daun primary saat aktif, transparan saat tidak aktif).
+- `docs/COMPONENT_LIBRARY.md` - BottomNavActiveIcon 4 gaya + flag 1/2/3/4.
+- `docs/UI_PAGES.md` - Default nav Versi 4 uji coba daun.
+
+Catatan:
+
+- Bentuk daun via borderRadius asimetris (tanpa CustomPainter/dependency baru), mengikuti bahasa lingkaran aksen 44px; berlaku di nav user dan admin (satu widget + satu flag).
+- Kembalikan ke gaya final lama: set `AppValues.bottomNavActiveStyle = 2`.
+- Tidak ada hardcode warna/spacing/radius/string; tidak ada dependency baru; tidak ada perubahan routing.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- flutter test: OK (273 test lulus, termasuk 2 test baru gaya 4)
+
+## [2026-10-01] - Aksen bottom nav sejajar di dalam bar (44px)
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/core/widgets/custom_bottom_nav_bar_widget.dart` - Item aksen `Buang Sampah` tidak lagi `Stack` + `Positioned(top: -16)` 56px menonjol ke atas bar; kini satu struktur kolom sama seperti item lain (lingkaran `AnimatedContainer` 44px + label + titik, spasi `sm`); lingkaran transparan + ikon 24px textSecondary saat tidak aktif, primary + ikon 28px putih + shadow level2 saat aktif; `AnimatedScale` 1.15 dihapus (meluap dari bar 72px); komentar kelas disesuaikan.
+- `docs/COMPONENT_LIBRARY.md` - Catat aksen 44px di dalam bar + sejajar baseline (2 lokasi).
+- `docs/UI_PAGES.md` - Catat aksen 44px di dalam bar.
+
+Catatan:
+
+- Spec usulan (hapus aksen total + widget bubble gradient baru) tidak dipakai: membalik 5+ keputusan committed, menduplikasi `BottomNavActiveIcon` (larangan Bagian M), dan contoh `AnimatedContainer` width 0 + child ikon meluap; diputuskan via tanya-jawab menjadi selaras-dalam-desain-existing.
+- Keluhan ripple-tanpa-indikator-tetap di spec sudah usang: indikator tetap (ikon gaya aktif + titik 4px) sudah ada sebelum task ini.
+- Baseline sejajar: kolom aksen (44+4+label+titik = 70px) dan kolom biasa terpusat di bar 72px sehingga pusat area ikon sama (23px dari atas bar).
+- Tidak ada hardcode warna/spacing/radius/string; tidak ada dependency baru; tidak ada perubahan routing.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- flutter test: OK (271 test lulus, tanpa ubah test)
+
+## [2026-10-01] - Background Home gradasi penuh atas ke bawah
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/features/home/presentation/pages/home_page.dart` - `_TopGradientBackground` (280px atas) diganti `_HomeGradientBackground` penuh via `Positioned.fill`; 5 warna token (secondaryContainer, secondaryContainer 70%, background, background, secondaryContainer 30%; stops 0.0/0.15/0.45/0.75/1.0).
+- `docs/UI_PAGES.md` - Catat background gradasi penuh section 5.
+
+Catatan:
+
+- Koreksi spec: `AppColors.bg` tidak ada (token: `AppColors.background`); komentar `#D8F3DC` pada secondaryContainer salah (aktual `#92F7C3` sesuai DESIGN_SYSTEM, token tidak diubah).
+- FASE 3 spec (siluet daun di background) tidak dipakai: opsional menurut spec, dan aturan anti-AI-slop melarang dekorasi non-fungsi; motif daun sudah ada di kartu poin.
+- Gradasi fixed di belakang ListView sehingga konsisten saat scroll.
+- Tidak ada hardcode warna/spacing/radius/string; tidak ada dependency baru.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- flutter test: OK (271 test lulus)
+
+## [2026-10-01] - Seragamkan Home tamu vs login (label stat + empty state)
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/features/home/presentation/pages/home_page.dart` - Daftar 3 stat selalu memakai label/ikon yang sama (`Kali Buang`/`Minggu Ini`/`Terverifikasi`), hanya nilai beda (0 untuk tamu/gagal backend, real untuk login); empty state aktivitas memakai `homeActivityEmptyGuest` untuk tamu dan `homeActivityEmpty` untuk login; header komentar catat keseragaman stat.
+- `lib/core/constants/app_strings.dart` - Hapus 3 kunci tak terpakai (ID/EN): `homeStatWasteLabel`, `homeStatCarbonLabel`, `homeStatTreeLabel`; tambah kunci `homeActivityEmptyGuest` ID/EN.
+- `docs/UI_PAGES.md` - Catat label stat selalu sama + empty state tamu vs login.
+
+Catatan:
+
+- Daftar perbedaan audit: (1) label stat tamu (`Sampah Terpilah`/`Karbon Dikurangi`/`Pohon Selamat`) vs login (`Kali Buang`/`Minggu Ini`/`Terverifikasi`) - DIPERBAIKI; (2) empty state sama untuk tamu dan login - DIPERBAIKI (teks beda, layout sama); (3) tombol Tukar Reward selalu tampil dan selalu ke `/points` - DIPERTAHANKAN (halaman Poin ramah tamu, guard login ada saat redeem di detail reward); (4) misi, artikel, notice login, skeleton - sudah seragam, tidak diubah.
+- Tidak ada daftar perbedaan di komentar kode (sementara) sesuai PROTOCOL Bagian M; daftar ada di laporan dan entri ini.
+- Tidak ada hardcode warna/spacing/radius/string; tidak ada dependency baru; tidak ada perubahan schema database.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- flutter test: OK (271 test lulus)
+
+## [2026-10-01] - Samakan struktur dan padding 3 stat kartu poin Home
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/features/home/presentation/pages/home_page.dart` - `_MiniStat` tambah param opsional `onTap` (null = tidak bisa ditekan); cabang tap memakai `Material` + `InkWell` + `borderRadius` token agar ripple mengikuti bentuk kartu, cabang non-tap tetap `Container` seperti semula; Row 3 stat dibangun seragam via loop (spasi `sm` di antara tiap stat, hanya stat pertama `onTap` ke `/activity`).
+- `docs/UI_PAGES.md` - Catat spasi seragam + tap di dalam `_MiniStat`.
+
+Catatan:
+
+- Akar masalah: stat pertama dibungkus `InkWell` di luar `_MiniStat` dan pemisah `SizedBox` hanya ada antara stat 1-2 (loop stat 2+ tanpa pemisah), sehingga jarak 1-2 = 8px dan 2-3 = 0px.
+- Perilaku tidak berubah: hanya stat Kali Buang yang bisa diklik (ke `/activity`); visual (tinggi 72px, warna, radius, string) tidak berubah.
+- Tidak ada hardcode warna/spacing/radius/string; tidak ada dependency baru.
+
+Verifikasi:
+
+- flutter analyze: OK (tidak ada issue)
+- flutter test: OK (271 test lulus)
+
+## [2026-10-01] - Tambah dokumentasi API ringkas
+
+Status: Selesai
+
+File yang diubah:
+
+- `docs/API.md` (dibuat) - Ringkasan permukaan API: Auth, 2 RPC, operasi tabel per fitur, storage, API eksternal wilayah, rencana Edge Function; merujuk DATABASE_SCHEMA dan ARCHITECTURE sebagai sumber kebenaran.
+
+Catatan:
+
+- Tidak ada perubahan kode; backend tetap Supabase tanpa REST custom dan tanpa Edge Function.
+- Fakta yang diklarifikasi saat penulisan: voucher code dibuat di klien (`Uuid` 8 karakter), fungsi SQL `generate_voucher_code()` tersedia tapi belum dipakai klien.
+- Tidak ada hardcode/secret; tidak ada dependency baru.
+
+Verifikasi:
+
+- hasil linter/analyze: belum dijalankan (hanya docs, tanpa perubahan kode)
+- hasil test: belum dijalankan (hanya docs, tanpa perubahan kode)
+
 ## [2026-10-01] - Push migrasi 026 ke Supabase remote
 
 Status: Selesai

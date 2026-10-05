@@ -1,17 +1,12 @@
 // Komponen AppPasswordField sesuai docs/COMPONENT_LIBRARY.md (Form).
-// Membungkus CustomTextField dengan mode rahasia dan toggle mata otomatis.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 
 import 'custom_text_field_widget.dart';
 
-/// Field input password dengan toggle tampil/sembunyi bawaan.
-///
-/// Memakai [CustomTextField] sehingga label, hint, validasi, dan tema input
-/// tetap konsisten dengan halaman autentikasi.
+/// Field input password dengan toggle tampil/sembunyi bawaan. Memakai [CustomTextField] sehingga label, hint, validasi, dan tema input tetap konsisten dengan halaman autentikasi.
 class AppPasswordField extends StatefulWidget {
-  /// Membuat field password.
   const AppPasswordField({
     super.key,
     this.label,

@@ -17,7 +17,7 @@
 --
 -- Referensi: docs/DATABASE_SCHEMA.md.
 
--- ============ BERSIHKAN SEMUA POLICY TABEL PUBLIK ============
+-- BERSIHKAN SEMUA POLICY TABEL PUBLIK
 do $$
 declare
   rec record;
@@ -39,7 +39,7 @@ begin
   end loop;
 end $$;
 
--- ============ FUNGSI BANTU ROLE (SECURITY DEFINER) ============
+-- FUNGSI BANTU ROLE (SECURITY DEFINER)
 create or replace function public.get_role(_user_id uuid)
 returns text
 language sql
@@ -80,7 +80,7 @@ as $$
   select coalesce(public.get_role(auth.uid()), '') in ('admin', 'petugas');
 $$;
 
--- ============ RLS: PROFILES ============
+-- RLS: PROFILES
 alter table public.profiles enable row level security;
 
 create policy "profiles_select_own"
@@ -99,7 +99,7 @@ create policy "profiles_update_own"
     and coalesce(public.get_role(id), 'user') = role
   );
 
--- ============ RLS: CHECKPOINTS ============
+-- RLS: CHECKPOINTS
 alter table public.checkpoints enable row level security;
 
 create policy "checkpoints_read_all"
@@ -118,7 +118,7 @@ create policy "checkpoints_delete_admin"
   on public.checkpoints for delete
   using (public.is_admin());
 
--- ============ RLS: WASTE_LOGS ============
+-- RLS: WASTE_LOGS
 alter table public.waste_logs enable row level security;
 
 create policy "waste_logs_select_own"
@@ -137,7 +137,7 @@ create policy "waste_logs_update_staff"
   on public.waste_logs for update
   using (public.is_admin_or_petugas());
 
--- ============ RLS: POINTS ============
+-- RLS: POINTS
 alter table public.points enable row level security;
 
 create policy "points_select_own"
@@ -148,7 +148,7 @@ create policy "points_select_all_admin"
   on public.points for select
   using (public.is_admin());
 
--- ============ RLS: REWARDS ============
+-- RLS: REWARDS
 alter table public.rewards enable row level security;
 
 create policy "rewards_read_active"
@@ -167,7 +167,7 @@ create policy "rewards_delete_admin"
   on public.rewards for delete
   using (public.is_admin());
 
--- ============ RLS: REDEMPTIONS ============
+-- RLS: REDEMPTIONS
 alter table public.redemptions enable row level security;
 
 create policy "redemptions_select_own"

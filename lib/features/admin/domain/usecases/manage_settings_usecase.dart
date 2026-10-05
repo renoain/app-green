@@ -1,6 +1,4 @@
-// Use case kelola pengaturan operasional (domain).
-//
-// Validasi batas wajar tinggal di domain agar widget tetap tipis.
+// Use case kelola pengaturan operasional (domain). Validasi batas wajar tinggal di domain agar widget tetap tipis.
 
 import '../../../../core/constants/app_strings.dart';
 import '../../data/datasources/admin_settings_datasource.dart';
@@ -8,7 +6,6 @@ import '../entities/app_settings_values.dart';
 
 /// Exception validasi pengaturan; [message] aman tampil ke user.
 class SettingsValidationException implements Exception {
-  /// Membuat exception dengan pesan ramah user.
   const SettingsValidationException(this.message);
 
   /// Pesan kesalahan.
@@ -20,7 +17,6 @@ class SettingsValidationException implements Exception {
 
 /// Use case baca/simpan pengaturan operasional oleh admin.
 class ManageSettingsUsecase {
-  /// Membuat use case.
   const ManageSettingsUsecase(this._datasource);
 
   final AdminSettingsDatasource _datasource;

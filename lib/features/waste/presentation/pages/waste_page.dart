@@ -1,10 +1,4 @@
 // Halaman buang sampah (waste) Go Green.
-//
-// Checkpoint dimuat dari Supabase via checkpointNotifierProvider dengan
-// fallback demo saat backend tidak tersedia. Blokir radius GPS sementara
-// dimatikan via AppValues.enforceGpsRadius agar uji device bisa submit
-// dari mana saja; jarak tetap ditampilkan di kartu status. Kategori
-// dipilih setelah foto, di halaman verifikasi.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -50,7 +44,6 @@ List<Checkpoint> _fallbackCheckpoints() {
 
 /// Halaman buang sampah ke checkpoint Go Green.
 class WastePage extends ConsumerStatefulWidget {
-  /// Membuat halaman buang sampah.
   const WastePage({super.key});
 
   @override
@@ -364,7 +357,6 @@ class _WastePageState extends ConsumerState<WastePage> {
 
 /// Banner penanda lokasi uji aktif (debug) di halaman Waste.
 class _DebugLocationBanner extends StatelessWidget {
-  /// Membuat banner lokasi uji.
   const _DebugLocationBanner({required this.debug, required this.onClear});
 
   /// Lokasi uji yang aktif.

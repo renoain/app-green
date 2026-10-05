@@ -1,8 +1,4 @@
 // Provider bersama admin (role, lokasi uji, kunci drawer, use case).
-//
-// Provider state tiap halaman ada di file sendiri (admin_dashboard_provider,
-// admin_checkpoint_provider, admin_waste_provider). Logic bisnis tetap di
-// domain dan data, bukan di sini.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -40,19 +36,12 @@ final Provider<AsyncValue<bool>> isAdminProvider =
   );
 });
 
-/// Pembuka drawer shell admin yang aktif (didaftarkan AdminShell).
-///
-/// Branch admin memakai ini agar tidak bergantung pada GlobalKey
-/// bersama; tiap instance shell mendaftarkan pembukanya sendiri.
+/// Pembuka drawer shell admin yang aktif (didaftarkan AdminShell). Branch admin memakai ini agar tidak bergantung pada GlobalKey bersama; tiap instance shell mendaftarkan pembukanya sendiri.
 final StateProvider<void Function()?> adminDrawerOpenerProvider =
     StateProvider<void Function()?>((Ref ref) => null);
 
-/// Titik lokasi uji (GPS palsu khusus testing).
-///
-/// Saat aktif, halaman Waste dan Kamera memakai titik ini sebagai posisi
-/// user sehingga penguji bisa pindah lokasi tanpa ke lapangan.
+/// Titik lokasi uji (GPS palsu khusus testing). Saat aktif, halaman Waste dan Kamera memakai titik ini sebagai posisi user sehingga penguji bisa pindah lokasi tanpa ke lapangan.
 class DebugLocation {
-  /// Membuat titik lokasi uji.
   const DebugLocation({
     required this.latitude,
     required this.longitude,
@@ -71,7 +60,6 @@ class DebugLocation {
 
 /// Notifier lokasi uji (null berarti pakai GPS asli).
 class DebugLocationNotifier extends StateNotifier<DebugLocation?> {
-  /// Membuat notifier lokasi uji.
   DebugLocationNotifier() : super(null);
 
   /// Aktifkan lokasi uji.

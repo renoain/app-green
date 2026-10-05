@@ -10,7 +10,6 @@ import '../../../waste/domain/usecases/calculate_points_usecase.dart';
 
 /// Use case approve/reject waste log untuk admin dan petugas.
 class VerifyWasteUsecase {
-  /// Membuat use case.
   const VerifyWasteUsecase({
     required WasteRepository wasteRepository,
     required CheckpointRepository checkpointRepository,
@@ -23,8 +22,7 @@ class VerifyWasteUsecase {
   final CheckpointRepository _checkpointRepository;
   final CalculatePointsUsecase _calculatePoints;
 
-  /// Menyetujui log. Poin earn sudah tercatat saat submit, jadi approve
-  /// hanya mengubah status tanpa insert poin ulang.
+  /// Menyetujui log. Poin earn sudah tercatat saat submit, jadi approve hanya mengubah status tanpa insert poin ulang.
   Future<WasteLog> approve({
     required String id,
     required String verifiedBy,

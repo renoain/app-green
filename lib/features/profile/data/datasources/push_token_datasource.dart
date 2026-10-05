@@ -1,7 +1,4 @@
 // Data source token push perangkat (data layer).
-//
-// Menyimpan token FCM ke kolom profiles.fcm_token milik user sendiri
-// (RLS update_own; hanya role yang dikunci).
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -10,7 +7,6 @@ import '../../../../core/services/supabase_service.dart';
 
 /// Data source token push Go Green.
 class PushTokenDatasource {
-  /// Membuat data source. [client] bisa di-inject untuk test.
   PushTokenDatasource({SupabaseClient? client}) : _override = client;
 
   final SupabaseClient? _override;

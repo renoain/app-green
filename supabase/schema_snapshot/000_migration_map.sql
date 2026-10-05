@@ -1,0 +1,21 @@
+-- Peta schema_snapshot: arsip baca-saja dari supabase/migrations 001-027.
+-- Folder schema_snapshot TIDAK dibaca Supabase CLI (hanya supabase/migrations yang jalan).
+-- Dipakai untuk reset DB baru atau jaga-jaga: jalankan 001-007 berurut.
+-- Folder lama supabase/migrations tidak diubah.
+--
+-- Urutan baru dan sumber lama:
+-- 001_core_identity.sql <- 001 (profiles+fungsi role+RLS) + 010 (kanonik) + 011 (unique username, RPC email, handle_new_user final) + 013 (normalisasi, sebagai fungsi) + 018 (profiles_update_role_admin) + 026 (fcm_token).
+-- 002_checkpoints.sql <- 002 (tabel+RLS) + 010 (kanonik) + 017 (region+code) + 021 (is_active) + 025 (max_uses/remaining_uses).
+-- 003_waste.sql <- 003 (tabel+RLS) + 010 (kanonik) + 016 (item_type+source) + 023 (forensik) + 024/025 (rejection_reason + trigger final v025).
+-- 004_points_rewards.sql <- 004 (points) + 005 (rewards) + 006 (redemptions) + 010 (kanonik) + 015 (articles + policy points_insert_own final) + 018 (rewards_select_all_admin) + 025 (voucher_code + generate_voucher_code) + 027 (komentar policy).
+-- 005_settings_audit.sql <- 018 (bagian admin) + 019 (app_settings+seed) + 020 (admin_audit_logs) + 022 (seed bonus kategori).
+-- 006_storage.sql <- 008 (bucket waste-photos+avatars + policy storage).
+-- 007_seeds.sql <- 009 (seed checkpoint+reward) + 012 (set admin) + 015 (seed 4 artikel).
+--
+-- Yang sengaja dibuang (perantara, sudah digantikan):
+-- 004 klaim tanpa insert klien (digantikan 015, diklarifikasi 027).
+-- 007 handle_new_user versi awal (digantikan 011).
+-- 014 points_insert_own_earn (di-DROP oleh 015).
+-- 024 trigger auto-verify v1 (digantikan 025).
+-- 009 bagian UPDATE admin (dipindah ke 012).
+-- Nomor duplikat 025_profile_fcm_token lama (sudah di-rename 026).

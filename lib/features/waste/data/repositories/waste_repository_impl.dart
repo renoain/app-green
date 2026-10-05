@@ -1,7 +1,4 @@
 // Implementasi repository waste log (data layer).
-//
-// Menerjemahkan kontrak WasteRepository menjadi panggilan
-// WasteRemoteDatasource. Tidak boleh dipakai di presentation.
 
 import 'dart:typed_data';
 
@@ -12,7 +9,6 @@ import '../datasources/waste_remote_datasource.dart';
 
 /// Implementasi [WasteRepository] berbasis Supabase.
 class WasteRepositoryImpl implements WasteRepository {
-  /// Membuat repository. [remote] bisa di-inject untuk test.
   WasteRepositoryImpl({WasteRemoteDatasource? remote})
       : _remote = remote ?? WasteRemoteDatasource();
 

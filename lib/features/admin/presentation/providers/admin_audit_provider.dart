@@ -1,7 +1,4 @@
 // Provider jejak audit admin (presentation).
-//
-// Daftar log terbaru untuk halaman Log Audit; datasource dipakai ulang
-// notifier tulis lain untuk mencatat aksi.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,7 +13,6 @@ final Provider<AdminAuditDatasource> adminAuditDatasourceProvider =
 
 /// Notifier daftar log audit terbaru.
 class AdminAuditNotifier extends StateNotifier<AsyncValue<List<AuditLog>>> {
-  /// Membuat notifier audit.
   AdminAuditNotifier(this._datasource)
       : super(const AsyncLoading<List<AuditLog>>());
 

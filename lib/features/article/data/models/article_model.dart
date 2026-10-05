@@ -1,14 +1,9 @@
 // Model Article (data layer).
-//
-// extends Article untuk dipakai domain; fromJson menyesuaikan format kolom
-// tabel articles (snake_case). Kolom content satu teks dengan paragraf
-// dipisah baris kosong ganda.
 
 import '../../domain/entities/article.dart';
 
 /// Model data [Article] untuk komunikasi dengan Supabase.
 class ArticleModel extends Article {
-  /// Membuat model dari field entity.
   const ArticleModel({
     required super.id,
     required super.title,

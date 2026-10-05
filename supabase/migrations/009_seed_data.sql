@@ -1,7 +1,7 @@
 -- Migration 009: seed data contoh (opsional).
 -- Referensi skema: docs/DATABASE_SCHEMA.md bagian 5.
 
--- ============ SEED CHECKPOINTS ============
+-- SEED CHECKPOINTS
 insert into public.checkpoints (name, address, latitude, longitude, radius, qr_code)
 values
   ('Checkpoint RW 01', 'Jl. Melati No. 10, Jakarta', -6.200000, 106.800000, 100, 'CP-001'),
@@ -9,7 +9,7 @@ values
   ('Checkpoint RW 03', 'Jl. Anggrek No. 3, Jakarta', -6.202000, 106.802000, 100, 'CP-003')
 on conflict (qr_code) do nothing;
 
--- ============ SEED REWARDS ============
+-- SEED REWARDS
 insert into public.rewards (name, description, points_cost, stock)
 values
   ('Voucher Belanja 10.000', 'Voucher belanja senilai 10 ribu', 100, 50),
@@ -18,7 +18,7 @@ values
   ('Donasi Lingkungan', 'Donasi untuk program lingkungan', 100, 999),
   ('Tumbler Go Green', 'Tumbler edisi Go Green', 300, 15);
 
--- ============ SEED ADMIN ============
+-- SEED ADMIN
 -- Setelah user admin dibuat di Authentication, jalankan (idempoten):
 update public.profiles
 set role = 'admin', username = 'admin'

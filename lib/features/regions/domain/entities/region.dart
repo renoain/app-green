@@ -1,11 +1,7 @@
 // Entity wilayah Indonesia (domain).
-//
-// Nilai id mengikuti API wilayah Indonesia (emsifa) agar tersimpan
-// konsisten di kolom province_code/city_code/district_code checkpoints.
 
 /// Provinsi.
 class RegionProvince {
-  /// Membuat provinsi.
   const RegionProvince({required this.id, required this.name});
 
   /// ID provinsi (mis. 35 untuk Jawa Timur).
@@ -17,7 +13,6 @@ class RegionProvince {
 
 /// Kota/kabupaten.
 class RegionCity {
-  /// Membuat kota/kabupaten.
   const RegionCity({required this.id, required this.name});
 
   /// ID kota/kabupaten (mis. 3578 untuk Kota Surabaya).
@@ -29,7 +24,6 @@ class RegionCity {
 
 /// Kecamatan.
 class RegionDistrict {
-  /// Membuat kecamatan.
   const RegionDistrict({required this.id, required this.name});
 
   /// ID kecamatan.

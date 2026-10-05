@@ -1,8 +1,4 @@
 // Widget pemilih titik checkpoint di atas peta OSM (presentation).
-//
-// Memakai flutter_map + TileLayer OpenStreetMap tanpa API key.
-// Ketuk peta untuk memindahkan pin; tombol layar penuh membuka
-// pemilih peta geser-pin bila [onExpand] diisi.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -15,7 +11,6 @@ import '../../../../core/theme/app_spacing.dart';
 
 /// Peta pemilih koordinat checkpoint.
 class CheckpointMapPicker extends StatefulWidget {
-  /// Membuat peta pemilih titik.
   const CheckpointMapPicker({
     super.key,
     required this.latitude,

@@ -1,7 +1,4 @@
 // Menyimpan seluruh token border radius aplikasi sesuai docs/DESIGN_SYSTEM.md.
-//
-// Wajib dipakai di widget, dilarang hardcode BorderRadius.circular(...)
-// langsung.
 
 /// Token border radius aplikasi Go Green.
 class AppRadius {

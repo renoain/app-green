@@ -1,16 +1,10 @@
 // Use case resolve wilayah dari koordinat (domain).
-//
-// Dipakai form TPS: usai admin menekan lokasi saya atau memindahkan pin,
-// koordinat di-reverse-geocode (Nominatim) lalu dicocokkan ke daftar
-// wilayah sehingga dropdown + kelurahan + alamat + kode TPS terisi
-// otomatis. Murni Dart kecuali fetch, mudah diuji via matcher statis.
 
 import '../entities/region.dart';
 import '../repositories/region_repository.dart';
 
 /// Hasil resolve lokasi: pilihan wilayah + kelurahan + alamat lengkap.
 class ResolvedLocation {
-  /// Membuat hasil resolve lokasi.
   const ResolvedLocation({
     required this.selection,
     this.subdistrict,
@@ -29,14 +23,11 @@ class ResolvedLocation {
 
 /// Use case mencocokkan koordinat ke wilayah Indonesia.
 class ResolveRegionFromCoordinatesUsecase {
-  /// Membuat use case.
   const ResolveRegionFromCoordinatesUsecase(this._repository);
 
   final RegionRepository _repository;
 
-  /// Resolve [latitude]/[longitude] menjadi pilihan wilayah.
-  ///
-  /// Mengembalikan null bila tidak ada yang cocok (mis. offline).
+  /// Resolve [latitude]/[longitude] menjadi pilihan wilayah. Mengembalikan null bila tidak ada yang cocok (mis. offline).
   Future<RegionSelection?> resolve({
     required double latitude,
     required double longitude,
@@ -46,9 +37,7 @@ class ResolveRegionFromCoordinatesUsecase {
     return details?.selection;
   }
 
-  /// Resolve lengkap: wilayah + kelurahan + alamat.
-  ///
-  /// Mengembalikan null bila reverse-geocode gagal total (mis. offline).
+  /// Resolve lengkap: wilayah + kelurahan + alamat. Mengembalikan null bila reverse-geocode gagal total (mis. offline).
   Future<ResolvedLocation?> resolveDetails({
     required double latitude,
     required double longitude,
@@ -203,11 +192,7 @@ class ResolveRegionFromCoordinatesUsecase {
     return null;
   }
 
-  /// Ambil nama kelurahan dari peta address Nominatim.
-  ///
-  /// Kunci selevel kelurahan (village/dst) dipakai apa adanya; kunci
-  /// ambigu [suburb] dilewati bila sama dengan [districtName] agar
-  /// kelurahan tidak terisi nama kecamatan. Null bila tak ada.
+  /// Ambil nama kelurahan dari peta address Nominatim. Kunci selevel kelurahan (village/dst) dipakai apa adanya; kunci ambigu [suburb] dilewati bila sama dengan [districtName] agar kelurahan tidak terisi nama kecamatan. Null bila tak ada.
   static String? pickSubdistrict(
     Map<String, String> address,
     String? districtName,

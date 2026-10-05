@@ -1,8 +1,4 @@
 // Provider data checkpoint.
-//
-// Menyediakan repository, use case, dan notifier daftar checkpoint
-// terdekat (AsyncValue) agar halaman bisa memuat data tanpa akses langsung
-// ke data layer.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -27,7 +23,6 @@ final Provider<GetNearbyCheckpointsUsecase> getNearbyCheckpointsUsecaseProvider 
 
 /// Notifier daftar checkpoint terdekat.
 class CheckpointNotifier extends StateNotifier<AsyncValue<List<Checkpoint>>> {
-  /// Membuat notifier dengan use case yang di-inject.
   CheckpointNotifier(this._usecase, {CheckpointRepository? repository})
       : _repository = repository,
         super(const AsyncLoading<List<Checkpoint>>());

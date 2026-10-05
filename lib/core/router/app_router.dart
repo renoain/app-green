@@ -1,8 +1,4 @@
 // Konfigurasi routing aplikasi menggunakan go_router.
-//
-// Route bebas (splash, onboarding, login, register, article) dan
-// StatefulShellRoute untuk tab utama (home, activity, waste, points,
-// profile) agar state tiap tab tetap tersimpan.
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -48,8 +44,7 @@ import '../../features/waste/presentation/pages/capture_photo_page.dart';
 import '../../features/waste/presentation/pages/waste_page.dart';
 import '../widgets/main_shell.dart';
 
-/// Daftar route aplikasi, dipakai untuk membangun [appRouter] dan
-/// keperluan test.
+/// Daftar route aplikasi, dipakai untuk membangun [appRouter] dan keperluan test.
 final List<RouteBase> appRoutes = <RouteBase>[
   GoRoute(
     path: '/splash',
@@ -345,9 +340,7 @@ final List<RouteBase> appRoutes = <RouteBase>[
   ),
 ];
 
-/// Router aplikasi Go Green.
-///
-/// Didefinisikan sekali dan dipakai oleh MaterialApp.router.
+/// Router aplikasi Go Green. Didefinisikan sekali dan dipakai oleh MaterialApp.router.
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
   routes: appRoutes,

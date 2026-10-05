@@ -1,6 +1,4 @@
 // Komponen AppErrorState sesuai docs/COMPONENT_LIBRARY.md (Feedback).
-// Tampilan state kosong bergaya error dengan opsi retry, berbasis
-// EmptyState agar visual konsisten.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -8,12 +6,8 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import '../constants/app_strings.dart';
 import 'feedback_widgets.dart';
 
-/// State error untuk halaman yang gagal memuat data.
-///
-/// Menampilkan ikon, judul generik, pesan [message], dan tombol "Coba
-/// Lagi" bila [onRetry] disediakan.
+/// State error untuk halaman yang gagal memuat data. Menampilkan ikon, judul generik, pesan [message], dan tombol "Coba Lagi" bila [onRetry] disediakan.
 class AppErrorState extends StatelessWidget {
-  /// Membuat state error.
   const AppErrorState({
     super.key,
     required this.message,

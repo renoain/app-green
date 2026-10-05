@@ -1,13 +1,9 @@
 // Model Checkpoint (data layer).
-//
-// extends Checkpoint untuk dipakai domain; fromJson/toJson menyesuaikan
-// format kolom tabel checkpoints (snake_case).
 
 import '../../domain/entities/checkpoint.dart';
 
 /// Model data [Checkpoint] untuk komunikasi dengan Supabase.
 class CheckpointModel extends Checkpoint {
-  /// Membuat model dari field entity.
   const CheckpointModel({
     required super.id,
     required super.name,

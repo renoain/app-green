@@ -90,6 +90,9 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 ## 5. Home [Selesai]
 
 - Tujuan: beranda, ringkasan aktivitas dan akses cepat.
+- Background: gradasi penuh secondaryContainer ke background dengan
+  sentuhan secondaryContainer di bawah (stops 0.0/0.15/0.45/0.75/1.0,
+  tanpa garis batas, tanpa dekorasi tambahan).
 - Elemen (referensi Stitch V3 Minimalist): header environmental
   ("Halo," + nama tampilan + avatar inisial + bell notifikasi
   dengan titik merah), notice login (hanya bila belum login),
@@ -97,7 +100,10 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   + subtitle + tombol Tukar Reward putih) dengan 3 stat
    (Kali Buang, Minggu Ini, Terverifikasi) yang dapat diklik
    (Total Poin ke /points, Kali Buang ke /activity; 3 stat Expanded
-   sama lebar, tinggi 72px, ikon 18px, anti-overflow di 360px),
+   sama lebar + spasi sm seragam antar stat, tinggi 72px, ikon 18px,
+   anti-overflow di 360px; tap ditangani di dalam _MiniStat via onTap
+   sehingga struktur ketiga stat identik; label/ikon/warna stat selalu
+   sama untuk tamu dan login, hanya nilainya beda),
    grid aksi
   cepat 4 menu (Buang Sampah ke /waste, Scan QR ke /scan,
   Artikel ke /article, Reward ke /points), kartu
@@ -105,8 +111,9 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   "Aktivitas Terkini" berisi dua tile, section "Artikel &
   Edukasi Hijau" dengan thumbnail gambar dari
   assets/images/ref/ (article_1.png, article_2.png).
-  Tamu/gagal backend: semua 0 (0 Poin, stat 0/0/0, misi 0%,
-  terkumpul 0) dan aktivitas empty state (ajakan buang sampah).
+   Tamu/gagal backend: semua 0 (0 Poin, stat 0/0/0 dengan label sama,
+   misi 0%, terkumpul 0) dan aktivitas empty state ajakan masuk;
+   login tanpa data: 0 + empty state ajakan buang sampah.
   User login tanpa data: sama (0 + empty state). User login: data asli
   selaras Poin & Aktivitas (saldo points, stat Kali Buang/Minggu
   Ini/Terverifikasi, misi hitungan vs target mingguan, 2 log terbaru
@@ -135,12 +142,10 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
   "Masuk" pada notice (buka Login), tap "Lihat semua" ke halaman Artikel,
   tarik untuk memuat ulang Home.
 - Navigasi: bottom nav ke Home, Aktivitas, Buang Sampah, Poin, Profile.
-  Bottom nav pakai BottomNavActiveIcon dengan 3 gaya aktif
-  (default Versi 2 final: elevated icon; ganti via
-  AppValues.bottomNavActiveStyle: 1/2/3). Item aksen "Buang
-  Sampah" tidak aktif sama seperti item lain (ikon textSecondary tanpa
-  lingkaran primary); saat aktif jadi lingkaran primary 56px menonjol
-  ke atas bar + membesar 1.15x + shadow level2.
+  Bottom nav pakai BottomNavActiveIcon dengan 4 gaya aktif
+  (default Versi 4 uji coba lingkaran pop; ganti via
+  AppValues.bottomNavActiveStyle: 1/2/3/4); kelima item setara tanpa
+  perlakuan khusus (Buang Sampah sama seperti Beranda/Aktivitas/Poin/Profile).
 - Keperilakuan back: dari tab selain Beranda, back kembali ke tab Beranda
   dulu (tidak langsung keluar aplikasi); di tab Beranda, back pertama
   menampilkan hint "Tekan kembali lagi untuk keluar" dan back kedua dalam

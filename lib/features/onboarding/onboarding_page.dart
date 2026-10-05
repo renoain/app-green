@@ -1,6 +1,4 @@
-// Halaman onboarding: pengantar fitur utama dalam 3 slide. Slide terakhir
-// mengarahkan user ke Home; login tidak wajib di awal (notice muncul di
-// Home). Ilustrasi memakai placeholder ikon sampai asset gambar tersedia.
+// Halaman onboarding: pengantar fitur utama dalam 3 slide.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -16,7 +14,6 @@ import '../../core/widgets/app_button_widgets.dart';
 
 /// Halaman onboarding Go Green.
 class OnboardingPage extends StatefulWidget {
-  /// Membuat halaman onboarding.
   const OnboardingPage({super.key});
 
   @override

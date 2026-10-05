@@ -1,7 +1,4 @@
 // Interface repository waste log (domain).
-//
-// Implementasi data layer (WasteRepositoryImpl) wajib mengikuti kontrak
-// ini. Mengembalikan entity domain, bukan model data.
 
 import 'dart:typed_data';
 

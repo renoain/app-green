@@ -1,6 +1,4 @@
 // Dialog QR checkpoint untuk dicetak/ditempel di TPS (presentation).
-//
-// Render kode QR via pretty_qr_code yang sudah ada; tanpa dependency baru.
 
 import 'package:flutter/material.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';

@@ -12,7 +12,7 @@
 --
 -- Referensi skema: docs/DATABASE_SCHEMA.md.
 
--- ============ UNIQUE USERNAME (IDEMPOTEN) ============
+-- UNIQUE USERNAME (IDEMPOTEN)
 do $$
 begin
   if not exists (
@@ -23,7 +23,7 @@ begin
   end if;
 end $$;
 
--- ============ RPC: EMAIL DARI USERNAME ============
+-- RPC: EMAIL DARI USERNAME
 create or replace function public.get_email_by_username(p_username text)
 returns text
 language sql
@@ -44,7 +44,7 @@ comment on function public.get_email_by_username(text) is
 grant execute on function public.get_email_by_username(text)
   to anon, authenticated;
 
--- ============ TRIGGER: NORMALISASI USERNAME ============
+-- TRIGGER: NORMALISASI USERNAME
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
@@ -65,3 +65,4 @@ begin
   return new;
 end;
 $$;
+

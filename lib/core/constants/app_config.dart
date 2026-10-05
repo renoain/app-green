@@ -1,10 +1,4 @@
 // Konfigurasi runtime Go Green (override sinkron dari app_settings).
-//
-// AppValues adalah konstanta kompilasi (fallback). AppConfig menampung
-// override yang dimuat dari tabel app_settings saat splash (best effort)
-// dan diperbarui langsung saat admin menyimpan. Bila override kosong
-// (offline/test/belum push migrasi), nilai fallback AppValues dipakai
-// sehingga perilaku deterministik.
 
 import 'app_values.dart';
 

@@ -1,7 +1,4 @@
 // Provider data artikel.
-//
-// Menyediakan repository dan notifier daftar artikel (AsyncValue) agar
-// halaman bisa memuat data tanpa akses langsung ke data layer.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,7 +14,6 @@ final Provider<ArticleRepository> articleRepositoryProvider =
 
 /// Notifier daftar artikel edukasi.
 class ArticleNotifier extends StateNotifier<AsyncValue<List<Article>>> {
-  /// Membuat notifier dengan repository yang di-inject.
   ArticleNotifier(this._repository)
       : super(const AsyncLoading<List<Article>>());
 

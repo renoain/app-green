@@ -22,7 +22,6 @@ import '../providers/admin_providers.dart';
 
 /// Dasbor admin: ringkasan angka + grafik + aksi cepat.
 class AdminDashboardPage extends ConsumerWidget {
-  /// Membuat halaman dasbor admin.
   const AdminDashboardPage({super.key});
 
   @override
@@ -139,7 +138,6 @@ class AdminDashboardPage extends ConsumerWidget {
 
 /// Kartu grafik batang setoran 7 hari terakhir.
 class _WeeklyChartCard extends StatelessWidget {
-  /// Membuat kartu grafik dari state provider.
   const _WeeklyChartCard({required this.chart});
 
   /// State daftar hitungan harian.

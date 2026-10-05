@@ -1,8 +1,4 @@
 // Halaman Voucher Saya: daftar penukaran reward milik user.
-//
-// Tamu melihat notice login; user login memuat redemptions asli dari
-// Supabase; kosong menampilkan empty state. Semua state bisa
-// pull-to-refresh; loading memakai skeleton statis.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -51,7 +47,6 @@ import '../providers/reward_provider.dart';
 
 /// Halaman daftar voucher milik user.
 class VouchersPage extends ConsumerStatefulWidget {
-  /// Membuat halaman voucher saya.
   const VouchersPage({super.key});
 
   @override

@@ -18,7 +18,6 @@ import '../widgets/waste_verification_card.dart';
 
 /// Halaman antrean verifikasi: list pending + filter waktu.
 class AdminWasteVerificationPage extends ConsumerStatefulWidget {
-  /// Membuat halaman antrean verifikasi admin.
   const AdminWasteVerificationPage({super.key});
 
   @override

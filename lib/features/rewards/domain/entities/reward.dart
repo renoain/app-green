@@ -1,11 +1,7 @@
 // Entity Reward (domain).
-//
-// Representasi bisnis reward tanpa ketergantungan ke data layer.
-// Field mengikuti kolom tabel rewards (docs/DATABASE_SCHEMA.md).
 
 /// Hadiah yang bisa ditukar dengan poin.
 class Reward {
-  /// Membuat reward.
   const Reward({
     required this.id,
     required this.name,

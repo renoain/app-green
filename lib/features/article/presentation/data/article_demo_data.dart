@@ -1,6 +1,4 @@
-// Data artikel demo untuk tahap placeholder.
-//
-// Akan diganti oleh layer data (repository + Supabase) saat terpasang.
+// Data artikel demo untuk tahap placeholder. Akan diganti oleh layer data (repository + Supabase) saat terpasang.
 
 import '../../../../core/constants/app_strings.dart';
 

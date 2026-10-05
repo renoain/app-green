@@ -1,8 +1,4 @@
 // Provider data reward.
-//
-// Menyediakan datasource dan notifier daftar reward + pengajuan penukaran
-// agar halaman Poin & Reward bisa memuat data tanpa akses langsung ke data
-// layer.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,7 +14,6 @@ final Provider<RewardRemoteDatasource> rewardRemoteDatasourceProvider =
 
 /// Notifier daftar reward aktif.
 class RewardNotifier extends StateNotifier<AsyncValue<List<Reward>>> {
-  /// Membuat notifier dengan data source yang di-inject.
   RewardNotifier(this._datasource) : super(const AsyncLoading<List<Reward>>());
 
   final RewardRemoteDatasource _datasource;
@@ -50,7 +45,6 @@ final StateNotifierProvider<RewardNotifier, AsyncValue<List<Reward>>>
 /// Notifier daftar voucher (redemption) milik user.
 class UserVouchersNotifier
     extends StateNotifier<AsyncValue<List<Redemption>>> {
-  /// Membuat notifier dengan data source yang di-inject.
   UserVouchersNotifier(this._datasource)
       : super(const AsyncLoading<List<Redemption>>());
 

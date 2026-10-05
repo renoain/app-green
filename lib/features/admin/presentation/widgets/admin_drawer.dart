@@ -11,7 +11,6 @@ import '../../../../core/theme/app_typography.dart';
 
 /// Item menu drawer admin.
 class AdminMenuItem {
-  /// Membuat item menu drawer admin.
   const AdminMenuItem({required this.title, required this.icon});
 
   /// Judul menu.
@@ -34,7 +33,6 @@ final List<AdminMenuItem> adminMenuItems = <AdminMenuItem>[
 
 /// Drawer sidebar admin dengan header identitas dan menu.
 class AdminDrawer extends StatelessWidget {
-  /// Membuat drawer admin.
   const AdminDrawer({
     super.key,
     required this.displayName,

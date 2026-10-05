@@ -1,7 +1,7 @@
 -- Migration 025: batas penggunaan checkpoint + voucher code.
 -- Referensi: docs/ARCHITECTURE.md, docs/DATABASE_SCHEMA.md.
 
--- ============ CHECKPOINTS: max_uses + remaining_uses ============
+-- CHECKPOINTS: max_uses + remaining_uses
 alter table public.checkpoints
   add column if not exists max_uses integer,
   add column if not exists remaining_uses integer;
@@ -15,7 +15,7 @@ create index if not exists checkpoints_remaining_uses_idx
   on public.checkpoints (remaining_uses)
   where remaining_uses is not null and remaining_uses > 0;
 
--- ============ REDEMPTIONS: voucher_code ============
+-- REDEMPTIONS: voucher_code
 alter table public.redemptions
   add column if not exists voucher_code text;
 
@@ -26,7 +26,7 @@ create index if not exists redemptions_voucher_code_idx
 comment on column public.redemptions.voucher_code is
   'Kode voucher unik untuk klaim reward oleh user.';
 
--- ============ FUNGSI BANTU: generate voucher code ============
+-- FUNGSI BANTU: generate voucher code
 create or replace function public.generate_voucher_code()
 returns text
 language plpgsql
@@ -46,7 +46,7 @@ begin
 end;
 $$;
 
--- ============ AUTO-VERIFY TRIGGER: check + decrement remaining_uses ============
+-- AUTO-VERIFY TRIGGER: check + decrement remaining_uses
 create or replace function public.auto_verify_waste_trigger()
 returns trigger
 language plpgsql
@@ -157,3 +157,4 @@ create trigger trg_auto_verify_waste
 
 -- Drop fungsi bantuan yang tidak terpakai lagi.
 drop function if exists public.update_checkpoint_uses_trigger();
+

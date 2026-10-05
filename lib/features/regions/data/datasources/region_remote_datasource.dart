@@ -1,10 +1,4 @@
 // Data source wilayah Indonesia via API publik (data layer).
-//
-// Memakai dio yang sudah ada; tanpa dependency wilayah baru. Respons
-// di-cache di memory agar dropdown berjenjang tidak fetch berulang.
-// GET dibatasi timeout dan diulang untuk galat transien (timeout,
-// koneksi, HTTP 5xx seperti 522) agar dropdown tahan terhadap
-// gangguan sesaat API statis.
 
 import 'package:dio/dio.dart';
 import '../../../../core/utils/logger.dart';
@@ -12,7 +6,6 @@ import '../../domain/entities/region.dart';
 
 /// Data source wilayah Indonesia (emsifa/api-wilayah-indonesia).
 class RegionRemoteDatasource {
-  /// Membuat data source. [dio] bisa di-inject untuk test.
   RegionRemoteDatasource({Dio? dio})
       : _dio = dio ??
             Dio(
@@ -87,11 +80,7 @@ class RegionRemoteDatasource {
         .toList();
   }
 
-  /// Alamat hasil reverse-geocode Nominatim untuk [latitude]/[longitude].
-  ///
-  /// Mengembalikan peta address (state, city, suburb, ...) ditambah kunci
-  /// `display_name` berisi alamat lengkap, atau kosong bila gagal.
-  /// Tanpa API key; dibatasi pemakaian wajar admin.
+  /// Alamat hasil reverse-geocode Nominatim untuk [latitude]/[longitude]. Mengembalikan peta address (state, city, suburb, ...) ditambah kunci `display_name` berisi alamat lengkap, atau kosong bila gagal. Tanpa API key; dibatasi pemakaian wajar admin.
   Future<Map<String, String>> reverseGeocode({
     required double latitude,
     required double longitude,
@@ -150,9 +139,7 @@ class RegionRemoteDatasource {
     }
   }
 
-  /// GET dengan ulang untuk galat transien (timeout/koneksi/HTTP 5xx).
-  ///
-  /// Galat permanen (HTTP 4xx) langsung dilempar tanpa ulang.
+  /// GET dengan ulang untuk galat transien (timeout/koneksi/HTTP 5xx). Galat permanen (HTTP 4xx) langsung dilempar tanpa ulang.
   Future<Response<dynamic>?> _getWithRetry(
     String url, {
     Map<String, dynamic>? queryParameters,

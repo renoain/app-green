@@ -1,13 +1,9 @@
 // Entity WasteLog (domain).
-//
-// Representasi bisnis log pembuangan sampah tanpa ketergantungan ke data
-// layer. Field mengikuti kolom tabel waste_logs (docs/DATABASE_SCHEMA.md).
 
 import '../../../../core/constants/app_enums.dart';
 
 /// Log pembuangan sampah dari user.
 class WasteLog {
-  /// Membuat log pembuangan sampah.
   const WasteLog({
     required this.id,
     required this.userId,

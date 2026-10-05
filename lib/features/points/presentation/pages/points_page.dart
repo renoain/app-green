@@ -1,7 +1,4 @@
 // Halaman poin dan reward Go Green.
-//
-// Saldo dan riwayat dimuat dari Supabase via pointsNotifierProvider saat
-// user login; tamu atau saat backend gagal memakai konten demo.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -34,7 +31,6 @@ final DateTime _demoHistoryDate2 = DateTime(2026, 9, 9);
 
 /// Halaman poin dan reward Go Green.
 class PointsPage extends ConsumerStatefulWidget {
-  /// Membuat halaman poin.
   const PointsPage({super.key});
 
   @override

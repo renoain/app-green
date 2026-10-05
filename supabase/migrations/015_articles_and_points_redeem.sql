@@ -8,7 +8,7 @@
 --    Pengerasan fase lanjut: approval server + cabut insert klien
 --    (lihat docs/ARCHITECTURE.md 10.4).
 
--- ============ ARTICLES ============
+-- ARTICLES
 create table if not exists public.articles (
   id uuid primary key default gen_random_uuid(),
   title text not null,
@@ -46,7 +46,7 @@ create policy "articles_delete_admin"
   on public.articles for delete
   using (public.is_admin());
 
--- ============ SEED ARTICLES ============
+-- SEED ARTICLES
 insert into public.articles (title, excerpt, content, published_at)
 values
   (
@@ -83,7 +83,7 @@ values
   )
 on conflict do nothing;
 
--- ============ POINTS: IZINKAN REDEEM (GGANTI POLICY 014) ============
+-- POINTS: IZINKAN REDEEM (GGANTI POLICY 014)
 drop policy if exists "points_insert_own_earn" on public.points;
 drop policy if exists "points_insert_own" on public.points;
 create policy "points_insert_own"
@@ -94,3 +94,4 @@ create policy "points_insert_own"
     and amount <= 50
     and type in ('earn', 'redeem')
   );
+

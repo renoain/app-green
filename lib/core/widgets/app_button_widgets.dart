@@ -1,5 +1,4 @@
-// Komponen PrimaryButton: tombol utama sesuai docs/COMPONENT_LIBRARY.md
-// dan docs/DESIGN_SYSTEM.md (Button -> Primary).
+// Komponen PrimaryButton: tombol utama sesuai docs/COMPONENT_LIBRARY.md dan docs/DESIGN_SYSTEM.md (Button -> Primary).
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,12 +11,8 @@ import '../theme/app_typography.dart';
 
 /// Tombol dengan label (teks dari pemanggil).
 
-/// Tombol utama (primary action) aplikasi Go Green.
-///
-/// Background [AppColors.primary], teks [AppColors.textOnPrimary],
-/// tinggi 48, radius [AppRadius.lg]. Mendukung state loading.
+/// Tombol utama (primary action) aplikasi Go Green. Background [AppColors.primary], teks [AppColors.textOnPrimary], tinggi 48, radius [AppRadius.lg]. Mendukung state loading.
 class PrimaryButton extends StatelessWidget {
-  /// Membuat tombol utama.
   const PrimaryButton({
     super.key,
     required this.text,
@@ -66,11 +61,8 @@ class PrimaryButton extends StatelessWidget {
   }
 }
 
-/// Tombol sekunder (secondary action) aplikasi Go Green.///
-/// Background [AppColors.surface], border [AppColors.border], teks
-/// [AppColors.primary], tinggi 48, radius [AppRadius.lg].
+/// Tombol sekunder (secondary action) aplikasi Go Green./// Background [AppColors.surface], border [AppColors.border], teks [AppColors.primary], tinggi 48, radius [AppRadius.lg].
 class SecondaryButton extends StatelessWidget {
-  /// Membuat tombol sekunder.
   const SecondaryButton({
     super.key,
     required this.text,
@@ -109,11 +101,8 @@ class SecondaryButton extends StatelessWidget {
   }
 }
 
-/// Tombol teks (link) aplikasi Go Green.
-///
-/// Dipakai untuk link seperti "Belum punya akun? Daftar di sini".
+/// Tombol teks (link) aplikasi Go Green. Dipakai untuk link seperti "Belum punya akun? Daftar di sini".
 class AppTextButton extends StatelessWidget {
-  /// Membuat tombol teks.
   const AppTextButton({
     super.key,
     required this.text,
@@ -143,12 +132,8 @@ class AppTextButton extends StatelessWidget {
   }
 }
 
-/// Tombol masuk/daftar dengan Google (sekali klik OAuth).
-///
-/// Menampilkan logo G Google resmi (SVG 4 warna), gaya outlined sekunder
-/// tinggi 48 dan radius [AppRadius.lg], konsisten dengan SecondaryButton.
+/// Tombol masuk/daftar dengan Google (sekali klik OAuth). Menampilkan logo G Google resmi (SVG 4 warna), gaya outlined sekunder tinggi 48 dan radius [AppRadius.lg], konsisten dengan SecondaryButton.
 class GoogleAuthButton extends StatelessWidget {
-  /// Membuat tombol autentikasi Google.
   const GoogleAuthButton({
     super.key,
     required this.text,

@@ -1,8 +1,4 @@
 // String UI aplikasi (dwibahasa Indonesia/Inggris).
-//
-// String tampilan wajib lewat AppStrings (dilarang hardcode di widget).
-// Bahasa aktif diatur via AppStrings.locale ('id'/'en', default 'id').
-// API dipertahankan (AppStrings.nama) sehingga pemanggil tidak berubah.
 
 /// String UI aplikasi Go Green (ID/EN sesuai [AppStrings.locale]).
 class AppStrings {
@@ -248,14 +244,11 @@ class AppStrings {
   /// Tombol lihat riwayat di kartu poin Home.
   static String get homeViewHistory => _t('homeViewHistory');
 
-  /// Label stat sampah terpilah di Home.
-  static String get homeStatWasteLabel => _t('homeStatWasteLabel');
+  /// Pesan aktivitas kosong di Home (user login tanpa riwayat).
+  static String get homeActivityEmpty => _t('homeActivityEmpty');
 
-  /// Label stat karbon dikurangi di Home (Stitch Enhanced).
-  static String get homeStatCarbonLabel => _t('homeStatCarbonLabel');
-
-  /// Label stat pohon selamat di Home.
-  static String get homeStatTreeLabel => _t('homeStatTreeLabel');
+  /// Pesan aktivitas kosong di Home khusus tamu (ajakan masuk).
+  static String get homeActivityEmptyGuest => _t('homeActivityEmptyGuest');
 
   /// Judul misi mingguan di Home.
   static String get homeMissionTitle => _t('homeMissionTitle');
@@ -286,9 +279,6 @@ class AppStrings {
 
   /// Awalan target misi mingguan di Home.
   static String get homeMissionTargetPrefix => _t('homeMissionTargetPrefix');
-
-  /// Pesan aktivitas kosong di Home (user login tanpa riwayat).
-  static String get homeActivityEmpty => _t('homeActivityEmpty');
 
   /// Judul section artikel dan edukasi di Home.
   static String get homeArticleSection => _t('homeArticleSection');
@@ -1382,9 +1372,6 @@ class AppStrings {
     'homePointsSubtitle': 'Kumpulkan poin, tukar reward',
     'homeExchangeReward': 'Tukar Reward',
     'homeViewHistory': 'Lihat Riwayat',
-    'homeStatWasteLabel': 'Sampah Terpilah',
-    'homeStatCarbonLabel': 'Karbon Dikurangi',
-    'homeStatTreeLabel': 'Pohon Selamat',
     'homeMissionTitle': 'Misi Hijau Mingguan',
     'homeMissionDesc': 'Kumpulkan 5 kg sampah anorganik minggu ini',
     'homeLatestActivity': 'Aktivitas Terkini',
@@ -1396,6 +1383,7 @@ class AppStrings {
     'homeMissionCollectedSuffix': 'terkumpul',
     'homeMissionTargetPrefix': 'Target:',
     'homeActivityEmpty': 'Belum ada aktivitas. Buang sampah pertamamu yuk!',
+    'homeActivityEmptyGuest': 'Belum ada aktivitas. Masuk dulu untuk mulai.',
     'homeArticleSection': 'Artikel & Edukasi Hijau',
     'quickActionWasteDesc': 'Ambil foto di checkpoint terdekat',
     'quickActionPointsTitle': 'Lihat Poin',
@@ -1837,9 +1825,6 @@ class AppStrings {
     'homePointsSubtitle': 'Collect points, redeem rewards',
     'homeExchangeReward': 'Redeem Reward',
     'homeViewHistory': 'View History',
-    'homeStatWasteLabel': 'Sorted Waste',
-    'homeStatCarbonLabel': 'Carbon Reduced',
-    'homeStatTreeLabel': 'Trees Saved',
     'homeMissionTitle': 'Weekly Green Mission',
     'homeMissionDesc': 'Collect 5 kg of inorganic waste this week',
     'homeLatestActivity': 'Latest Activity',
@@ -1851,6 +1836,7 @@ class AppStrings {
     'homeMissionCollectedSuffix': 'collected',
     'homeMissionTargetPrefix': 'Target:',
     'homeActivityEmpty': 'No activity yet. Make your first drop-off!',
+    'homeActivityEmptyGuest': 'No activity yet. Sign in to get started.',
     'homeArticleSection': 'Green Articles & Education',
     'quickActionWasteDesc': 'Take a photo at the nearest checkpoint',
     'quickActionPointsTitle': 'View Points',

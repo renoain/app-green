@@ -1,5 +1,4 @@
-// Komponen CheckpointTile sesuai docs/COMPONENT_LIBRARY.md (Waste &
-// Checkpoint). Menampilkan satu baris checkpoint dengan status terpilih.
+// Komponen CheckpointTile sesuai docs/COMPONENT_LIBRARY.md (Waste & Checkpoint).
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -9,12 +8,8 @@ import '../../../../../core/theme/app_radius.dart';
 import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../core/theme/app_typography.dart';
 
-/// Baris item checkpoint yang bisa dipilih di halaman Buang Sampah.
-///
-/// Saat [selected] true, ditampilkan ikon centang dan border warna
-/// [AppColors.primary].
+/// Baris item checkpoint yang bisa dipilih di halaman Buang Sampah. Saat [selected] true, ditampilkan ikon centang dan border warna [AppColors.primary].
 class CheckpointTile extends StatelessWidget {
-  /// Membuat item checkpoint.
   const CheckpointTile({
     super.key,
     required this.name,

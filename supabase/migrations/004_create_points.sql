@@ -4,7 +4,7 @@
 -- dilakukan sisi server (trigger/RPC fase lanjut), sehingga tidak ada
 -- policy insert untuk klien.
 
--- ============ POINTS ============
+-- POINTS
 create table if not exists public.points (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
@@ -23,7 +23,7 @@ create index if not exists points_user_id_idx
 create index if not exists points_user_created_at_idx
   on public.points (user_id, created_at desc);
 
--- ============ RLS: POINTS ============
+-- RLS: POINTS
 alter table public.points enable row level security;
 
 -- User bisa baca riwayat poin miliknya.

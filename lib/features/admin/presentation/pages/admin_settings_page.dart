@@ -1,8 +1,4 @@
 // Halaman pengaturan operasional admin (baca + tulis).
-//
-// Nilai dari app_settings via adminSettingsProvider (fallback default);
-// simpan tervalidasi di ManageSettingsUsecase lalu diterapkan ke
-// AppConfig agar langsung berlaku.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -23,7 +19,6 @@ import '../providers/admin_settings_provider.dart';
 
 /// Halaman pengaturan admin.
 class AdminSettingsPage extends ConsumerStatefulWidget {
-  /// Membuat halaman pengaturan admin.
   const AdminSettingsPage({super.key});
 
   @override

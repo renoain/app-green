@@ -1,7 +1,4 @@
 // Halaman daftar artikel edukasi Go Green.
-//
-// Daftar dimuat dari Supabase via articleNotifierProvider (publik, tanpa
-// login); saat backend gagal memakai daftar demo.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -21,7 +18,6 @@ import '../providers/article_provider.dart';
 
 /// Halaman daftar artikel Go Green.
 class ArticlePage extends ConsumerStatefulWidget {
-  /// Membuat halaman daftar artikel.
   const ArticlePage({super.key});
 
   @override

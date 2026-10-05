@@ -1,13 +1,9 @@
 // Entity Redemption (domain).
-//
-// Penukaran reward milik user. Nama reward dari join tabel rewards
-// (bisa null bila reward dihapus; reward_id on delete set null).
 
 import '../../../../core/constants/app_enums.dart';
 
 /// Penukaran reward oleh user.
 class Redemption {
-  /// Membuat redemption.
   const Redemption({
     required this.id,
     this.rewardId,

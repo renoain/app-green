@@ -1,8 +1,4 @@
 // Halaman pemilih titik di peta layar penuh (presentation).
-//
-// Pin tetap di tengah layar; user menggeser peta atau mengetuk titik
-// untuk memindahkan pin, lalu menekan Gunakan lokasi ini. Hasil
-// dikembalikan via Navigator pop sebagai LatLng.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -21,7 +17,6 @@ import '../widgets/location_ready.dart';
 
 /// Pemilih koordinat di peta layar penuh untuk form TPS admin.
 class AdminMapPickerPage extends StatefulWidget {
-  /// Membuat pemilih peta dari titik awal [initialLatitude]/[initialLongitude].
   const AdminMapPickerPage({
     super.key,
     required this.initialLatitude,

@@ -1,7 +1,7 @@
 -- Migration 006: tabel redemptions + RLS.
 -- Referensi skema: docs/DATABASE_SCHEMA.md bagian 3.6.
 
--- ============ REDEMPTIONS ============
+-- REDEMPTIONS
 create table if not exists public.redemptions (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
@@ -24,7 +24,7 @@ create index if not exists redemptions_reward_id_idx
 create index if not exists redemptions_status_idx
   on public.redemptions (status);
 
--- ============ RLS: REDEMPTIONS ============
+-- RLS: REDEMPTIONS
 alter table public.redemptions enable row level security;
 
 -- User bisa baca redemption miliknya.

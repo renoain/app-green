@@ -1,8 +1,4 @@
 // Dropdown wilayah berjenjang untuk form/filter TPS (presentation).
-//
-// Provinsi -> Kota/Kabupaten -> Kecamatan memakai DropdownSearch
-// dengan kotak cari. Data dari region_providers (API wilayah via dio).
-// Logic generate kode TPS tetap di domain (GenerateTpsCodeUsecase).
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +12,6 @@ import '../../../regions/presentation/providers/region_provider.dart';
 
 /// Dropdown pemilih wilayah berjenjang.
 class RegionPickerDropdown extends ConsumerStatefulWidget {
-  /// Membuat pemilih wilayah.
   const RegionPickerDropdown({
     super.key,
     this.initialProvinceCode,
@@ -235,7 +230,6 @@ class _RegionPickerDropdownState
 
 /// Placeholder loading dropdown wilayah.
 class _RegionLoading extends StatelessWidget {
-  /// Membuat placeholder loading.
   const _RegionLoading({required this.label});
 
   /// Label dropdown.
@@ -252,7 +246,6 @@ class _RegionLoading extends StatelessWidget {
 
 /// Placeholder gagal muat dropdown wilayah.
 class _RegionError extends StatelessWidget {
-  /// Membuat placeholder error.
   const _RegionError({required this.label});
 
   /// Label dropdown.

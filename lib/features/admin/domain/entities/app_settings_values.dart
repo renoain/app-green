@@ -1,14 +1,10 @@
 // Entity nilai pengaturan operasional (domain).
-//
-// Representasi terketik dari tabel app_settings; parsing mentah
-// (string) dengan fallback AppValues agar tahan data rusak.
 
 import '../../../../core/constants/app_config.dart';
 import '../../../../core/constants/app_values.dart';
 
 /// Nilai pengaturan operasional Go Green.
 class AppSettingsValues {
-  /// Membuat nilai pengaturan.
   const AppSettingsValues({
     required this.gpsRadiusMeters,
     required this.enforceGpsRadius,

@@ -17,7 +17,6 @@ import '../providers/admin_waste_provider.dart';
 
 /// Detail satu waste log pending + aksi setujui/tolak.
 class AdminWasteDetailPage extends ConsumerStatefulWidget {
-  /// Membuat halaman detail verifikasi. [log] dari extra, [logId] dari path.
   const AdminWasteDetailPage({super.key, required this.logId, this.log});
 
   /// ID waste log.
@@ -218,7 +217,6 @@ class _AdminWasteDetailPageState extends ConsumerState<AdminWasteDetailPage> {
 
 /// Baris label-nilai di detail verifikasi.
 class _DetailRow extends StatelessWidget {
-  /// Membuat baris detail.
   const _DetailRow({required this.label, required this.value});
 
   /// Label baris.
@@ -263,7 +261,6 @@ String _riskReasonLabel(String code) {
 
 /// Seksi forensik foto di detail verifikasi.
 class _ForensicsSection extends StatelessWidget {
-  /// Membuat seksi forensik.
   const _ForensicsSection({required this.log});
 
   /// Waste log yang dinilai.
@@ -361,7 +358,6 @@ class _ForensicsSection extends StatelessWidget {
 
 /// Baris jarak log ke checkpoint (async).
 class _DistanceRow extends ConsumerWidget {
-  /// Membuat baris jarak.
   const _DistanceRow({required this.log});
 
   /// Waste log yang diukur.
@@ -386,7 +382,6 @@ class _DistanceRow extends ConsumerWidget {
 
 /// Foto bukti dari storage privat (signed URL).
 class _PhotoSection extends ConsumerWidget {
-  /// Membuat section foto bukti.
   const _PhotoSection({required this.photoPath});
 
   /// Path foto di storage.

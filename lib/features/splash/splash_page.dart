@@ -1,6 +1,4 @@
-// Halaman splash: layar pembuka dengan logo, nama aplikasi, dan indikator
-// loading. Sesi tersimpan langsung diarahkan sesuai role (admin/petugas
-// ke dasbor admin, user ke Home); tanpa sesi ke Onboarding.
+// Halaman splash: layar pembuka dengan logo, nama aplikasi, dan indikator loading.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -22,7 +20,6 @@ import '../auth/presentation/providers/auth_provider.dart';
 
 /// Halaman splash Go Green.
 class SplashPage extends ConsumerStatefulWidget {
-  /// Membuat halaman splash.
   const SplashPage({super.key});
 
   @override

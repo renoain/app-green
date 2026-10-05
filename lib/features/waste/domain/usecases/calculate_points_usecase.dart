@@ -1,7 +1,4 @@
 // Use case perhitungan poin (domain).
-//
-// Aturan bisnis MVP: poin dasar tetap + bonus per kategori + bonus streak.
-// Bonus kategori mengikuti pengaturan admin (AppConfig, fallback AppValues).
 
 import '../../../../core/constants/app_config.dart';
 import '../../../../core/constants/app_enums.dart';
@@ -9,13 +6,8 @@ import '../../../../core/constants/app_values.dart';
 
 /// Use case menghitung estimasi poin dari satu pembuangan sampah.
 class CalculatePointsUsecase {
-  /// Membuat use case (stateless).
   const CalculatePointsUsecase();
-  /// Menghitung total poin untuk [category] dengan [currentStreakDays]
-  /// hari beruntun membuang sampah.
-  ///
-  /// Formula: poin dasar + bonus kategori + bonus streak (bila streak
-  /// melewati ambang [AppValues.streakBonusThreshold]).
+  /// Menghitung total poin untuk [category] dengan [currentStreakDays] hari beruntun membuang sampah. Formula: poin dasar + bonus kategori + bonus streak (bila streak melewati ambang [AppValues.streakBonusThreshold]).
   int calculate({
     required WasteCategory category,
     int currentStreakDays = 0,

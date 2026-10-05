@@ -1,7 +1,4 @@
 // Bahasa aplikasi Indonesia/Inggris + persistensi pilihan (presentation).
-//
-// AppStrings membaca bahasa aktif secara sinkron; provider ini menyimpan
-// pilihan ke SharedPreferences dan menerapkannya ke AppStrings.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

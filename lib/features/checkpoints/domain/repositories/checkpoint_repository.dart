@@ -1,7 +1,4 @@
 // Interface repository checkpoint (domain).
-//
-// Implementasi data layer (CheckpointRepositoryImpl) wajib mengikuti
-// kontrak ini. Mengembalikan entity domain, bukan model data.
 
 import '../entities/checkpoint.dart';
 
@@ -13,8 +10,7 @@ abstract interface class CheckpointRepository {
   /// Ambil checkpoint aktif saja (user).
   Future<List<Checkpoint>> getActiveCheckpoints();
 
-  /// Ambil checkpoint terdekat dari posisi user (client-side),
-  /// diurutkan dari yang terdekat.
+  /// Ambil checkpoint terdekat dari posisi user (client-side), diurutkan dari yang terdekat.
   Future<List<Checkpoint>> getNearbyCheckpoints({
     required double latitude,
     required double longitude,

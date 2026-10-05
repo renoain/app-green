@@ -1,6 +1,4 @@
-// Use case kelola reward untuk admin (domain).
-//
-// Validasi bisnis tinggal di domain agar widget tetap tipis.
+// Use case kelola reward untuk admin (domain). Validasi bisnis tinggal di domain agar widget tetap tipis.
 
 import '../../../../core/constants/app_strings.dart';
 import '../entities/reward.dart';
@@ -8,7 +6,6 @@ import '../repositories/reward_repository.dart';
 
 /// Exception validasi form reward; [message] aman tampil ke user.
 class RewardValidationException implements Exception {
-  /// Membuat exception dengan pesan ramah user.
   const RewardValidationException(this.message);
 
   /// Pesan kesalahan.
@@ -20,7 +17,6 @@ class RewardValidationException implements Exception {
 
 /// Use case tambah/ubah/hapus reward oleh admin.
 class ManageRewardUsecase {
-  /// Membuat use case.
   const ManageRewardUsecase(this._repository);
 
   final RewardRepository _repository;

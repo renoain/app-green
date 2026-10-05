@@ -1,13 +1,9 @@
 // Model Reward (data layer).
-//
-// extends Reward untuk dipakai domain; fromJson/toJson menyesuaikan
-// format kolom tabel rewards (snake_case).
 
 import '../../domain/entities/reward.dart';
 
 /// Model data [Reward] untuk komunikasi dengan Supabase.
 class RewardModel extends Reward {
-  /// Membuat model dari field entity.
   const RewardModel({
     required super.id,
     required super.name,

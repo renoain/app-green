@@ -1,8 +1,4 @@
 // Halaman detail reward Go Green.
-//
-// Demo id 1-4 langsung tampil tanpa backend (kompatibel deep link lama +
-// test). Id UUID memuat katalog real via Supabase; tukar memakai
-// redeem backend dan guard saldo/stok/login.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -28,7 +24,6 @@ import '../data/reward_demo_data.dart';
 
 /// Halaman detail reward Go Green.
 class RewardDetailPage extends ConsumerStatefulWidget {
-  /// Membuat halaman detail reward.
   const RewardDetailPage({super.key, this.rewardId = '1'});
 
   /// Identitas reward yang dibuka (demo 1-4 atau UUID real).

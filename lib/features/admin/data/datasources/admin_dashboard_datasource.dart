@@ -9,7 +9,6 @@ import '../../domain/entities/admin_dashboard_summary.dart';
 
 /// Data source ringkasan dasbor admin Go Green.
 class AdminDashboardDatasource {
-  /// Membuat data source. [client] bisa di-inject untuk test.
   AdminDashboardDatasource({SupabaseClient? client}) : _override = client;
 
   final SupabaseClient? _override;

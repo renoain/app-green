@@ -1,6 +1,4 @@
 // Menyimpan seluruh token elevation (shadow) sesuai docs/DESIGN_SYSTEM.md.
-//
-// Wajib dipakai di widget, dilarang hardcode BoxShadow langsung.
 
 import 'package:flutter/material.dart';
 

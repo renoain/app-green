@@ -1,6 +1,4 @@
-// Implementasi repository reward admin (data).
-//
-// Meneruskan ke RewardRemoteDatasource; mapping model ke entity.
+// Implementasi repository reward admin (data). Meneruskan ke RewardRemoteDatasource; mapping model ke entity.
 
 import '../../domain/entities/reward.dart';
 import '../../domain/repositories/reward_repository.dart';
@@ -8,7 +6,6 @@ import '../datasources/reward_remote_datasource.dart';
 
 /// Implementasi [RewardRepository] via Supabase.
 class RewardRepositoryImpl implements RewardRepository {
-  /// Membuat implementasi dengan datasource.
   const RewardRepositoryImpl(this._datasource);
 
   final RewardRemoteDatasource _datasource;

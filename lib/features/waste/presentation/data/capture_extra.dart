@@ -1,8 +1,4 @@
 // Data yang dikirim dari halaman Buang Sampah ke halaman kamera.
-//
-// Berisi checkpoint terpilih agar kamera bisa menegakkan radius GPS
-// sebelum foto diteruskan ke verifikasi. Kategori dipilih user
-// setelah foto, di halaman verifikasi.
 
 /// Data ekstra route kamera in-app.
 class CaptureExtra {

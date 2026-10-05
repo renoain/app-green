@@ -1,16 +1,4 @@
-// Halaman utama (home) Go Green, referensi Stitch V3 Minimalist.
-//
-// Section: header environmental + bell, notice login, kartu poin solid
-// primary dengan siluet daun, aksi cepat 4 menu, misi hijau mingguan,
-// aktivitas terkini, artikel & edukasi hijau.
-//
-// Background atas: gradasi secondaryContainer ke background.
-// Kartu poin: siluet daun putih opacity 12% di pojok kanan bawah.
-//
-// Tamu dan user login tanpa data menampilkan 0 dan empty state;
-// user login memakai data asli (poin + waste log) agar selaras
-// dengan halaman Poin & Aktivitas.
-// Bottom nav tetap via MainShell (CustomBottomNavBar), tidak diubah.
+// Home V3 minimalist: header + kartu poin + aksi cepat + misi + aktivitas.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -45,17 +33,13 @@ import '../../../waste/domain/usecases/submit_waste_usecase.dart';
 import '../../../waste/presentation/providers/waste_provider.dart';
 import '../../domain/usecases/build_home_summary_usecase.dart';
 
-/// Tanggal terbit artikel demo pertama.
+/// Tanggal terbit artikel demo.
 final DateTime _demoArticle1Date = DateTime(2026, 9, 10);
-
-/// Tanggal terbit artikel demo kedua.
 final DateTime _demoArticle2Date = DateTime(2026, 9, 5);
 
 
 
-/// Halaman beranda Go Green.
 class HomePage extends ConsumerStatefulWidget {
-  /// Membuat halaman beranda.
   const HomePage({super.key});
 
   @override
@@ -117,7 +101,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     }
   }
 
-  /// Ikon tile aktivitas berdasarkan kategori sampah.
+  /// Ikon tile berdasarkan kategori sampah.
   IconData _iconForCategory(WasteCategory category) {
     return switch (category) {
       WasteCategory.organik => LucideIcons.leaf,
@@ -168,42 +152,25 @@ class _HomePageState extends ConsumerState<HomePage> {
     const CalculatePointsUsecase calculatePoints = CalculatePointsUsecase();
 
     final int totalPoints = realPoints ?? 0;
+    // 3 stat selalu sama, hanya nilai beda (0 tamu vs real login).
     final List<({IconData icon, String value, String label})> stats =
-        summary == null
-            ? <({IconData icon, String value, String label})>[
-                (
-                  icon: LucideIcons.trash,
-                  value: '0',
-                  label: AppStrings.homeStatWasteLabel,
-                ),
-                (
-                  icon: LucideIcons.globe,
-                  value: '0',
-                  label: AppStrings.homeStatCarbonLabel,
-                ),
-                (
-                  icon: LucideIcons.leaf,
-                  value: '0',
-                  label: AppStrings.homeStatTreeLabel,
-                ),
-              ]
-            : <({IconData icon, String value, String label})>[
-                (
-                  icon: LucideIcons.trash,
-                  value: '${summary.totalDisposals}',
-                  label: AppStrings.homeStatTimesLabel,
-                ),
-                (
-                  icon: LucideIcons.globe,
-                  value: '${summary.weeklyDisposals}',
-                  label: AppStrings.homeStatWeekLabel,
-                ),
-                (
-                  icon: LucideIcons.leaf,
-                  value: '${summary.verifiedCount}',
-                  label: AppStrings.homeVerifiedLabel,
-                ),
-              ];
+        <({IconData icon, String value, String label})>[
+      (
+        icon: LucideIcons.trash,
+        value: summary == null ? '0' : '${summary.totalDisposals}',
+        label: AppStrings.homeStatTimesLabel,
+      ),
+      (
+        icon: LucideIcons.globe,
+        value: summary == null ? '0' : '${summary.weeklyDisposals}',
+        label: AppStrings.homeStatWeekLabel,
+      ),
+      (
+        icon: LucideIcons.leaf,
+        value: summary == null ? '0' : '${summary.verifiedCount}',
+        label: AppStrings.homeVerifiedLabel,
+      ),
+    ];
     final double missionProgress = summary?.missionProgress ?? 0;
     final String missionCollected = summary == null
         ? '0 ${AppStrings.homeMissionCollectedSuffix}'
@@ -219,15 +186,11 @@ class _HomePageState extends ConsumerState<HomePage> {
       body: SafeArea(
         child: Stack(
           children: <Widget>[
-            // Layer 1: gradasi hijau di background atas.
-            const Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              height: 280,
-              child: _TopGradientBackground(),
+            // Gradasi di belakang konten.
+            const Positioned.fill(
+              child: _HomeGradientBackground(),
             ),
-            // Layer 2: konten utama.
+            // Konten utama.
             RefreshIndicator(
               color: AppColors.primary,
               onRefresh: _reload,
@@ -292,7 +255,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                         vertical: AppSpacing.md,
                       ),
                       child: Text(
-                        AppStrings.homeActivityEmpty,
+                        isLoggedIn
+                            ? AppStrings.homeActivityEmpty
+                            : AppStrings.homeActivityEmptyGuest,
                         style: AppTypography.bodySm,
                         textAlign: TextAlign.center,
                       ),
@@ -385,14 +350,9 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 }
 
-/// Background gradasi hijau ke putih di bagian atas Home.
-///
-/// Gradasi dari secondaryContainer ke background, tinggi 280px,
-/// ditempatkan di belakang konten utama agar header dan kartu poin
-/// terasa menyatu dengan tema environmental.
-class _TopGradientBackground extends StatelessWidget {
-  /// Membuat background gradasi atas.
-  const _TopGradientBackground();
+/// Background gradasi Home atas ke bawah (tanpa dekorasi tambahan).
+class _HomeGradientBackground extends StatelessWidget {
+  const _HomeGradientBackground();
 
   @override
   Widget build(BuildContext context) {
@@ -403,25 +363,22 @@ class _TopGradientBackground extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: <Color>[
             AppColors.secondaryContainer,
-            AppColors.secondaryContainer.withValues(alpha: 0.6),
+            AppColors.secondaryContainer.withValues(alpha: 0.7),
             AppColors.background,
+            AppColors.background,
+            AppColors.secondaryContainer.withValues(alpha: 0.3),
           ],
-          stops: const <double>[0.0, 0.5, 1.0],
+          stops: const <double>[0.0, 0.15, 0.45, 0.75, 1.0],
         ),
       ),
     );
   }
 }
 
-/// Sapaan header Home V3 minimalist dengan bell notifikasi.
-///
-/// Avatar + sapaan kiri, tombol bell kanan dengan titik oranye
-/// sebagai penanda environmental header ala Stitch V3.
+/// Header Home: avatar + sapaan + bell notifikasi.
 class _HomeHeader extends StatelessWidget {
-  /// Membuat sapaan header Home.
   const _HomeHeader({required this.displayName});
 
-  /// Nama yang ditampilkan (display name / username / tamu).
   final String displayName;
 
   @override
@@ -489,22 +446,16 @@ class _HomeHeader extends StatelessWidget {
   }
 }
 
-/// Header section dengan judul kiri dan aksi kanan.
+/// Judul kiri + aksi kanan.
 class _SectionHeader extends StatelessWidget {
-  /// Membuat header section.
   const _SectionHeader({
     required this.title,
     required this.actionLabel,
     required this.onAction,
   });
 
-  /// Judul section.
   final String title;
-
-  /// Label aksi kanan.
   final String actionLabel;
-
-  /// Aksi saat tombol kanan ditekan.
   final VoidCallback onAction;
 
   @override
@@ -520,12 +471,8 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-/// Aksi cepat Home V3 minimalist: 4 menu grid ala Stitch.
-///
-/// Buang Sampah, Scan QR, Artikel, Reward. Ikon lingkaran pastel di atas
-/// kartu putih agar bersih dan minimalis.
+/// Grid 4 menu cepat: Buang Sampah, Scan, Artikel, Reward.
 class _QuickActionsGrid extends StatelessWidget {
-  /// Membuat grid aksi cepat.
   const _QuickActionsGrid({
     required this.onWaste,
     required this.onScan,
@@ -533,16 +480,9 @@ class _QuickActionsGrid extends StatelessWidget {
     required this.onReward,
   });
 
-  /// Aksi ke halaman Buang Sampah.
   final VoidCallback onWaste;
-
-  /// Aksi ke halaman Scan QR.
   final VoidCallback onScan;
-
-  /// Aksi ke halaman Artikel.
   final VoidCallback onArticle;
-
-  /// Aksi ke halaman Poin/Reward.
   final VoidCallback onReward;
 
   @override
@@ -593,9 +533,8 @@ class _QuickActionsGrid extends StatelessWidget {
   }
 }
 
-/// Satu tombol aksi cepat dengan ikon lingkaran + label.
+/// Tombol aksi cepat: ikon lingkaran + label.
 class _QuickActionButton extends StatelessWidget {
-  /// Membuat tombol aksi cepat.
   const _QuickActionButton({
     required this.icon,
     required this.label,
@@ -604,19 +543,10 @@ class _QuickActionButton extends StatelessWidget {
     required this.onTap,
   });
 
-  /// Ikon menu.
   final IconData icon;
-
-  /// Label menu via AppStrings.
   final String label;
-
-  /// Warna ikon.
   final Color iconColor;
-
-  /// Warna latar lingkaran ikon.
   final Color iconBackground;
-
-  /// Aksi saat ditekan.
   final VoidCallback onTap;
 
   @override
@@ -663,22 +593,14 @@ class _QuickActionButton extends StatelessWidget {
   }
 }
 
-/// Kartu ringkasan poin V3 minimalist: solid primary, teks putih,
-/// siluet daun putih opacity 12% di pojok kanan bawah.
-///
-/// Berisi judul, angka besar, subtitle, tombol Tukar Reward
-/// (kuning), divider putih 20%, dan 3 stat putih.
+/// Kartu poin: solid primary + siluet daun + total + 3 stat.
 class _PointsSummaryCard extends StatelessWidget {
-  /// Membuat kartu ringkasan poin.
   const _PointsSummaryCard({
     required this.totalPoints,
     required this.stats,
   });
 
-  /// Total poin tampil (asli atau demo).
   final int totalPoints;
-
-  /// Tiga stat dampak (asli atau demo).
   final List<({IconData icon, String value, String label})> stats;
 
   @override
@@ -693,7 +615,7 @@ class _PointsSummaryCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: <Widget>[
-          // Siluet daun putih di pojok kanan bawah.
+          // Siluet daun di sudut kartu.
           Positioned(
             right: -28,
             bottom: -28,
@@ -703,7 +625,7 @@ class _PointsSummaryCard extends StatelessWidget {
               color: AppColors.textOnPrimary.withValues(alpha: 0.12),
             ),
           ),
-          // Konten kartu.
+          // Isi kartu.
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.md,
@@ -805,28 +727,19 @@ class _PointsSummaryCard extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      if (stats.isNotEmpty)
+                      for (int i = 0; i < stats.length; i++) ...<Widget>[
+                        if (i > 0) const SizedBox(width: AppSpacing.sm),
                         Expanded(
-                          child: InkWell(
-                            onTap: () =>
-                                context.goNamed(AppRouteName.activity),
-                            child: _MiniStat(
-                              icon: stats.first.icon,
-                              value: stats.first.value,
-                              label: stats.first.label,
-                            ),
+                          child: _MiniStat(
+                            icon: stats[i].icon,
+                            value: stats[i].value,
+                            label: stats[i].label,
+                            onTap: i == 0
+                                ? () =>
+                                    context.goNamed(AppRouteName.activity)
+                                : null,
                           ),
                         ),
-                      if (stats.length > 1) ...<Widget>[
-                        const SizedBox(width: AppSpacing.sm),
-                        for (int i = 1; i < stats.length; i++)
-                          Expanded(
-                            child: _MiniStat(
-                              icon: stats[i].icon,
-                              value: stats[i].value,
-                              label: stats[i].label,
-                            ),
-                          ),
                       ],
                     ],
                   ),
@@ -840,36 +753,28 @@ class _PointsSummaryCard extends StatelessWidget {
   }
 }
 
-/// Stat kecil dampak lingkungan di kartu poin.
+/// Stat kecil di kartu poin; onTap null = tidak bisa ditekan.
 class _MiniStat extends StatelessWidget {
-  /// Membuat stat kecil.
   const _MiniStat({
     required this.icon,
     required this.value,
     required this.label,
+    this.onTap,
   });
 
-  /// Ikon stat.
   final IconData icon;
-
-  /// Nilai stat.
   final String value;
-
-  /// Label stat.
   final String label;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final BorderRadius radius = BorderRadius.circular(AppRadius.lg);
+    final Widget content = Container(
       height: 72,
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm,
         vertical: AppSpacing.sm,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        border: Border.all(color: AppColors.borderLight),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -901,25 +806,44 @@ class _MiniStat extends StatelessWidget {
         ],
       ),
     );
+    final VoidCallback? tap = onTap;
+    if (tap == null) {
+      return Container(
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: radius,
+          border: Border.all(color: AppColors.borderLight),
+        ),
+        child: content,
+      );
+    }
+    return Material(
+      color: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(color: AppColors.borderLight),
+        borderRadius: radius,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: tap,
+        borderRadius: radius,
+        child: content,
+      ),
+    );
   }
 }
 
-/// Kartu misi hijau mingguan dengan progress bar.
+/// Kartu misi mingguan + progress bar.
 class _MissionCard extends StatelessWidget {
-  /// Membuat kartu misi.
   const _MissionCard({
     required this.progress,
     required this.collected,
     required this.target,
   });
 
-  /// Progres 0..1 (asli atau demo).
+  /// Progres 0..1.
   final double progress;
-
-  /// Teks terkumpul (asli atau demo).
   final String collected;
-
-  /// Teks target (asli atau demo).
   final String target;
 
   @override
@@ -1000,9 +924,8 @@ class _MissionCard extends StatelessWidget {
   }
 }
 
-/// Tile aktivitas terkini gaya Stitch.
+/// Tile aktivitas terkini.
 class _ActivityTile extends StatelessWidget {
-  /// Membuat tile aktivitas.
   const _ActivityTile({
     required this.icon,
     required this.title,
@@ -1012,22 +935,13 @@ class _ActivityTile extends StatelessWidget {
     this.statusLabel,
   });
 
-  /// Ikon aktivitas.
   final IconData icon;
-
-  /// Judul setoran.
   final String title;
-
-  /// Waktu setoran.
   final String time;
-
-  /// Poin didapat.
   final int points;
-
-  /// Aksi saat ditekan.
   final VoidCallback onTap;
 
-  /// Label chip status (default label Terverifikasi bahasa aktif).
+  /// Chip status, default label Terverifikasi.
   final String? statusLabel;
 
   @override
@@ -1105,18 +1019,13 @@ class _ActivityTile extends StatelessWidget {
   }
 }
 
-/// Fade-in seksi sekali jalan agar Home terasa hidup tanpa loop.
-///
-/// Animasi opacity + geser 8px ke atas, durasi 350ms dengan jeda per
-/// seksi. Tidak berulang sehingga hemat baterai.
+/// Fade-in sekali jalan (hemat baterai, tanpa loop).
 class _FadeIn extends StatelessWidget {
-  /// Membuat pembungkus fade-in.
   const _FadeIn({required this.child, this.delayMs = 0});
 
-  /// Konten seksi yang dianimasikan.
   final Widget child;
 
-  /// Jeda sebelum animasi mulai (ms).
+  /// Jeda animasi (ms).
   final int delayMs;
 
   @override
@@ -1140,11 +1049,8 @@ class _FadeIn extends StatelessWidget {
   }
 }
 
-/// Skeleton statis Home saat memuat data login.
-///
-/// Kotak surfaceDim tanpa shimmer agar ringan dan layout tidak lompat.
+/// Skeleton Home saat memuat (tanpa shimmer, anti layout lompat).
 class _HomeSkeleton extends StatelessWidget {
-  /// Membuat skeleton Home.
   const _HomeSkeleton();
 
   @override
@@ -1166,15 +1072,11 @@ class _HomeSkeleton extends StatelessWidget {
   }
 }
 
-/// Satu blok placeholder skeleton.
+/// Placeholder skeleton.
 class _SkeletonBlock extends StatelessWidget {
-  /// Membuat blok skeleton.
   const _SkeletonBlock({required this.height, required this.radius});
 
-  /// Tinggi blok.
   final double height;
-
-  /// Radius sudut blok.
   final double radius;
 
   @override

@@ -1,8 +1,4 @@
 // Provider status autentikasi aplikasi.
-//
-// Menyediakan authRepositoryProvider (implementasi repository) dan
-// authNotifierProvider yang mengikuti perubahan sesi login. Dalam mode
-// demo (Supabase belum terinisialisasi) sesi selalu belum login.
 
 import 'dart:async';
 
@@ -23,7 +19,6 @@ final Provider<AuthRepository> authRepositoryProvider =
 
 /// Notifier status autentikasi yang mengikuti perubahan sesi.
 class AuthNotifier extends StateNotifier<AuthSession> {
-  /// Membuat notifier dan mulai mengikuti [repository.authStateChanges].
   AuthNotifier(this._repository) : super(_repository.currentSession) {
     _subscription = _repository.authStateChanges.listen(
       (AuthSession session) {
@@ -49,9 +44,7 @@ final StateNotifierProvider<AuthNotifier, AuthSession> authNotifierProvider =
   (Ref ref) => AuthNotifier(ref.watch(authRepositoryProvider)),
 );
 
-/// Role user yang sedang login untuk redirect pasca-login.
-///
-/// Default [UserRole.user] saat demo, belum login, atau query gagal.
+/// Role user yang sedang login untuk redirect pasca-login. Default [UserRole.user] saat demo, belum login, atau query gagal.
 Future<UserRole> getCurrentUserRole() async {
   final String? userId = SupabaseService.instance.currentUser?.id;
   if (userId == null) return UserRole.user;

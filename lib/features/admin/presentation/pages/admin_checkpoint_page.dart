@@ -22,7 +22,6 @@ import '../widgets/tps_card.dart';
 
 /// Halaman kelola TPS: daftar semua checkpoint + cari + tambah + ubah.
 class AdminCheckpointPage extends ConsumerStatefulWidget {
-  /// Membuat halaman daftar TPS admin.
   const AdminCheckpointPage({super.key});
 
   @override

@@ -1,11 +1,4 @@
 // Halaman verifikasi bukti pembuangan sampah Go Green.
-//
-// Menampilkan preview foto + timestamp + lokasi, pilihan kategori
-// sampah (dipilih setelah foto), lalu mengirim bukti via
-// WasteSubmitNotifier (hash SHA-256, validasi radius/duplikat/rate
-// limit, upload, insert waste_logs). Sukses menampilkan popup poin
-// animasi. Timestamp server tercatat di database saat insert (kolom
-// server_timestamp default now()).
 
 import 'dart:io';
 import 'dart:typed_data';
@@ -47,7 +40,6 @@ String _categoryLabel(WasteCategory category) {
 
 /// Halaman verifikasi foto bukti Go Green.
 class VerificationPage extends ConsumerStatefulWidget {
-  /// Membuat halaman verifikasi.
   const VerificationPage({super.key, this.extra});
 
   /// Data ekstra dari halaman kamera (lokasi GPS dan path foto).
@@ -379,8 +371,7 @@ class _DetailRow extends StatelessWidget {
   }
 }
 
-/// Preview foto bukti dengan overlay timestamp, atau placeholder saat
-/// path foto tidak ada.
+/// Preview foto bukti dengan overlay timestamp, atau placeholder saat path foto tidak ada.
 class _PhotoPreview extends StatelessWidget {
   const _PhotoPreview({this.imagePath, required this.timestampLabel});
 

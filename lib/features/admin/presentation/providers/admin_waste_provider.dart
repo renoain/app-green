@@ -30,7 +30,6 @@ final StateProvider<AdminWasteFilter> adminWasteFilterProvider =
 /// Notifier antrean verifikasi pending untuk admin/petugas.
 class AdminWasteListNotifier
     extends StateNotifier<AsyncValue<List<WasteLog>>> {
-  /// Membuat notifier antrean verifikasi.
   AdminWasteListNotifier(this._usecase, this._ref)
       : super(const AsyncLoading<List<WasteLog>>());
 

@@ -1,7 +1,4 @@
 // Halaman log audit admin (daftar jejak aksi, read-only).
-//
-// 50 aktivitas terbaru via adminAuditProvider; append-only di server
-// (tanpa ubah/hapus dari klien).
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -50,7 +47,6 @@ String _entityLabel(String entity) {
 
 /// Halaman log audit admin.
 class AdminAuditPage extends ConsumerStatefulWidget {
-  /// Membuat halaman log audit admin.
   const AdminAuditPage({super.key});
 
   @override

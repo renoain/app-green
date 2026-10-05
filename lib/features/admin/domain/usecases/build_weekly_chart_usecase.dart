@@ -1,11 +1,7 @@
 // Use case grafik setoran 7 hari untuk dasbor admin (domain).
-//
-// Bucket waktu per hari (7 hari terakhir berurutan) murni Dart agar
-// mudah diuji; label hari singkat Bahasa Indonesia.
 
 /// Satu batang grafik harian.
 class DailyWasteCount {
-  /// Membuat hitungan harian.
   const DailyWasteCount({required this.label, required this.count});
 
   /// Label hari singkat (Sen..Min).
@@ -17,7 +13,6 @@ class DailyWasteCount {
 
 /// Use case membangun 7 batang grafik dari timestamp waste.
 class BuildWeeklyChartUsecase {
-  /// Membuat use case (stateless).
   const BuildWeeklyChartUsecase();
 
   /// Label hari singkat Indonesia untuk [date].

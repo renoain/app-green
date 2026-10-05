@@ -1,8 +1,4 @@
 // Use case pengiriman pembuangan sampah (domain).
-//
-// Mengorkestrasi alur anti-kecurangan: hash SHA-256 -> validasi (duplikat,
-// radius, rate limit) -> forensik EXIF + skor risiko -> upload foto ->
-// simpan waste_log (termasuk skor) -> hitung poin.
 
 import 'dart:typed_data';
 
@@ -19,7 +15,6 @@ import 'validate_photo_usecase.dart';
 
 /// Hasil pengiriman pembuangan sampah.
 class SubmitWasteResult {
-  /// Membuat hasil submit.
   const SubmitWasteResult({
     required this.log,
     required this.estimatedPoints,
@@ -36,9 +31,7 @@ class SubmitWasteResult {
   final PhotoRisk risk;
 }
 
-/// Mencatat poin earn ke tabel points. Di-inject agar usecase tetap
-/// teruji tanpa Supabase; implementasi produksi memakai
-/// PointsRemoteDatasource.addPoints (butuh policy points_insert_own_earn).
+/// Mencatat poin earn ke tabel points. Di-inject agar usecase tetap teruji tanpa Supabase; implementasi produksi memakai PointsRemoteDatasource.addPoints (butuh policy points_insert_own_earn).
 typedef RecordEarnPoints = Future<void> Function({
   required String userId,
   required int amount,
@@ -48,9 +41,7 @@ typedef RecordEarnPoints = Future<void> Function({
 
 /// Use case mengirim bukti pembuangan sampah.
 class SubmitWasteUsecase {
-  /// Membuat use case. [hashFunction] bisa di-inject untuk test.
-  /// [recordEarnPoints] null berarti poin hanya dihitung (estimasi) tanpa
-  /// dicatat, untuk kompatibilitas pemanggil lama/test.
+  /// [recordEarnPoints] null berarti poin hanya dihitung (estimasi) tanpa dicatat, untuk kompatibilitas pemanggil lama/test.
   SubmitWasteUsecase({
     required WasteRepository wasteRepository,
     required ValidatePhotoUsecase validatePhoto,
@@ -76,9 +67,7 @@ class SubmitWasteUsecase {
   final AssessPhotoRiskUsecase _assessRisk;
   final Future<PhotoForensics> Function(Uint8List bytes) _analyzeForensics;
 
-  /// Menjalankan alur submit.
-  ///
-  /// Melempar [WasteValidationException] bila validasi foto gagal.
+  /// Menjalankan alur submit. Melempar [WasteValidationException] bila validasi foto gagal.
   Future<SubmitWasteResult> execute({
     required String userId,
     required Checkpoint checkpoint,

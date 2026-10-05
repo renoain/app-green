@@ -1,7 +1,4 @@
 // Halaman detail user admin (presentation).
-//
-// Profil + total poin + riwayat buang + ubah role. Validasi cegah
-// self-demote di ManageUserUsecase; widget hanya tampilkan pesan.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -38,7 +35,6 @@ String _roleLabel(UserRole role) {
 
 /// Halaman detail user admin.
 class AdminUserDetailPage extends ConsumerStatefulWidget {
-  /// Membuat detail user. [user] wajib ada (dari extra route).
   const AdminUserDetailPage({super.key, required this.user});
 
   /// User yang ditampilkan.

@@ -76,6 +76,8 @@ Skill bisa dipanggil dengan menyebut namanya. Lihat .opencode/skills/:
 - String UI dwibahasa ID/EN via AppStrings (tambah kunci + kedua teks,
   dilarang hardcode di widget, dilarang const untuk widget berisi string).
 - Dilarang emoji di kode, komentar, dokumentasi, commit.
+- Dilarang pemisah dekoratif di komentar kode (contoh garis sama dengan,
+  strip, underscore berulang); pakai komentar 1 baris polos.
 - Dilarang hardcode warna/spacing/radius, wajib pakai token di
   lib/core/theme/.
 - Dilarang menulis secret, wajib lewat .env.

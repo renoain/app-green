@@ -1,8 +1,4 @@
 // Layanan push notification FCM + tampil lokal (core service).
-//
-// Best effort: tanpa konfigurasi Firebase (google-services.json belum
-// dipasang) layanan nonaktif diam-diam dan aplikasi tetap jalan.
-// Dioptimalkan agar aman di test (semua panggilan platform di-try).
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -54,7 +50,6 @@ abstract final class PushRouteMapper {
 
 /// Layanan push notification Go Green.
 class PushNotificationService {
-  /// Membuat service dengan dependensi yang bisa di-inject untuk test.
   PushNotificationService({
     FirebaseMessaging? messaging,
     FlutterLocalNotificationsPlugin? local,

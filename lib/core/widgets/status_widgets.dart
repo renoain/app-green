@@ -1,5 +1,4 @@
-// Komponen status sesuai docs/COMPONENT_LIBRARY.md (Status).
-// Dikelompokkan dalam satu file: StatusType, StatusChip.
+// Komponen status sesuai docs/COMPONENT_LIBRARY.md (Status). Dikelompokkan dalam satu file: StatusType, StatusChip.
 
 import 'package:flutter/material.dart';
 
@@ -13,7 +12,6 @@ enum StatusType { success, warning, error, info }
 
 /// Chip label status berwarna sesuai tipe (Aktivitas, Reward, Verifikasi).
 class StatusChip extends StatelessWidget {
-  /// Membuat chip status.
   const StatusChip({
     super.key,
     required this.label,

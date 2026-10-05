@@ -1,6 +1,4 @@
 // Komponen card sesuai docs/COMPONENT_LIBRARY.md (Card).
-// Dikelompokkan dalam satu file: InfoCard, PointCard, ArticleCard,
-// ActivityCard, RewardCard.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -52,7 +50,6 @@ class _SurfaceCard extends StatelessWidget {
 
 /// Kartu aksi di Home (Buang Sampah, Lihat Poin).
 class InfoCard extends StatelessWidget {
-  /// Membuat kartu informasi dengan aksi.
   const InfoCard({
     super.key,
     required this.title,
@@ -120,7 +117,6 @@ class InfoCard extends StatelessWidget {
 
 /// Kartu saldo poin dengan latar primary (Home dan Profile).
 class PointCard extends StatelessWidget {
-  /// Membuat kartu total poin.
   const PointCard({
     super.key,
     required this.point,
@@ -198,7 +194,6 @@ class PointCard extends StatelessWidget {
 
 /// Kartu artikel (Home dan daftar Artikel).
 class ArticleCard extends StatelessWidget {
-  /// Membuat kartu artikel.
   const ArticleCard({
     super.key,
     required this.title,
@@ -220,8 +215,7 @@ class ArticleCard extends StatelessWidget {
   /// Aksi saat kartu ditekan.
   final VoidCallback? onTap;
 
-  /// Path asset thumbnail gambar (opsional). Jika diisi, thumbnail
-  /// ditampilkan sebagai gambar; jika null, fallback ke ikon placeholder.
+  /// Path asset thumbnail gambar (opsional). Jika diisi, thumbnail ditampilkan sebagai gambar; jika null, fallback ke ikon placeholder.
   final String? thumbnailImage;
 
   @override
@@ -305,7 +299,6 @@ class ArticleCard extends StatelessWidget {
 
 /// Kartu riwayat aktivitas (Aktivitas dan Riwayat Poin).
 class ActivityCard extends StatelessWidget {
-  /// Membuat kartu aktivitas.
   const ActivityCard({
     super.key,
     required this.date,
@@ -410,7 +403,6 @@ class ActivityCard extends StatelessWidget {
 
 /// Kartu reward yang bisa ditukar poin (Poin & Reward).
 class RewardCard extends StatelessWidget {
-  /// Membuat kartu reward.
   const RewardCard({
     super.key,
     required this.title,

@@ -1,7 +1,4 @@
 // Menyimpan seluruh path aset aplikasi.
-//
-// Sumber kebenaran: docs/ASSET_MANAGEMENT.md. Wajib dipakai untuk
-// mereferensikan aset, dilarang hardcode path di widget.
 
 /// Path aset aplikasi Go Green.
 class AppAssets {

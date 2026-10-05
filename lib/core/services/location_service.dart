@@ -1,7 +1,4 @@
 // Layanan lokasi (GPS) memakai geolocator.
-//
-// Mengambil posisi saat ini untuk verifikasi bukti dan cek radius
-// checkpoint. Perlu diuji di device fisik sesuai docs/TESTING_STRATEGY.md.
 
 import 'package:geolocator/geolocator.dart';
 
@@ -9,9 +6,7 @@ import 'package:geolocator/geolocator.dart';
 class LocationService {
   const LocationService();
 
-  /// Mengambil posisi GPS saat ini.
-  ///
-  /// Mengembalikan null jika GPS mati, izin ditolak, atau gagal.
+  /// Mengambil posisi GPS saat ini. Mengembalikan null jika GPS mati, izin ditolak, atau gagal.
   Future<Position?> getCurrentPosition() async {    try {
       if (!await Geolocator.isLocationServiceEnabled()) return null;
 

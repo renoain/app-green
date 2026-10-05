@@ -1,7 +1,4 @@
 // Data source pengaturan operasional admin (data layer).
-//
-// Baca semua baris app_settings; tulis via upsert per kunci (policy
-// app_settings_write_admin, migration 019; RLS admin di server).
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -10,7 +7,6 @@ import '../../../../core/services/supabase_service.dart';
 
 /// Data source pengaturan untuk admin + startup aplikasi.
 class AdminSettingsDatasource {
-  /// Membuat data source. [client] bisa di-inject untuk test.
   AdminSettingsDatasource({SupabaseClient? client}) : _override = client;
 
   final SupabaseClient? _override;

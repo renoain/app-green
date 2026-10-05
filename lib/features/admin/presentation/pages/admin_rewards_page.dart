@@ -1,7 +1,4 @@
 // Halaman kelola reward admin (daftar + tulis).
-//
-// Daftar semua reward via adminRewardListProvider; tambah/ubah lewat
-// form, aktif/nonaktif via switch, hapus via konfirmasi.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -25,7 +22,6 @@ import '../providers/admin_reward_provider.dart';
 
 /// Halaman kelola reward admin.
 class AdminRewardsPage extends ConsumerStatefulWidget {
-  /// Membuat halaman kelola reward admin.
   const AdminRewardsPage({super.key});
 
   @override

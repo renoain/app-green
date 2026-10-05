@@ -1,7 +1,4 @@
 // Data source artikel berbasis Supabase.
-//
-// Membungkus pembacaan artikel edukasi (publik, tanpa login). Dipanggil
-// oleh repository, bukan dari widget.
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -11,10 +8,7 @@ import '../models/article_model.dart';
 
 /// Data source artikel Go Green.
 class ArticleRemoteDatasource {
-  /// Membuat data source artikel. [client] bisa di-inject untuk test.
-  ///
-  /// Client Supabase diambil malas (lazy) agar konstruksi provider tidak
-  /// crash di mode demo/test saat Supabase belum terinisialisasi.
+  /// Client Supabase diambil malas (lazy) agar konstruksi provider tidak crash di mode demo/test saat Supabase belum terinisialisasi.
   ArticleRemoteDatasource({SupabaseClient? client}) : _override = client;
 
   final SupabaseClient? _override;

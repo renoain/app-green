@@ -1,5 +1,4 @@
-// Komponen feedback sesuai docs/COMPONENT_LIBRARY.md (Feedback).
-// Dikelompokkan dalam satu file: EmptyState.
+// Komponen feedback sesuai docs/COMPONENT_LIBRARY.md (Feedback). Dikelompokkan dalam satu file: EmptyState.
 
 import 'package:flutter/material.dart';
 
@@ -10,7 +9,6 @@ import 'app_button_widgets.dart';
 
 /// State kosong: daftar kosong atau pencarian tanpa hasil.
 class EmptyState extends StatelessWidget {
-  /// Membuat empty state.
   const EmptyState({
     super.key,
     required this.icon,

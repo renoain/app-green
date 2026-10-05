@@ -1,7 +1,4 @@
 // Data source daftar user admin (data layer).
-//
-// Baca profiles terbaru + ubah role (policy profiles_update_role_admin,
-// migration 018; RLS admin di server).
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -12,7 +9,6 @@ import '../../domain/entities/admin_user.dart';
 
 /// Data source daftar user untuk admin.
 class AdminUsersDatasource {
-  /// Membuat data source. [client] bisa di-inject untuk test.
   AdminUsersDatasource({SupabaseClient? client}) : _override = client;
 
   final SupabaseClient? _override;

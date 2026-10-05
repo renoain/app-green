@@ -5,7 +5,6 @@ import '../repositories/checkpoint_repository.dart';
 
 /// Use case membuat kode QR unik format CP-XXX untuk checkpoint baru.
 class GenerateCheckpointQrUsecase {
-  /// Membuat use case.
   const GenerateCheckpointQrUsecase(this._repository);
 
   final CheckpointRepository _repository;

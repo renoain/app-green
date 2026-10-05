@@ -1,20 +1,9 @@
 // Service inisialisasi Supabase.
-//
-// Kredensial dibaca berurutan:
-// 1. --dart-define (SUPABASE_URL / SUPABASE_ANON_KEY) saat run,
-//    contoh: flutter run --dart-define=SUPABASE_URL=...
-//    --dart-define=SUPABASE_ANON_KEY=...
-// 2. File .env (di-gitignore) bila dart-define kosong.
-//
-// Dilarang hardcode secret di file ini.
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// Service Supabase untuk Go Green.
-///
-/// Memastikan Supabase terinisialisasi sekali sebelum aplikasi berjalan
-/// dan menyediakan akses ke [client].
+/// Service Supabase untuk Go Green. Memastikan Supabase terinisialisasi sekali sebelum aplikasi berjalan dan menyediakan akses ke [client].
 class SupabaseService {
   SupabaseService._();
 
@@ -82,8 +71,7 @@ class SupabaseService {
   /// Client Supabase yang sudah aktif.
   SupabaseClient get client => Supabase.instance.client;
 
-  /// User yang sedang login, atau null bila belum login atau Supabase
-  /// belum terinisialisasi (mode demo / test widget).
+  /// User yang sedang login, atau null bila belum login atau Supabase belum terinisialisasi (mode demo / test widget).
   User? get currentUser {
     if (!_isInitialized) {
       return null;

@@ -1,5 +1,4 @@
 // Komponen notice login yang bisa di-tutup, dipakai di Home dan Profile.
-// Menampilkan pesan singkat, aksi "Masuk", dan tombol tutup opsional.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -13,7 +12,6 @@ import 'app_button_widgets.dart';
 
 /// Notice login dengan aksi Masuk dan tombol tutup opsional.
 class LoginNoticeCard extends StatelessWidget {
-  /// Membuat notice login.
   const LoginNoticeCard({
     super.key,
     required this.message,

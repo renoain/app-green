@@ -1,5 +1,4 @@
-// Halaman register: form nama, email, kata sandi, dan konfirmasi kata
-// sandi dengan validasi. Setelah berhasil, kembali ke halaman Login.
+// Halaman register: form nama, email, kata sandi, dan konfirmasi kata sandi dengan validasi.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -19,7 +18,6 @@ import '../providers/auth_provider.dart';
 
 /// Halaman registrasi Go Green.
 class RegisterPage extends ConsumerStatefulWidget {
-  /// Membuat halaman registrasi.
   const RegisterPage({super.key});
 
   @override
@@ -142,9 +140,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     context.goNamed(AppRouteName.login);
   }
 
-  /// Menangani "Daftar dengan Google": buka browser OAuth lalu tunggu
-  /// sesi dari deep link callback; form manual tetap bisa dipakai
-  /// selama menunggu.
+  /// Menangani "Daftar dengan Google": buka browser OAuth lalu tunggu sesi dari deep link callback; form manual tetap bisa dipakai selama menunggu.
   Future<void> _handleGoogleSignIn() async {
     setState(() => _isGoogleLoading = true);
     ScaffoldMessenger.of(context)

@@ -1,8 +1,4 @@
 // Halaman edit profil sesuai docs/UI_PAGES.md (Profile).
-//
-// Mengisi nama tampilan dan telepon opsional ke metadata auth Supabase
-// (tidak ada kolom baru di tabel profiles). Email ditampilkan baca-saja;
-// perubahan email mengikuti alur verifikasi Supabase (fase berikutnya).
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -22,7 +18,6 @@ import '../../../auth/presentation/providers/auth_provider.dart';
 
 /// Halaman pengaturan data profil (nama, telepon, email).
 class EditProfilePage extends ConsumerStatefulWidget {
-  /// Membuat halaman edit profil.
   const EditProfilePage({super.key});
 
   @override

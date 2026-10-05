@@ -16,12 +16,8 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/app_bar_and_loading_widgets.dart';
 import '../../../../core/widgets/display_widgets.dart';
 
-/// Halaman pengaturan aplikasi Go Green.
-///
-/// Berisi menu akun (edit profil), preferensi notifikasi, serta informasi
-/// aplikasi.
+/// Halaman pengaturan aplikasi Go Green. Berisi menu akun (edit profil), preferensi notifikasi, serta informasi aplikasi.
 class SettingsPage extends ConsumerStatefulWidget {
-  /// Membuat halaman pengaturan.
   const SettingsPage({super.key});
 
   @override

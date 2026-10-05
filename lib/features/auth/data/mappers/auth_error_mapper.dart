@@ -1,7 +1,4 @@
 // Pemeta error autentikasi ke hasil enum (data layer).
-//
-// Dokumen acuan kode error Supabase:
-// https://supabase.com/docs/guides/auth/debugging/error-codes
 
 import 'dart:async';
 import 'dart:io';
@@ -103,8 +100,7 @@ abstract final class AuthErrorMapper {
     return SignUpResult.error;
   }
 
-  /// Deteksi error username duplikat (constraint profiles_username_key atau
-  /// pesan unik/duplikat yang menyebut username).
+  /// Deteksi error username duplikat (constraint profiles_username_key atau pesan unik/duplikat yang menyebut username).
   static bool _isUsernameTakenError(String code, String message) {
     if (message.contains('profiles_username_key')) {
       return true;

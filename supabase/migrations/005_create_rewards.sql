@@ -1,7 +1,7 @@
 -- Migration 005: tabel rewards + RLS.
 -- Referensi skema: docs/DATABASE_SCHEMA.md bagian 3.5.
 
--- ============ REWARDS ============
+-- REWARDS
 create table if not exists public.rewards (
   id uuid primary key default gen_random_uuid(),
   name text not null,
@@ -18,7 +18,7 @@ comment on table public.rewards is 'Katalog hadiah yang bisa ditukar poin.';
 create index if not exists rewards_is_active_idx
   on public.rewards (is_active);
 
--- ============ RLS: REWARDS ============
+-- RLS: REWARDS
 alter table public.rewards enable row level security;
 
 -- Semua user hanya bisa membaca reward yang aktif.

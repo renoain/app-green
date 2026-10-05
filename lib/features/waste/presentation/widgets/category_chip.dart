@@ -1,5 +1,4 @@
-// Komponen CategoryChip sesuai docs/COMPONENT_LIBRARY.md (Waste &
-// Checkpoint). Chip pemilihan kategori sampah di halaman Buang Sampah.
+// Komponen CategoryChip sesuai docs/COMPONENT_LIBRARY.md (Waste & Checkpoint).
 
 import 'package:flutter/material.dart';
 
@@ -8,12 +7,8 @@ import '../../../../../core/theme/app_radius.dart';
 import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../core/theme/app_typography.dart';
 
-/// Chip kategori sampah yang bisa dipilih.
-///
-/// Saat [selected] true, latar [AppColors.primary] dan teks
-/// [AppColors.textOnPrimary]; sebaliknya latar surface dan teks primary.
+/// Chip kategori sampah yang bisa dipilih. Saat [selected] true, latar [AppColors.primary] dan teks [AppColors.textOnPrimary]; sebaliknya latar surface dan teks primary.
 class CategoryChip extends StatelessWidget {
-  /// Membuat chip kategori.
   const CategoryChip({
     super.key,
     required this.label,

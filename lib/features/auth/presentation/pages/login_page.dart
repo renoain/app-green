@@ -1,5 +1,4 @@
-// Halaman login: form email dan kata sandi dengan validasi. Setelah
-// login berhasil, berpindah ke Home.
+// Halaman login: form email dan kata sandi dengan validasi. Setelah login berhasil, berpindah ke Home.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -20,7 +19,6 @@ import '../providers/auth_provider.dart';
 
 /// Halaman login Go Green.
 class LoginPage extends ConsumerStatefulWidget {
-  /// Membuat halaman login.
   const LoginPage({super.key});
 
   @override
@@ -90,9 +88,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       ..showSnackBar(SnackBar(content: Text(message)));
   }
 
-  /// Menangani tombol "Masuk dengan Google": buka browser OAuth lalu
-  /// tunggu sesi dari deep link callback (repository menunggu sampai
-  /// 120 detik); form email tetap bisa dipakai selama menunggu.
+  /// Menangani tombol "Masuk dengan Google": buka browser OAuth lalu tunggu sesi dari deep link callback (repository menunggu sampai 120 detik); form email tetap bisa dipakai selama menunggu.
   Future<void> _handleGoogleSignIn() async {
     setState(() => _isGoogleLoading = true);
     ScaffoldMessenger.of(context)

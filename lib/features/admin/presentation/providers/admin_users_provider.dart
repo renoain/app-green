@@ -1,7 +1,4 @@
 // Provider daftar user admin (presentation).
-//
-// State daftar user terbaru + cari/filter role + ubah role via
-// ManageUserUsecase (cegah admin mencabut role sendiri).
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -35,7 +32,6 @@ final StateProvider<UserRole?> adminUserRoleFilterProvider =
 
 /// Notifier daftar user admin.
 class AdminUsersNotifier extends StateNotifier<AsyncValue<List<AdminUser>>> {
-  /// Membuat notifier dengan use case yang di-inject.
   AdminUsersNotifier(this._usecase, this._datasource, {AdminAuditDatasource? audit})
       : _audit = audit ?? AdminAuditDatasource(),
         super(const AsyncLoading<List<AdminUser>>());

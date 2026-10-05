@@ -1,9 +1,4 @@
 // Helper kesiapan lokasi untuk form admin (presentation).
-//
-// Memeriksa layanan GPS dan izin sebelum memakai lokasi saat ini atau
-// membuka pemilih peta. Menampilkan dialog Bahasa Indonesia: minta
-// hidupkan GPS (ke pengaturan sistem) atau buka pengaturan aplikasi
-// bila izin ditolak permanen.
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,10 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/services/location_service.dart';
 
-/// Memastikan layanan GPS hidup dan izin lokasi diberikan.
-///
-/// Mengembalikan true bila siap dipakai, false bila user membatalkan
-/// atau izin ditolak.
+/// Memastikan layanan GPS hidup dan izin lokasi diberikan. Mengembalikan true bila siap dipakai, false bila user membatalkan atau izin ditolak.
 Future<bool> ensureLocationReady(BuildContext context) async {
   const LocationService service = LocationService();
   if (!await service.isServiceEnabled()) {

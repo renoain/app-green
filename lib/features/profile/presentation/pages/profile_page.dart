@@ -1,11 +1,4 @@
 // Halaman profil pengguna Go Green.
-//
-// Menampilkan identitas, statistik, dan menu pengguna tergantung status
-// login:
-// - Belum login: notice login (Masuk/Daftar) + Pengaturan; tanpa Keluar,
-//   tanpa Edit Profil; stat placeholder.
-// - Sudah login: identitas user + stat poin/buang asli bila Supabase
-//   tersedia (fallback placeholder), Edit Profil, Pengaturan, Keluar.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -31,7 +24,6 @@ import '../../../waste/presentation/providers/waste_provider.dart';
 
 /// Halaman profil Go Green.
 class ProfilePage extends ConsumerStatefulWidget {
-  /// Membuat halaman profil.
   const ProfilePage({super.key});
 
   @override

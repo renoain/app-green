@@ -1,5 +1,4 @@
 // Komponen display sesuai docs/COMPONENT_LIBRARY.md (Display & List).
-// Dikelompokkan dalam satu file: Avatar, StatItem, ListTileItem.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -11,7 +10,6 @@ import '../theme/app_typography.dart';
 
 /// Avatar bulat dengan inisial nama, atau foto bila disediakan.
 class Avatar extends StatelessWidget {
-  /// Membuat avatar.
   const Avatar({
     super.key,
     required this.name,
@@ -78,7 +76,6 @@ class Avatar extends StatelessWidget {
 
 /// Item statistik bernilai tunggal (poin, jumlah buang, dst).
 class StatItem extends StatelessWidget {
-  /// Membuat item statistik.
   const StatItem({
     super.key,
     required this.value,
@@ -119,7 +116,6 @@ class StatItem extends StatelessWidget {
 
 /// Baris menu/list dengan ikon dan trailing opsional.
 class ListTileItem extends StatelessWidget {
-  /// Membuat baris menu.
   const ListTileItem({
     super.key,
     required this.title,

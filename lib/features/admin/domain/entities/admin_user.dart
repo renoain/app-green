@@ -1,13 +1,9 @@
 // Entity user untuk daftar admin (domain).
-//
-// Ringkasan profil tanpa data sensitif berlebih; hanya yang tampil
-// di daftar kelola user.
 
 import '../../../../core/constants/app_enums.dart';
 
 /// Ringkasan user untuk daftar admin.
 class AdminUser {
-  /// Membuat ringkasan user admin.
   const AdminUser({
     required this.id,
     this.username,

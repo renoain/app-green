@@ -13,7 +13,6 @@ import 'checkpoint_qr_sheet.dart';
 
 /// Kartu satu TPS: nama, status, koordinat, radius, QR, aksi.
 class TpsCard extends StatelessWidget {
-  /// Membuat kartu TPS.
   const TpsCard({
     super.key,
     required this.checkpoint,
@@ -155,7 +154,6 @@ class TpsCard extends StatelessWidget {
 
 /// Label sisa kuota checkpoint dengan warna status.
 class _QuotaLabel extends StatelessWidget {
-  /// Membuat label kuota.
   const _QuotaLabel({required this.checkpoint});
 
   /// Checkpoint yang ditampilkan.
@@ -204,7 +202,6 @@ class _QuotaLabel extends StatelessWidget {
 
 /// Label kecil kode QR checkpoint.
 class StatusChipText extends StatelessWidget {
-  /// Membuat label kode QR.
   const StatusChipText({super.key, required this.code});
 
   /// Kode QR.

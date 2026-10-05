@@ -1,7 +1,4 @@
 // Navbar bawah admin + sheet semua menu (presentation).
-//
-// Uji coba: 3 menu utama di bawah; usap navbar ke atas (atau ketuk
-// grip) membuka sheet berisi semua menu + Mode Pengguna (admin saja).
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -20,7 +17,6 @@ const List<int> adminBottomBranches = <int>[0, 1, 2];
 
 /// Navbar bawah admin: 3 menu utama + grip usap-atas.
 class AdminBottomBar extends StatelessWidget {
-  /// Membuat navbar bawah admin.
   const AdminBottomBar({
     super.key,
     required this.currentIndex,
@@ -172,7 +168,6 @@ class AdminBottomBar extends StatelessWidget {
 
 /// Satu tombol navbar bawah admin.
 class _AdminBottomButton extends StatelessWidget {
-  /// Membuat tombol navbar bawah admin.
   const _AdminBottomButton({
     required this.item,
     required this.selected,

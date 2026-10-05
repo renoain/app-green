@@ -41,21 +41,23 @@ Implementasi yang sudah ada di lib/core/widgets/:
 Props:
 - icon: IconData (dari flutter_lucide)
 - selected: bool (apakah item aktif)
-- style: int (1, 2, atau 3)
+- style: int (1, 2, 3, atau 4)
 
 Gaya aktif (dipilih via AppValues.bottomNavActiveStyle):
 - Versi 1: Circle background (ikon putih di lingkaran primary + shadow).
-- Versi 2 (default, final): Elevated icon (ikon primary + shadow + scale 1.15 saat aktif).
+- Versi 2: Elevated icon (ikon primary + shadow + scale 1.15 saat aktif).
 - Versi 3: Pill indicator (ikon primary + pill indicator di atas saat aktif).
+- Versi 4 (default, uji coba): Lingkaran pop (lingkaran primary 44px
+  timbul membesar 250ms easeOutBack di belakang ikon + ikon putih;
+  hilang saat tidak aktif; semua di dalam bar 72px).
 
 Pemakaian:
-- CustomBottomNavBar (user): non-accent item pakai BottomNavActiveIcon.
-  Item aksen "Buang Sampah" gaya khusus: lingkaran primary 56px + ikon
-  recycle 28px putih yang menonjol ke atas bar; saat aktif membesar
-  1.15x + shadow level2 (bahasa Versi 2), tidak ikut versi style.
+- CustomBottomNavBar (user): 5 item setara (Beranda, Aktivitas,
+  Buang Sampah, Poin, Profile) semua pakai BottomNavActiveIcon;
+  tanpa perlakuan khusus untuk item mana pun.
 - AdminBottomBar: semua item pakai BottomNavActiveIcon.
 
-Catatan: Ganti style cukup ubah AppValues.bottomNavActiveStyle (1/2/3), hot reload langsung terlihat.
+Catatan: Ganti style cukup ubah AppValues.bottomNavActiveStyle (1/2/3/4), hot reload langsung terlihat.
 
 ### FAB Kamera di WastePage [Selesai]
 
@@ -214,11 +216,8 @@ Props:
 - onTap: ValueChanged<int>
 
 Pemakaian: bottom navigation bar (Home, Aktivitas, Buang Sampah, Poin,
-Profile). Item "Buang Sampah" saat tidak aktif tampil sama seperti item
-lain (ikon recycle textSecondary 24px tanpa lingkaran primary); saat
-aktif menjadi lingkaran primary 56px + ikon 28px textOnPrimary yang
-menonjol ke atas bar dengan scale 1.15 + shadow level2. Item aktif
-ditandai ikon primary dan titik indikator di bawah label; tinggi bar 72.
+Profile). Kelima item setara: ikon 24px + label + titik indikator;
+item aktif mengikuti gaya BottomNavActiveIcon; tinggi bar 72.
 
 ### CustomAppBar [Selesai]
 

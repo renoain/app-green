@@ -1,8 +1,4 @@
 // Implementasi repository autentikasi berbasis Supabase (data layer).
-//
-// Menerjemahkan operasi Supabase Auth menjadi enum hasil yang aman untuk
-// UI. Dalam mode demo (Supabase belum terinisialisasi, misal saat test
-// widget) operasi disimulasikan agar UI tetap bisa berjalan.
 
 import 'dart:async';
 
@@ -17,9 +13,7 @@ import '../mappers/auth_error_mapper.dart';
 
 /// Repository autentikasi Go Green berbasis Supabase.
 class SupabaseAuthRepository implements AuthRepository {
-  /// Membuat repository. [datasource] bisa di-inject untuk test.
-  /// [isDemoOverride] memaksa mode demo/non-demo (hanya untuk test;
-  /// produksi memakai status inisialisasi Supabase).
+  /// [isDemoOverride] memaksa mode demo/non-demo (hanya untuk test; produksi memakai status inisialisasi Supabase).
   SupabaseAuthRepository({AuthRemoteDatasource? datasource, bool? isDemoOverride})
       : _datasource = datasource ?? AuthRemoteDatasource(),
         _isDemoOverride = isDemoOverride;

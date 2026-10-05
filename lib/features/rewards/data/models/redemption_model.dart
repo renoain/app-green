@@ -1,14 +1,10 @@
 // Model Redemption (data layer).
-//
-// extends Redemption untuk dipakai domain; fromJson menyesuaikan
-// format kolom tabel redemptions plus join rewards(name).
 
 import '../../../../core/constants/app_enums.dart';
 import '../../domain/entities/redemption.dart';
 
 /// Model data [Redemption] untuk komunikasi dengan Supabase.
 class RedemptionModel extends Redemption {
-  /// Membuat model dari field entity.
   const RedemptionModel({
     required super.id,
     super.rewardId,

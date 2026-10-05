@@ -1,8 +1,4 @@
 // Interface repository wilayah (domain).
-//
-// Implementasi mengambil dari API wilayah Indonesia via dio yang sudah
-// ada (tanpa dependency wilayah baru). Hasil di-cache di memory oleh
-// datasource.
 
 import '../entities/region.dart';
 

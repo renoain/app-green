@@ -1,7 +1,4 @@
 // Konstanta enum domain yang berkaitan dengan database.
-//
-// Nilai `.value` tiap enum adalah string yang dipakai di kolom database.
-// Dipakai oleh model saat fromJson/toJson (lihat docs/DATABASE_SCHEMA.md).
 
 /// Role pengguna. Nilai sesuai kolom `role` tabel profiles.
 enum UserRole {
@@ -104,9 +101,7 @@ enum PointType {
   }
 }
 
-/// Sumber data pembuangan sampah. Sesuai kolom `source` tabel waste_logs.
-///
-/// Dipakai untuk analytics (distribusi qr_scan / manual / nfc).
+/// Sumber data pembuangan sampah. Sesuai kolom `source` tabel waste_logs. Dipakai untuk analytics (distribusi qr_scan / manual / nfc).
 enum WasteSource {
   qrScan('qr_scan'),
   manual('manual'),
@@ -117,8 +112,7 @@ enum WasteSource {
   /// String di database.
   final String value;
 
-  /// Mem-parsing string database menjadi [WasteSource]. Default `manual`
-  /// mengikuti default kolom di database.
+  /// Mem-parsing string database menjadi [WasteSource]. Default `manual` mengikuti default kolom di database.
   static WasteSource fromDb(String? value) {
     return WasteSource.values.firstWhere(
       (WasteSource source) => source.value == value,

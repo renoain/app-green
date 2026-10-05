@@ -4,26 +4,19 @@
 abstract final class AppValues {
   AppValues._();
 
-  /// Radius maksimal jarak user dari checkpoint dalam meter (anti-kecurangan).
+  /// Radius GPS checkpoint dalam meter (anti-kecurangan).
   static const double gpsRadiusMeters = 100;
 
-  /// Apakah blokir radius GPS ditegakkan sebelum foto/submit.
-  ///
-  /// True berarti anti-kecurangan radius aktif: user di luar radius
-  /// checkpoint tidak bisa lanjut ke kamera/verifikasi dan submit diblokir.
+  /// True = user di luar radius tidak bisa foto/submit.
   static const bool enforceGpsRadius = true;
 
-  /// Ukuran maksimal foto bukti dalam byte (5 MB,
-  /// docs/DATABASE_SCHEMA.md bagian 4.1).
+  /// Ukuran maksimal foto bukti (5 MB).
   static const int maxPhotoBytes = 5 * 1024 * 1024;
 
-  /// Batas maksimal waste_logs per user per hari (anti-kecurangan rate limit).
+  /// Batas setoran per user per hari (anti-spam).
   static const int maxWasteLogsPerDay = 5;
 
-  /// Poin dasar setiap pembuangan sampah yang berhasil diverifikasi.
-  ///
-  /// Dipakai CalculatePointsUsecase (lib/features/waste/domain/usecases/
-  /// calculate_points_usecase.dart).
+  /// Poin dasar per setoran terverifikasi.
   static const int basePointsPerWaste = 25;
 
   /// Bonus poin untuk kategori organik.
@@ -44,33 +37,19 @@ abstract final class AppValues {
   /// Bonus poin saat streak melewati ambang threshold.
   static const int streakBonusPoints = 10;
 
-  /// Target buang sampah per minggu untuk misi hijau Home (kali/minggu).
-  ///
-  /// Dipakai BuildHomeSummaryUsecase (lib/features/home/domain/usecases/
-  /// build_home_summary_usecase.dart).
+  /// Target setoran mingguan misi Home (kali/minggu).
   static const int weeklyMissionTargetDisposals = 5;
 
-  /// Redirect deep link login Google (OAuth) kembali ke aplikasi.
-  ///
-  /// Wajib terdaftar di AndroidManifest (intent-filter VIEW/BROWSABLE),
-  /// Info.plist (CFBundleURLTypes), dan Supabase dashboard
-  /// (Authentication > URL Configuration > Redirect URLs).
+  /// Redirect deep link login Google (terdaftar di native + Supabase).
   static const String oauthRedirectTo =
       'io.supabase.gogreen://login-callback';
 
-  /// Tampilkan navbar bawah di shell admin (uji coba, bisa dimatikan).
-  ///
-  /// True berarti 3 menu utama tampil di bawah + usap ke atas membuka
-  /// semua menu; false berarti navigasi admin hanya lewat drawer.
+  /// True = nav bawah admin tampil (3 menu + sheet semua menu).
   static const bool adminBottomNavEnabled = true;
 
-  /// Gestur usap tepi kiri untuk membuka drawer admin (uji coba).
-  ///
-  /// False berarti drawer hanya dibuka lewat tombol menu.
+  /// False = drawer admin hanya via tombol menu.
   static const bool adminDrawerSwipeEnabled = true;
 
-  /// Versi gaya bottom nav aktif: 1 (circle), 2 (elevated), 3 (pill).
-  ///
-  /// Dipakai BottomNavActiveIcon di bottom nav user dan admin.
-  static const int bottomNavActiveStyle = 2;
+  /// Gaya ikon nav aktif: 1=circle, 2=elevated, 3=pill, 4=pop.
+  static const int bottomNavActiveStyle = 4;
 }

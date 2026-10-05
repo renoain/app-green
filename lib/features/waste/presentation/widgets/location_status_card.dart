@@ -1,5 +1,4 @@
-// Komponen LocationStatusCard sesuai docs/COMPONENT_LIBRARY.md (Waste &
-// Checkpoint). Kartu status radius GPS user terhadap checkpoint terpilih.
+// Komponen LocationStatusCard sesuai docs/COMPONENT_LIBRARY.md (Waste & Checkpoint).
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -13,12 +12,8 @@ import '../../../../../core/utils/formatters.dart';
 import '../../../../../core/widgets/app_button_widgets.dart';
 import '../../../../../core/widgets/status_widgets.dart';
 
-/// Kartu status lokasi user terhadap radius checkpoint.
-///
-/// Menampilkan label "Berhasil" bila [withinRadius] true, "Di luar radius"
-/// bila false, beserta jarak saat ini dan radius checkpoint.
+/// Kartu status lokasi user terhadap radius checkpoint. Menampilkan label "Berhasil" bila [withinRadius] true, "Di luar radius" bila false, beserta jarak saat ini dan radius checkpoint.
 class LocationStatusCard extends StatelessWidget {
-  /// Membuat kartu status lokasi.
   const LocationStatusCard({
     super.key,
     required this.withinRadius,

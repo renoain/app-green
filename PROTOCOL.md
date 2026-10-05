@@ -238,6 +238,8 @@ Setiap task selesai wajib dicek:
 - Komentar fungsi/method hanya jika logikanya tidak jelas dari nama dan kode.
 - Dilarang komentar bertele-tele: tidak setiap baris, tidak menjelaskan yang
   sudah jelas dari kode, maksimal sesingkat yang masih jelas.
+- Dilarang pemisah dekoratif di komentar kode (contoh garis sama dengan,
+  strip, underscore berulang); pakai komentar 1 baris polos.
 - Dilarang kode hasil generate yang tidak dipahami.
 - Dilarang duplikasi kode; wajib di-refactor ke fungsi/class.
 - Dilarang hardcode nilai ajaib yang seharusnya konstanta.

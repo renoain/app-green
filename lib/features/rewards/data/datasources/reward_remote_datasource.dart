@@ -1,8 +1,4 @@
 // Data source reward berbasis Supabase.
-//
-// Membungkus pembacaan katalog reward dan pengajuan penukaran. Delegasi
-// penukaran ke PointsRemoteDatasource (insert redemptions) agar logika
-// redemption tidak terduplikasi.
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -14,11 +10,7 @@ import '../models/reward_model.dart';
 
 /// Data source reward Go Green.
 class RewardRemoteDatasource {
-  /// Membuat data source reward. [client] dan [pointsDatasource] bisa
-  /// di-inject untuk test.
-  ///
-  /// Client Supabase diambil malas (lazy) agar konstruksi provider tidak
-  /// crash di mode demo/test saat Supabase belum terinisialisasi.
+  /// di-inject untuk test. Client Supabase diambil malas (lazy) agar konstruksi provider tidak crash di mode demo/test saat Supabase belum terinisialisasi.
   RewardRemoteDatasource({
     SupabaseClient? client,
     PointsRemoteDatasource? pointsDatasource,

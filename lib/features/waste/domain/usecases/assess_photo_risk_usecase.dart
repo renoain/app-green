@@ -1,8 +1,4 @@
 // Use case penilaian risiko forensik foto (domain).
-//
-// Menggabungkan sinyal EXIF + jarak GPS + frekuensi harian menjadi skor
-// 0-100 murni Dart agar mudah diuji. Skor hanya membantu verifikator
-// (tidak memblokir submit).
 
 import '../../../../core/services/photo_forensics_service.dart';
 
@@ -48,7 +44,6 @@ enum PhotoRiskLevel {
 
 /// Hasil penilaian risiko foto.
 class PhotoRisk {
-  /// Membuat hasil risiko.
   const PhotoRisk({
     required this.score,
     required this.level,
@@ -74,7 +69,6 @@ class PhotoRisk {
 
 /// Use case menilai risiko foto bukti.
 class AssessPhotoRiskUsecase {
-  /// Membuat use case (stateless).
   const AssessPhotoRiskUsecase();
 
   /// Bobot tiap sinyal risiko.

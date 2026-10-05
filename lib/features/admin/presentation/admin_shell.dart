@@ -1,10 +1,4 @@
 // Kerangka admin dengan drawer (presentation).
-//
-// Perilaku tombol back: di branch root sekali tekan tampilkan
-// snackbar "Tekan kembali lagi untuk keluar", tekan kedua dalam
-// 2 detik kembali ke UI user (/profile); di sub-route (form/detail)
-// back berjalan normal (pop). Masuk admin selalu via go (bukan
-// push) agar hanya ada satu instance shell.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,7 +30,6 @@ const Duration _adminExitConfirmDuration = Duration(seconds: 2);
 
 /// Kerangka admin: drawer + konten branch aktif, tanpa bottom nav user.
 class AdminShell extends ConsumerStatefulWidget {
-  /// Membuat kerangka admin.
   const AdminShell({super.key, required this.navigationShell});
 
   /// Navigation shell dari go_router untuk branch admin.

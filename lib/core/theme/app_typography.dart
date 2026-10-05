@@ -1,7 +1,4 @@
 // Menyimpan seluruh token tipografi aplikasi sesuai docs/DESIGN_SYSTEM.md.
-//
-// Headline memakai font Manrope, body/label memakai font Geist.
-// Sumber kebenaran: docs/DESIGN_SYSTEM.md -> Typography.
 
 import 'package:flutter/material.dart';
 

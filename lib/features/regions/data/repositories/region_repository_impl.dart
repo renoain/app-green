@@ -6,7 +6,6 @@ import '../datasources/region_remote_datasource.dart';
 
 /// Implementasi [RegionRepository] via API wilayah.
 class RegionRepositoryImpl implements RegionRepository {
-  /// Membuat repository. [remote] bisa di-inject untuk test.
   RegionRepositoryImpl({RegionRemoteDatasource? remote})
       : _remote = remote ?? RegionRemoteDatasource();
 

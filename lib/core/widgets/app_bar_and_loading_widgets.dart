@@ -1,17 +1,12 @@
-// Komponen CustomAppBar dan LoadingIndicator sesuai
-// docs/COMPONENT_LIBRARY.md (Navigation, Feedback).
+// Komponen CustomAppBar dan LoadingIndicator sesuai docs/COMPONENT_LIBRARY.md (Navigation, Feedback).
 
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 
-/// App bar custom aplikasi Go Green.
-///
-/// Memakai tema [ThemeData.appBarTheme]. Mendukung ikon leading,
-/// callback leading, dan aksi di sisi kanan.
+/// App bar custom aplikasi Go Green. Memakai tema [ThemeData.appBarTheme]. Mendukung ikon leading, callback leading, dan aksi di sisi kanan.
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  /// Membuat app bar custom.
   const CustomAppBar({
     super.key,
     required this.title,
@@ -58,11 +53,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-/// Indikator loading aplikasi Go Green.
-///
-/// Dipakai untuk state loading di halaman atau bagian tertentu.
+/// Indikator loading aplikasi Go Green. Dipakai untuk state loading di halaman atau bagian tertentu.
 class LoadingIndicator extends StatelessWidget {
-  /// Membuat indikator loading.
   const LoadingIndicator({
     super.key,
     this.size = 32,

@@ -1,8 +1,4 @@
 // Data source role admin (data layer).
-//
-// Membaca kolom role tabel profiles untuk user yang sedang login.
-// Dipakai guard halaman admin; bukan untuk otorisasi server (otorisasi
-// tetap di RLS Supabase).
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -12,7 +8,6 @@ import '../../../../core/services/supabase_service.dart';
 
 /// Data source role pengguna Go Green.
 class AdminProfileDatasource {
-  /// Membuat data source. [client] bisa di-inject untuk test.
   AdminProfileDatasource({SupabaseClient? client}) : _override = client;
 
   final SupabaseClient? _override;

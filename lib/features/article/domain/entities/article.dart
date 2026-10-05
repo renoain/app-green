@@ -1,11 +1,7 @@
 // Entity Article (domain).
-//
-// Representasi bisnis artikel edukasi tanpa ketergantungan ke data layer.
-// Field mengikuti kolom tabel articles (docs/DATABASE_SCHEMA.md).
 
 /// Artikel edukasi lingkungan Go Green.
 class Article {
-  /// Membuat artikel.
   const Article({
     required this.id,
     required this.title,

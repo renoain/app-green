@@ -1,13 +1,8 @@
 // Setup logger aplikasi menggunakan package logger.
-//
-// Level: debug, info, warning, error. Output ke console.
-// Dilarang log data sensitif (token, password, foto, GPS detail).
 
 import 'package:logger/logger.dart';
 
-/// Logger global aplikasi Go Green.
-///
-/// Digunakan di seluruh lapisan kode untuk pencatatan log terstruktur.
+/// Logger global aplikasi Go Green. Digunakan di seluruh lapisan kode untuk pencatatan log terstruktur.
 class AppLogger {
   AppLogger._();
 

@@ -1,6 +1,4 @@
-// Provider kelola reward admin (presentation).
-//
-// Daftar semua reward (aktif + nonaktif) + tulis via ManageRewardUsecase.
+// Provider kelola reward admin (presentation). Daftar semua reward (aktif + nonaktif) + tulis via ManageRewardUsecase.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,7 +28,6 @@ final Provider<ManageRewardUsecase> manageRewardUsecaseProvider =
 /// Notifier daftar reward untuk admin (semua + tulis + audit).
 class AdminRewardListNotifier
     extends StateNotifier<AsyncValue<List<Reward>>> {
-  /// Membuat notifier admin reward.
   AdminRewardListNotifier(this._usecase, this._repository, {AdminAuditDatasource? audit})
       : _audit = audit ?? AdminAuditDatasource(),
         super(const AsyncLoading<List<Reward>>());

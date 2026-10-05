@@ -1,6 +1,4 @@
-// Halaman ambil foto bukti via kamera in-app Go Green (anti-kecurangan:
-// kamera in-app, bukan galeri). Sesuai docs/UI_PAGES.md (Waste) dan
-// docs/SECURITY_AND_VALIDATION.md.
+// Halaman ambil foto bukti via kamera in-app Go Green (anti-kecurangan: kamera in-app, bukan galeri).
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -28,12 +26,8 @@ import '../data/capture_extra.dart';
 /// Status inisialisasi kamera pada halaman CapturePhotoPage.
 enum _CaptureStatus { initializing, denied, unavailable, ready }
 
-/// Halaman kamera in-app untuk mengambil foto bukti pembuangan sampah.
-///
-/// Meminta izin kamera, menampilkan preview, dan mengarahkan ke halaman
-/// verifikasi setelah foto diambil.
+/// Halaman kamera in-app untuk mengambil foto bukti pembuangan sampah. Meminta izin kamera, menampilkan preview, dan mengarahkan ke halaman verifikasi setelah foto diambil.
 class CapturePhotoPage extends StatefulWidget {
-  /// Membuat halaman ambil foto.
   const CapturePhotoPage({super.key, this.extra});
 
   /// Checkpoint terpilih dari halaman Waste.

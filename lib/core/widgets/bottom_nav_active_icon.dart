@@ -1,3 +1,5 @@
+// Ikon bottom nav dengan gaya aktif di belakang ikon tab.
+
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
@@ -5,14 +7,8 @@ import '../theme/app_elevation.dart';
 import '../theme/app_radius.dart';
 import '../theme/app_spacing.dart';
 
-/// Ikon bottom nav dengan 3 gaya aktif (circle, elevated, pill).
-///
-/// Gaya dipilih via AppValues.bottomNavActiveStyle:
-/// - 1: Circle background (ikon putih di lingkaran primary).
-/// - 2: Elevated icon (ikon primary + shadow + scale).
-/// - 3: Pill indicator (ikon primary + pill di atas).
+/// Ikon bottom nav: 1=circle, 2=elevated, 3=pill, 4=pop (uji coba).
 class BottomNavActiveIcon extends StatelessWidget {
-  /// Membuat ikon bottom nav aktif.
   const BottomNavActiveIcon({
     super.key,
     required this.icon,
@@ -20,13 +16,8 @@ class BottomNavActiveIcon extends StatelessWidget {
     required this.style,
   });
 
-  /// Ikon yang ditampilkan.
   final IconData icon;
-
-  /// Apakah item sedang aktif.
   final bool selected;
-
-  /// Versi gaya (1, 2, atau 3).
   final int style;
 
   @override
@@ -36,13 +27,15 @@ class BottomNavActiveIcon extends StatelessWidget {
         return _buildElevated();
       case 3:
         return _buildPill();
+      case 4:
+        return _buildPopCircle();
       case 1:
       default:
         return _buildCircle();
     }
   }
 
-  /// Versi 1: circle background.
+  /// Style 1: lingkaran primary saat aktif.
   Widget _buildCircle() {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -60,7 +53,7 @@ class BottomNavActiveIcon extends StatelessWidget {
     );
   }
 
-  /// Versi 2: elevated icon.
+  /// Style 2: ikon elevated + shadow saat aktif.
   Widget _buildElevated() {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -81,7 +74,7 @@ class BottomNavActiveIcon extends StatelessWidget {
     );
   }
 
-  /// Versi 3: pill indicator.
+  /// Style 3: pill kecil di atas ikon saat aktif.
   Widget _buildPill() {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -102,6 +95,40 @@ class BottomNavActiveIcon extends StatelessWidget {
           color: selected ? AppColors.primary : AppColors.textSecondary,
         ),
       ],
+    );
+  }
+
+  /// Style 4: lingkaran 44px timbul saat aktif, tetap di dalam bar.
+  Widget _buildPopCircle() {
+    return SizedBox(
+      width: 44,
+      height: 44,
+      child: Stack(
+        alignment: Alignment.center,
+        clipBehavior: Clip.none,
+        children: <Widget>[
+          AnimatedScale(
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOutBack,
+            scale: selected ? 1.0 : 0.0,
+            child: Container(
+              width: 44,
+              height: 44,
+              decoration: const BoxDecoration(
+                color: AppColors.primary,
+                shape: BoxShape.circle,
+                boxShadow: AppElevation.level1,
+              ),
+            ),
+          ),
+          Icon(
+            icon,
+            size: 24,
+            color:
+                selected ? AppColors.textOnPrimary : AppColors.textSecondary,
+          ),
+        ],
+      ),
     );
   }
 }

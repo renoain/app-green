@@ -1,7 +1,4 @@
 // Data source jejak audit admin (data layer).
-//
-// Tulis best effort (kegagalan hanya jadi warning agar aksi utama tidak
-// ikut gagal); baca 50 terbaru dengan nama pelaku.
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -12,7 +9,6 @@ import '../../domain/entities/audit_log.dart';
 
 /// Data source log audit untuk admin.
 class AdminAuditDatasource {
-  /// Membuat data source. [client] bisa di-inject untuk test.
   AdminAuditDatasource({SupabaseClient? client}) : _override = client;
 
   final SupabaseClient? _override;

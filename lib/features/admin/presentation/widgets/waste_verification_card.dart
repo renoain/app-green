@@ -12,7 +12,6 @@ import '../../../waste/domain/entities/waste_log.dart';
 
 /// Kartu satu waste log pending: kategori, pengirim, waktu, aksi detail.
 class WasteVerificationCard extends StatelessWidget {
-  /// Membuat kartu verifikasi.
   const WasteVerificationCard({
     super.key,
     required this.log,

@@ -1,6 +1,4 @@
-// Komponen PhotoUploadContainer sesuai docs/COMPONENT_LIBRARY.md (Waste &
-// Checkpoint). Pemicu kamera in-app di halaman Buang Sampah dengan border
-// putus-putus (dashed border) via CustomPainter.
+// Komponen PhotoUploadContainer sesuai docs/COMPONENT_LIBRARY.md (Waste & Checkpoint).
 
 import 'dart:ui' show PathMetric;
 
@@ -13,12 +11,8 @@ import '../../../../../core/theme/app_radius.dart';
 import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../core/theme/app_typography.dart';
 
-/// Container upload foto bukti dengan border putus-putus dan ikon kamera.
-///
-/// Saat [hasPhoto] true, indikator foto terpasang ditampilkan menggantikan
-/// ikon kamera.
+/// Container upload foto bukti dengan border putus-putus dan ikon kamera. Saat [hasPhoto] true, indikator foto terpasang ditampilkan menggantikan ikon kamera.
 class PhotoUploadContainer extends StatelessWidget {
-  /// Membuat container upload foto.
   const PhotoUploadContainer({
     super.key,
     this.label,

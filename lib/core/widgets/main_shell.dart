@@ -1,12 +1,4 @@
 // Kerangka halaman utama berisi bottom navigation.
-//
-// Dipakai oleh StatefulShellRoute dari go_router. Menyimpan state tiap
-// tab halaman lewat IndexedStack milik navigationShell.
-//
-// Perilaku tombol back:
-// - Di tab selain Beranda: kembali ke tab Beranda terlebih dahulu.
-// - Di tab Beranda: back pertama menampilkan hint keluar, back kedua dalam
-//   jeda singkat menutup aplikasi.
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,7 +15,6 @@ const Duration _exitConfirmDuration = Duration(seconds: 2);
 
 /// Kerangka utama aplikasi: konten tab + [CustomBottomNavBar].
 class MainShell extends StatefulWidget {
-  /// Membuat kerangka utama.
   const MainShell({super.key, required this.navigationShell});
 
   /// Navigation shell dari go_router untuk mengelola tab.

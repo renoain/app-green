@@ -1,6 +1,4 @@
-// Data reward demo untuk tahap placeholder.
-//
-// Akan diganti oleh layer data (repository + Supabase) saat terpasang.
+// Data reward demo untuk tahap placeholder. Akan diganti oleh layer data (repository + Supabase) saat terpasang.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';

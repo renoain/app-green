@@ -1,6 +1,4 @@
 // Utilitas format angka dan tanggal dengan konvensi Bahasa Indonesia.
-//
-// Dipakai agar nilai poin dan tanggal tampil konsisten di seluruh UI.
 
 /// Nama bulan pendek Bahasa Indonesia.
 const List<String> _monthShort = <String>[

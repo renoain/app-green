@@ -1,5 +1,4 @@
-// Data yang dikirim dari daftar aktivitas ke halaman detail saat item
-// berasal dari waste log Supabase (bukan demo).
+// Data yang dikirim dari daftar aktivitas ke halaman detail saat item berasal dari waste log Supabase (bukan demo).
 
 import '../../../../core/constants/app_enums.dart';
 

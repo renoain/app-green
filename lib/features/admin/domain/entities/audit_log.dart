@@ -1,9 +1,5 @@
 // Entity jejak audit aksi admin (domain).
-//
-// Baris append-only tabel admin_audit_logs; nama pelaku opsional dari
-// join profiles.
 
-// Aksi audit yang dicatat aplikasi.
 abstract final class AuditAction {
   AuditAction._();
 
@@ -57,7 +53,6 @@ abstract final class AuditEntity {
 
 /// Satu baris jejak audit admin.
 class AuditLog {
-  /// Membuat jejak audit.
   const AuditLog({
     required this.id,
     this.actorId,

@@ -1,5 +1,4 @@
 // Komponen AppCheckbox sesuai docs/COMPONENT_LIBRARY.md (Form).
-// Checkbox dengan label teks dan tautan opsional di dalam label.
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +7,8 @@ import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
 
-/// Checkbox berkonsep Go Green dengan label dan tautan opsional.
-///
-/// Dipakai untuk persetujuan Syarat & Ketentuan di Register dan
-/// "Ingat saya" di Login.
+/// Checkbox berkonsep Go Green dengan label dan tautan opsional. Dipakai untuk persetujuan Syarat & Ketentuan di Register dan "Ingat saya" di Login.
 class AppCheckbox extends StatelessWidget {
-  /// Membuat checkbox dengan label.
   const AppCheckbox({
     super.key,
     required this.value,

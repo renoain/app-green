@@ -1,14 +1,10 @@
 // Model Profile (data layer).
-//
-// extends Profile untuk dipakai domain; fromJson/toJson menyesuaikan
-// format kolom tabel profiles (snake_case).
 
 import '../../../../core/constants/app_enums.dart';
 import '../../domain/entities/profile.dart';
 
 /// Model data [Profile] untuk komunikasi dengan Supabase.
 class ProfileModel extends Profile {
-  /// Membuat model dari field entity.
   const ProfileModel({
     required super.id,
     required super.email,

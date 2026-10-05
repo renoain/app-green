@@ -1,7 +1,4 @@
 // Provider lapisan waste (Buang Sampah).
-//
-// Menyediakan repository dan use case pengiriman/validasi/perhitungan poin
-// agar halaman bisa memanggil tanpa akses langsung ke data layer.
 
 import 'dart:typed_data';
 
@@ -34,10 +31,7 @@ final Provider<ValidatePhotoUsecase> validatePhotoUsecaseProvider =
   (Ref ref) => ValidatePhotoUsecase(ref.watch(wasteRepositoryProvider)),
 );
 
-/// Provider use case pengiriman pembuangan sampah.
-///
-/// Poin earn langsung dicatat ke tabel points via PointsRemoteDatasource
-/// (butuh policy points_insert_own_earn, migration 014).
+/// Provider use case pengiriman pembuangan sampah. Poin earn langsung dicatat ke tabel points via PointsRemoteDatasource (butuh policy points_insert_own_earn, migration 014).
 final Provider<SubmitWasteUsecase> submitWasteUsecaseProvider =
     Provider<SubmitWasteUsecase>(
   (Ref ref) {
@@ -64,14 +58,9 @@ final Provider<SubmitWasteUsecase> submitWasteUsecaseProvider =
   },
 );
 
-/// Notifier status pengiriman bukti buang sampah.
-///
-/// Widget hanya memanggil [submit]; seluruh orkestrasi anti-kecurangan
-/// (hash, validasi radius/duplikat/rate limit, upload, insert, hitung poin)
-/// berjalan di [SubmitWasteUsecase].
+/// Notifier status pengiriman bukti buang sampah. Widget hanya memanggil [submit]; seluruh orkestrasi anti-kecurangan (hash, validasi radius/duplikat/rate limit, upload, insert, hitung poin) berjalan di [SubmitWasteUsecase].
 class WasteSubmitNotifier
     extends StateNotifier<AsyncValue<SubmitWasteResult?>> {
-  /// Membuat notifier dengan use case yang di-inject.
   WasteSubmitNotifier(this._usecase)
       : super(const AsyncData<SubmitWasteResult?>(null));
 

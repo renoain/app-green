@@ -2,7 +2,7 @@
 -- Fungsi role dipakai bersama oleh migration lain untuk policy admin/petugas.
 -- Referensi skema: docs/DATABASE_SCHEMA.md bagian 3.1.
 
--- ============ PROFILES ============
+-- PROFILES
 create table if not exists public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   email text not null,
@@ -14,7 +14,7 @@ create table if not exists public.profiles (
 
 comment on table public.profiles is 'Data profil dan role user Go Green.';
 
--- ============ FUNGSI BANTU ROLE ============
+-- FUNGSI BANTU ROLE
 -- Security definer agar bisa membaca profiles dari dalam policy tanpa
 -- memicu rekrursif RLS pada tabel yang sama.
 
@@ -58,7 +58,7 @@ as $$
   select coalesce(public.get_role(auth.uid()), '') in ('admin', 'petugas');
 $$;
 
--- ============ RLS: PROFILES ============
+-- RLS: PROFILES
 alter table public.profiles enable row level security;
 
 -- User bisa baca profil sendiri.

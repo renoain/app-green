@@ -1,11 +1,7 @@
 // Entity Checkpoint (domain).
-//
-// Representasi bisnis checkpoint tanpa ketergantungan ke data layer.
-// Field mengikuti kolom tabel checkpoints (docs/DATABASE_SCHEMA.md).
 
 /// Lokasi pembuangan sampah terdaftar.
 class Checkpoint {
-  /// Membuat checkpoint.
   const Checkpoint({
     required this.id,
     required this.name,

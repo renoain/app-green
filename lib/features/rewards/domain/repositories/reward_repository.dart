@@ -1,6 +1,4 @@
-// Kontrak repository reward admin (domain).
-//
-// Abstraksi tulis katalog agar usecase tidak tergantung Supabase.
+// Kontrak repository reward admin (domain). Abstraksi tulis katalog agar usecase tidak tergantung Supabase.
 
 import '../entities/reward.dart';
 

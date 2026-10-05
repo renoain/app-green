@@ -1,7 +1,4 @@
 // Data source autentikasi berbasis Supabase Auth.
-//
-// Membungkus operasi auth (email/password, Google, logout, profil) dengan
-// klien Supabase. Dipanggil oleh repository, bukan dari widget.
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -12,10 +9,7 @@ import '../../../profile/data/models/profile_model.dart';
 
 /// Data source autentikasi Go Green.
 class AuthRemoteDatasource {
-  /// Membuat data source auth. [client] bisa di-inject untuk test.
-  ///
-  /// Klien di-resolve secara lazy sehingga membuat instance data source
-  /// aman dilakukan meski Supabase belum diinisialisasi (mode demo).
+  /// Klien di-resolve secara lazy sehingga membuat instance data source aman dilakukan meski Supabase belum diinisialisasi (mode demo).
   AuthRemoteDatasource({SupabaseClient? client}) : _client = client;
 
   final SupabaseClient? _client;
@@ -34,9 +28,7 @@ class AuthRemoteDatasource {
     );
   }
 
-  /// Mendaftar akun baru. [username] masuk ke metadata dan dipakai trigger
-  /// `handle_new_user` saat membuat baris profiles; [displayName] tersimpan
-  /// di metadata untuk tampilan (tidak ada kolom baru di profiles).
+  /// Mendaftar akun baru. [username] masuk ke metadata dan dipakai trigger `handle_new_user` saat membuat baris profiles; [displayName] tersimpan di metadata untuk tampilan (tidak ada kolom baru di profiles).
   Future<AuthResponse> signUpWithEmail({
     required String email,
     required String password,
@@ -56,10 +48,7 @@ class AuthRemoteDatasource {
     );
   }
 
-  /// Mencari email auth dari username lewat RPC `get_email_by_username`.
-  ///
-  /// Mengembalikan null bila username tidak ditemukan. Dipakai untuk
-  /// login username karena Supabase Auth hanya menerima email.
+  /// Mencari email auth dari username lewat RPC `get_email_by_username`. Mengembalikan null bila username tidak ditemukan. Dipakai untuk login username karena Supabase Auth hanya menerima email.
   Future<String?> findEmailByUsername(String username) async {
     final dynamic result = await _resolvedClient.rpc(
       'get_email_by_username',
@@ -72,10 +61,7 @@ class AuthRemoteDatasource {
     return email.isEmpty ? null : email;
   }
 
-  /// Mengecek apakah username sudah dipakai (case-insensitive).
-  ///
-  /// Dipakai sebelum registrasi agar pesan "username sudah dipakai" bisa
-  /// tampil jelas. Penegak akhir tetap constraint unik di database.
+  /// Mengecek apakah username sudah dipakai (case-insensitive). Dipakai sebelum registrasi agar pesan "username sudah dipakai" bisa tampil jelas. Penegak akhir tetap constraint unik di database.
   Future<bool> isUsernameTaken(String username) async {
     final String normalized = username.trim().toLowerCase();
     if (normalized.isEmpty) {
@@ -94,11 +80,7 @@ class AuthRemoteDatasource {
     return _resolvedClient.auth.updateUser(UserAttributes(data: data));
   }
 
-  /// Login dengan akun Google (OAuth).
-  ///
-  /// [redirectTo] deep link kembali ke aplikasi agar sesi bisa
-  /// diselesaikan di HP; hasilnya dipantau lewat [authStateChanges].
-  /// Mengembalikan true saat halaman OAuth berhasil dibuka.
+  /// Login dengan akun Google (OAuth). [redirectTo] deep link kembali ke aplikasi agar sesi bisa diselesaikan di HP; hasilnya dipantau lewat [authStateChanges]. Mengembalikan true saat halaman OAuth berhasil dibuka.
   Future<bool> signInWithGoogle() {
     return _resolvedClient.auth.signInWithOAuth(
       OAuthProvider.google,

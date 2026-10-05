@@ -1,9 +1,4 @@
 // Halaman form tambah/ubah titik pembuangan (presentation).
-//
-// Koordinat dari lokasi saya/peta layar penuh otomatis me-resolve
-// wilayah (reverse-geocode) sehingga dropdown + kelurahan + alamat +
-// kode TPS terisi sendiri. Validasi bisnis di ManageCheckpointUsecase;
-// widget hanya menampilkan pesan ramah Bahasa Indonesia.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -38,7 +33,6 @@ import 'admin_map_picker_page.dart';
 
 /// Form tambah/ubah checkpoint admin.
 class AdminCheckpointFormPage extends ConsumerStatefulWidget {
-  /// Membuat form checkpoint. [checkpoint] null berarti mode tambah.
   const AdminCheckpointFormPage({super.key, this.checkpoint, this.checkpointId});
 
   /// Checkpoint yang diubah (null untuk tambah baru).
@@ -604,7 +598,6 @@ class _AdminCheckpointFormPageState
 
 /// Pratinjau QR di form TPS (ada untuk ubah, catatan otomatis tambah).
 class _QrPreviewSection extends StatelessWidget {
-  /// Membuat pratinjau QR form.
   const _QrPreviewSection({required this.checkpoint});
 
   /// Checkpoint yang diubah (null untuk tambah baru).

@@ -47,7 +47,6 @@ final StateProvider<String?> adminCheckpointDistrictFilterProvider =
 /// Notifier daftar TPS untuk admin (semua + cari + tambah + ubah + hapus).
 class AdminCheckpointListNotifier
     extends StateNotifier<AsyncValue<List<Checkpoint>>> {
-  /// Membuat notifier daftar TPS admin.
   AdminCheckpointListNotifier(this._usecase, this._ref)
       : super(const AsyncLoading<List<Checkpoint>>());
 

@@ -1,14 +1,10 @@
 // Model Point (data layer).
-//
-// extends Point untuk dipakai domain; fromJson/toJson menyesuaikan format
-// kolom tabel points (snake_case).
 
 import '../../../../core/constants/app_enums.dart';
 import '../../domain/entities/point.dart';
 
 /// Model data [Point] untuk komunikasi dengan Supabase.
 class PointModel extends Point {
-  /// Membuat model dari field entity.
   const PointModel({
     required super.id,
     required super.userId,

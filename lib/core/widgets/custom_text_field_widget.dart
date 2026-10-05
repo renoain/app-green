@@ -1,5 +1,4 @@
-// Komponen CustomTextField dan SearchField sesuai docs/COMPONENT_LIBRARY.md
-// dan docs/DESIGN_SYSTEM.md (Input).
+// Komponen CustomTextField dan SearchField sesuai docs/COMPONENT_LIBRARY.md dan docs/DESIGN_SYSTEM.md (Input).
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -7,13 +6,8 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 
-/// Text field custom aplikasi Go Green.
-///
-/// Memakai tema input dari [ThemeData.inputDecorationTheme] (lihat
-/// lib/core/theme/app_theme.dart) dengan dukungan label, hint, ikon,
-/// validasi, dan mode rahasia.
+/// Text field custom aplikasi Go Green. Memakai tema input dari [ThemeData.inputDecorationTheme] (lihat lib/core/theme/app_theme.dart) dengan dukungan label, hint, ikon, validasi, dan mode rahasia.
 class CustomTextField extends StatelessWidget {
-  /// Membuat text field custom.
   const CustomTextField({
     super.key,
     this.label,
@@ -94,11 +88,8 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
-/// Field pencarian (search) aplikasi Go Green.
-///
-/// Dipakai untuk pencarian artikel dan filter aktivitas.
+/// Field pencarian (search) aplikasi Go Green. Dipakai untuk pencarian artikel dan filter aktivitas.
 class SearchField extends StatelessWidget {
-  /// Membuat field pencarian.
   const SearchField({
     super.key,
     required this.hint,

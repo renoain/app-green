@@ -1,16 +1,10 @@
 // Use case generate kode TPS (domain).
-//
-// Format: <KOTA>-<KEC>-<NOMOR> (mis. SBY-KTT-01). Singkatan diambil
-// dari 3 huruf pertama nama (tanpa awalan KOTA/KABUPATEN/KECAMATAN).
-// Nomor urut = jumlah kode existing dengan prefiks sama + 1. Murni
-// Dart sehingga mudah diuji; widget hanya menampilkan hasil.
 
 import '../entities/checkpoint.dart';
 import '../repositories/checkpoint_repository.dart';
 
 /// Use case membuat kode TPS unik per kota + kecamatan.
 class GenerateTpsCodeUsecase {
-  /// Membuat use case.
   const GenerateTpsCodeUsecase(this._repository);
 
   final CheckpointRepository _repository;
@@ -35,10 +29,7 @@ class GenerateTpsCodeUsecase {
     return clean.substring(0, 3);
   }
 
-  /// Kode berikutnya untuk [cityName] + [districtName].
-  ///
-  /// [cityCode]/[districtCode] dipakai memfilter baris se-wilayah bila
-  /// tersedia; bila kosong, filter dari prefiks singkatan.
+  /// Kode berikutnya untuk [cityName] + [districtName]. [cityCode]/[districtCode] dipakai memfilter baris se-wilayah bila tersedia; bila kosong, filter dari prefiks singkatan.
   Future<String> nextCode({
     required String cityName,
     required String districtName,

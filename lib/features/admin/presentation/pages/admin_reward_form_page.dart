@@ -1,7 +1,4 @@
 // Halaman form tambah/ubah reward admin (presentation).
-//
-// Validasi bisnis di ManageRewardUsecase; widget hanya menampilkan
-// pesan ramah Bahasa Indonesia.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,7 +16,6 @@ import '../providers/admin_reward_provider.dart';
 
 /// Form tambah/ubah reward admin.
 class AdminRewardFormPage extends ConsumerStatefulWidget {
-  /// Membuat form reward. [reward] null berarti mode tambah.
   const AdminRewardFormPage({super.key, this.reward});
 
   /// Reward yang diubah (null untuk tambah baru).

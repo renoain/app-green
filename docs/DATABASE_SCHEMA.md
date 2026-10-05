@@ -446,6 +446,15 @@ where email = 'admin@green.com';
   file sebelumnya bernama 025_profile_fcm_token.sql (duplikat nomor 025,
   header tertulis 024); di-rename ke 026 tanpa ubah isi. Status push:
   cek `supabase migration list` sebelum `db push`.
+- Migration 027_points_policy_comment.sql mengoreksi penjelasan policy
+  insert points tanpa ubah struktur/policy (COMMENT ON POLICY, idempoten):
+  header 004 menyatakan tidak ada policy insert klien, padahal 014 lalu
+  015 sudah mengizinkan insert earn + redeem milik sendiri (amount 1-50).
+  File 004 tidak diedit karena sudah applied di remote. Status push:
+  cek `supabase migration list` sebelum `db push`.
+- Snapshot `supabase/schema_snapshot/` (000 peta + 001-007) adalah arsip baca-saja
+  state final 001-027 untuk reset DB baru atau jaga-jaga; tidak dibaca CLI
+  dan folder `supabase/migrations/` tidak diubah.
 
 ---
 

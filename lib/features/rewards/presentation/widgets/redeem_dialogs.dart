@@ -1,7 +1,4 @@
 // Popup konfirmasi + sukses penukaran reward (presentation).
-//
-// Animasi scale + fade 350ms seperti popup poin. Tombol Batal selalu
-// di kiri sebagai teks, aksi utama di kanan sebagai PrimaryButton.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';

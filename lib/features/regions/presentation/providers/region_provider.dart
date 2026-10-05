@@ -1,7 +1,4 @@
 // Provider wilayah Indonesia (presentation).
-//
-// Dropdown berjenjang: provinsi -> kota -> kecamatan. Repository
-// di-inject agar mudah di-fake di test/widget.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

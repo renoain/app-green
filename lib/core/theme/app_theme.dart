@@ -1,7 +1,4 @@
 // Merakit token desain menjadi ThemeData aplikasi Go Green.
-//
-// Sumber kebenaran: docs/DESIGN_SYSTEM.md. Gunakan AppTheme.light()
-// sebagai tema aplikasi di MaterialApp.
 
 import 'package:flutter/material.dart';
 

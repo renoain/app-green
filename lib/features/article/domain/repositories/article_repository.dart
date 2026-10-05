@@ -1,7 +1,4 @@
 // Interface repository artikel (domain).
-//
-// Implementasi data layer (ArticleRepositoryImpl) wajib mengikuti kontrak
-// ini. Mengembalikan entity domain, bukan model data.
 
 import '../entities/article.dart';
 

@@ -1,14 +1,10 @@
 // Model WasteLog (data layer).
-//
-// extends WasteLog untuk dipakai domain; fromJson/toJson menyesuaikan
-// format kolom tabel waste_logs (snake_case).
 
 import '../../../../core/constants/app_enums.dart';
 import '../../domain/entities/waste_log.dart';
 
 /// Model data [WasteLog] untuk komunikasi dengan Supabase.
 class WasteLogModel extends WasteLog {
-  /// Membuat model dari field entity.
   const WasteLogModel({
     required super.id,
     required super.userId,

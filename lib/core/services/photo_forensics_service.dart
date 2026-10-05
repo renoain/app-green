@@ -1,7 +1,4 @@
 // Forensik foto on-device (EXIF) untuk anti-kecurangan.
-//
-// Memeriksa metadata kamera memakai paket exif yang sudah ada; tanpa
-// API cloud/kunci. Tidak pernah melempar: byte rusak = tanpa EXIF.
 
 import 'dart:typed_data';
 
@@ -9,7 +6,6 @@ import 'package:exif/exif.dart';
 
 /// Hasil analisis EXIF satu foto bukti.
 class PhotoForensics {
-  /// Membuat hasil forensik.
   const PhotoForensics({
     required this.hasExif,
     this.softwareTag,

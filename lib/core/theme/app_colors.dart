@@ -1,13 +1,8 @@
 // Menyimpan seluruh token warna aplikasi sesuai docs/DESIGN_SYSTEM.md.
-//
-// Wajib dipakai sebagai satu-satunya sumber warna. Dilarang hardcode
-// Color(0xFF...) langsung di widget.
 
 import 'package:flutter/material.dart';
 
-/// Token warna aplikasi Go Green.
-///
-/// Sumber kebenaran: docs/DESIGN_SYSTEM.md -> Color Tokens.
+/// Token warna aplikasi Go Green. Sumber kebenaran: docs/DESIGN_SYSTEM.md -> Color Tokens.
 class AppColors {
   AppColors._();
 
