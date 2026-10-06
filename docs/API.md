@@ -158,7 +158,49 @@ Implementasi: `lib/features/regions/data/datasources/region_remote_datasource.da
 
 ---
 
-## 7. Yang belum ada (rencana)
+## 7. Mode Dummy (json-server)
+
+Server REST lokal untuk testing tanpa Supabase (lihat docs/dummy/README.md
+dan docs/dummy/db.json). Struktur key JSON sama dengan
+docs/DATABASE_SCHEMA.md.
+
+- Cara jalan: `cd docs/dummy` lalu `json-server --watch db.json --port 3000`.
+- Cara pakai: isi `.env` dengan `USE_DUMMY_API=true` dan
+  `DUMMY_API_URL=http://localhost:3000`; provider otomatis memakai
+  `*_dummy_datasource.dart` (dio). Default tetap Supabase.
+- Endpoint standar json-server per tabel (`<baseUrl>/<nama_tabel>`):
+  GET daftar, GET by id, POST insert, PATCH update partial, DELETE.
+  Filter contoh: `/waste_logs?user_id=...`, `/waste_logs?status=pending`,
+  `/checkpoints?qr_code=...`, `/rewards?is_active=true`.
+- Batasan: tanpa auth (user id manual), tanpa RLS, tanpa storage
+  (upload foto dilewati), tanpa trigger server dan signed URL.
+  Edit profil dummy via `ProfileDummyDatasource` PATCH
+  `/profiles/:id` (username + email, tanpa phone); mode Supabase
+  tetap update user_metadata (display_name + phone, email baca-saja).
+  Jangan untuk data asli.
+
+### 7.1 Auth dummy (json-server)
+
+Saat `USE_DUMMY_API=true`, `authRepositoryProvider` memakai
+`DummyAuthRepository` + `AuthDummyDatasource` (dio ke
+`<baseUrl>/profiles`); UI register/login tidak berubah.
+
+- Register: cek `GET /profiles?username=` lalu `?email=` (unik),
+  `POST /profiles` (`id` uuid, `role` user, `password` plain text).
+  Hasil register langsung login (sesi di memori, tanpa konfirmasi
+  email). Akun baru terlihat di `db.json` bila server jalan
+  dengan `--watch`.
+- Login: `GET /profiles?email=` (atau resolve username dulu),
+  cocokkan `password`; gagal dengan `invalid_credentials`.
+- Akun bawaan (password `password123`): `user@green.com`,
+  `admin@green.com`, `petugas@green.com` (lihat docs/dummy/README.md).
+- Batasan: password plain text, tanpa JWT, tanpa RLS, sesi hilang
+  saat restart, login Google dan reset password tidak didukung,
+  role admin dummy tetap terbaca sebagai user di aplikasi.
+
+---
+
+## 8. Yang belum ada (rencana)
 
 - Edge Function: validasi anti-kecurangan lanjutan, AI forensics,
   approval berjenjang (fase 2+; secret dilarang di klien).
@@ -169,7 +211,7 @@ Implementasi: `lib/features/regions/data/datasources/region_remote_datasource.da
 
 ---
 
-## 8. Referensi
+## 9. Referensi
 
 - Skema, RLS, storage, seed: docs/DATABASE_SCHEMA.md.
 - Alur data, datasource, auth, deep link: docs/ARCHITECTURE.md

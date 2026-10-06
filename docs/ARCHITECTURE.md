@@ -517,6 +517,11 @@ Arsitektur auth berlapis presentation -> domain -> data:
   Profile (nama tampilan + email sesi, notice hanya saat belum login),
   dan Edit Profil
   (nama + telepon via updateProfile, email baca-saja).
+- Mode dummy (USE_DUMMY_API=true): authRepositoryProvider memakai
+  DummyAuthRepository + AuthDummyDatasource (dio ke tabel profiles
+  json-server, password plain text khusus testing, sesi di memori).
+  Register langsung login dan tersimpan ke db.json; login Google
+  tidak didukung. File Supabase auth, UI, dan entity tidak diubah.
 
 ### 10.8.1 RPC Login Username (migration 011)
 
@@ -647,6 +652,24 @@ Arsitektur auth berlapis presentation -> domain -> data:
   semua + chip status + tombol toggle; user baca aktif saja via
   getActiveCheckpoints (daftar + terdekat). Tanpa kolom ini dulu
   nonaktif = hapus permanen.
+
+### 10.10 Opsi Datasource (Supabase vs json-server)
+
+- Setiap fitur punya 2 datasource dengan method yang sama persis:
+  Supabase (`*_remote_datasource.dart`, sudah ada) dan dummy
+  (`*_dummy_datasource.dart`, dio ke json-server, tanpa SDK Supabase).
+- Dummy `extends` remote agar tipe provider tidak berubah; repository
+  impl menerima datasource lewat parameter `remote` yang sudah ada,
+  provider menyuntikkan pilihan berdasarkan `AppEnv.useDummyApi`
+  (.env `USE_DUMMY_API`, default false = Supabase).
+- Alur 2 mode (UI tetap sama):
+  - Production: UI -> Provider -> Repository -> RemoteDatasource -> Supabase.
+  - Dummy: UI -> Provider -> Repository -> DummyDatasource -> json-server
+    (docs/dummy/db.json, lihat docs/API.md bagian 7).
+- Batasan dummy: tanpa auth/RLS/storage/trigger server; upload foto
+  dilewati, ID baru berupa UUID klien.
+- Evaluasi dependency (PROTOCOL Bagian C): tanpa dependency baru
+  (dio, uuid, mocktail sudah ada; json-server hanya tool dev via npm).
 
 ---
 

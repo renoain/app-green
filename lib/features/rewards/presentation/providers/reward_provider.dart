@@ -4,12 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/redemption.dart';
 import '../../domain/entities/reward.dart';
+import '../../data/datasources/reward_dummy_datasource.dart';
 import '../../data/datasources/reward_remote_datasource.dart';
+import '../../../../core/constants/app_env.dart';
 
-/// Provider data source reward.
+/// Provider data source reward (dummy saat [AppEnv.useDummyApi] true).
 final Provider<RewardRemoteDatasource> rewardRemoteDatasourceProvider =
     Provider<RewardRemoteDatasource>(
-  (Ref ref) => RewardRemoteDatasource(),
+  (Ref ref) => AppEnv.useDummyApi
+      ? RewardDummyDatasource()
+      : RewardRemoteDatasource(),
 );
 
 /// Notifier daftar reward aktif.

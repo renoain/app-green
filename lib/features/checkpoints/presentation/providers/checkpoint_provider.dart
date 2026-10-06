@@ -5,12 +5,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/checkpoint.dart';
 import '../../domain/repositories/checkpoint_repository.dart';
 import '../../domain/usecases/get_nearby_checkpoints_usecase.dart';
+import '../../data/datasources/checkpoint_dummy_datasource.dart';
+import '../../data/datasources/checkpoint_remote_datasource.dart';
 import '../../data/repositories/checkpoint_repository_impl.dart';
+import '../../../../core/constants/app_env.dart';
+
+/// Provider data source checkpoint (dummy saat [AppEnv.useDummyApi] true).
+final Provider<CheckpointRemoteDatasource>
+    checkpointRemoteDatasourceProvider = Provider<CheckpointRemoteDatasource>(
+  (Ref ref) => AppEnv.useDummyApi
+      ? CheckpointDummyDatasource()
+      : CheckpointRemoteDatasource(),
+);
 
 /// Provider repository checkpoint.
 final Provider<CheckpointRepository> checkpointRepositoryProvider =
     Provider<CheckpointRepository>(
-  (Ref ref) => CheckpointRepositoryImpl(),
+  (Ref ref) => CheckpointRepositoryImpl(
+    remote: ref.watch(checkpointRemoteDatasourceProvider),
+  ),
 );
 
 /// Provider use case checkpoint terdekat.

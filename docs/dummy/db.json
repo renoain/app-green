@@ -1,0 +1,295 @@
+{
+  "articles": [
+    {
+      "content": "Memilah sampah sejak dari sumber adalah langkah paling sederhana untuk memulai gaya hidup ramah lingkungan.\n\nSiapkan wadah terpisah untuk organik, anorganik, dan residu di area dapur.\n\nDengan rutin memilah, kamu berkontribusi mengurangi beban tempat pembuangan akhir.",
+      "cover_url": null,
+      "created_at": "2026-09-10T00:00:00Z",
+      "excerpt": "Cara sederhana memilah sampah organik dan anorganik di rumah.",
+      "id": "00000000-0000-0000-0000-000000000031",
+      "published_at": "2026-09-10T00:00:00Z",
+      "title": "Pilah Sampah: Mulai dari Dapur"
+    },
+    {
+      "content": "Sampah organik dapat diolah menjadi kompos dengan teknik yang tepat.\n\nTeknik kompos basah aman untuk rumah kecil dan tidak menimbulkan bau.",
+      "cover_url": null,
+      "created_at": "2026-09-05T00:00:00Z",
+      "excerpt": "Teknik kompos basah yang aman untuk rumah kecil.",
+      "id": "00000000-0000-0000-0000-000000000032",
+      "published_at": "2026-09-05T00:00:00Z",
+      "title": "Kompos Rumah Tangga Tanpa Bau"
+    },
+    {
+      "content": "Botol plastik bekas bisa diubah menjadi barang berguna.\n\nPastikan membilas kemasan sebelum diserahkan agar mudah didaur ulang.",
+      "cover_url": null,
+      "created_at": "2026-08-28T00:00:00Z",
+      "excerpt": "Mengubah botol bekas menjadi barang yang berguna.",
+      "id": "00000000-0000-0000-0000-000000000033",
+      "published_at": "2026-08-28T00:00:00Z",
+      "title": "Daur Ulang Plastik di Rumah"
+    }
+  ],
+  "checkpoints": [
+    {
+      "address": "Jl. Melati No. 10, Jakarta",
+      "city_code": "3174",
+      "code": "JKT-PSR-01",
+      "created_at": "2026-09-01T00:00:00Z",
+      "district_code": "317401",
+      "id": "00000000-0000-0000-0000-000000000011",
+      "is_active": true,
+      "latitude": -6.2,
+      "longitude": 106.8,
+      "max_uses": null,
+      "name": "Checkpoint RW 01",
+      "province_code": "31",
+      "qr_code": "CP-001",
+      "radius": 100,
+      "remaining_uses": null,
+      "subdistrict": "Melati"
+    },
+    {
+      "address": "Jl. Mawar No. 5, Jakarta",
+      "city_code": "3174",
+      "code": "JKT-PSR-02",
+      "created_at": "2026-09-01T00:00:00Z",
+      "district_code": "317401",
+      "id": "00000000-0000-0000-0000-000000000012",
+      "is_active": true,
+      "latitude": -6.201,
+      "longitude": 106.801,
+      "max_uses": 100,
+      "name": "Checkpoint RW 02",
+      "province_code": "31",
+      "qr_code": "CP-002",
+      "radius": 100,
+      "remaining_uses": 97,
+      "subdistrict": "Mawar"
+    },
+    {
+      "address": "Jl. Anggrek No. 3, Jakarta",
+      "city_code": "3174",
+      "code": "JKT-PSR-03",
+      "created_at": "2026-09-01T00:00:00Z",
+      "district_code": "317402",
+      "id": "00000000-0000-0000-0000-000000000013",
+      "is_active": false,
+      "latitude": -6.202,
+      "longitude": 106.802,
+      "max_uses": null,
+      "name": "Checkpoint RW 03",
+      "province_code": "31",
+      "qr_code": "CP-003",
+      "radius": 150,
+      "remaining_uses": null,
+      "subdistrict": "Anggrek"
+    }
+  ],
+  "points": [
+    {
+      "amount": 25,
+      "created_at": "2026-10-01T08:00:00Z",
+      "description": "Setoran sampah organik",
+      "id": "00000000-0000-0000-0000-000000000041",
+      "reference_id": "00000000-0000-0000-0000-000000000021",
+      "type": "earn",
+      "user_id": "00000000-0000-0000-0000-000000000001"
+    },
+    {
+      "amount": 35,
+      "created_at": "2026-10-02T08:00:00Z",
+      "description": "Setoran sampah daur ulang",
+      "id": "00000000-0000-0000-0000-000000000042",
+      "reference_id": "00000000-0000-0000-0000-000000000022",
+      "type": "earn",
+      "user_id": "00000000-0000-0000-0000-000000000001"
+    },
+    {
+      "amount": 100,
+      "created_at": "2026-10-03T08:00:00Z",
+      "description": "Redeem reward: 00000000-0000-0000-0000-000000000051",
+      "id": "00000000-0000-0000-0000-000000000043",
+      "reference_id": "ABCD1234",
+      "type": "redeem",
+      "user_id": "00000000-0000-0000-0000-000000000001"
+    },
+    {
+      "amount": 30,
+      "created_at": "2026-10-01T09:00:00Z",
+      "description": "Setoran sampah anorganik",
+      "id": "00000000-0000-0000-0000-000000000044",
+      "reference_id": "00000000-0000-0000-0000-000000000023",
+      "type": "earn",
+      "user_id": "00000000-0000-0000-0000-000000000002"
+    }
+  ],
+  "profiles": [
+    {
+      "created_at": "2026-09-01T00:00:00Z",
+      "email": "user@green.com",
+      "fcm_token": null,
+      "id": "00000000-0000-0000-0000-000000000001",
+      "password": "password123",
+      "role": "user",
+      "username": "user"
+    },
+    {
+      "created_at": "2026-09-01T00:00:00Z",
+      "email": "admin@green.com",
+      "fcm_token": null,
+      "id": "00000000-0000-0000-0000-000000000002",
+      "password": "password123",
+      "role": "admin",
+      "username": "admin"
+    },
+    {
+      "created_at": "2026-09-01T00:00:00Z",
+      "email": "petugas@green.com",
+      "fcm_token": null,
+      "id": "00000000-0000-0000-0000-000000000003",
+      "password": "password123",
+      "role": "petugas",
+      "username": "petugas"
+    },
+    {
+      "id": "O8xyU1UVqfw",
+      "email": "test@g.com",
+      "username": "test1",
+      "password": "test123",
+      "role": "user",
+      "fcm_token": null,
+      "created_at": "2026-10-06T05:44:56.015Z"
+    }
+  ],
+  "redemptions": [
+    {
+      "claimed_at": null,
+      "created_at": "2026-10-03T08:00:00Z",
+      "id": "00000000-0000-0000-0000-000000000061",
+      "qr_code": "00000000-0000-0000-0000-000000000062",
+      "reward_id": "00000000-0000-0000-0000-000000000051",
+      "status": "pending",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "voucher_code": "ABCD1234"
+    },
+    {
+      "claimed_at": "2026-09-20T10:00:00Z",
+      "created_at": "2026-09-20T09:00:00Z",
+      "id": "00000000-0000-0000-0000-000000000063",
+      "qr_code": "00000000-0000-0000-0000-000000000064",
+      "reward_id": "00000000-0000-0000-0000-000000000054",
+      "status": "claimed",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "voucher_code": "EFGH5678"
+    }
+  ],
+  "rewards": [
+    {
+      "created_at": "2026-09-01T00:00:00Z",
+      "description": "Voucher belanja senilai 10 ribu",
+      "id": "00000000-0000-0000-0000-000000000051",
+      "image_url": null,
+      "is_active": true,
+      "name": "Voucher Belanja 10.000",
+      "points_cost": 100,
+      "stock": 50
+    },
+    {
+      "created_at": "2026-09-01T00:00:00Z",
+      "description": "Saldo e-wallet senilai 50 ribu",
+      "id": "00000000-0000-0000-0000-000000000052",
+      "image_url": null,
+      "is_active": true,
+      "name": "Saldo E-Wallet 50.000",
+      "points_cost": 500,
+      "stock": 20
+    },
+    {
+      "created_at": "2026-09-01T00:00:00Z",
+      "description": "Tumbler edisi Go Green",
+      "id": "00000000-0000-0000-0000-000000000053",
+      "is_active": true,
+      "name": "Tumbler Go Green",
+      "points_cost": 300,
+      "stock": 15
+    },
+    {
+      "created_at": "2026-09-01T00:00:00Z",
+      "description": "Reward nonaktif untuk uji filter admin",
+      "id": "00000000-0000-0000-0000-000000000054",
+      "image_url": null,
+      "is_active": false,
+      "name": "Reward Arsip",
+      "points_cost": 1000,
+      "stock": 0
+    }
+  ],
+  "waste_logs": [
+    {
+      "category": "organik",
+      "checkpoint_id": "00000000-0000-0000-0000-000000000011",
+      "created_at": "2026-10-01T08:00:00Z",
+      "exif_ok": true,
+      "hash": "aaa111",
+      "id": "00000000-0000-0000-0000-000000000021",
+      "item_type": "sisa sayur",
+      "latitude": -6.2,
+      "longitude": 106.8,
+      "notes": null,
+      "photo_url": "00000000-0000-0000-0000-000000000001/dummy_1.jpg",
+      "rejection_reason": null,
+      "risk_detail": null,
+      "risk_score": 10,
+      "server_timestamp": "2026-10-01T08:00:00Z",
+      "source": "manual",
+      "status": "verified",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "verified_at": "2026-10-01T08:05:00Z",
+      "verified_by": "00000000-0000-0000-0000-000000000002"
+    },
+    {
+      "category": "daur_ulang",
+      "checkpoint_id": "00000000-0000-0000-0000-000000000012",
+      "created_at": "2026-10-02T08:00:00Z",
+      "exif_ok": null,
+      "hash": "bbb222",
+      "id": "00000000-0000-0000-0000-000000000022",
+      "item_type": "botol plastik",
+      "latitude": -6.201,
+      "longitude": 106.801,
+      "notes": null,
+      "photo_url": "00000000-0000-0000-0000-000000000001/dummy_2.jpg",
+      "rejection_reason": null,
+      "risk_detail": null,
+      "risk_score": null,
+      "server_timestamp": "2026-10-02T08:00:00Z",
+      "source": "qr_scan",
+      "status": "pending",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "verified_at": null,
+      "verified_by": null
+    },
+    {
+      "category": "anorganik",
+      "checkpoint_id": "00000000-0000-0000-0000-000000000011",
+      "created_at": "2026-10-01T09:00:00Z",
+      "exif_ok": true,
+      "hash": "ccc333",
+      "id": "00000000-0000-0000-0000-000000000023",
+      "item_type": "kardus",
+      "latitude": -6.2,
+      "longitude": 106.8,
+      "notes": null,
+      "photo_url": "00000000-0000-0000-0000-000000000002/dummy_3.jpg",
+      "rejection_reason": null,
+      "risk_detail": null,
+      "risk_score": 5,
+      "server_timestamp": "2026-10-01T09:00:00Z",
+      "source": "manual",
+      "status": "verified",
+      "user_id": "00000000-0000-0000-0000-000000000002",
+      "verified_at": "2026-10-01T09:05:00Z",
+      "verified_by": "00000000-0000-0000-0000-000000000002"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

@@ -5,18 +5,31 @@ import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_enums.dart';
+import '../../../../core/constants/app_env.dart';
 import '../../../checkpoints/domain/entities/checkpoint.dart';
+import '../../../points/data/datasources/points_dummy_datasource.dart';
 import '../../../points/data/datasources/points_remote_datasource.dart';
+import '../../data/datasources/waste_dummy_datasource.dart';
+import '../../data/datasources/waste_remote_datasource.dart';
 import '../../domain/repositories/waste_repository.dart';
 import '../../domain/usecases/calculate_points_usecase.dart';
 import '../../domain/usecases/submit_waste_usecase.dart';
 import '../../domain/usecases/validate_photo_usecase.dart';
 import '../../data/repositories/waste_repository_impl.dart';
 
+/// Provider data source waste log (dummy saat [AppEnv.useDummyApi] true).
+final Provider<WasteRemoteDatasource> wasteRemoteDatasourceProvider =
+    Provider<WasteRemoteDatasource>(
+  (Ref ref) =>
+      AppEnv.useDummyApi ? WasteDummyDatasource() : WasteRemoteDatasource(),
+);
+
 /// Provider repository waste log.
 final Provider<WasteRepository> wasteRepositoryProvider =
     Provider<WasteRepository>(
-  (Ref ref) => WasteRepositoryImpl(),
+  (Ref ref) => WasteRepositoryImpl(
+    remote: ref.watch(wasteRemoteDatasourceProvider),
+  ),
 );
 
 /// Provider use case perhitungan poin.
@@ -35,8 +48,9 @@ final Provider<ValidatePhotoUsecase> validatePhotoUsecaseProvider =
 final Provider<SubmitWasteUsecase> submitWasteUsecaseProvider =
     Provider<SubmitWasteUsecase>(
   (Ref ref) {
-    final PointsRemoteDatasource pointsDatasource =
-        PointsRemoteDatasource();
+    final PointsRemoteDatasource pointsDatasource = AppEnv.useDummyApi
+        ? PointsDummyDatasource()
+        : PointsRemoteDatasource();
     return SubmitWasteUsecase(
       wasteRepository: ref.watch(wasteRepositoryProvider),
       validatePhoto: ref.watch(validatePhotoUsecaseProvider),

@@ -5,16 +5,19 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_enums.dart';
+import '../../../../core/constants/app_env.dart';
 import '../../../../core/services/supabase_service.dart';
 import '../../../admin/data/datasources/admin_profile_datasource.dart';
 import '../../domain/entities/auth_session.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../../data/repositories/dummy_auth_repository.dart';
 import '../../data/repositories/supabase_auth_repository.dart';
 
-/// Provider repository autentikasi.
+/// Provider repository autentikasi (dummy json-server saat [AppEnv.useDummyApi] true).
 final Provider<AuthRepository> authRepositoryProvider =
     Provider<AuthRepository>(
-  (Ref ref) => SupabaseAuthRepository(),
+  (Ref ref) =>
+      AppEnv.useDummyApi ? DummyAuthRepository() : SupabaseAuthRepository(),
 );
 
 /// Notifier status autentikasi yang mengikuti perubahan sesi.

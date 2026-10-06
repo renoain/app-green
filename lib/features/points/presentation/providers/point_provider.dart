@@ -3,13 +3,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/point.dart';
+import '../../data/datasources/points_dummy_datasource.dart';
 import '../../data/datasources/points_remote_datasource.dart';
 import '../../data/models/point_model.dart';
+import '../../../../core/constants/app_env.dart';
 
-/// Provider data source poin.
+/// Provider data source poin (dummy saat [AppEnv.useDummyApi] true).
 final Provider<PointsRemoteDatasource> pointsRemoteDatasourceProvider =
     Provider<PointsRemoteDatasource>(
-  (Ref ref) => PointsRemoteDatasource(),
+  (Ref ref) => AppEnv.useDummyApi
+      ? PointsDummyDatasource()
+      : PointsRemoteDatasource(),
 );
 
 /// State saldo dan riwayat poin.

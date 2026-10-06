@@ -1,5 +1,106 @@
 # CHANGELOG - Go Green
 
+## [2026-10-05] - Auth dummy json-server (register/login profiles)
+
+Status: Selesai
+
+File yang dibuat:
+
+- `lib/features/auth/data/datasources/auth_dummy_datasource.dart` (dibuat) - Register/login dummy via dio ke tabel profiles json-server.
+- `lib/features/auth/data/repositories/dummy_auth_repository.dart` (dibuat) - Implementasi AuthRepository mode dummy, sesi di memori.
+- `test/unit/features/auth/auth_dummy_datasource_test.dart` (dibuat) - 10 test mock dio.
+
+File yang diubah:
+
+- `lib/features/auth/presentation/providers/auth_provider.dart` (diedit) - Pilih DummyAuthRepository saat AppEnv.useDummyApi, nama dan tipe provider tetap.
+- `docs/dummy/db.json` (diedit) - Tambah password password123 di 3 profiles (khusus dummy).
+- `docs/dummy/README.md` (diedit) - Section akun dummy + catatan sesi memori.
+- `docs/API.md` (diedit) - Section 7.1 auth dummy.
+- `docs/ARCHITECTURE.md` (diedit) - Catatan auth dummy di 10.8.
+
+Catatan:
+
+- File Supabase auth, UI register/login, entity AuthSession, dan usecase tidak diubah sesuai batas tugas.
+- Penyimpangan dari prompt: datasource kembalikan map (bukan AuthResponse gotrue) agar tidak memalsukan JWT; sesi di memori bukan SharedPreferences karena provider sync (cukup untuk testing, hilang saat restart).
+- Tanpa dependency baru (dio, uuid sudah ada).
+- Batasan dummy: password plain text, tanpa JWT/RLS, tanpa login Google/reset password, role admin dummy terbaca user di aplikasi.
+
+Verifikasi:
+
+- flutter analyze: OK (No issues found)
+- flutter test: OK (311 test lulus)
+
+## [2026-10-05] - Edit profil dummy json (nama+email ke profiles)
+
+Status: Selesai
+
+File yang dibuat:
+
+- `lib/features/profile/data/datasources/profile_dummy_datasource.dart` (dibuat) - GET/PATCH profiles ke json-server via dio.
+- `lib/features/profile/presentation/providers/profile_provider.dart` (dibuat) - Provider ProfileDummyDatasource.
+- `test/unit/features/profile/profile_dummy_datasource_test.dart` (dibuat) - 4 test mock dio.
+
+File yang diubah:
+
+- `lib/features/profile/presentation/pages/edit_profile_page.dart` (diedit) - Mode dummy muat/simpan username+email via json, email bisa diubah, field phone disembunyikan; mode Supabase tetap via AuthRepository.
+- `docs/dummy/README.md` (diedit) - Section edit profil dummy + contoh curl PATCH.
+- `docs/API.md` (diedit) - Batasan dummy sebut PATCH profiles username+email.
+
+Catatan:
+
+- Tanpa phone di mode dummy sesuai permintaan; tanpa kolom DB baru dan tanpa dependency baru.
+- Profil demo dummy default id 00000000-0000-0000-0000-000000000001 bila belum login.
+
+Verifikasi:
+
+- flutter analyze lib/features/profile test/unit/features/profile: OK (No issues found)
+- flutter test profile dummy + edit_profile widget: OK (7 test lulus, 4 baru + 3 lama)
+- flutter analyze: OK (No issues found)
+- flutter test: OK (301 test lulus)
+
+## [2026-10-05] - Opsi datasource dummy json-server (mode testing)
+
+Status: Selesai
+
+File yang dibuat:
+
+- `lib/core/constants/app_env.dart` (dibuat) - Saklar USE_DUMMY_API + DUMMY_API_URL (default Supabase).
+- `lib/features/waste/data/datasources/waste_dummy_datasource.dart` (dibuat) - Dummy waste via dio.
+- `lib/features/checkpoints/data/datasources/checkpoint_dummy_datasource.dart` (dibuat) - Dummy checkpoint via dio.
+- `lib/features/points/data/datasources/points_dummy_datasource.dart` (dibuat) - Dummy points via dio.
+- `lib/features/rewards/data/datasources/reward_dummy_datasource.dart` (dibuat) - Dummy reward via dio.
+- `lib/features/article/data/datasources/article_dummy_datasource.dart` (dibuat) - Dummy artikel via dio.
+- `docs/dummy/db.json` (dibuat) - Data json-server (7 tabel, struktur DATABASE_SCHEMA).
+- `docs/dummy/README.md` (dibuat) - Cara install, jalan, pakai, kembali ke Supabase.
+- `test/unit/features/waste/waste_dummy_datasource_test.dart` (dibuat) - 5 test mock dio.
+- `test/unit/features/checkpoints/checkpoint_dummy_datasource_test.dart` (dibuat) - 6 test mock dio.
+- `test/unit/features/points/points_dummy_datasource_test.dart` (dibuat) - 4 test mock dio.
+- `test/unit/features/rewards/reward_dummy_datasource_test.dart` (dibuat) - 9 test mock dio.
+
+File yang diubah:
+
+- `.env.example` (diedit) - Tambah USE_DUMMY_API=false + DUMMY_API_URL.
+- `lib/features/waste/presentation/providers/waste_provider.dart` (diedit) - Pilih dummy/Supabase + suntik ke repository.
+- `lib/features/checkpoints/presentation/providers/checkpoint_provider.dart` (diedit) - Sama.
+- `lib/features/points/presentation/providers/point_provider.dart` (diedit) - Sama.
+- `lib/features/rewards/presentation/providers/reward_provider.dart` (diedit) - Sama.
+- `lib/features/article/presentation/providers/article_provider.dart` (diedit) - Sama.
+- `docs/API.md` (diedit) - Section 7 Mode Dummy, section lama jadi 8-9.
+- `docs/ARCHITECTURE.md` (diedit) - Section 10.10 Opsi Datasource.
+
+Catatan:
+
+- Dummy `extends` remote agar tipe provider tetap; repository impl tidak diubah (pakai parameter `remote` yang sudah ada); UI, domain, migration, Supabase datasource tidak diubah.
+- AppTables sudah punya semua konstanta endpoint jadi tidak ditambah.
+- Beda dari contoh tugas: provider konstruksi datasource tanpa `supabaseClientProvider` (mengikuti kode repo yang lazy via SupabaseService); method dummy ikut remote aktual (mis. insertWasteLog kembalikan model, ada verifyWasteLog).
+- Tanpa dependency baru (dio, uuid, mocktail sudah ada; json-server tool dev via npm).
+- Batasan dummy: tanpa auth/RLS/storage/trigger server; upload foto dilewati.
+
+Verifikasi:
+
+- flutter analyze: OK (No issues found)
+- flutter test: OK (297 test lulus, 24 baru + 273 lama)
+
 ## [2026-10-05] - Rename baseline_7 jadi schema_snapshot
 
 Status: Selesai
