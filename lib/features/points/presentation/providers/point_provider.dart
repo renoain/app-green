@@ -4,16 +4,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/point.dart';
 import '../../data/datasources/points_dummy_datasource.dart';
+import '../../data/datasources/points_laravel_datasource.dart';
 import '../../data/datasources/points_remote_datasource.dart';
 import '../../data/models/point_model.dart';
 import '../../../../core/constants/app_env.dart';
 
-/// Provider data source poin (dummy saat [AppEnv.useDummyApi] true).
+/// Provider data source poin (dummy/laravel sesuai [AppEnv.dataSource]).
 final Provider<PointsRemoteDatasource> pointsRemoteDatasourceProvider =
     Provider<PointsRemoteDatasource>(
-  (Ref ref) => AppEnv.useDummyApi
-      ? PointsDummyDatasource()
-      : PointsRemoteDatasource(),
+  (Ref ref) {
+    switch (AppEnv.dataSource) {
+      case 'laravel':
+        return PointsLaravelDatasource();
+      case 'dummy':
+        return PointsDummyDatasource();
+      case 'supabase':
+      default:
+        return PointsRemoteDatasource();
+    }
+  },
 );
 
 /// State saldo dan riwayat poin.
@@ -29,8 +38,7 @@ class PointsState {
 
 /// Notifier saldo dan riwayat poin.
 class PointsNotifier extends StateNotifier<AsyncValue<PointsState>> {
-  PointsNotifier(this._datasource)
-      : super(const AsyncLoading<PointsState>());
+  PointsNotifier(this._datasource) : super(const AsyncLoading<PointsState>());
 
   final PointsRemoteDatasource _datasource;
 

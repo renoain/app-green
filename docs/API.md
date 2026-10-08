@@ -6,7 +6,7 @@ ada Edge Function. Sumber kebenaran skema tetap
 docs/DATABASE_SCHEMA.md; arsitektur data di docs/ARCHITECTURE.md
 bagian 10.
 
-Terakhir update: 2026-10-01
+Terakhir update: 2026-10-07
 Status sinkron migrasi: 001-026 Local = Remote.
 
 ---
@@ -200,7 +200,52 @@ Saat `USE_DUMMY_API=true`, `authRepositoryProvider` memakai
 
 ---
 
-## 8. Yang belum ada (rencana)
+## 8. Mode Laravel (backend alternatif)
+
+Server REST Laravel di `http://127.0.0.1:8000/api` (lihat repo
+`go-green-api`, Sanctum token). Struktur JSON selalu dibungkus
+`{success, data}` atau `{success, data: [...]}`; datasource Flutter
+mengekstrak `data` dulu baru parse ke model.
+
+- Cara pakai: isi `.env` dengan `DATA_SOURCE=laravel` dan
+  `LARAVEL_API_URL=http://127.0.0.1:8000/api`; provider otomatis memakai
+  `*_laravel_datasource.dart` (dio). Default tetap Supabase.
+  Server Laravel harus jalan (`php artisan serve`) saat mode ini aktif.
+- Auth (`auth_laravel_datasource.dart` + `laravel_auth_repository.dart`):
+  `POST /register` (`name`, `email`, `password`), `POST /login`
+  (`email`, `password`), `POST /logout` + `GET /me` (Bearer token).
+  Token disimpan di SharedPreferences (`laravel_token`). Login username
+  tidak didukung server (langsung gagal); login Google tidak didukung.
+- Checkpoints (`checkpoint_laravel_datasource.dart`): `GET /checkpoints`,
+  `GET /checkpoints/{id}`, `POST /checkpoints`, `PUT /checkpoints/{id}`,
+  `DELETE /checkpoints/{id}`. Filter aktif dan QR dikerjakan di klien;
+  aktif/nonaktif via `PUT is_active`.
+- Waste (`waste_laravel_datasource.dart`): `GET /waste-logs`
+  (`user_id`/`status`/`hash` sebagai query), `POST /waste-logs`,
+  `GET /waste-logs/{id}`, `PATCH /waste-logs/{id}`,
+  `POST /waste-logs/{id}/approve`, `POST /waste-logs/{id}/reject`.
+  Upload foto dilewati (path dipakai apa adanya), signed URL
+  dikembalikan apa adanya.
+- Points (`points_laravel_datasource.dart`): `GET /points` (`user_id`),
+  `POST /points`, `GET /points/total` (`user_id`). Redeem membuat
+  `POST /redemptions` lalu entri `POST /points` tipe redeem per maksimal
+  50 poin (dipecah bila harga di atas 50) dengan `reference_id` id
+  redemption dan kode voucher di `description`.
+- Rewards dan redemptions (`reward_laravel_datasource.dart`):
+  `GET /rewards`,
+  `GET /rewards/{id}`, `POST /rewards`, `PUT /rewards/{id}`,
+  `DELETE /rewards/{id}`, `GET /redemptions` (`user_id`),
+  `POST /redemptions`, `GET /redemptions/{id}`.
+- Articles (`article_laravel_datasource.dart`): `GET /articles`,
+  `GET /articles/{id}` (publik, tanpa token).
+- Batasan: tanpa RLS Supabase (otorisasi via middleware `role:admin`
+  dan `role:admin,petugas` di server), tanpa storage terpusat,
+  `getAllForAdmin` reward dan `getAllCheckpoints` mengikuti apa yang
+  dikembalikan server sesuai role token.
+
+---
+
+## 9. Yang belum ada (rencana)
 
 - Edge Function: validasi anti-kecurangan lanjutan, AI forensics,
   approval berjenjang (fase 2+; secret dilarang di klien).
@@ -211,7 +256,7 @@ Saat `USE_DUMMY_API=true`, `authRepositoryProvider` memakai
 
 ---
 
-## 9. Referensi
+## 10. Referensi
 
 - Skema, RLS, storage, seed: docs/DATABASE_SCHEMA.md.
 - Alur data, datasource, auth, deep link: docs/ARCHITECTURE.md

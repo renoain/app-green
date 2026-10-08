@@ -5,15 +5,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/redemption.dart';
 import '../../domain/entities/reward.dart';
 import '../../data/datasources/reward_dummy_datasource.dart';
+import '../../data/datasources/reward_laravel_datasource.dart';
 import '../../data/datasources/reward_remote_datasource.dart';
 import '../../../../core/constants/app_env.dart';
 
-/// Provider data source reward (dummy saat [AppEnv.useDummyApi] true).
+/// Provider data source reward (dummy/laravel sesuai [AppEnv.dataSource]).
 final Provider<RewardRemoteDatasource> rewardRemoteDatasourceProvider =
     Provider<RewardRemoteDatasource>(
-  (Ref ref) => AppEnv.useDummyApi
-      ? RewardDummyDatasource()
-      : RewardRemoteDatasource(),
+  (Ref ref) {
+    switch (AppEnv.dataSource) {
+      case 'laravel':
+        return RewardLaravelDatasource();
+      case 'dummy':
+        return RewardDummyDatasource();
+      case 'supabase':
+      default:
+        return RewardRemoteDatasource();
+    }
+  },
 );
 
 /// Notifier daftar reward aktif.
@@ -47,8 +56,7 @@ final StateNotifierProvider<RewardNotifier, AsyncValue<List<Reward>>>
 );
 
 /// Notifier daftar voucher (redemption) milik user.
-class UserVouchersNotifier
-    extends StateNotifier<AsyncValue<List<Redemption>>> {
+class UserVouchersNotifier extends StateNotifier<AsyncValue<List<Redemption>>> {
   UserVouchersNotifier(this._datasource)
       : super(const AsyncLoading<List<Redemption>>());
 
@@ -64,10 +72,8 @@ class UserVouchersNotifier
 }
 
 /// Provider state voucher milik user.
-final StateNotifierProvider<UserVouchersNotifier,
-        AsyncValue<List<Redemption>>> userVouchersProvider =
-    StateNotifierProvider<UserVouchersNotifier,
-        AsyncValue<List<Redemption>>>(
-  (Ref ref) =>
-      UserVouchersNotifier(ref.watch(rewardRemoteDatasourceProvider)),
+final StateNotifierProvider<UserVouchersNotifier, AsyncValue<List<Redemption>>>
+    userVouchersProvider =
+    StateNotifierProvider<UserVouchersNotifier, AsyncValue<List<Redemption>>>(
+  (Ref ref) => UserVouchersNotifier(ref.watch(rewardRemoteDatasourceProvider)),
 );

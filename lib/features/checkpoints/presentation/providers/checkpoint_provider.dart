@@ -6,16 +6,25 @@ import '../../domain/entities/checkpoint.dart';
 import '../../domain/repositories/checkpoint_repository.dart';
 import '../../domain/usecases/get_nearby_checkpoints_usecase.dart';
 import '../../data/datasources/checkpoint_dummy_datasource.dart';
+import '../../data/datasources/checkpoint_laravel_datasource.dart';
 import '../../data/datasources/checkpoint_remote_datasource.dart';
 import '../../data/repositories/checkpoint_repository_impl.dart';
 import '../../../../core/constants/app_env.dart';
 
-/// Provider data source checkpoint (dummy saat [AppEnv.useDummyApi] true).
-final Provider<CheckpointRemoteDatasource>
-    checkpointRemoteDatasourceProvider = Provider<CheckpointRemoteDatasource>(
-  (Ref ref) => AppEnv.useDummyApi
-      ? CheckpointDummyDatasource()
-      : CheckpointRemoteDatasource(),
+/// Provider data source checkpoint (dummy/laravel sesuai [AppEnv.dataSource]).
+final Provider<CheckpointRemoteDatasource> checkpointRemoteDatasourceProvider =
+    Provider<CheckpointRemoteDatasource>(
+  (Ref ref) {
+    switch (AppEnv.dataSource) {
+      case 'laravel':
+        return CheckpointLaravelDatasource();
+      case 'dummy':
+        return CheckpointDummyDatasource();
+      case 'supabase':
+      default:
+        return CheckpointRemoteDatasource();
+    }
+  },
 );
 
 /// Provider repository checkpoint.
@@ -27,8 +36,8 @@ final Provider<CheckpointRepository> checkpointRepositoryProvider =
 );
 
 /// Provider use case checkpoint terdekat.
-final Provider<GetNearbyCheckpointsUsecase> getNearbyCheckpointsUsecaseProvider =
-    Provider<GetNearbyCheckpointsUsecase>(
+final Provider<GetNearbyCheckpointsUsecase>
+    getNearbyCheckpointsUsecaseProvider = Provider<GetNearbyCheckpointsUsecase>(
   (Ref ref) => GetNearbyCheckpointsUsecase(
     ref.watch(checkpointRepositoryProvider),
   ),

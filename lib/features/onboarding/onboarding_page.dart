@@ -10,7 +10,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
-import '../../core/widgets/app_button_widgets.dart';
+import 'widgets/morphing_next_button.dart';
 
 /// Halaman onboarding Go Green.
 class OnboardingPage extends StatefulWidget {
@@ -101,9 +101,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(AppSpacing.lg),
-              child: PrimaryButton(
-                text: _isLastSlide ? AppStrings.startButton : AppStrings.nextButton,
-                onPressed: _handleNext,
+              child: Center(
+                child: MorphingNextButton(
+                  label: AppStrings.startButton,
+                  expanded: _isLastSlide,
+                  onPressed: _handleNext,
+                ),
               ),
             ),
           ],

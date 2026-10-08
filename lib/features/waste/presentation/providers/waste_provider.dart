@@ -8,8 +8,10 @@ import '../../../../core/constants/app_enums.dart';
 import '../../../../core/constants/app_env.dart';
 import '../../../checkpoints/domain/entities/checkpoint.dart';
 import '../../../points/data/datasources/points_dummy_datasource.dart';
+import '../../../points/data/datasources/points_laravel_datasource.dart';
 import '../../../points/data/datasources/points_remote_datasource.dart';
 import '../../data/datasources/waste_dummy_datasource.dart';
+import '../../data/datasources/waste_laravel_datasource.dart';
 import '../../data/datasources/waste_remote_datasource.dart';
 import '../../domain/repositories/waste_repository.dart';
 import '../../domain/usecases/calculate_points_usecase.dart';
@@ -17,11 +19,20 @@ import '../../domain/usecases/submit_waste_usecase.dart';
 import '../../domain/usecases/validate_photo_usecase.dart';
 import '../../data/repositories/waste_repository_impl.dart';
 
-/// Provider data source waste log (dummy saat [AppEnv.useDummyApi] true).
+/// Provider data source waste log (dummy/laravel sesuai [AppEnv.dataSource]).
 final Provider<WasteRemoteDatasource> wasteRemoteDatasourceProvider =
     Provider<WasteRemoteDatasource>(
-  (Ref ref) =>
-      AppEnv.useDummyApi ? WasteDummyDatasource() : WasteRemoteDatasource(),
+  (Ref ref) {
+    switch (AppEnv.dataSource) {
+      case 'laravel':
+        return WasteLaravelDatasource();
+      case 'dummy':
+        return WasteDummyDatasource();
+      case 'supabase':
+      default:
+        return WasteRemoteDatasource();
+    }
+  },
 );
 
 /// Provider repository waste log.
@@ -48,9 +59,19 @@ final Provider<ValidatePhotoUsecase> validatePhotoUsecaseProvider =
 final Provider<SubmitWasteUsecase> submitWasteUsecaseProvider =
     Provider<SubmitWasteUsecase>(
   (Ref ref) {
-    final PointsRemoteDatasource pointsDatasource = AppEnv.useDummyApi
-        ? PointsDummyDatasource()
-        : PointsRemoteDatasource();
+    final PointsRemoteDatasource pointsDatasource;
+    switch (AppEnv.dataSource) {
+      case 'laravel':
+        pointsDatasource = PointsLaravelDatasource();
+        break;
+      case 'dummy':
+        pointsDatasource = PointsDummyDatasource();
+        break;
+      case 'supabase':
+      default:
+        pointsDatasource = PointsRemoteDatasource();
+        break;
+    }
     return SubmitWasteUsecase(
       wasteRepository: ref.watch(wasteRepositoryProvider),
       validatePhoto: ref.watch(validatePhotoUsecaseProvider),
@@ -109,9 +130,8 @@ class WasteSubmitNotifier
 }
 
 /// Provider status pengiriman bukti buang sampah.
-final StateNotifierProvider<WasteSubmitNotifier,
-        AsyncValue<SubmitWasteResult?>>
-    wasteSubmitNotifierProvider = StateNotifierProvider<WasteSubmitNotifier,
-        AsyncValue<SubmitWasteResult?>>(
+final StateNotifierProvider<WasteSubmitNotifier, AsyncValue<SubmitWasteResult?>>
+    wasteSubmitNotifierProvider =
+    StateNotifierProvider<WasteSubmitNotifier, AsyncValue<SubmitWasteResult?>>(
   (Ref ref) => WasteSubmitNotifier(ref.watch(submitWasteUsecaseProvider)),
 );

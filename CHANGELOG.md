@@ -1,5 +1,212 @@
 # CHANGELOG - Go Green
 
+## [2026-10-07] - Tombol morph onboarding ala template referensi
+
+Status: Selesai
+
+File yang dibuat:
+
+- `lib/features/onboarding/widgets/morphing_next_button.dart` (dibuat) - Lingkaran panah jadi pil label di slide terakhir (AnimatedContainer + AnimatedSwitcher, tanpa dependency baru).
+- `test/widget/components/morphing_next_button_test.dart` (dibuat) - 3 test widget (lingkaran, pil, onPressed).
+
+File yang diubah:
+
+- `lib/features/onboarding/onboarding_page.dart` (diedit) - PrimaryButton diganti MorphingNextButton terpusat; target tetap Home.
+- `test/widget/pages/auth_flow_test.dart` (diedit) - Tap via MorphingNextButton, bukan teks nextButton.
+- `docs/COMPONENT_LIBRARY.md` (diedit) - Section MorphingNextButton.
+- `docs/UI_PAGES.md` (diedit) - Section Onboarding catat tombol morph.
+
+Catatan:
+
+- Referensi: Best-Flutter-UI-Templates introduction_animation CenterNextButton (tombol lingkaran melebar jadi Sign Up). Evaluasi dependency (PROTOCOL Bagian C): paket animations DITOLAK (hanya dipakai untuk SharedAxisTransition; morph cukup widget bawaan).
+- Perbaikan saat implementasi: teks pil dibungkus Flexible + fade agar tidak overflow di tengah animasi (ditemukan via auth_flow_test).
+- Tanpa perubahan flow (slide terakhir tetap ke Home, bukan Register); tanpa string baru; tanpa dependency baru.
+
+Verifikasi:
+
+- flutter analyze: OK (No issues found)
+- flutter test: OK (337 test lulus, 3 baru + 334 lama)
+
+## [2026-10-07] - Hapus redemption_laravel_datasource yang tak terpakai
+
+Status: Selesai
+
+File yang dihapus:
+
+- `lib/features/rewards/data/datasources/redemption_laravel_datasource.dart` (dihapus) - Kode mati, tidak di-import file mana pun; operasi redemption tetap via RewardLaravelDatasource.
+
+File yang diubah:
+
+- `docs/API.md` (diedit) - Hapus sebutan file tersebut di section 8.
+
+Catatan:
+
+- Terverifikasi nol pemakaian di kode sebelum dihapus; tidak ada perubahan flow.
+- Tanpa dependency baru; tanpa perubahan UI.
+
+Verifikasi:
+
+- flutter analyze: OK (No issues found)
+- flutter test: OK (334 test lulus)
+
+## [2026-10-07] - Fix race .env belum dimuat saat provider dibuat
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/main.dart` (diedit) - Muat dotenv dengan await sebelum runApp agar AppEnv.dataSource benar sejak provider pertama.
+
+Catatan:
+
+- Akar masalah: .env dimuat async di background sehingga provider auth yang dibuat duluan fallback ke supabase (register masuk Supabase, bukan MySQL), sedangkan halaman belakangan memakai Laravel tanpa token Sanctum (401).
+- Tanpa dependency baru; tanpa perubahan UI.
+
+Verifikasi:
+
+- flutter analyze: OK (No issues found)
+- flutter test: OK (334 test lulus)
+
+## [2026-10-07] - Konsistenkan useDummyApi dengan dataSource
+
+Status: Selesai
+
+File yang diubah:
+
+- `lib/core/constants/app_env.dart` (diedit) - useDummyApi kini sama dengan dataSource == 'dummy' agar USE_DUMMY_API diabaikan total saat DATA_SOURCE terisi.
+
+Catatan:
+
+- Akar masalah: provider pakai dataSource (abaikan flag lama), tetapi Edit Profil baca useDummyApi sehingga mode Laravel + USE_DUMMY_API=true bertingkah dummy di halaman itu.
+- `.env` tidak perlu diubah (USE_DUMMY_API=true kini harmless saat DATA_SOURCE=laravel); perilaku legacy tanpa DATA_SOURCE tetap sama.
+- Tanpa dependency baru; tanpa perubahan UI.
+
+Verifikasi:
+
+- flutter analyze: OK (No issues found)
+- flutter test: OK (334 test lulus)
+
+## [2026-10-07] - Fix redeem dan reject Laravel sisi Flutter (Opsi A)
+
+Status: Selesai
+
+File yang dibuat:
+
+- `test/unit/features/points/points_laravel_datasource_test.dart` (dibuat) - 2 test redeem (pecah 100 jadi 2x50, 30 jadi 1 entri).
+
+File yang diubah:
+
+- `lib/features/waste/data/datasources/waste_laravel_datasource.dart` (diedit) - Reject kirim rejection_reason, field notes dihapus dari body.
+- `lib/features/points/data/datasources/points_laravel_datasource.dart` (diedit) - Redeem pakai reference_id id redemption, voucher di description, amount dipecah per maks 50.
+- `test/unit/features/waste/waste_laravel_datasource_test.dart` (diedit) - 1 test baru reject (isi body + tanpa notes).
+- `docs/API.md` (diedit) - Section 8 perbarui perilaku redeem Laravel.
+- `docs/TEST_RESULT_LARAVEL.md` (diedit) - Section tindak lanjut Opsi A.
+
+Catatan:
+
+- File Supabase, dummy, UI, entity, usecase, repository tidak diubah.
+- Bentuk payload baru terbukti lolos validasi server pada test kontrol E2E (rejection_reason sukses, ref 36 char + amount 50 sukses).
+- Tanpa dependency baru.
+
+Verifikasi:
+
+- flutter analyze: OK (No issues found)
+- flutter test: OK (334 test lulus, 3 baru + 331 lama)
+
+## [2026-10-07] - Test E2E Flutter ke Laravel (API-level, 2 bug field)
+
+Status: Selesai
+
+File yang dibuat:
+
+- `docs/TEST_RESULT_LARAVEL.md` (dibuat) - Tabel 11 test, 2 bug, rekomendasi Opsi A/B.
+
+File yang diubah:
+
+- Tidak ada file kode diubah (sesuai aturan: lapor dulu sebelum fix).
+
+Catatan:
+
+- Metode: endpoint Laravel dipanggil 1:1 seperti datasource Flutter (tanpa device fisik, UI tidak diklik manual).
+- Bug 1: redeem gagal 422, reference_id voucher 8 char ditolak (wajib 36), amount 100-500 ditolak (maks 50).
+- Bug 2: reject gagal 422, Flutter kirim notes, server wajibkan rejection_reason.
+- `.env` aktif masih mode dummy (USE_DUMMY_API=true, tanpa DATA_SOURCE); uji device butuh DATA_SOURCE=laravel.
+- Data uji tertinggal di MySQL: user e2e194806@green.com + 2 waste logs + 1 redemption + 2 points.
+
+Verifikasi:
+
+- hasil linter/analyze: OK (No issues found, tanpa perubahan kode)
+- hasil test: OK (20 test laravel lulus; full suite terakhir 331 lulus sebelum task ini)
+
+## [2026-10-07] - Datasource Laravel ketiga (mode DATA_SOURCE=laravel)
+
+Status: Selesai
+
+File yang dibuat:
+
+- `lib/features/auth/data/datasources/auth_laravel_datasource.dart` (dibuat) - Register/login/logout/me Sanctum via dio, token di SharedPreferences.
+- `lib/features/auth/data/repositories/laravel_auth_repository.dart` (dibuat) - Implementasi AuthRepository mode Laravel, sesi di memori.
+- `lib/features/checkpoints/data/datasources/checkpoint_laravel_datasource.dart` (dibuat) - Checkpoint Laravel via dio.
+- `lib/features/waste/data/datasources/waste_laravel_datasource.dart` (dibuat) - Waste Laravel via dio.
+- `lib/features/points/data/datasources/points_laravel_datasource.dart` (dibuat) - Points Laravel via dio.
+- `lib/features/rewards/data/datasources/reward_laravel_datasource.dart` (dibuat) - Reward Laravel via dio.
+- `lib/features/rewards/data/datasources/redemption_laravel_datasource.dart` (dibuat) - Redemption Laravel via dio.
+- `lib/features/article/data/datasources/article_laravel_datasource.dart` (dibuat) - Artikel Laravel via dio.
+- `test/unit/features/auth/auth_laravel_datasource_test.dart` (dibuat) - 6 test mock dio.
+- `test/unit/features/checkpoints/checkpoint_laravel_datasource_test.dart` (dibuat) - 6 test mock dio.
+- `test/unit/features/waste/waste_laravel_datasource_test.dart` (dibuat) - 8 test mock dio.
+
+File yang diubah:
+
+- `lib/core/constants/app_env.dart` (diedit) - Tambah dataSource + laravelApiUrl, fallback USE_DUMMY_API bila DATA_SOURCE kosong.
+- `.env.example` (diedit) - Tambah DATA_SOURCE=supabase + LARAVEL_API_URL.
+- `lib/features/auth/presentation/providers/auth_provider.dart` (diedit) - Pilih Supabase/Dummy/Laravel repository, nama dan tipe provider tetap.
+- `lib/features/checkpoints/presentation/providers/checkpoint_provider.dart` (diedit) - Sama untuk datasource.
+- `lib/features/waste/presentation/providers/waste_provider.dart` (diedit) - Sama untuk datasource + points pendamping submit.
+- `lib/features/points/presentation/providers/point_provider.dart` (diedit) - Sama untuk datasource.
+- `lib/features/rewards/presentation/providers/reward_provider.dart` (diedit) - Sama untuk datasource.
+- `lib/features/article/presentation/providers/article_provider.dart` (diedit) - Sama untuk datasource.
+- `docs/API.md` (diedit) - Section 8 Mode Laravel, section lama 8-9 jadi 9-10.
+- `docs/ARCHITECTURE.md` (diedit) - Section 10.10 jadi 3 opsi datasource, versi 1.2.
+
+Catatan:
+
+- File Supabase, dummy json-server, UI, entity, usecase, dan repository impl lama tidak diubah sesuai batas tugas.
+- Penyimpangan dari prompt: auth Laravel butuh LaravelAuthRepository baru agar tipe provider tetap AuthRepository (datasource Sanctum tidak cocok dengan API Supabase Auth); redemption Laravel jadi file pendamping karena repo tidak punya redemption datasource terpisah; upload foto dan signed URL dilewati seperti mode dummy (tanpa endpoint storage di Laravel).
+- Batasan Laravel: login username dan login Google tidak didukung server; redeem mencatat entri redeem sebesar harga reward (baca GET rewards/id, fallback 1); server Laravel harus jalan saat mode aktif.
+- Tanpa dependency baru (dio, shared_preferences, uuid, mocktail sudah ada).
+
+Verifikasi:
+
+- flutter analyze: OK (No issues found)
+- flutter test: OK (331 test lulus, 20 baru + 311 lama)
+
+## [2026-10-06] - Backend Laravel alternatif di Laragon (tanpa ubah Flutter)
+
+Status: Selesai
+
+File yang dibuat (di C:\laragon\www\go-green-api, project Flutter tidak diubah):
+
+- Migration 9 tabel Go Green (convert PostgreSQL ke MySQL, char36 + HasUuids).
+- Model Eloquent: Profile, Checkpoint, WasteLog, Point, Reward, Redemption, Article, AppSetting, AdminAuditLog.
+- Controller API: Auth, Checkpoint, Waste, Point, Reward, Redemption, Article + routes/api.php (Sanctum).
+- Seeder: 3 user, 3 profiles, 3 checkpoints, 4 rewards, 3 artikel.
+- Docs: SETUP.md, API.md, CONVERT_SCHEMA.md (+ copy DATABASE_SCHEMA.md).
+
+Catatan:
+
+- Aktifkan extension=zip di php.ini Laragon agar composer jalan.
+- Auth pakai tabel users bawaan + Sanctum; profiles domain diisi terpisah.
+- RLS/trigger/check constraint diganti validasi controller + middleware (detail di CONVERT_SCHEMA.md).
+- Tanpa dependency tambahan selain laravel/sanctum.
+
+Verifikasi:
+
+- php artisan migrate: OK (9 migration + sanctum)
+- php artisan db:seed: OK (3/3/3/4/3)
+- GET /api/checkpoints: OK (3 baris)
+- POST /api/register: OK (token Sanctum, user tes dihapus lagi)
+
 ## [2026-10-05] - Auth dummy json-server (register/login profiles)
 
 Status: Selesai

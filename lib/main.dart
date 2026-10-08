@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -25,6 +26,7 @@ final PushNotificationService pushService = PushNotificationService(
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await _loadEnv();
   final Locale savedLocale = await loadSavedLocale();
   unawaited(_initSupabase());
   unawaited(_initPush());
@@ -36,6 +38,19 @@ Future<void> main() async {
       child: const GoGreenApp(),
     ),
   );
+}
+
+/// Memuat .env sebelum runApp agar AppEnv.dataSource sudah benar saat
+/// provider pertama dibuat (hindari fallback supabase karena race).
+Future<void> _loadEnv() async {
+  if (dotenv.isInitialized) {
+    return;
+  }
+  try {
+    await dotenv.load(fileName: '.env');
+  } catch (error, stackTrace) {
+    AppLogger.error('Gagal memuat .env', error, stackTrace);
+  }
 }
 
 /// Inisialisasi Supabase tanpa memblokir render awal.

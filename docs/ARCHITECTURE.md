@@ -653,23 +653,35 @@ Arsitektur auth berlapis presentation -> domain -> data:
   getActiveCheckpoints (daftar + terdekat). Tanpa kolom ini dulu
   nonaktif = hapus permanen.
 
-### 10.10 Opsi Datasource (Supabase vs json-server)
+### 10.10 Opsi Datasource (Supabase vs json-server vs Laravel)
 
-- Setiap fitur punya 2 datasource dengan method yang sama persis:
-  Supabase (`*_remote_datasource.dart`, sudah ada) dan dummy
-  (`*_dummy_datasource.dart`, dio ke json-server, tanpa SDK Supabase).
-- Dummy `extends` remote agar tipe provider tidak berubah; repository
-  impl menerima datasource lewat parameter `remote` yang sudah ada,
-  provider menyuntikkan pilihan berdasarkan `AppEnv.useDummyApi`
-  (.env `USE_DUMMY_API`, default false = Supabase).
-- Alur 2 mode (UI tetap sama):
+- Setiap fitur punya datasource dengan method yang sama persis:
+  Supabase (`*_remote_datasource.dart`, sudah ada), dummy
+  (`*_dummy_datasource.dart`, dio ke json-server, tanpa SDK Supabase),
+  dan Laravel (`*_laravel_datasource.dart`, dio ke REST Laravel
+  `AppEnv.laravelApiUrl`, respons `{success, data}` diekstrak dulu).
+- Dummy dan Laravel `extends` remote agar tipe provider tidak berubah;
+  repository impl menerima datasource lewat parameter `remote` yang sudah
+  ada, provider menyuntikkan pilihan berdasarkan `AppEnv.dataSource`
+  (.env `DATA_SOURCE`: `supabase` default, `dummy`, atau `laravel`;
+  bila kosong fallback ke `USE_DUMMY_API` lama).
+- Auth memilih repository (tipe tetap `AuthRepository`):
+  `SupabaseAuthRepository`, `DummyAuthRepository`, atau
+  `LaravelAuthRepository` (Sanctum, token di SharedPreferences
+  `laravel_token`; login username/Google tidak didukung server).
+- Alur 3 mode (UI tetap sama):
   - Production: UI -> Provider -> Repository -> RemoteDatasource -> Supabase.
   - Dummy: UI -> Provider -> Repository -> DummyDatasource -> json-server
     (docs/dummy/db.json, lihat docs/API.md bagian 7).
+  - Laravel: UI -> Provider -> Repository -> LaravelDatasource ->
+    Laravel API (lihat docs/API.md bagian 8).
 - Batasan dummy: tanpa auth/RLS/storage/trigger server; upload foto
   dilewati, ID baru berupa UUID klien.
+- Batasan Laravel: otorisasi via middleware role di server (bukan RLS);
+  upload foto dan signed URL dilewati; redeem mencatat entri redeem
+  sebesar harga reward; server harus jalan saat mode aktif.
 - Evaluasi dependency (PROTOCOL Bagian C): tanpa dependency baru
-  (dio, uuid, mocktail sudah ada; json-server hanya tool dev via npm).
+  (dio, shared_preferences, uuid, mocktail sudah ada).
 
 ---
 
@@ -688,10 +700,12 @@ Detail di docs/SECURITY_AND_VALIDATION.md.
 
 ## 12. Status Dokumen
 
-- Versi: 1.1
-- Terakhir update: 2026-09-15
+- Versi: 1.2
+- Terakhir update: 2026-10-07
 - Riwayat:
   - 1.0: arsitektur awal (layer, routing, backend, anti-kecurangan).
   - 1.1: tambah strategi query checkpoint terdekat (client-side dulu),
     deep link QR fase 2 (App Links/Universal Links), NFC fase 2, kolom
     source waste_logs untuk analytics, dan daftar datasource per fitur.
+  - 1.2: tambah datasource ketiga Laravel (DATA_SOURCE) di samping
+    Supabase dan json-server, tanpa ubah datasource lama.

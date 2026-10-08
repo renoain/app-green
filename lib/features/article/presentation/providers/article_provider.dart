@@ -5,16 +5,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/article.dart';
 import '../../domain/repositories/article_repository.dart';
 import '../../data/datasources/article_dummy_datasource.dart';
+import '../../data/datasources/article_laravel_datasource.dart';
 import '../../data/datasources/article_remote_datasource.dart';
 import '../../data/repositories/article_repository_impl.dart';
 import '../../../../core/constants/app_env.dart';
 
-/// Provider data source artikel (dummy saat [AppEnv.useDummyApi] true).
+/// Provider data source artikel (dummy/laravel sesuai [AppEnv.dataSource]).
 final Provider<ArticleRemoteDatasource> articleRemoteDatasourceProvider =
     Provider<ArticleRemoteDatasource>(
-  (Ref ref) => AppEnv.useDummyApi
-      ? ArticleDummyDatasource()
-      : ArticleRemoteDatasource(),
+  (Ref ref) {
+    switch (AppEnv.dataSource) {
+      case 'laravel':
+        return ArticleLaravelDatasource();
+      case 'dummy':
+        return ArticleDummyDatasource();
+      case 'supabase':
+      default:
+        return ArticleRemoteDatasource();
+    }
+  },
 );
 
 /// Provider repository artikel.

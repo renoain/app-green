@@ -21,7 +21,9 @@ Status: [Selesai] = halaman sudah diimplementasi, [Belum] = belum dibuat.
 ## 2. Onboarding [Selesai]
 
 - Tujuan: pengantar fitur utama.
-- Elemen: gambar ilustrasi, judul, deskripsi, tombol "Selanjutnya"/"Mulai",
+- Elemen: gambar ilustrasi, judul, deskripsi, tombol morph
+  (MorphingNextButton: lingkaran panah di slide 1-2, pil "Mulai" di
+  slide 3, referensi Best-Flutter-UI-Templates introduction_animation),
   tombol "Lewati".
 - State: current page index.
 - Aksi: swipe atau tap tombol, lewati (skip langsung ke Home), navigasi

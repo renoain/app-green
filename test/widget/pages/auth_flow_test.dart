@@ -16,6 +16,7 @@ import 'package:go_green/features/activity/presentation/pages/activity_page.dart
 import 'package:go_green/features/auth/presentation/pages/login_page.dart';
 import 'package:go_green/features/home/presentation/pages/home_page.dart';
 import 'package:go_green/features/onboarding/onboarding_page.dart';
+import 'package:go_green/features/onboarding/widgets/morphing_next_button.dart';
 import 'package:go_green/features/points/presentation/pages/points_page.dart';
 import 'package:go_green/features/splash/splash_page.dart';
 
@@ -32,7 +33,8 @@ Widget _app(String initialLocation) {
 }
 
 void main() {
-  testWidgets('Splash berpindah ke Onboarding setelah jeda', (WidgetTester tester) async {
+  testWidgets('Splash berpindah ke Onboarding setelah jeda',
+      (WidgetTester tester) async {
     await tester.pumpWidget(_app('/splash'));
     await tester.pump();
 
@@ -45,19 +47,20 @@ void main() {
     expect(find.byType(OnboardingPage), findsOneWidget);
   });
 
-  testWidgets('Onboarding menyelesaikan 3 slide lalu ke Home', (WidgetTester tester) async {
+  testWidgets('Onboarding menyelesaikan 3 slide lalu ke Home',
+      (WidgetTester tester) async {
     await tester.pumpWidget(_app('/onboarding'));
     await tester.pumpAndSettle();
 
     expect(find.text(AppStrings.onboardingTitle1), findsOneWidget);
 
-    await tester.tap(find.text(AppStrings.nextButton));
+    await tester.tap(find.byType(MorphingNextButton));
     await tester.pumpAndSettle();
     expect(find.text(AppStrings.onboardingTitle2), findsOneWidget);
 
-    await tester.tap(find.text(AppStrings.nextButton));
+    await tester.tap(find.byType(MorphingNextButton));
     await tester.pumpAndSettle();
-    expect(find.byType(PrimaryButton), findsOneWidget);
+    expect(find.byType(MorphingNextButton), findsOneWidget);
 
     await tester.tap(find.text(AppStrings.startButton));
     await tester.pumpAndSettle();
@@ -66,7 +69,8 @@ void main() {
     expect(find.text(AppStrings.homeLoginNotice), findsOneWidget);
   });
 
-  testWidgets('Onboarding tombol Lewati langsung ke Home', (WidgetTester tester) async {
+  testWidgets('Onboarding tombol Lewati langsung ke Home',
+      (WidgetTester tester) async {
     await tester.pumpWidget(_app('/onboarding'));
     await tester.pumpAndSettle();
 
@@ -77,7 +81,8 @@ void main() {
     expect(find.text(AppStrings.homeLoginNotice), findsOneWidget);
   });
 
-  testWidgets('Login menampilkan error saat form kosong', (WidgetTester tester) async {
+  testWidgets('Login menampilkan error saat form kosong',
+      (WidgetTester tester) async {
     await tester.pumpWidget(_app('/login'));
     await tester.pumpAndSettle();
 
@@ -88,7 +93,8 @@ void main() {
     expect(find.text(AppStrings.errorPasswordRequired), findsOneWidget);
   });
 
-  testWidgets('Login berpindah ke Home setelah form valid', (WidgetTester tester) async {
+  testWidgets('Login berpindah ke Home setelah form valid',
+      (WidgetTester tester) async {
     await tester.pumpWidget(_app('/login'));
     await tester.pumpAndSettle();
 
@@ -101,7 +107,8 @@ void main() {
     expect(find.byType(HomePage), findsOneWidget);
   });
 
-  testWidgets('Register menampilkan error saat konfirmasi tidak cocok', (WidgetTester tester) async {
+  testWidgets('Register menampilkan error saat konfirmasi tidak cocok',
+      (WidgetTester tester) async {
     await tester.pumpWidget(_app('/register'));
     await tester.pumpAndSettle();
 
@@ -117,7 +124,8 @@ void main() {
     expect(find.text(AppStrings.errorPasswordMismatch), findsOneWidget);
   });
 
-  testWidgets('Register berpindah ke Login setelah form valid', (WidgetTester tester) async {
+  testWidgets('Register berpindah ke Login setelah form valid',
+      (WidgetTester tester) async {
     await tester.pumpWidget(_app('/register'));
     await tester.pumpAndSettle();
 
@@ -134,7 +142,8 @@ void main() {
     expect(find.byType(LoginPage), findsOneWidget);
   });
 
-  testWidgets('Home berpindah tab melalui bottom nav', (WidgetTester tester) async {
+  testWidgets('Home berpindah tab melalui bottom nav',
+      (WidgetTester tester) async {
     await tester.pumpWidget(_app('/home'));
     await tester.pumpAndSettle();
 
@@ -151,7 +160,8 @@ void main() {
     expect(find.byType(ActivityPage), findsOneWidget);
   });
 
-  testWidgets('back dari tab lain kembali ke tab Home dulu', (WidgetTester tester) async {
+  testWidgets('back dari tab lain kembali ke tab Home dulu',
+      (WidgetTester tester) async {
     await tester.pumpWidget(_app('/home'));
     await tester.pumpAndSettle();
 
@@ -170,7 +180,8 @@ void main() {
     expect(find.byType(HomePage), findsOneWidget);
   });
 
-  testWidgets('back pertama di tab Home hanya menampilkan hint keluar', (WidgetTester tester) async {
+  testWidgets('back pertama di tab Home hanya menampilkan hint keluar',
+      (WidgetTester tester) async {
     await tester.pumpWidget(_app('/home'));
     await tester.pumpAndSettle();
 
@@ -181,7 +192,8 @@ void main() {
     expect(find.text(AppStrings.backToExitHint), findsOneWidget);
   });
 
-  testWidgets('Login menampilkan tombol Google dengan logo', (WidgetTester tester) async {
+  testWidgets('Login menampilkan tombol Google dengan logo',
+      (WidgetTester tester) async {
     await tester.pumpWidget(_app('/login'));
     await tester.pumpAndSettle();
 
@@ -195,7 +207,8 @@ void main() {
     expect(find.text(AppStrings.loginWithGoogle), findsOneWidget);
   });
 
-  testWidgets('Login dengan Google demo berpindah ke Home', (WidgetTester tester) async {
+  testWidgets('Login dengan Google demo berpindah ke Home',
+      (WidgetTester tester) async {
     await tester.pumpWidget(_app('/login'));
     await tester.pumpAndSettle();
 

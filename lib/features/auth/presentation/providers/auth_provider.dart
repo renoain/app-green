@@ -11,13 +11,23 @@ import '../../../admin/data/datasources/admin_profile_datasource.dart';
 import '../../domain/entities/auth_session.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../data/repositories/dummy_auth_repository.dart';
+import '../../data/repositories/laravel_auth_repository.dart';
 import '../../data/repositories/supabase_auth_repository.dart';
 
-/// Provider repository autentikasi (dummy json-server saat [AppEnv.useDummyApi] true).
+/// Provider repository autentikasi (dummy/laravel sesuai [AppEnv.dataSource]).
 final Provider<AuthRepository> authRepositoryProvider =
     Provider<AuthRepository>(
-  (Ref ref) =>
-      AppEnv.useDummyApi ? DummyAuthRepository() : SupabaseAuthRepository(),
+  (Ref ref) {
+    switch (AppEnv.dataSource) {
+      case 'laravel':
+        return LaravelAuthRepository();
+      case 'dummy':
+        return DummyAuthRepository();
+      case 'supabase':
+      default:
+        return SupabaseAuthRepository();
+    }
+  },
 );
 
 /// Notifier status autentikasi yang mengikuti perubahan sesi.

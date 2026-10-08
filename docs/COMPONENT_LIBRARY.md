@@ -99,7 +99,6 @@ Catatan: sebelumnya bernama TextButton di dokumen; diubah menjadi
 AppTextButton untuk menghindari bentrok dengan TextButton bawaan Flutter.
 
 ### GoogleAuthButton [Selesai]
-
 Props:
 - text: String (label, mis. "Masuk dengan Google" / "Daftar dengan Google")
 - onPressed: VoidCallback?
@@ -113,6 +112,19 @@ logo resminya. Handler ada di masing-masing halaman (login/register):
 buka browser OAuth (redirectTo AppValues.oauthRedirectTo), tampilkan
 snackbar petunjuk + spinner terpisah, tunggu sesi max 120 detik via
 AuthRepository.signInWithGoogle, lalu navigasi sesuai role.
+
+### MorphingNextButton [Selesai]
+
+Props:
+- label: String (teks pil saat expanded)
+- expanded: bool (true di slide terakhir)
+- onPressed: VoidCallback?
+
+Pemakaian: tombol next onboarding (lingkaran panah 58px jadi pil 200px
+"Mulai" + panah, 480ms fastOutSlowIn, teks Flexible anti-overflow
+transisi). Referensi Best-Flutter-UI-Templates introduction_animation
+CenterNextButton; tanpa paket animations (cukup AnimatedContainer +
+AnimatedSwitcher bawaan). Dipakai OnboardingPage; target tetap Home.
 
 ---
 
