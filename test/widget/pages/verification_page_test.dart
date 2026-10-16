@@ -1,4 +1,4 @@
-// Widget test halaman verifikasi.
+﻿// Widget test halaman verifikasi.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,7 +9,7 @@ import 'package:go_green/core/constants/app_strings.dart';
 import 'package:go_green/core/router/app_router.dart';
 import 'package:go_green/core/theme/app_theme.dart';
 import 'package:go_green/features/home/presentation/pages/home_page.dart';
-import 'package:go_green/features/verification/presentation/data/verification_extra.dart';
+import 'package:go_green/core/router/route_extras.dart';
 import 'package:go_green/features/verification/presentation/pages/verification_page.dart';
 import 'package:go_green/features/verification/presentation/widgets/points_earned_dialog.dart';
 

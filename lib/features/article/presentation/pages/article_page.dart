@@ -1,4 +1,4 @@
-// Halaman daftar artikel edukasi Go Green.
+﻿// Halaman daftar artikel edukasi Go Green.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -13,7 +13,7 @@ import '../../../../core/widgets/card_widgets.dart';
 import '../../../../core/widgets/custom_text_field_widget.dart';
 import '../../../../core/widgets/feedback_widgets.dart';
 import '../../domain/entities/article.dart';
-import '../data/article_demo_data.dart';
+import '../../data/datasources/article_demo_datasource.dart';
 import '../providers/article_provider.dart';
 
 /// Halaman daftar artikel Go Green.

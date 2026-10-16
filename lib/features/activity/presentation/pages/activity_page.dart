@@ -1,4 +1,4 @@
-// Halaman riwayat aktivitas Go Green.
+﻿// Halaman riwayat aktivitas Go Green.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,9 +18,9 @@ import '../../../checkpoints/presentation/providers/checkpoint_provider.dart';
 import '../../../waste/domain/entities/waste_log.dart';
 import '../../../waste/domain/usecases/calculate_points_usecase.dart';
 import '../../../waste/presentation/providers/waste_provider.dart';
-import '../data/activity_demo_data.dart';
-import '../data/activity_detail_extra.dart';
-import '../data/activity_texts.dart';
+import '../../data/datasources/activity_demo_datasource.dart';
+import '../../../../core/router/route_extras.dart';
+import '../mappers/activity_texts.dart';
 
 /// Halaman riwayat aktivitas Go Green.
 class ActivityPage extends ConsumerStatefulWidget {

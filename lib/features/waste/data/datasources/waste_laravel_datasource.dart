@@ -1,15 +1,14 @@
-// Data source waste log Laravel via REST (tanpa Supabase).
+﻿// Data source waste log Laravel via REST (tanpa Supabase).
 
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants/app_config.dart';
 import '../../../../core/constants/app_enums.dart';
 import '../../../../core/constants/app_env.dart';
 import '../../../../core/utils/logger.dart';
-import '../../../auth/data/datasources/auth_laravel_datasource.dart';
+import '../../../../core/services/token_storage.dart';
 import '../models/waste_log_model.dart';
 import 'waste_remote_datasource.dart';
 
@@ -43,16 +42,7 @@ class WasteLaravelDatasource extends WasteRemoteDatasource {
     return Map<String, dynamic>.from(body as Map);
   }
 
-  Future<Options> _authOptions() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString(laravelTokenKey);
-    if (token == null || token.isEmpty) {
-      return Options();
-    }
-    return Options(
-      headers: <String, dynamic>{'Authorization': 'Bearer $token'},
-    );
-  }
+  Future<Options> _authOptions() => authOptions();
 
   Never _logAndRethrow(String method, Object error, StackTrace stackTrace) {
     AppLogger.error('WasteLaravelDatasource.$method gagal', error, stackTrace);
@@ -70,7 +60,9 @@ class WasteLaravelDatasource extends WasteRemoteDatasource {
         'Ukuran foto melebihi batas maksimal ${AppConfig.maxPhotoMb} MB.',
       );
     }
-    AppLogger.warning('Mode Laravel: upload foto dilewati untuk $fileName.');
+    AppLogger.warning(
+      'Mode Laravel: upload foto dilewati, path disimpan apa adanya.',
+    );
     return fileName;
   }
 
@@ -161,6 +153,9 @@ class WasteLaravelDatasource extends WasteRemoteDatasource {
         data: <String, dynamic>{
           'status': status.value,
           'verified_by': verifiedBy,
+          // Mode ini tidak punya trigger server seperti mode Supabase, jadi
+          // verified_at memakai jam device. Saat backend Laravel sudah punya trigger,
+          // hapus baris ini dan biarkan server yang mengisinya.
           'verified_at': DateTime.now().toUtc().toIso8601String(),
           if (notes != null) 'notes': notes,
         },

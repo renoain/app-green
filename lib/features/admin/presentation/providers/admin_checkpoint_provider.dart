@@ -1,12 +1,14 @@
-// Provider kelola TPS admin (presentation).
+﻿// Provider kelola TPS admin (presentation).
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../checkpoints/domain/entities/checkpoint.dart';
+import '../../../checkpoints/domain/repositories/checkpoint_repository.dart';
 import '../../../checkpoints/domain/usecases/generate_checkpoint_qr_usecase.dart';
 import '../../../checkpoints/domain/usecases/generate_tps_code_usecase.dart';
 import '../../../checkpoints/domain/usecases/manage_checkpoint_usecase.dart';
 import '../../../checkpoints/presentation/providers/checkpoint_provider.dart';
+import '../../data/datasources/admin_audit_datasource.dart';
 import '../../domain/entities/audit_log.dart';
 import 'admin_audit_provider.dart';
 import 'admin_providers.dart' show manageCheckpointUsecaseProvider;
@@ -29,35 +31,43 @@ final Provider<GenerateTpsCodeUsecase> generateTpsCodeUsecaseProvider =
 );
 
 /// Filter teks pencarian daftar TPS.
-final StateProvider<String> adminCheckpointSearchProvider =
-    StateProvider<String>((Ref ref) => '');
+final AutoDisposeStateProvider<String> adminCheckpointSearchProvider =
+    AutoDisposeStateProvider<String>((Ref ref) => '');
 
 /// Filter wilayah daftar TPS (id atau null berarti semua).
-final StateProvider<String?> adminCheckpointProvinceFilterProvider =
-    StateProvider<String?>((Ref ref) => null);
+final AutoDisposeStateProvider<String?> adminCheckpointProvinceFilterProvider =
+    AutoDisposeStateProvider<String?>((Ref ref) => null);
 
 /// Filter kota daftar TPS (id atau null berarti semua).
-final StateProvider<String?> adminCheckpointCityFilterProvider =
-    StateProvider<String?>((Ref ref) => null);
+final AutoDisposeStateProvider<String?> adminCheckpointCityFilterProvider =
+    AutoDisposeStateProvider<String?>((Ref ref) => null);
 
 /// Filter kecamatan daftar TPS (id atau null berarti semua).
-final StateProvider<String?> adminCheckpointDistrictFilterProvider =
-    StateProvider<String?>((Ref ref) => null);
+final AutoDisposeStateProvider<String?> adminCheckpointDistrictFilterProvider =
+    AutoDisposeStateProvider<String?>((Ref ref) => null);
 
 /// Notifier daftar TPS untuk admin (semua + cari + tambah + ubah + hapus).
 class AdminCheckpointListNotifier
     extends StateNotifier<AsyncValue<List<Checkpoint>>> {
-  AdminCheckpointListNotifier(this._usecase, this._ref)
-      : super(const AsyncLoading<List<Checkpoint>>());
+AdminCheckpointListNotifier(
+    this._usecase,
+    this._checkpointRepository, {
+    required GenerateCheckpointQrUsecase generateQr,
+    required AdminAuditDatasource auditWriter,
+  })  : _generateQr = generateQr,
+        _auditWriter = auditWriter,
+        super(const AsyncLoading<List<Checkpoint>>());
 
   final ManageCheckpointUsecase _usecase;
-  final Ref _ref;
+  final CheckpointRepository _checkpointRepository;
+  final GenerateCheckpointQrUsecase _generateQr;
+  final AdminAuditDatasource _auditWriter;
 
   /// Muat semua checkpoint.
   Future<void> loadAll() async {
     state = const AsyncLoading<List<Checkpoint>>();
     state = await AsyncValue.guard<List<Checkpoint>>(
-      () => _ref.read(checkpointRepositoryProvider).getAllCheckpoints(),
+      () => _checkpointRepository.getAllCheckpoints(),
     );
   }
 
@@ -112,9 +122,7 @@ class AdminCheckpointListNotifier
     int? maxUses,
   }) async {
     String? qr = qrCode?.trim().isEmpty ?? true ? null : qrCode?.trim();
-    qr ??= await _ref
-        .read(generateCheckpointQrUsecaseProvider)
-        .nextCode();
+    qr ??= await _generateQr.nextCode();
     final Checkpoint created = await _usecase.create(
       name: name,
       address: address,
@@ -129,7 +137,7 @@ class AdminCheckpointListNotifier
       subdistrict: subdistrict,
       maxUses: maxUses,
     );
-    await _ref.read(adminAuditDatasourceProvider).log(
+    await _auditWriter.log(
           action: AuditAction.create,
           entity: AuditEntity.checkpoint,
           entityId: created.id,
@@ -156,9 +164,7 @@ class AdminCheckpointListNotifier
     int? maxUses,
   }) async {
     String? qr = qrCode?.trim().isEmpty ?? true ? null : qrCode?.trim();
-    qr ??= await _ref
-        .read(generateCheckpointQrUsecaseProvider)
-        .nextCode();
+    qr ??= await _generateQr.nextCode();
     final Checkpoint updated = await _usecase.update(
       id: id,
       name: name,
@@ -174,7 +180,7 @@ class AdminCheckpointListNotifier
       subdistrict: subdistrict,
       maxUses: maxUses,
     );
-    await _ref.read(adminAuditDatasourceProvider).log(
+    await _auditWriter.log(
           action: AuditAction.update,
           entity: AuditEntity.checkpoint,
           entityId: id,
@@ -187,7 +193,7 @@ class AdminCheckpointListNotifier
   /// Nonaktifkan TPS (soft-delete).
   Future<void> deactivate(String id) async {
     await _usecase.deactivate(id);
-    await _ref.read(adminAuditDatasourceProvider).log(
+    await _auditWriter.log(
           action: AuditAction.deactivate,
           entity: AuditEntity.checkpoint,
           entityId: id,
@@ -198,7 +204,7 @@ class AdminCheckpointListNotifier
   /// Aktifkan kembali TPS.
   Future<void> activate(String id) async {
     await _usecase.activate(id);
-    await _ref.read(adminAuditDatasourceProvider).log(
+    await _auditWriter.log(
           action: AuditAction.activate,
           entity: AuditEntity.checkpoint,
           entityId: id,
@@ -214,6 +220,8 @@ final StateNotifierProvider<AdminCheckpointListNotifier,
         AsyncValue<List<Checkpoint>>>(
   (Ref ref) => AdminCheckpointListNotifier(
     ref.watch(manageCheckpointUsecaseProvider),
-    ref,
+    ref.watch(checkpointRepositoryProvider),
+    generateQr: ref.watch(generateCheckpointQrUsecaseProvider),
+    auditWriter: ref.watch(adminAuditDatasourceProvider),
   ),
 );

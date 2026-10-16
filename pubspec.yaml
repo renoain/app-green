@@ -19,7 +19,6 @@ dependencies:
 
   # State Management
   flutter_riverpod: ^2.5.1
-  riverpod_annotation: ^2.3.5
 
   # Routing
   go_router: ^14.0.0
@@ -38,7 +37,6 @@ dependencies:
   # Kamera & Media
   camera: ^0.10.5+9
   image: ^4.1.7
-  image_picker: ^1.1.2
 
   # GPS & Lokasi
   geolocator: ^11.0.0
@@ -52,6 +50,7 @@ dependencies:
   # Keamanan & Hash
   crypto: ^3.0.3
   exif: ^3.3.0
+  flutter_secure_storage: ^11.2.0
 
   # Logging
   logger: ^2.3.0
@@ -76,8 +75,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  build_runner: ^2.4.9
-  riverpod_generator: ^2.4.0
   mocktail: ^1.0.3
   geolocator_platform_interface: ^4.3.0
 
@@ -89,7 +86,6 @@ flutter:
     - assets/icons/custom/
     - assets/splash/
     - assets/app_icon/
-    - .env
   fonts:
     - family: Manrope
       fonts:

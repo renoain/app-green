@@ -1,4 +1,4 @@
-// Halaman verifikasi bukti pembuangan sampah Go Green.
+﻿// Halaman verifikasi bukti pembuangan sampah Go Green.
 
 import 'dart:io';
 import 'dart:typed_data';
@@ -25,7 +25,7 @@ import '../../../checkpoints/presentation/providers/checkpoint_provider.dart';
 import '../../../waste/domain/usecases/submit_waste_usecase.dart';
 import '../../../waste/presentation/providers/waste_provider.dart';
 import '../../../waste/presentation/widgets/category_chip.dart';
-import '../data/verification_extra.dart';
+import '../../../../core/router/route_extras.dart';
 import '../widgets/points_earned_dialog.dart';
 
 /// Label Bahasa Indonesia untuk kategori sampah.

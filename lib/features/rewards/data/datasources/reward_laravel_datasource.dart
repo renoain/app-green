@@ -1,11 +1,10 @@
-// Data source reward Laravel via REST (tanpa Supabase).
+﻿// Data source reward Laravel via REST (tanpa Supabase).
 
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants/app_env.dart';
 import '../../../../core/utils/logger.dart';
-import '../../../auth/data/datasources/auth_laravel_datasource.dart';
+import '../../../../core/services/token_storage.dart';
 import '../../../points/data/datasources/points_laravel_datasource.dart';
 import '../models/redemption_model.dart';
 import '../models/reward_model.dart';
@@ -47,16 +46,7 @@ class RewardLaravelDatasource extends RewardRemoteDatasource {
     return Map<String, dynamic>.from(body as Map);
   }
 
-  Future<Options> _authOptions() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString(laravelTokenKey);
-    if (token == null || token.isEmpty) {
-      return Options();
-    }
-    return Options(
-      headers: <String, dynamic>{'Authorization': 'Bearer $token'},
-    );
-  }
+  Future<Options> _authOptions() => authOptions();
 
   Never _logAndRethrow(String method, Object error, StackTrace stackTrace) {
     AppLogger.error('RewardLaravelDatasource.$method gagal', error, stackTrace);

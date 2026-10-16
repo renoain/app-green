@@ -1,4 +1,4 @@
-// Halaman detail user admin (presentation).
+﻿// Halaman detail user admin (presentation).
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -25,7 +25,7 @@ import '../../domain/usecases/manage_user_usecase.dart';
 import '../providers/admin_users_provider.dart';
 
 /// Label role user.
-String _roleLabel(UserRole role) {
+String userRoleLabel(UserRole role) {
   return switch (role) {
     UserRole.admin => 'Admin',
     UserRole.petugas => 'Petugas',
@@ -177,7 +177,7 @@ class _AdminUserDetailPageState extends ConsumerState<AdminUserDetailPage> {
               children: UserRole.values.map((UserRole role) {
                 final bool selected = _selectedRole == role;
                 return ChoiceChip(
-                  label: Text(_roleLabel(role)),
+                  label: Text(userRoleLabel(role)),
                   selected: selected,
                   onSelected: (_) => setState(() => _selectedRole = role),
                 );

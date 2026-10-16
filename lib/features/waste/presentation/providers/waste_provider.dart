@@ -60,35 +60,44 @@ final Provider<SubmitWasteUsecase> submitWasteUsecaseProvider =
     Provider<SubmitWasteUsecase>(
   (Ref ref) {
     final PointsRemoteDatasource pointsDatasource;
+    final bool serverCreditsPoints;
     switch (AppEnv.dataSource) {
       case 'laravel':
         pointsDatasource = PointsLaravelDatasource();
+        serverCreditsPoints = false;
         break;
       case 'dummy':
         pointsDatasource = PointsDummyDatasource();
+        serverCreditsPoints = false;
         break;
       case 'supabase':
       default:
         pointsDatasource = PointsRemoteDatasource();
+        serverCreditsPoints = true;
         break;
     }
     return SubmitWasteUsecase(
       wasteRepository: ref.watch(wasteRepositoryProvider),
       validatePhoto: ref.watch(validatePhotoUsecaseProvider),
       calculatePoints: ref.watch(calculatePointsUsecaseProvider),
-      recordEarnPoints: ({
-        required String userId,
-        required int amount,
-        required String referenceId,
-        required String description,
-      }) =>
-          pointsDatasource.addPoints(
-        userId: userId,
-        amount: amount,
-        type: PointType.earn,
-        referenceId: referenceId,
-        description: description,
-      ),
+      // Di mode Supabase poin earn dicatat trigger server saat waste log
+      // terverifikasi (migration 029). Klien tidak boleh insert earn sendiri
+      // karena policy-nya sudah dicabut agar poin tidak bisa dicetak gratis.
+      recordEarnPoints: serverCreditsPoints
+          ? null
+          : ({
+              required String userId,
+              required int amount,
+              required String referenceId,
+              required String description,
+            }) =>
+                  pointsDatasource.addPoints(
+            userId: userId,
+            amount: amount,
+            type: PointType.earn,
+            referenceId: referenceId,
+            description: description,
+          ),
     );
   },
 );

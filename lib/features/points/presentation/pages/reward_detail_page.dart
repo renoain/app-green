@@ -1,4 +1,4 @@
-// Halaman detail reward Go Green.
+﻿// Halaman detail reward Go Green.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -20,7 +20,8 @@ import '../../../rewards/domain/entities/reward.dart';
 import '../../../rewards/presentation/providers/reward_provider.dart';
 import '../../../rewards/presentation/widgets/redeem_dialogs.dart';
 import '../providers/point_provider.dart';
-import '../data/reward_demo_data.dart';
+import '../../data/datasources/reward_demo_datasource.dart';
+import '../widgets/reward_icon.dart';
 
 /// Halaman detail reward Go Green.
 class RewardDetailPage extends ConsumerStatefulWidget {
@@ -87,24 +88,6 @@ class _RewardDetailPageState extends ConsumerState<RewardDetailPage> {
     }
   }
 
-  /// Ikon reward berdasarkan nama katalog.
-  IconData _iconForName(String name) {
-    final String lower = name.toLowerCase();
-    if (lower.contains('voucher') || lower.contains('belanja')) {
-      return LucideIcons.shopping_bag;
-    }
-    if (lower.contains('wallet') ||
-        lower.contains('saldo') ||
-        lower.contains('e-wallet') ||
-        lower.contains('ewallet')) {
-      return LucideIcons.wallet;
-    }
-    if (lower.contains('donasi') || lower.contains('donation')) {
-      return LucideIcons.heart_handshake;
-    }
-    return LucideIcons.gift;
-  }
-
   @override
   Widget build(BuildContext context) {
     if (!_isDemoId) {
@@ -149,7 +132,7 @@ class _RewardDetailPageState extends ConsumerState<RewardDetailPage> {
         title: reward.name,
         description: reward.description ?? reward.name,
         pointCost: reward.pointsCost,
-        icon: _iconForName(reward.name),
+        icon: rewardIconForName(reward.name),
         stock: reward.stock,
         redeeming: _redeeming,
         onExchange: () => _onExchange(

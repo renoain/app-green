@@ -1,4 +1,4 @@
-// Provider daftar user admin (presentation).
+﻿// Provider daftar user admin (presentation).
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,12 +23,12 @@ final Provider<ManageUserUsecase> manageUserUsecaseProvider =
 );
 
 /// Kata kunci cari user admin (nama/email).
-final StateProvider<String> adminUserSearchProvider =
-    StateProvider<String>((Ref ref) => '');
+final AutoDisposeStateProvider<String> adminUserSearchProvider =
+    AutoDisposeStateProvider<String>((Ref ref) => '');
 
 /// Filter role user admin (null berarti semua).
-final StateProvider<UserRole?> adminUserRoleFilterProvider =
-    StateProvider<UserRole?>((Ref ref) => null);
+final AutoDisposeStateProvider<UserRole?> adminUserRoleFilterProvider =
+    AutoDisposeStateProvider<UserRole?>((Ref ref) => null);
 
 /// Notifier daftar user admin.
 class AdminUsersNotifier extends StateNotifier<AsyncValue<List<AdminUser>>> {

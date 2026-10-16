@@ -13,6 +13,7 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/app_bar_and_loading_widgets.dart';
 import '../../../waste/domain/entities/waste_log.dart';
+import '../../../waste/domain/usecases/assess_photo_risk_usecase.dart';
 import '../providers/admin_waste_provider.dart';
 
 /// Detail satu waste log pending + aksi setujui/tolak.
@@ -241,21 +242,23 @@ class _DetailRow extends StatelessWidget {
   }
 }
 
-/// Label tingkat risiko dari skor (selaras AssessPhotoRiskUsecase).
+/// Label tingkat risiko dari skor (ambang diambil dari domain PhotoRiskLevel).
 String _riskLevelLabel(int score) {
-  if (score >= 60) return AppStrings.forensicHigh;
-  if (score >= 30) return AppStrings.forensicMedium;
-  return AppStrings.forensicLow;
+  return switch (PhotoRiskLevel.fromScore(score)) {
+    PhotoRiskLevel.high => AppStrings.forensicHigh,
+    PhotoRiskLevel.medium => AppStrings.forensicMedium,
+    PhotoRiskLevel.low => AppStrings.forensicLow,
+  };
 }
 
 /// Label sinyal risiko dari kode kolom risk_detail.
 String _riskReasonLabel(String code) {
-  return switch (code) {
-    'no_exif' => AppStrings.forensicNoExif,
-    'edited_software' => AppStrings.forensicEdited,
-    'far_gps' => AppStrings.forensicFarGps,
-    'rapid_submit' => AppStrings.forensicRapid,
-    _ => code,
+  return switch (PhotoRiskReason.fromCode(code)) {
+    PhotoRiskReason.noExif => AppStrings.forensicNoExif,
+    PhotoRiskReason.editedSoftware => AppStrings.forensicEdited,
+    PhotoRiskReason.farGps => AppStrings.forensicFarGps,
+    PhotoRiskReason.rapidSubmit => AppStrings.forensicRapid,
+    null => code,
   };
 }
 
@@ -356,18 +359,33 @@ class _ForensicsSection extends StatelessWidget {
   }
 }
 
-/// Baris jarak log ke checkpoint (async).
-class _DistanceRow extends ConsumerWidget {
+/// Baris jarak log ke checkpoint (async). Future dibuat sekali saat initState
+/// supaya rebuild tidak memanggil ulang pengukuran jarak.
+class _DistanceRow extends ConsumerStatefulWidget {
   const _DistanceRow({required this.log});
 
   /// Waste log yang diukur.
   final WasteLog log;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_DistanceRow> createState() => _DistanceRowState();
+}
+
+class _DistanceRowState extends ConsumerState<_DistanceRow> {
+  late final Future<int?> _distance;
+
+  @override
+  void initState() {
+    super.initState();
+    _distance = ref
+        .read(verifyWasteUsecaseProvider)
+        .distanceToCheckpoint(widget.log);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return FutureBuilder<int?>(
-      future:
-          ref.read(verifyWasteUsecaseProvider).distanceToCheckpoint(log),
+      future: _distance,
       builder: (BuildContext context, AsyncSnapshot<int?> snapshot) {
         final String value =
             snapshot.data == null ? '-' : '${snapshot.data} m';
@@ -380,16 +398,33 @@ class _DistanceRow extends ConsumerWidget {
   }
 }
 
-/// Foto bukti dari storage privat (signed URL).
-class _PhotoSection extends ConsumerWidget {
+/// Foto bukti dari storage privat (signed URL). Signed URL dibuat sekali saat
+/// initState supaya rebuild tidak meminta ulang dan tidak membuat loop.
+class _PhotoSection extends ConsumerStatefulWidget {
   const _PhotoSection({required this.photoPath});
 
   /// Path foto di storage.
   final String? photoPath;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    if (photoPath == null || photoPath!.isEmpty) {
+  ConsumerState<_PhotoSection> createState() => _PhotoSectionState();
+}
+
+class _PhotoSectionState extends ConsumerState<_PhotoSection> {
+  Future<String>? _photoUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    final String? path = widget.photoPath;
+    if (path != null && path.isNotEmpty) {
+      _photoUrl = ref.read(adminWasteListProvider.notifier).photoUrl(path);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_photoUrl == null) {
       return Container(
         height: 200,
         alignment: Alignment.center,
@@ -401,7 +436,7 @@ class _PhotoSection extends ConsumerWidget {
       );
     }
     return FutureBuilder<String>(
-      future: ref.read(adminWasteListProvider.notifier).photoUrl(photoPath!),
+      future: _photoUrl,
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (!snapshot.hasData) {
           return const SizedBox(

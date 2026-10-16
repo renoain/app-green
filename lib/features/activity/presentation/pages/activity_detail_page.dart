@@ -1,4 +1,4 @@
-// Halaman detail aktivitas Go Green.
+﻿// Halaman detail aktivitas Go Green.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -12,8 +12,8 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/app_bar_and_loading_widgets.dart';
 import '../../../../core/widgets/status_widgets.dart';
-import '../data/activity_demo_data.dart';
-import '../data/activity_detail_extra.dart';
+import '../../data/datasources/activity_demo_datasource.dart';
+import '../../../../core/router/route_extras.dart';
 
 /// Halaman detail satu aktivitas pembuangan sampah.
 class ActivityDetailPage extends StatelessWidget {

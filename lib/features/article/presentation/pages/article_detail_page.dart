@@ -1,4 +1,4 @@
-// Halaman detail artikel edukasi Go Green.
+﻿// Halaman detail artikel edukasi Go Green.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -10,7 +10,7 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/app_bar_and_loading_widgets.dart';
 import '../../domain/entities/article.dart';
-import '../data/article_demo_data.dart';
+import '../../data/datasources/article_demo_datasource.dart';
 
 /// Halaman detail artikel Go Green.
 class ArticleDetailPage extends StatelessWidget {

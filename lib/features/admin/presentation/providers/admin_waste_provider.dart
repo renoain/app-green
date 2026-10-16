@@ -1,12 +1,14 @@
-// Provider verifikasi waste admin (presentation).
+﻿// Provider verifikasi waste admin (presentation).
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/services/supabase_service.dart';
 import '../../../checkpoints/presentation/providers/checkpoint_provider.dart';
 import '../../../waste/domain/entities/waste_log.dart';
+import '../../../waste/domain/repositories/waste_repository.dart';
 import '../../../waste/presentation/providers/waste_provider.dart'
     show wasteRepositoryProvider;
+import '../../data/datasources/admin_audit_datasource.dart';
 import '../../domain/entities/audit_log.dart';
 import '../../domain/usecases/verify_waste_usecase.dart';
 import 'admin_audit_provider.dart';
@@ -24,23 +26,32 @@ final Provider<VerifyWasteUsecase> verifyWasteUsecaseProvider =
 );
 
 /// Filter aktif daftar verifikasi.
-final StateProvider<AdminWasteFilter> adminWasteFilterProvider =
-    StateProvider<AdminWasteFilter>((Ref ref) => AdminWasteFilter.all);
+final AutoDisposeStateProvider<AdminWasteFilter> adminWasteFilterProvider =
+    AutoDisposeStateProvider<AdminWasteFilter>((Ref ref) => AdminWasteFilter.all);
 
 /// Notifier antrean verifikasi pending untuk admin/petugas.
+///
+/// Repository dan audit datasource di-inject pada konstruktor, bukan diambil
+/// lewat [Ref], supaya provider tidak memegang referensi provider lain dan
+/// tetap bisa di-override saat pengujian.
 class AdminWasteListNotifier
     extends StateNotifier<AsyncValue<List<WasteLog>>> {
-  AdminWasteListNotifier(this._usecase, this._ref)
-      : super(const AsyncLoading<List<WasteLog>>());
+  AdminWasteListNotifier(
+    this._usecase,
+    this._wasteRepository, {
+    required AdminAuditDatasource auditWriter,
+  })  : _auditWriter = auditWriter,
+        super(const AsyncLoading<List<WasteLog>>());
 
   final VerifyWasteUsecase _usecase;
-  final Ref _ref;
+  final WasteRepository _wasteRepository;
+  final AdminAuditDatasource _auditWriter;
 
   /// Muat waste log berstatus pending.
   Future<void> loadPending() async {
     state = const AsyncLoading<List<WasteLog>>();
     state = await AsyncValue.guard<List<WasteLog>>(
-      () => _ref.read(wasteRepositoryProvider).getPendingWasteLogs(),
+      () => _wasteRepository.getPendingWasteLogs(),
     );
   }
 
@@ -74,11 +85,11 @@ class AdminWasteListNotifier
     final String? verifiedBy = SupabaseService.instance.currentUser?.id;
     if (verifiedBy == null) throw StateError('Belum login');
     await _usecase.approve(id: id, verifiedBy: verifiedBy);
-    await _ref.read(adminAuditDatasourceProvider).log(
-          action: AuditAction.approve,
-          entity: AuditEntity.verification,
-          entityId: id,
-        );
+    await _auditWriter.log(
+      action: AuditAction.approve,
+      entity: AuditEntity.verification,
+      entityId: id,
+    );
     await loadPending();
   }
 
@@ -87,18 +98,18 @@ class AdminWasteListNotifier
     final String? verifiedBy = SupabaseService.instance.currentUser?.id;
     if (verifiedBy == null) throw StateError('Belum login');
     await _usecase.reject(id: id, verifiedBy: verifiedBy, reason: reason);
-    await _ref.read(adminAuditDatasourceProvider).log(
-          action: AuditAction.reject,
-          entity: AuditEntity.verification,
-          entityId: id,
-          detail: reason,
-        );
+    await _auditWriter.log(
+      action: AuditAction.reject,
+      entity: AuditEntity.verification,
+      entityId: id,
+      detail: reason,
+    );
     await loadPending();
   }
 
   /// URL foto bukti untuk detail.
   Future<String> photoUrl(String path) {
-    return _ref.read(wasteRepositoryProvider).getPhotoSignedUrl(path);
+    return _wasteRepository.getPhotoSignedUrl(path);
   }
 }
 
@@ -109,6 +120,7 @@ final StateNotifierProvider<AdminWasteListNotifier,
         AsyncValue<List<WasteLog>>>(
   (Ref ref) => AdminWasteListNotifier(
     ref.watch(verifyWasteUsecaseProvider),
-    ref,
+    ref.watch(wasteRepositoryProvider),
+    auditWriter: ref.watch(adminAuditDatasourceProvider),
   ),
 );

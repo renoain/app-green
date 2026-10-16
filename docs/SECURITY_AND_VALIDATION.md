@@ -15,6 +15,11 @@ Dokumen ini menjelaskan mekanisme anti-kecurangan dan validasi data di Go Green.
    - Timestamp foto diambil dari server (Supabase), bukan dari waktu device.
    - Device time bisa dimanipulasi; server time tidak.
    - Disimpan di metadata bukti dan ditampilkan di UI verifikasi.
+   - Waktu verifikasi waste log juga dipaksa dari server: trigger
+     `trg_set_verified_at` (migration 028) menimpa `verified_at` dengan `now()`
+     saat status menjadi verified atau rejected. Klien tidak lagi mengirim
+     nilai ini, sehingga admin dengan jam device salah tetap mencatat waktu
+     verifikasi yang benar.
 
 3. **GPS Radius**
    - Lokasi GPS user dicek sebelum upload: harus dalam radius tertentu
@@ -27,6 +32,30 @@ Dokumen ini menjelaskan mekanisme anti-kecurangan dan validasi data di Go Green.
    - Hash disimpan di database bersama metadata bukti.
    - Duplikasi hash dicek sebelum simpan: jika ada hash sama, foto ditolak
      (kemungkinan foto sama diupload ulang).
+   - Pengecekan klien memakai query dengan `limit(1)`, bukan `maybeSingle()`,
+     supaya tetap melaporkan duplikat tanpa melempar error ketika baris
+     duplikat menumpuk.
+
+4a. **Poin Hanya Server yang Mencetak**
+   - Poin earn dicatat trigger `trg_credit_points_verified` (migration 029)
+     saat waste log berstatus verified.
+   - Klien tidak boleh membuat baris `earn` lagi. Policy lama
+     `points_insert_own` mengizinkan insert tanpa batas jumlah baris sehingga
+     user bisa mencetak poin tanpa buang sampah; policy itu sudah dicabut.
+   - Klien hanya boleh membuat baris `redeem` (amount negatif) untuk mengurangi
+     saldo sendiri, dan hanya bila stok reward tersedia serta saldo cukup
+     (dicek oleh `can_redeem_reward`).
+   - Satu waste log menghasilkan paling banyak satu baris poin earn.
+
+4b. **Perlindungan Sesi**
+   - Token sesi Laravel Sanctum disimpan di keystore perangkat lewat
+     `flutter_secure_storage`, bukan di `SharedPreferences` polos yang bisa
+     diekstrak lewat backup atau device rooted.
+   - Backup Android dimatikan (`allowBackup=false` plus
+     `dataExtractionRules`) supaya token dan preferensi lokal tidak ikut
+     tersalin ke cloud atau pindah device.
+   - Logger dimatikan di build release, dan alamat email pada pesan log
+     disensor.
 
 ### Level Menengah (selesai on-device; ELA/piksel fase lanjut)
 
@@ -40,9 +69,17 @@ Dokumen ini menjelaskan mekanisme anti-kecurangan dan validasi data di Go Green.
 6a. **Skor Risiko (selesai)**
    - AssessPhotoRiskUsecase menggabungkan EXIF + jarak GPS + frekuensi
      harian menjadi skor 0-100 (tersimpan risk_score + risk_detail).
-   - Level: 0-29 rendah, 30-59 sedang, 60-100 tinggi.
+   - Level: 0-29 rendah, 30-59 sedang, 60-100 tinggi. Ambang batas ini hanya
+     ditulis di satu tempat, `PhotoRiskLevel.fromScore()`, supaya penilaian di
+     domain dan label di UI admin tidak pernah berbeda.
    - Skor hanya membantu verifikator (tidak memblokir; status tetap
      pending). Tampil di detail admin dengan alasan per sinyal.
+
+6c. **Titik Uji GPS Hanya di Debug Build**
+   - `debugLocationProvider` dibuat untuk penguji agar bisa pindah lokasi
+     tanpa ke lapangan.
+   - Notifier menolak aktif bila bukan `kDebugMode`, sehingga GPS palsu tidak
+     bisa memalsukan bukti pembuangan sampah pada build rilis.
 
 6. **ELA (Error Level Analysis, fase lanjut)**
    - Analisis level kompresi untuk mendeteksi area yang diedit.

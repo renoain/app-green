@@ -1,4 +1,4 @@
-// Halaman buang sampah (waste) Go Green.
+﻿// Halaman buang sampah (waste) Go Green.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -21,8 +21,8 @@ import '../../../../core/widgets/display_widgets.dart';
 import '../../../admin/presentation/providers/admin_providers.dart';
 import '../../../checkpoints/domain/entities/checkpoint.dart';
 import '../../../checkpoints/presentation/providers/checkpoint_provider.dart';
-import '../data/capture_extra.dart';
-import '../data/checkpoint_demo_data.dart';
+import '../../../../core/router/route_extras.dart';
+import '../../data/datasources/checkpoint_demo_datasource.dart';
 import '../widgets/location_status_card.dart';
 
 /// Checkpoint fallback saat Supabase belum tersedia (mode demo/test).

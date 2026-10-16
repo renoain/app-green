@@ -417,6 +417,12 @@ class AppStrings {
   /// Pesan izin kamera ditolak.
   static String get capturePermissionDenied => _t('capturePermissionDenied');
 
+  /// Pesan izin kamera diblokir permanen sehingga hanya bisa diubah lewat pengaturan perangkat.
+  static String get capturePermissionBlocked => _t('capturePermissionBlocked');
+
+  /// Tombol untuk membuka pengaturan aplikasi di perangkat.
+  static String get openSettingsButton => _t('openSettingsButton');
+
   /// Pesan foto berhasil diambil.
   static String get captureSuccess => _t('captureSuccess');
 
@@ -1024,6 +1030,15 @@ class AppStrings {
   /// Label filter semua role user admin.
   static String get adminUserFilterAll => _t('adminUserFilterAll');
 
+  /// Label peran admin.
+  static String get adminRoleAdmin => _t('adminRoleAdmin');
+
+  /// Label peran petugas.
+  static String get adminRolePetugas => _t('adminRolePetugas');
+
+  /// Label peran user biasa.
+  static String get adminRoleUser => _t('adminRoleUser');
+
   /// Judul detail user admin.
   static String get adminUserDetailTitle => _t('adminUserDetailTitle');
 
@@ -1434,6 +1449,8 @@ class AppStrings {
     'captureTitle': 'Ambil Foto',
     'captureUnavailable': 'Kamera tidak tersedia di perangkat ini.',
     'capturePermissionDenied': 'Izin kamera belum diberikan. Aktifkan lewat pengaturan perangkat.',
+    'capturePermissionBlocked': 'Izin kamera diblokir. Buka pengaturan perangkat untuk mengaktifkan kamera.',
+    'openSettingsButton': 'Buka Pengaturan',
     'captureSuccess': 'Foto berhasil diambil.',
     'captureFlipButton': 'Balik kamera',
     'captureHint': 'Tekan tombol untuk mengambil foto bukti.',
@@ -1659,6 +1676,9 @@ class AppStrings {
     'adminUserRoleLabel': 'Role',
     'adminUserSearchHint': 'Cari nama atau email...',
     'adminUserFilterAll': 'Semua',
+    'adminRoleAdmin': 'Admin',
+    'adminRolePetugas': 'Petugas',
+    'adminRoleUser': 'User',
     'adminUserDetailTitle': 'Detail User',
     'adminUserTotalPoints': 'Total Poin',
     'adminUserHistoryTitle': 'Riwayat Buang',
@@ -1882,6 +1902,8 @@ class AppStrings {
     'captureTitle': 'Take Photo',
     'captureUnavailable': 'Camera is not available on this device.',
     'capturePermissionDenied': 'Camera permission not granted. Enable it in device settings.',
+    'capturePermissionBlocked': 'Camera permission is blocked. Open device settings to enable the camera.',
+    'openSettingsButton': 'Open Settings',
     'captureSuccess': 'Photo captured successfully.',
     'captureFlipButton': 'Flip camera',
     'captureHint': 'Press the button to take the proof photo.',
@@ -2099,6 +2121,9 @@ class AppStrings {
     'adminUserRoleLabel': 'Role',
     'adminUserSearchHint': 'Search name or email...',
     'adminUserFilterAll': 'All',
+    'adminRoleAdmin': 'Admin',
+    'adminRolePetugas': 'Officer',
+    'adminRoleUser': 'User',
     'adminUserDetailTitle': 'User Details',
     'adminUserTotalPoints': 'Total Points',
     'adminUserHistoryTitle': 'Drop-off History',

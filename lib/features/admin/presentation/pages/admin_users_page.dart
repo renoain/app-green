@@ -1,4 +1,4 @@
-// Halaman kelola user admin (daftar + filter + ubah role).
+﻿// Halaman kelola user admin (daftar + filter + ubah role).
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -22,22 +22,14 @@ import '../../../../core/widgets/status_widgets.dart';
 import '../../domain/entities/admin_user.dart';
 import '../providers/admin_providers.dart';
 import '../providers/admin_users_provider.dart';
+import '../widgets/user_role_display.dart';
 
 /// Label role user untuk chip admin.
-String _roleLabel(UserRole role) {
+String userRoleLabel(UserRole role) {
   return switch (role) {
     UserRole.admin => 'Admin',
     UserRole.petugas => 'Petugas',
     UserRole.user => 'User',
-  };
-}
-
-/// Tipe chip role user admin.
-StatusType _roleType(UserRole role) {
-  return switch (role) {
-    UserRole.admin => StatusType.success,
-    UserRole.petugas => StatusType.info,
-    UserRole.user => StatusType.warning,
   };
 }
 
@@ -116,7 +108,7 @@ class _AdminUsersPageState extends ConsumerState<AdminUsersPage> {
                     (UserRole role) => Padding(
                       padding: const EdgeInsets.only(right: AppSpacing.sm),
                       child: ChoiceChip(
-                        label: Text(_roleLabel(role)),
+                        label: Text(userRoleLabel(role)),
                         selected: roleFilter == role,
                         onSelected: (_) => ref
                             .read(adminUserRoleFilterProvider.notifier)
@@ -225,8 +217,8 @@ class _AdminUsersPageState extends ConsumerState<AdminUsersPage> {
                                   ),
                                   StatusChip(
                                     label:
-                                        '${AppStrings.adminUserRoleLabel}: ${_roleLabel(user.role)}',
-                                    type: _roleType(user.role),
+                                        '${AppStrings.adminUserRoleLabel}: ${userRoleLabel(user.role)}',
+                                    type: userRoleStatusType(user.role),
                                   ),
                                 ],
                               ),

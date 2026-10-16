@@ -31,7 +31,11 @@ class SubmitWasteResult {
   final PhotoRisk risk;
 }
 
-/// Mencatat poin earn ke tabel points. Di-inject agar usecase tetap teruji tanpa Supabase; implementasi produksi memakai PointsRemoteDatasource.addPoints (butuh policy points_insert_own_earn).
+/// Mencatat poin earn ke tabel points. Di-inject agar usecase tetap teruji tanpa Supabase.
+///
+/// Di mode Supabase parameter ini dibiarkan null karena poin earn dicatat trigger
+/// server saat waste log terverifikasi (migration 029). Mode non-Supabase memakai
+/// implementasi PointsRemoteDatasource.addPoints.
 typedef RecordEarnPoints = Future<void> Function({
   required String userId,
   required int amount,

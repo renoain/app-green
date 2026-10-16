@@ -1,5 +1,96 @@
 # CHANGELOG - Go Green
 
+## [2026-10-12 14:30] - Perbaikan best practice keamanan, anti-kecurangan, dan arsitektur
+
+Status: Selesai
+
+File yang dibuat:
+
+- `lib/core/services/token_storage.dart` (dibuat) - Penyimpanan token sesi di keystore perangkat (Android Keystore / iOS Keychain) dengan fallback in-memory saat keystore tidak tersedia, plus migrasi sekali dari nilai lama di SharedPreferences. Menyediakan helper `authOptions()` dan `authHeaders()`.
+- `lib/core/router/route_extras.dart` (dibuat) - Kontrak argumen route (CaptureExtra, VerificationExtra, ActivityDetailExtra). Semula tersebar di folder `presentation/data/`.
+- `lib/features/points/presentation/widgets/reward_icon.dart` (dibuat) - Pemetaan nama reward ke ikon Lucide, dipakai bersama daftar dan detail reward (sebelumnya method `_iconForName` diduplikasi di 2 halaman).
+- `lib/features/admin/presentation/widgets/user_role_display.dart` (dibuat) - Label peran user dan tipe chip dalam bahasa aktif (sebelumnya `_roleLabel`/`_roleType` diduplikasi di 2 halaman dengan string Indonesia hardcoded).
+- `supabase/migrations/028_server_verified_at.sql` (dibuat) - Trigger `trg_set_verified_at` (insert + update) yang memaksa `verified_at` memakai jam server, dan RPC `count_today_waste_logs(uuid)` yang menghitung log harian dengan `current_date` agar batas rate limit sama dengan trigger.
+- `supabase/migrations/029_server_points_credit.sql` (dibuat) - Trigger `trg_credit_points_verified` yang mencatat poin earn saat waste log verified, helper `get_setting_number` dan `can_redeem_reward`, seed konfigurasi poin, dan penggantian policy `points_insert_own` menjadi `points_insert_redeem_own`.
+- `android/app/src/main/res/xml/data_extraction_rules.xml` (dibuat) - Aturan backup Android 12+ yang mengecualikan seluruh data aplikasi.
+
+File yang dihapus:
+
+- `lib/features/activity/presentation/data/` (dihapus) - Folder `presentation/data/` tidak ada lagi di seluruh project.
+- `lib/features/article/presentation/data/` (dihapus)
+- `lib/features/points/presentation/data/` (dihapus)
+- `lib/features/waste/presentation/data/` (dihapus)
+- `lib/features/verification/presentation/data/` (dihapus)
+
+File yang dipindah:
+
+- `lib/features/activity/data/datasources/activity_demo_datasource.dart` (dipindah dari `activity/presentation/data/activity_demo_data.dart`)
+- `lib/features/article/data/datasources/article_demo_datasource.dart` (dipindah dari `article/presentation/data/article_demo_data.dart`)
+- `lib/features/points/data/datasources/reward_demo_datasource.dart` (dipindah dari `points/presentation/data/reward_demo_data.dart`)
+- `lib/features/waste/data/datasources/checkpoint_demo_datasource.dart` (dipindah dari `waste/presentation/data/checkpoint_demo_data.dart`)
+- `lib/features/activity/presentation/mappers/activity_texts.dart` (dipindah dari `activity/presentation/data/activity_texts.dart`)
+
+File yang diubah:
+
+- `pubspec.yaml` (diedit) - Hapus `- .env` dari daftar assets (credential tidak lagi ter-bundle ke APK/IPA), hapus dependency mati `image_picker`, hapus 3 dependency riverpod codegen yang tidak pernah dipakai (`riverpod_annotation`, `build_runner`, `riverpod_generator`), tambah `flutter_secure_storage`.
+- `.env.example` (diedit) - Jelaskan alur `--dart-define`, peringatkan agar API key pihak ketiga tidak ditaruh di file ini.
+- `lib/core/utils/logger.dart` (diedit) - Output dimatikan di build release (`Level.off` saat bukan `kDebugMode`), plus sensor alamat email pada pesan log.
+- `lib/features/admin/presentation/providers/admin_providers.dart` (diedit) - `DebugLocationNotifier.set()` menolak aktif saat bukan `kDebugMode` sehingga GPS uji tidak bisa memalsukan bukti di device pengguna.
+- `lib/features/waste/data/datasources/waste_remote_datasource.dart` (diedit) - Hapus `verified_at` dari payload update (diisi trigger server), `checkDuplicateHash` pakai `limit(1)` alih-alih `maybeSingle()` yang melempar error saat ada lebih dari satu baris duplikat, `countTodayWasteLogs` pindah ke RPC server.
+- `lib/features/waste/data/datasources/waste_laravel_datasource.dart` (diedit) - Token dibaca lewat TokenStorage, log path foto yang memuat userId dan hash dihapus.
+- `lib/features/waste/data/datasources/waste_dummy_datasource.dart` (diedit) - Sama: log path foto dihapus.
+- `lib/features/auth/data/datasources/auth_laravel_datasource.dart` (diedit) - Simpan/baca token lewat keystore, hapus email dari pesan log.
+- `lib/features/auth/data/repositories/supabase_auth_repository.dart` (diedit) - Hapus email dari log sign up.
+- `lib/features/auth/data/repositories/laravel_auth_repository.dart` (diedit) - Hapus email dari log sign up.
+- `lib/features/auth/data/repositories/dummy_auth_repository.dart` (diedit) - Hapus email dari log sign up.
+- `lib/features/checkpoints/data/datasources/checkpoint_laravel_datasource.dart` (diedit) - Pakai helper `authOptions()` bersama.
+- `lib/features/points/data/datasources/points_laravel_datasource.dart` (diedit) - Pakai helper `authOptions()` bersama.
+- `lib/features/rewards/data/datasources/reward_laravel_datasource.dart` (diedit) - Pakai helper `authOptions()` bersama.
+- `lib/core/router/app_router.dart` (diedit) - Tambah `adminRouteGuard` sebagai `redirect` yang mengalihkan `/admin/*` ke login bila tidak ada sesi login; hapus import ke folder `presentation/data/`.
+- `lib/core/constants/app_strings.dart` (diedit) - Tambah kunci dwibahasa `capturePermissionBlocked`, `openSettingsButton`, `adminRoleAdmin`, `adminRolePetugas`, `adminRoleUser`.
+- `lib/features/waste/presentation/pages/capture_photo_page.dart` (diedit) - Status `_CaptureStatus.blocked` untuk izin `permanentlyDenied`, tombol "Buka Pengaturan" yang membuka setelan lalu mencoba ulang otomatis; hapus import `presentation/data/`.
+- `lib/features/waste/presentation/pages/waste_page.dart` (diedit) - Hapus import `presentation/data/`.
+- `lib/features/waste/presentation/providers/waste_provider.dart` (diedit) - Di mode Supabase `recordEarnPoints` dibiarkan null karena poin dicatat trigger server; mode laravel dan dummy tetap mencatat dari klien.
+- `lib/features/waste/domain/usecases/submit_waste_usecase.dart` (diedit) - Perbarui doc comment `RecordEarnPoints`.
+- `lib/features/waste/domain/usecases/assess_photo_risk_usecase.dart` (diedit) - Ambang skor dipindah ke `PhotoRiskLevel.fromScore()` sebagai satu-satunya sumber kebenaran; `assess()` memakai helper itu.
+- `lib/features/admin/presentation/pages/admin_waste_detail_page.dart` (diedit) - Label risiko memakai `PhotoRiskLevel.fromScore()` dan `PhotoRiskReason.fromCode()`; `FutureBuilder` `_DistanceRow` dan `_PhotoSection` diubah ke StatefulWidget yang menyimpan Future satu kali agar tidak loop rebuild.
+- `lib/features/admin/presentation/pages/admin_checkpoint_form_page.dart` (diedit) - `TextEditingController` untuk sisa kuota dipindah jadi field yang di-init dan di-dispose, bukan dibuat di dalam `build()`.
+- `lib/features/admin/presentation/pages/admin_users_page.dart` (diedit) - Pakai `userRoleLabel()` dan `userRoleStatusType()`.
+- `lib/features/admin/presentation/pages/admin_user_detail_page.dart` (diedit) - Pakai `userRoleLabel()`.
+- `lib/features/points/presentation/pages/points_page.dart` (diedit) - Pakai `rewardIconForName()`.
+- `lib/features/points/presentation/pages/reward_detail_page.dart` (diedit) - Pakai `rewardIconForName()`.
+- `lib/features/admin/presentation/providers/admin_waste_provider.dart` (diedit) - Notifier tidak lagi menyimpan `Ref`; repository dan audit datasource di-inject, `AutoDisposeStateProvider` untuk filter.
+- `lib/features/admin/presentation/providers/admin_checkpoint_provider.dart` (diedit) - Notifier tidak lagi menyimpan `Ref`; repository, generator QR, dan audit datasource di-inject, filter jadi `AutoDisposeStateProvider`.
+- `lib/features/admin/presentation/providers/admin_users_provider.dart` (diedit) - Filter pencarian dan role jadi `AutoDisposeStateProvider`.
+- `lib/features/regions/presentation/providers/region_provider.dart` (diedit) - Ketiga provider wilayah jadi `AutoDisposeFutureProvider`/`AutoDisposeFutureProviderFamily` supaya cache keluarga tidak tumbuh tanpa batas.
+- `lib/features/activity/presentation/pages/activity_page.dart`, `activity_detail_page.dart` (diedit) - Sesuaikan import setelah pemindahan file.
+- `lib/features/home/presentation/pages/home_page.dart` (diedit) - Sesuaikan import setelah pemindahan file.
+- `lib/features/verification/presentation/pages/verification_page.dart` (diedit) - Sesuaikan import setelah pemindahan file.
+- `lib/features/article/presentation/pages/article_page.dart`, `article_detail_page.dart` (diedit) - Sesuaikan import setelah pemindahan file.
+- `test/widget/pages/verification_page_test.dart` (diedit) - Sesuaikan import `VerificationExtra`.
+- `android/app/src/main/AndroidManifest.xml` (diedit) - `allowBackup=false`, `fullBackupContent=false`, dan aturan `dataExtractionRules` supaya token serta preferensi lokal tidak ikut ter-backup.
+- `docs/ARCHITECTURE.md` (diedit) - Catat struktur folder baruper setelah `presentation/data/` dihapus, dependency baru, dan keputusan guard rute admin.
+- `docs/SECURITY_AND_VALIDATION.md` (diedit) - Catat crediting poin server-side, verified_at server-side, dan gate `kDebugMode`.
+- `docs/ENVIRONMENT_SETUP.md` (dibuat) - Panduan konfigurasi environment via `--dart-define` setelah `.env` tidak lagi di-bundle.
+- `docs/DATABASE_SCHEMA.md` (diedit) - Catat migration 028 dan 029.
+
+Catatan:
+
+- `.env` sengaja dikeluarkan dari daftar assets. `flutter_dotenv` membaca file dari asset bundle, jadi setelah perubahan ini app hanya membaca konfigurasi lewat `--dart-define`. Kode sudah memprioritaskan `String.fromEnvironment` dengan dotenv sebagai fallback, jadi tidak ada breaking change di sisi kode.
+- `STITCH_API_KEY` dihapus dari `.env` karena tidak dipakai di `lib/` sekaligus ikut tersebar ke device pengguna. Kunci itu perlu dirotasi di sisi Stitch/Google karena sudah pernah ter-bundle pada build sebelumnya.
+- `flutter_secure_storage` menambah dependency baru. Evaluasi PROTOCOL Bagian C: alasan (token Sanctum tidak boleh di XML SharedPreferences polos), alternatif (tetap SharedPreferences, atau hapus mode Laravel), pemeliharaan (versi 11.2.0 rilisbelasan hari lalu, aktif), lisensi BSD-3-Clause, kompatibilitas (butuh Dart >= 3.8 dan minSdk 24; project memakai Dart 3.13.5 dan minSdk bawaan Flutter), ukuran (wrapper tipis). Vote: setuju.
+- Poin di mode Supabase kini dicatat server. Perlu diingat: angka poin yang tampil sebelum migrasi diterapkan akan berbeda dari yang benar sampai trigger terpasang.
+- `points_insert_redeem_own` memanggil `can_redeem_reward` yang memakai `auth.uid()`. Bila klien menukar reward lewat jalur lain, sesuaikan pemanggilnya.
+- Guardian `adminRouteGuard` sengaja hanya memeriksa sesi login. Penegakan role tetap di `AdminShell` dan RLS Supabase, sesuai pemisahan tanggung jawab.
+- `image_picker` dihapus karena tidak pernah diimpor. Kehadirannya berisiko memunculkan kembali jalur galeri yang melanggar aturan kamera in-app.
+
+Verifikasi:
+
+- `flutter analyze`: OK, 0 issue.
+- `flutter test`: OK, 337 test lulus (jumlah sama dengan sebelum task, tidak ada test yang dihapus).
+- `flutter pub get`: OK, 33 package dicabut setelah penghapusan 4 dependency.
+- Belum diuji di device fisik: alur kamera `permanentlyDenied`, secure storage per platform, dan migrasi token lama.
+
 ## [2026-10-07] - Tombol morph onboarding ala template referensi
 
 Status: Selesai

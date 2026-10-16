@@ -559,3 +559,10 @@ Riwayat:
 - 1.9: kolom forensik waste_logs (migration 023).
 - 2.0: kolom checkpoints max_uses/remaining_uses + trigger limit (migration 025).
 - 2.1: kolom profiles.fcm_token (migration 026, rename dari duplikat 025) + kolom redemptions.voucher_code + trigger auto-verify (migration 024).
+- 2.2: trigger `trg_set_verified_at` yang memaksa verified_at memakai jam server
+  saat status waste_logs menjadi verified atau rejected, plus RPC
+  `count_today_waste_logs(uuid)` untuk rate limit harian (migration 028).
+- 2.3: trigger `trg_credit_points_verified` yang mencatat poin earn saat waste
+  log verified, helper `get_setting_number` dan `can_redeem_reward`, seed
+  konfigurasi poin (base, ambang streak, bonus streak), dan penggantian policy
+  `points_insert_own` menjadi `points_insert_redeem_own` (migration 029).

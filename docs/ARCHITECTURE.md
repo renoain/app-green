@@ -33,7 +33,7 @@ layer, dan aturan dependency.
 
 | Komponen   | Pilihan            | Alasan                     | Alternatif                            |
 | ---------- | ------------------ | -------------------------- | ------------------------------------- |
-| Kamera     | camera             | In-app only, kontrol penuh | image_picker (tidak bisa in-app only) |
+| Kamera     | camera             | In-app only, kontrol penuh | image_picker (tidak bisa in-app only, dan tidak lagi terpasang) |
 | GPS        | geolocator         | Standar Flutter, akurat    | location                              |
 | QR scan    | mobile_scanner     | Modern, aktif dipelihara   | qr_code_scanner                       |
 | Permission | permission_handler | Standar Flutter            | -                                     |
@@ -46,6 +46,16 @@ layer, dan aturan dependency.
 | Hash         | crypto        | SHA-256, standar                   | -          |
 | EXIF         | exif          | Baca metadata foto                 | -          |
 | AI Forensics | TBD (fase 2+) | Hive, Sightengine, AWS Rekognition | -          |
+| Secure storage | flutter_secure_storage | Token sesi tidak boleh di file XML polos; Android Keystore dan iOS Keychain. Versi 11.2.0, lisensi BSD-3-Clause, aktif dipelihara | shared_preferences polos (ditolak: dapat diekstrak lewat backup atau device rooted) |
+
+### 1.4a Dependency yang Dihapus
+
+| Dependency        | Alasan dihapus |
+| ----------------- | -------------- |
+| image_picker      | Tidak pernah diimpor. Kehadirannya berisiko memunculkan kembali jalur galeri yang melanggar aturan kamera in-app. |
+| riverpod_annotation | Tidak ada anotasi @riverpod di project. |
+| riverpod_generator | Tidak ada file *.g.dart yang dihasilkan. |
+| build_runner      | Tidak ada proses codegen yang berjalan. |
 
 ### 1.5 Utility
 
@@ -105,37 +115,47 @@ Project ini memakai **feature-first + clean architecture** ringan.
 
 ## 3. Struktur Folder
 
+Aturan lapis: `presentation` hanya memanggil provider, `domain` memegang logika
+bisnis, `data` memegang akses data. Folder `presentation/data/` tidak pernah
+dipakai karena已经不是 bagian dari lapis mana pun yang sah.
+
 lib/
 core/
 theme/ # token warna, typography, spacing, radius, elevation
-router/ # go_router
-constants/ # app_assets, app_strings
-utils/ # logger, helpers
+router/ # go_router + route_extras.dart (kontrak argumen route antar halaman)
+constants/ # app_assets, app_strings, app_env, app_config
+utils/ # logger, geo_utils, formatters, dll
 widgets/ # widget global reusable (termasuk LoginNoticeCard)
-services/ # supabase_service, auth_service, location_service, dll
+services/ # supabase_service, token_storage, location_service, dll
 features/
-auth/
+<fitur>/
 data/
-datasources/
+datasources/ # remote, laravel, dummy, dan dataset demo
 models/
 repositories/
+domain/
+entities/
+repositories/
+usecases/
 presentation/
-pages/ # login_page, register_page
-providers/ # auth_provider (authNotifierProvider, AuthSessionState)
 pages/
 widgets/
-providers/
-home/
-waste/
-points/
-activity/
-article/
-profile/
-splash/
-onboarding/
-scan/
-verification/
+mappers/ # pemetaan domain ke tampilan (mis. activity_texts)
+providers/ # provider Riverpod per fitur
 main.dart
+
+Aturan tambahan:
+
+- Argumen route (payload `extra` milik go_router) diletakkan di
+  lib/core/router/route_extras.dart, bukan di dalam folder fitur. Dengan begitu
+  router tidak bergantung pada folder internal presentation.
+- Dataset demo diletakkan di data/dataservers dengan sufiks _demo_datasource.
+- Provider yang menyimpan daftar atau filter memakai auto-dispose
+  (AutoDisposeStateProvider, AutoDisposeFutureProvider) supaya tidak menahan
+  state serta cache selamanya. Provider global (sesi auth, locale, role admin)
+  sengaja tidak auto-dispose.
+- Notifier tidak boleh menyimpan Ref. Dependency yang dibutuhkan di-inject lewat
+  konstruktor supaya provider bisa di-override saat pengujian.
 
 text
 
@@ -148,6 +168,9 @@ text
 - Dilarang Navigator.push langsung.
 - Pakai context.go / context.goNamed / context.push.
 - Route awal: /splash.
+- Route /admin/* dilindungi `adminRouteGuard` pada redirect router: tanpa sesi
+  login aktif, user diarahkan ke /login. Penegakan role tetap di AdminShell
+  (menolak selain admin dan petugas) serta RLS Supabase di sisi server.
 - Tab utama (home, activity, waste, points, profile) memakai
   StatefulShellRoute.indexedStack agar state tiap tab tersimpan dan
   bottom navigation dipakai bersama lewat MainShell

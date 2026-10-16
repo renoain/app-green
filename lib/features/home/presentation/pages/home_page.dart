@@ -1,4 +1,4 @@
-// Home V3 minimalist: header + kartu poin + aksi cepat + misi + aktivitas.
+﻿// Home V3 minimalist: header + kartu poin + aksi cepat + misi + aktivitas.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -21,8 +21,8 @@ import '../../../../core/widgets/app_button_widgets.dart';
 import '../../../../core/widgets/card_widgets.dart';
 import '../../../../core/widgets/display_widgets.dart';
 import '../../../../core/widgets/login_notice_widget.dart';
-import '../../../activity/presentation/data/activity_detail_extra.dart';
-import '../../../activity/presentation/data/activity_texts.dart';
+import '../../../../core/router/route_extras.dart';
+import '../../../activity/presentation/mappers/activity_texts.dart';
 import '../../../auth/domain/entities/auth_session.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../checkpoints/presentation/providers/checkpoint_provider.dart';

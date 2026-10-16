@@ -110,7 +110,7 @@ class SupabaseAuthRepository implements AuthRepository {
       );
       final User? user = response.user;
       AppLogger.debug(
-        'Sign up ${email.trim()}: user=${user?.id != null}, '
+        'Sign up selesai: user=${user?.id != null}, '
         'session=${response.session != null}',
       );
       if (user == null || response.session == null) {
@@ -120,7 +120,7 @@ class SupabaseAuthRepository implements AuthRepository {
       }
       return SignUpResult.success;
     } catch (error) {
-      AppLogger.error('Sign up gagal untuk ${email.trim()}', error);
+      AppLogger.error('Sign up gagal', error);
       return AuthErrorMapper.mapSignUpError(error);
     }
   }

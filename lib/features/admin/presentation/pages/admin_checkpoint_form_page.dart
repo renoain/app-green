@@ -56,6 +56,7 @@ class _AdminCheckpointFormPageState
   late final TextEditingController _codeController;
   late final TextEditingController _subdistrictController;
   late final TextEditingController _maxUsesController;
+  late final TextEditingController _remainingUsesController;
   RegionSelection _region = (
     province: null,
     city: null,
@@ -100,6 +101,9 @@ class _AdminCheckpointFormPageState
         TextEditingController(text: checkpoint?.subdistrict ?? '');
     _maxUsesController =
         TextEditingController(text: checkpoint?.maxUses?.toString() ?? '');
+    _remainingUsesController = TextEditingController(
+      text: checkpoint?.remainingUses?.toString() ?? AppStrings.checkpointUnlimited,
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       if (widget.checkpoint != null) return;
@@ -115,6 +119,7 @@ class _AdminCheckpointFormPageState
     _codeController.dispose();
     _subdistrictController.dispose();
     _maxUsesController.dispose();
+    _remainingUsesController.dispose();
     _nameController.dispose();
     _addressController.dispose();
     _latController.dispose();
@@ -238,6 +243,8 @@ class _AdminCheckpointFormPageState
         _codeController.text = found.code ?? '';
         _subdistrictController.text = found.subdistrict ?? '';
         _maxUsesController.text = found.maxUses?.toString() ?? '';
+        _remainingUsesController.text =
+            found.remainingUses?.toString() ?? AppStrings.checkpointUnlimited;
       });
     } catch (error, stackTrace) {
       AppLogger.error('Gagal memuat checkpoint admin', error, stackTrace);
@@ -491,10 +498,7 @@ class _AdminCheckpointFormPageState
               if (_isEdit) ...<Widget>[
                 const SizedBox(height: AppSpacing.sm),
                 TextField(
-                  controller: TextEditingController(
-                    text: _effective?.remainingUses?.toString() ??
-                        AppStrings.checkpointUnlimited,
-                  ),
+                  controller: _remainingUsesController,
                   readOnly: true,
                   enabled: false,
                   decoration: InputDecoration(

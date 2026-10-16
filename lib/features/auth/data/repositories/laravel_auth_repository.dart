@@ -126,10 +126,10 @@ class LaravelAuthRepository implements AuthRepository {
           error.type == DioExceptionType.connectionError) {
         return SignUpResult.networkError;
       }
-      AppLogger.error('Sign up Laravel gagal untuk ${email.trim()}', error);
+      AppLogger.error('Sign up Laravel gagal', error);
       return SignUpResult.error;
     } catch (error) {
-      AppLogger.error('Sign up Laravel gagal untuk ${email.trim()}', error);
+      AppLogger.error('Sign up Laravel gagal', error);
       return SignUpResult.error;
     }
   }

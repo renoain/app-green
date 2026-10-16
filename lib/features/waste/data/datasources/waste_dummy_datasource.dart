@@ -1,4 +1,4 @@
-// Data source waste log dummy berbasis json-server (tanpa Supabase).
+﻿// Data source waste log dummy berbasis json-server (tanpa Supabase).
 
 import 'dart:typed_data';
 
@@ -51,7 +51,9 @@ class WasteDummyDatasource extends WasteRemoteDatasource {
         'Ukuran foto melebihi batas maksimal ${AppConfig.maxPhotoMb} MB.',
       );
     }
-    AppLogger.warning('Mode dummy: upload foto dilewati untuk $fileName.');
+    AppLogger.warning(
+      'Mode dummy: upload foto dilewati, path disimpan apa adanya.',
+    );
     return fileName;
   }
 
@@ -149,6 +151,9 @@ class WasteDummyDatasource extends WasteRemoteDatasource {
         data: <String, dynamic>{
           'status': status.value,
           'verified_by': verifiedBy,
+          // Mode ini tidak punya trigger server seperti mode Supabase, jadi
+          // verified_at memakai jam device. Saat backend Laravel sudah punya trigger,
+          // hapus baris ini dan biarkan server yang mengisinya.
           'verified_at': DateTime.now().toUtc().toIso8601String(),
           'notes': notes,
         },

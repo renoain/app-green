@@ -1,4 +1,4 @@
-// Halaman ambil foto bukti via kamera in-app Go Green (anti-kecurangan: kamera in-app, bukan galeri).
+﻿// Halaman ambil foto bukti via kamera in-app Go Green (anti-kecurangan: kamera in-app, bukan galeri).
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +20,10 @@ import '../../../../core/utils/formatters.dart';
 import '../../../../core/utils/geo_utils.dart';
 import '../../../../core/widgets/app_bar_and_loading_widgets.dart';
 import '../../../../core/widgets/app_button_widgets.dart';
-import '../../../verification/presentation/data/verification_extra.dart';
-import '../data/capture_extra.dart';
+import '../../../../core/router/route_extras.dart';
 
 /// Status inisialisasi kamera pada halaman CapturePhotoPage.
-enum _CaptureStatus { initializing, denied, unavailable, ready }
+enum _CaptureStatus { initializing, denied, blocked, unavailable, ready }
 
 /// Halaman kamera in-app untuk mengambil foto bukti pembuangan sampah. Meminta izin kamera, menampilkan preview, dan mengarahkan ke halaman verifikasi setelah foto diambil.
 class CapturePhotoPage extends StatefulWidget {
@@ -62,7 +61,15 @@ class _CapturePhotoPageState extends State<CapturePhotoPage> {
       final bool granted =
           permission.isGranted || permission == PermissionStatus.limited;
       if (!granted) {
-        if (mounted) setState(() => _status = _CaptureStatus.denied);
+        // Permissions yang diblokir permanen tidak akan pernah diminta lagi,
+        // jadi arahkan user ke pengaturan perangkat, bukan ke coba ulang.
+        if (mounted) {
+          setState(
+            () => _status = permission.isPermanentlyDenied
+                ? _CaptureStatus.blocked
+                : _CaptureStatus.denied,
+          );
+        }
         return;
       }
 
@@ -85,6 +92,12 @@ class _CapturePhotoPageState extends State<CapturePhotoPage> {
     } catch (_) {
       if (mounted) setState(() => _status = _CaptureStatus.unavailable);
     }
+  }
+
+  /// Buka pengaturan perangkat lalu cek ulang izin setelah user kembali.
+  Future<void> _openAppSettingsThenRetry() async {
+    await openAppSettings();
+    await _initialize();
   }
 
   Future<void> _disposeController() async {
@@ -209,6 +222,13 @@ class _CapturePhotoPageState extends State<CapturePhotoPage> {
         message: AppStrings.capturePermissionDenied,
       );
     }
+    if (status == _CaptureStatus.blocked) {
+      return _buildFallback(
+        message: AppStrings.capturePermissionBlocked,
+        actionLabel: AppStrings.openSettingsButton,
+        onAction: _openAppSettingsThenRetry,
+      );
+    }
     if (status == _CaptureStatus.unavailable) {
       return _buildFallback(
         message: AppStrings.captureUnavailable,
@@ -222,7 +242,11 @@ class _CapturePhotoPageState extends State<CapturePhotoPage> {
     );
   }
 
-  Widget _buildFallback({required String message}) {
+  Widget _buildFallback({
+    required String message,
+    String? actionLabel,
+    Future<void> Function()? onAction,
+  }) {
     return Scaffold(
       appBar: CustomAppBar(
         title: AppStrings.captureTitle,
@@ -257,8 +281,8 @@ class _CapturePhotoPageState extends State<CapturePhotoPage> {
               ),
               const SizedBox(height: AppSpacing.lg),
               PrimaryButton(
-                text: AppStrings.captureRetryButton,
-                onPressed: _initialize,
+                text: actionLabel ?? AppStrings.captureRetryButton,
+                onPressed: onAction ?? _initialize,
               ),
               const SizedBox(height: AppSpacing.md),
               SecondaryButton(

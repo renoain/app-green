@@ -103,10 +103,10 @@ class DummyAuthRepository implements AuthRepository {
       if (code == 'username_taken') {
         return SignUpResult.usernameTaken;
       }
-      AppLogger.error('Sign up dummy gagal untuk ${email.trim()}', error);
+      AppLogger.error('Sign up dummy gagal', error);
       return AuthErrorMapper.mapSignUpError(error);
     } catch (error) {
-      AppLogger.error('Sign up dummy gagal untuk ${email.trim()}', error);
+      AppLogger.error('Sign up dummy gagal', error);
       return AuthErrorMapper.mapSignUpError(error);
     }
   }

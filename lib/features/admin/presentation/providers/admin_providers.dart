@@ -1,5 +1,6 @@
 // Provider bersama admin (role, lokasi uji, kunci drawer, use case).
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_enums.dart';
@@ -58,12 +59,13 @@ class DebugLocation {
   final String label;
 }
 
-/// Notifier lokasi uji (null berarti pakai GPS asli).
+/// Notifier lokasi uji (null berarti pakai GPS asli). Di build release notifier ini menolak aktif supaya GPS palsu tidak bisa memalsukan bukti di device pengguna.
 class DebugLocationNotifier extends StateNotifier<DebugLocation?> {
   DebugLocationNotifier() : super(null);
 
-  /// Aktifkan lokasi uji.
+  /// Aktifkan lokasi uji. Diabaikan saat bukan debug mode.
   void set(double latitude, double longitude, String label) {
+    if (!kDebugMode) return;
     state = DebugLocation(
       latitude: latitude,
       longitude: longitude,

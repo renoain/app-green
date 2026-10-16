@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/activity/presentation/data/activity_detail_extra.dart';
 import '../../features/activity/presentation/pages/activity_detail_page.dart';
 import '../../features/activity/presentation/pages/activity_page.dart';
 import '../../features/admin/presentation/admin_shell.dart';
@@ -36,12 +35,12 @@ import '../../features/profile/presentation/pages/settings_page.dart';
 import '../../features/rewards/presentation/pages/vouchers_page.dart';
 import '../../features/scan/presentation/pages/scan_page.dart';
 import '../../features/splash/splash_page.dart';
-import '../../features/verification/presentation/data/verification_extra.dart';
 import '../../features/verification/presentation/pages/verification_page.dart';
 import '../../features/waste/domain/entities/waste_log.dart';
-import '../../features/waste/presentation/data/capture_extra.dart';
 import '../../features/waste/presentation/pages/capture_photo_page.dart';
 import '../../features/waste/presentation/pages/waste_page.dart';
+import '../services/supabase_service.dart';
+import 'route_extras.dart';
 import '../widgets/main_shell.dart';
 
 /// Daftar route aplikasi, dipakai untuk membangun [appRouter] dan keperluan test.
@@ -340,9 +339,29 @@ final List<RouteBase> appRoutes = <RouteBase>[
   ),
 ];
 
+/// Guard rute admin: path /admin/* hanya boleh dibuka bila ada sesi login aktif.
+///
+/// Ini lapisan pertama (UI). Otorisasi sesungguhnya tetap di dua tempat lain:
+/// [AdminShell] menolak role selain admin/petugas, dan RLS Supabase menolak
+/// query admin di sisi server. Guard ini mencegah user yang belum login
+/// membuka struktur navigasi admin lewat deep link.
+String? adminRouteGuard(BuildContext context, GoRouterState state) {
+  if (!state.matchedLocation.startsWith(adminPathPrefix)) {
+    return null;
+  }
+  if (SupabaseService.instance.currentUser != null) {
+    return null;
+  }
+  return AppRouteName.login;
+}
+
+/// Awalan path seluruh route admin.
+const String adminPathPrefix = '/admin';
+
 /// Router aplikasi Go Green. Didefinisikan sekali dan dipakai oleh MaterialApp.router.
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
+  redirect: adminRouteGuard,
   routes: appRoutes,
 );
 

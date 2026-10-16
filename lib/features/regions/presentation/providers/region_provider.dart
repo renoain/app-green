@@ -22,23 +22,28 @@ final Provider<ResolveRegionFromCoordinatesUsecase>
   ),
 );
 
-/// Daftar provinsi (cache di datasource).
-final FutureProvider<List<RegionProvince>> regionProvincesProvider =
-    FutureProvider<List<RegionProvince>>(
+/// Daftar provinsi. Auto-dispose supaya cache provider ikut dibuang saat
+/// tidak ada layar yang memakainya.
+final AutoDisposeFutureProvider<List<RegionProvince>> regionProvincesProvider =
+    AutoDisposeFutureProvider<List<RegionProvince>>(
   (Ref ref) => ref.watch(regionRepositoryProvider).getProvinces(),
 );
 
 /// Daftar kota/kabupaten untuk [provinceId].
-final FutureProviderFamily<List<RegionCity>, String> regionCitiesProvider =
-    FutureProviderFamily<List<RegionCity>, String>(
+///
+/// Family ini wajib auto-dispose: tanpa itu setiap provinsi yang pernah dibuka
+/// akan tersimpan selamanya di memori selama proses berjalan.
+final AutoDisposeFutureProviderFamily<List<RegionCity>, String>
+    regionCitiesProvider =
+    AutoDisposeFutureProviderFamily<List<RegionCity>, String>(
   (Ref ref, String provinceId) =>
       ref.watch(regionRepositoryProvider).getCities(provinceId),
 );
 
-/// Daftar kecamatan untuk [cityId].
-final FutureProviderFamily<List<RegionDistrict>, String>
+/// Daftar kecamatan untuk [cityId]. Auto-dispose, sama seperti daftar kota.
+final AutoDisposeFutureProviderFamily<List<RegionDistrict>, String>
     regionDistrictsProvider =
-    FutureProviderFamily<List<RegionDistrict>, String>(
+    AutoDisposeFutureProviderFamily<List<RegionDistrict>, String>(
   (Ref ref, String cityId) =>
       ref.watch(regionRepositoryProvider).getDistricts(cityId),
 );

@@ -39,7 +39,21 @@ enum PhotoRiskLevel {
   medium,
 
   /// Skor 60-100.
-  high,
+  high;
+
+  /// Ambang batas skor untuk tingkat [medium].
+  static const int mediumThreshold = 30;
+
+  /// Ambang batas skor untuk tingkat [high].
+  static const int highThreshold = 60;
+
+  /// Menentukan tingkat risiko dari [score]. Satu-satunya tempat ambang
+  /// batas ini ditulis supaya penilaian di server, domain, dan UI konsisten.
+  static PhotoRiskLevel fromScore(int score) {
+    if (score >= highThreshold) return PhotoRiskLevel.high;
+    if (score >= mediumThreshold) return PhotoRiskLevel.medium;
+    return PhotoRiskLevel.low;
+  }
 }
 
 /// Hasil penilaian risiko foto.
@@ -105,11 +119,7 @@ class AssessPhotoRiskUsecase {
       score += weights[reason] ?? 0;
     }
     if (score > 100) score = 100;
-    final PhotoRiskLevel level = score >= 60
-        ? PhotoRiskLevel.high
-        : score >= 30
-            ? PhotoRiskLevel.medium
-            : PhotoRiskLevel.low;
+    final PhotoRiskLevel level = PhotoRiskLevel.fromScore(score);
     return PhotoRisk(
       score: score,
       level: level,

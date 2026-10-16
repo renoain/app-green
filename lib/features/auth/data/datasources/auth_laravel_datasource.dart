@@ -1,13 +1,14 @@
 // Data source autentikasi Laravel via Sanctum (tanpa Supabase).
 
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants/app_env.dart';
+import '../../../../core/services/token_storage.dart';
 import '../../../../core/utils/logger.dart';
 
-/// Kunci penyimpanan token Sanctum di SharedPreferences.
-const String laravelTokenKey = 'laravel_token';
+/// Kunci penyimpanan token Sanctum. Token disimpan di keystore perangkat,
+/// bukan SharedPreferences polos.
+const String laravelTokenKey = TokenStorage.laravelTokenKey;
 
 /// Data source auth untuk mode Laravel. Token Sanctum disimpan di
 /// SharedPreferences dan dikirim sebagai header Bearer.
@@ -100,8 +101,7 @@ class AuthLaravelDatasource {
     } catch (error, stackTrace) {
       AppLogger.error('AuthLaravelDatasource.logout gagal', error, stackTrace);
     } finally {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.remove(laravelTokenKey);
+      await tokenStorage.delete(laravelTokenKey);
     }
   }
 
@@ -123,15 +123,10 @@ class AuthLaravelDatasource {
     }
   }
 
-  /// Menyimpan token Sanctum.
-  Future<void> saveToken(String token) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(laravelTokenKey, token);
-  }
+  /// Menyimpan token Sanctum ke keystore perangkat.
+  Future<void> saveToken(String token) =>
+      tokenStorage.write(laravelTokenKey, token);
 
-  /// Membaca token Sanctum, atau null bila belum login.
-  Future<String?> getToken() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(laravelTokenKey);
-  }
+  /// Membaca token Sanctum dari keystore, atau null bila belum login.
+  Future<String?> getToken() => tokenStorage.read(laravelTokenKey);
 }

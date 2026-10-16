@@ -1,4 +1,4 @@
-// Halaman poin dan reward Go Green.
+﻿// Halaman poin dan reward Go Green.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -18,10 +18,11 @@ import '../../../../core/widgets/card_widgets.dart';
 import '../../../../core/widgets/feedback_widgets.dart';
 import '../../../../core/widgets/status_widgets.dart';
 import '../../domain/entities/point.dart';
-import '../data/reward_demo_data.dart';
+import '../../data/datasources/reward_demo_datasource.dart';
 import '../providers/point_provider.dart';
 import '../../../rewards/presentation/providers/reward_provider.dart';
 import '../../../waste/presentation/providers/waste_provider.dart';
+import '../widgets/reward_icon.dart';
 
 /// Tanggal riwayat poin demo pertama.
 final DateTime _demoHistoryDate1 = DateTime(2026, 9, 11);
@@ -298,24 +299,6 @@ class _RewardsSectionState extends ConsumerState<_RewardsSection> {
     });
   }
 
-  /// Ikon reward berdasarkan nama katalog.
-  IconData _iconForName(String name) {
-    final String lower = name.toLowerCase();
-    if (lower.contains('voucher') || lower.contains('belanja')) {
-      return LucideIcons.shopping_bag;
-    }
-    if (lower.contains('wallet') ||
-        lower.contains('saldo') ||
-        lower.contains('e-wallet') ||
-        lower.contains('ewallet')) {
-      return LucideIcons.wallet;
-    }
-    if (lower.contains('donasi') || lower.contains('donation')) {
-      return LucideIcons.heart_handshake;
-    }
-    return LucideIcons.gift;
-  }
-
   @override
   Widget build(BuildContext context) {
     final AsyncValue<List<dynamic>> rewards = ref.watch(rewardNotifierProvider);
@@ -329,7 +312,7 @@ class _RewardsSectionState extends ConsumerState<_RewardsSection> {
               description:
                   (reward.description as String?) ?? reward.name as String,
               pointCost: reward.pointsCost as int,
-              icon: _iconForName(reward.name as String),
+              icon: rewardIconForName(reward.name as String),
               onTap: () => context.pushNamed(
                 AppRouteName.rewardDetail,
                 pathParameters: <String, String>{'id': reward.id as String},

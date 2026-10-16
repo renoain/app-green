@@ -102,7 +102,8 @@ class WasteRemoteDatasource {
         .update(<String, dynamic>{
           'status': status.value,
           'verified_by': verifiedBy,
-          'verified_at': DateTime.now().toUtc().toIso8601String(),
+          // verified_at sengaja tidak dikirim: nilainya diisi trigger server
+          // (trg_set_verified_at) memakai jam server, bukan jam device.
           'notes': notes,
         })
         .eq('id', id)
@@ -145,27 +146,24 @@ class WasteRemoteDatasource {
   }
   /// Mengembalikan true bila ada waste log dengan hash yang sama.
   Future<bool> checkDuplicateHash(String hash) async {
-    final Map<String, dynamic>? row = await _client
-        .from(AppTables.wasteLogs)
-        .select('id')
-        .eq('hash', hash)
-        .maybeSingle();
-    return row != null;
-  }
-
-  /// Menghitung jumlah waste log user sejak awal hari ini (UTC). Dipakai untuk rate limit (docs/DATABASE_SCHEMA.md bagian 8.6).
-  Future<int> countTodayWasteLogs(String userId) async {
-    final DateTime start = DateTime.now().toUtc();
-    final DateTime startOfDayUtc = DateTime.utc(
-      start.year,
-      start.month,
-      start.day,
-    );
+    // Pakai limit(1) bukan maybeSingle(): baris duplikat bisa menumpuk sehingga
+    // maybeSingle() akan melempar error alih-alih melaporkan duplikat.
     final List<Map<String, dynamic>> rows = await _client
         .from(AppTables.wasteLogs)
         .select('id')
-        .eq('user_id', userId)
-        .gte('created_at', startOfDayUtc.toIso8601String());
-    return rows.length;
+        .eq('hash', hash)
+        .limit(1);
+    return rows.isNotEmpty;
+  }
+
+  /// Menghitung jumlah waste log user sejak awal hari server. Dipakai untuk rate
+  /// limit (docs/DATABASE_SCHEMA.md bagian 8.6). Batas hari dihitung server lewat
+  /// RPC count_today_waste_logs agar sama dengan trigger auto_verify_waste_trigger.
+  Future<int> countTodayWasteLogs(String userId) async {
+    final Object? result = await _client.rpc(
+      'count_today_waste_logs',
+      params: <String, dynamic>{'p_user_id': userId},
+    );
+    return (result as num?)?.toInt() ?? 0;
   }
 }
